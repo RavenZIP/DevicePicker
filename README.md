@@ -1,7 +1,7 @@
 # DevicePicker
 
 <p align="center">
-      <img alt="Logo" src="img/Logo.png" width="100%">
+      <img alt="Logo" src="img/logo.png" width="100%">
 </p>
 
 <p align="center">
