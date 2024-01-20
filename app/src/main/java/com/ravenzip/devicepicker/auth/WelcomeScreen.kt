@@ -37,36 +37,42 @@ fun WelcomeScreen() {
             when (it) {
                 0 -> {
                     ScreenContent(
-                        painterResource(id = R.drawable.devices),
-                        "Больше информации",
-                        "Предоставляем более расширенную информацию о каждом устройстве " +
-                            "(нагрев, производительность, качество сборки, надежность)"
+                        image = painterResource(id = R.drawable.devices),
+                        title = "Больше информации",
+                        text =
+                            "Предоставляем более расширенную информацию о каждом устройстве " +
+                                "(нагрев, производительность, качество сборки, надежность)",
+                        isFinal = false
                     )
                 }
                 1 -> {
                     ScreenContent(
-                        painterResource(id = R.drawable.search),
-                        "Продвинутый поиск",
-                        "Возможность поиска устройства по меткам. Еще какая-то тонна текста, " +
-                            "которую я пока что не придумал, но ее нужно написать, чтобы понять " +
-                            "как будет смотреться текст в таком обхеме"
+                        image = painterResource(id = R.drawable.search),
+                        title = "Продвинутый поиск",
+                        text =
+                            "Возможность поиска устройства по генерируемым меткам. Благодаря этому " +
+                                "поиск можно сделать точнее или найти необходимое быстрее",
+                        isFinal = false
                     )
                 }
                 2 -> {
                     ScreenContent(
-                        painterResource(id = R.drawable.time),
-                        "Необязательная регистрация",
-                        "Регистрация дает возможность писать отзывы, выставлять оценки, " +
-                            "хранить один и тот же список избранных товаров на разных устройствах и " +
-                            "возможность писать в техподдержку. Если это пока что не нужно, " +
-                            "то можно зарегистрироваться позднее"
+                        image = painterResource(id = R.drawable.time),
+                        title = "Необязательная регистрация",
+                        text =
+                            "Регистрация дает возможность писать отзывы, выставлять оценки, " +
+                                "хранить один и тот же список избранных товаров на разных устройствах и " +
+                                "возможность писать в техподдержку. Если это пока что не нужно, " +
+                                "то можно зарегистрироваться позднее",
+                        isFinal = false
                     )
                 }
                 3 -> {
-                    ChooseScreen(
-                        painterResource(id = R.drawable.devicepicker),
-                        "Device Picker",
-                        "Лучшее приложение для подбора переносных корпоративных устройств"
+                    ScreenContent(
+                        image = painterResource(id = R.drawable.devicepicker),
+                        title = "Device Picker",
+                        text = "Лучшее приложение для подбора переносных корпоративных устройств",
+                        isFinal = true
                     )
                 }
             }
@@ -84,7 +90,7 @@ fun WelcomeScreen() {
 }
 
 @Composable
-private fun ScreenContent(image: Painter, title: String, text: String) {
+private fun ScreenContent(image: Painter, title: String, text: String, isFinal: Boolean) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -97,45 +103,31 @@ private fun ScreenContent(image: Painter, title: String, text: String) {
             modifier = Modifier.fillMaxWidth(0.9f),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = title, fontSize = 22.sp, fontWeight = FontWeight.W500, letterSpacing = 0.sp)
+            Text(
+                text = title,
+                fontSize = if (isFinal) 24.sp else 22.sp,
+                fontWeight = FontWeight.W500,
+                letterSpacing = 0.sp
+            )
+            Spacer(modifier = Modifier.height(if (isFinal) 10.dp else 20.dp))
+            Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)
+        }
+
+        if (isFinal) {
+            Spacer(modifier = Modifier.height(40.dp))
+            SimpleButton(
+                text = TextParameters("Регистрация", size = 16),
+                textAlign = TextAlign.Center
+            ) {}
+
             Spacer(modifier = Modifier.height(20.dp))
-            Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)
+            SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {}
+
+            Spacer(modifier = Modifier.height(20.dp))
+            SimpleButton(
+                text = TextParameters("Продолжить без регистрации", size = 16),
+                textAlign = TextAlign.Center
+            ) {}
         }
-    }
-}
-
-@Composable
-private fun ChooseScreen(image: Painter, title: String, text: String) {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(painter = image, contentDescription = "")
-        Spacer(modifier = Modifier.height(80.dp))
-
-        Column(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = title, fontSize = 24.sp, fontWeight = FontWeight.W500, letterSpacing = 0.sp)
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)
-        }
-
-        Spacer(modifier = Modifier.height(40.dp))
-        SimpleButton(
-            text = TextParameters("Регистрация", size = 16),
-            textAlign = TextAlign.Center
-        ) {}
-
-        Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {}
-
-        Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(
-            text = TextParameters("Продолжить без регистрации", size = 16),
-            textAlign = TextAlign.Center
-        ) {}
     }
 }
