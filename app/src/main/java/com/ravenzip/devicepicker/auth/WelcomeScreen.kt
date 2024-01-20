@@ -35,14 +35,15 @@ fun WelcomeScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
             when (it) {
-                0 ->
+                0 -> {
                     ScreenContent(
                         painterResource(id = R.drawable.devices),
                         "Больше информации",
                         "Предоставляем более расширенную информацию о каждом устройстве " +
                             "(нагрев, производительность, качество сборки, надежность)"
                     )
-                1 ->
+                }
+                1 -> {
                     ScreenContent(
                         painterResource(id = R.drawable.search),
                         "Продвинутый поиск",
@@ -50,7 +51,8 @@ fun WelcomeScreen() {
                             "которую я пока что не придумал, но ее нужно написать, чтобы понять " +
                             "как будет смотреться текст в таком обхеме"
                     )
-                2 ->
+                }
+                2 -> {
                     ScreenContent(
                         painterResource(id = R.drawable.time),
                         "Необязательная регистрация",
@@ -59,12 +61,14 @@ fun WelcomeScreen() {
                             "возможность писать в техподдержку. Если это пока что не нужно, " +
                             "то можно зарегистрироваться позднее"
                     )
-                3 ->
+                }
+                3 -> {
                     ChooseScreen(
                         painterResource(id = R.drawable.devicepicker),
                         "Device Picker",
                         "Лучшее приложение для подбора переносных корпоративных устройств"
                     )
+                }
             }
         }
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
