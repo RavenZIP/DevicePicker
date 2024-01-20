@@ -1,7 +1,7 @@
 # DevicePicker
 
 <p align="center">
-      <img alt="Logo" src="img/logo.png" width="100%">
+      <img alt="Logo" src="img/Logo.png" width="100%">
 </p>
 
 <p align="center">
@@ -9,6 +9,7 @@
 <img alt="Kotlin" src="https://img.shields.io/badge/Kotlin-1.9.0-A831F5">
 <img alt="Jetpack Compose" src="https://img.shields.io/badge/Jetpack%20Compose-4181ED">
 <img alt="Material 3" src="https://img.shields.io/badge/Material%203-1.2.0%20beta01-%2310699C">
+<img alt="Version" src="https://img.shields.io/badge/v0.1.0-008AFF">
 </p>
 
 # 📄 О проекте
