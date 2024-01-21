@@ -28,6 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.theme.RoundedTop
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
@@ -88,22 +89,13 @@ fun RegistrationScreen() {
                 )
         )
 
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Column(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .clip(RoundedTop)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHigh),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                SimpleButton(
-                    text = TextParameters(value = "Продолжить", size = 16),
-                    textAlign = TextAlign.Center
-                ) {}
-                Spacer(modifier = Modifier.height(20.dp))
-            }
+        BottomContainer {
+            Spacer(modifier = Modifier.height(20.dp))
+            SimpleButton(
+                text = TextParameters(value = "Продолжить", size = 16),
+                textAlign = TextAlign.Center
+            ) {}
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

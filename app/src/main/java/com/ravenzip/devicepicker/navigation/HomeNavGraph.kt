@@ -6,5 +6,7 @@ import androidx.navigation.compose.NavHost
 
 @Composable
 fun HomeScreenNavGraph(navController: NavHostController) {
-    NavHost(navController = navController, route = Graph.MAIN, startDestination = "") {}
+    NavHost(navController = navController, route = Graph.MAIN, startDestination = "") {
+
+    }
 }

@@ -26,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.theme.RoundedTop
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -65,36 +66,27 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
         Spacer(modifier = Modifier.height(15.dp))
         SinglenessTextField(text = password, label = "Пароль")
 
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-            Column(
-                modifier =
-                    Modifier.fillMaxWidth()
-                        .clip(RoundedTop)
-                        .background(MaterialTheme.colorScheme.surfaceContainerHigh),
-                verticalArrangement = Arrangement.Bottom,
-                horizontalAlignment = Alignment.CenterHorizontally
+        BottomContainer {
+            Spacer(modifier = Modifier.height(20.dp))
+            SimpleButton(
+                text = TextParameters(value = "Продолжить", size = 16),
+                textAlign = TextAlign.Center
+            ) {}
+
+            Spacer(modifier = Modifier.height(20.dp))
+            SimpleButton(
+                text = TextParameters(value = "Забыли пароль?", size = 16),
+                textAlign = TextAlign.Center,
+                colors =
+                ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                    contentColor = MaterialTheme.colorScheme.primary
+                )
             ) {
-                Spacer(modifier = Modifier.height(20.dp))
-                SimpleButton(
-                    text = TextParameters(value = "Продолжить", size = 16),
-                    textAlign = TextAlign.Center
-                ) {}
-
-                Spacer(modifier = Modifier.height(20.dp))
-                SimpleButton(
-                    text = TextParameters(value = "Забыли пароль?", size = 16),
-                    textAlign = TextAlign.Center,
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                            contentColor = MaterialTheme.colorScheme.primary
-                        )
-                ) {
-                    forgotPassClick()
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
+                forgotPassClick()
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }
