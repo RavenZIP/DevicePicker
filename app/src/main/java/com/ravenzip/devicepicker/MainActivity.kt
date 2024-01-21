@@ -7,7 +7,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.ravenzip.devicepicker.auth.WelcomeScreen
+import androidx.navigation.compose.rememberNavController
+import com.ravenzip.devicepicker.navigation.RootNavigationGraph
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,7 +20,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    WelcomeScreen()
+                    RootNavigationGraph(navController = rememberNavController())
                 }
             }
         }

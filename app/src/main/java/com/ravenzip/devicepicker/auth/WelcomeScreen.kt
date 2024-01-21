@@ -30,7 +30,11 @@ import com.ravenzip.workshop.data.TextParameters
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(
+    registrationClick: () -> Unit,
+    loginClick: () -> Unit,
+    forgotPassClick: () -> Unit
+) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
@@ -42,7 +46,6 @@ fun WelcomeScreen() {
                         text =
                             "Предоставляем более расширенную информацию о каждом устройстве " +
                                 "(нагрев, производительность, качество сборки, надежность)",
-                        isFinal = false
                     )
                 }
                 1 -> {
@@ -52,7 +55,6 @@ fun WelcomeScreen() {
                         text =
                             "Возможность поиска устройства по генерируемым меткам. Благодаря этому " +
                                 "поиск можно сделать точнее или найти необходимое быстрее",
-                        isFinal = false
                     )
                 }
                 2 -> {
@@ -64,7 +66,6 @@ fun WelcomeScreen() {
                                 "хранить один и тот же список избранных товаров на разных устройствах и " +
                                 "возможность писать в техподдержку. Если это пока что не нужно, " +
                                 "то можно зарегистрироваться позднее",
-                        isFinal = false
                     )
                 }
                 3 -> {
@@ -72,7 +73,10 @@ fun WelcomeScreen() {
                         image = painterResource(id = R.drawable.devicepicker),
                         title = "Device Picker",
                         text = "Лучшее приложение для подбора переносных корпоративных устройств",
-                        isFinal = true
+                        isFinal = true,
+                        registrationClick = registrationClick,
+                        loginClick = loginClick,
+                        forgotPassClick = forgotPassClick
                     )
                 }
             }
@@ -90,7 +94,15 @@ fun WelcomeScreen() {
 }
 
 @Composable
-private fun ScreenContent(image: Painter, title: String, text: String, isFinal: Boolean) {
+private fun ScreenContent(
+    image: Painter,
+    title: String,
+    text: String,
+    isFinal: Boolean = false,
+    registrationClick: () -> Unit = {},
+    loginClick: () -> Unit = {},
+    forgotPassClick: () -> Unit = {}
+) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -118,10 +130,14 @@ private fun ScreenContent(image: Painter, title: String, text: String, isFinal: 
             SimpleButton(
                 text = TextParameters("Регистрация", size = 16),
                 textAlign = TextAlign.Center
-            ) {}
+            ) {
+                registrationClick()
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
-            SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {}
+            SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {
+                loginClick()
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
             SimpleButton(
@@ -132,7 +148,9 @@ private fun ScreenContent(image: Painter, title: String, text: String, isFinal: 
                         containerColor = MaterialTheme.colorScheme.surface,
                         contentColor = MaterialTheme.colorScheme.primary
                     )
-            ) {}
+            ) {
+                forgotPassClick()
+            }
         }
     }
 }
