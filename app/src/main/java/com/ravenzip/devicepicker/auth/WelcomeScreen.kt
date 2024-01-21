@@ -33,9 +33,10 @@ import com.ravenzip.workshop.data.TextParameters
 fun WelcomeScreen(
     registrationClick: () -> Unit,
     loginClick: () -> Unit,
-    forgotPassClick: () -> Unit
+    continueWithoutAuthClick: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 4 })
+
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
             when (it) {
@@ -76,7 +77,7 @@ fun WelcomeScreen(
                         isFinal = true,
                         registrationClick = registrationClick,
                         loginClick = loginClick,
-                        forgotPassClick = forgotPassClick
+                        continueWithoutAuthClick = continueWithoutAuthClick
                     )
                 }
             }
@@ -101,7 +102,7 @@ private fun ScreenContent(
     isFinal: Boolean = false,
     registrationClick: () -> Unit = {},
     loginClick: () -> Unit = {},
-    forgotPassClick: () -> Unit = {}
+    continueWithoutAuthClick: () -> Unit = {}
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -149,7 +150,7 @@ private fun ScreenContent(
                         contentColor = MaterialTheme.colorScheme.primary
                     )
             ) {
-                forgotPassClick()
+                continueWithoutAuthClick()
             }
         }
     }

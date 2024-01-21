@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.ui.theme
 
 import android.app.Activity
 import android.os.Build
+import android.view.View
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -10,6 +11,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -37,13 +39,20 @@ fun DevicePickerTheme(
         }
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect {
-            val window = (view.context as Activity).window
-            window.statusBarColor = colorScheme.surface.toArgb()
-            window.navigationBarColor = colorScheme.surface.toArgb()
-            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
-        }
+        SideEffect { setWindowStyle(view, colorScheme.surface, colorScheme.surface, !darkTheme) }
     }
 
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+}
+
+fun setWindowStyle(
+    view: View,
+    statusBarColor: Color,
+    navigationBarColor: Color,
+    isAppearanceLight: Boolean
+) {
+    val window = (view.context as Activity).window
+    window.statusBarColor = statusBarColor.toArgb()
+    window.navigationBarColor = navigationBarColor.toArgb()
+    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isAppearanceLight
 }
