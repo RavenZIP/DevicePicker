@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -126,7 +126,12 @@ private fun ScreenContent(image: Painter, title: String, text: String, isFinal: 
             Spacer(modifier = Modifier.height(20.dp))
             SimpleButton(
                 text = TextParameters("Продолжить без регистрации", size = 16),
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                colors =
+                    ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.surface,
+                        contentColor = MaterialTheme.colorScheme.primary
+                    )
             ) {}
         }
     }
