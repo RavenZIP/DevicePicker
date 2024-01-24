@@ -14,8 +14,8 @@ import com.ravenzip.devicepicker.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 
 fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
-    navigation(route = Graph.AUTHENTICATION, startDestination = AuthScreen.Welcome.route) {
-        composable(route = AuthScreen.Welcome.route) {
+    navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
+        composable(route = AuthGraph.WELCOME) {
             setWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -24,12 +24,12 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             )
 
             WelcomeScreen(
-                registrationClick = { navController.navigate(AuthScreen.Registration.route) },
-                loginClick = { navController.navigate(AuthScreen.Login.route) },
-                continueWithoutAuthClick = { navController.navigate(Graph.MAIN) }
+                registrationClick = { navController.navigate(AuthGraph.REGISTRATION) },
+                loginClick = { navController.navigate(AuthGraph.LOGIN) },
+                continueWithoutAuthClick = { navController.navigate(RootGraph.MAIN) }
             )
         }
-        composable(route = AuthScreen.Registration.route) {
+        composable(route = AuthGraph.REGISTRATION) {
             setWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -39,7 +39,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
 
             RegistrationScreen()
         }
-        composable(route = AuthScreen.Login.route) {
+        composable(route = AuthGraph.LOGIN) {
             setWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -47,9 +47,9 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
-            LoginScreen(forgotPassClick = { navController.navigate(AuthScreen.ForgotPass.route) })
+            LoginScreen(forgotPassClick = { navController.navigate(AuthGraph.FORGOT_PASS) })
         }
-        composable(route = AuthScreen.ForgotPass.route) {
+        composable(route = AuthGraph.FORGOT_PASS) {
             setWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -60,14 +60,4 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             ForgotPasswordScreen()
         }
     }
-}
-
-private sealed class AuthScreen(val route: String) {
-    data object Welcome : AuthScreen(route = "WELCOME")
-
-    data object Registration : AuthScreen(route = "REGISTRATION")
-
-    data object Login : AuthScreen(route = "LOGIN")
-
-    data object ForgotPass : AuthScreen(route = "FORGOT PASS")
 }
