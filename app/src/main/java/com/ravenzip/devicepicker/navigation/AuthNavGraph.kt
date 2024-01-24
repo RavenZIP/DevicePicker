@@ -20,7 +20,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surface,
-                isAppearanceLight = isSystemInDarkTheme()
+                isAppearanceLight = !isSystemInDarkTheme()
             )
 
             WelcomeScreen(
@@ -34,7 +34,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                isAppearanceLight = isSystemInDarkTheme()
+                isAppearanceLight = !isSystemInDarkTheme()
             )
 
             RegistrationScreen()
@@ -44,7 +44,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                isAppearanceLight = isSystemInDarkTheme()
+                isAppearanceLight = !isSystemInDarkTheme()
             )
 
             LoginScreen(forgotPassClick = { navController.navigate(AuthScreen.ForgotPass.route) })
