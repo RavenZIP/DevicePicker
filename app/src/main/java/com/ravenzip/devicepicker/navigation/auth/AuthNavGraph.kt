@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation
+package com.ravenzip.devicepicker.navigation.auth
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +11,7 @@ import com.ravenzip.devicepicker.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.auth.LoginScreen
 import com.ravenzip.devicepicker.auth.RegistrationScreen
 import com.ravenzip.devicepicker.auth.WelcomeScreen
+import com.ravenzip.devicepicker.navigation.root.RootGraph
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 
 fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
@@ -54,7 +55,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                isAppearanceLight = isSystemInDarkTheme()
+                isAppearanceLight = !isSystemInDarkTheme()
             )
 
             ForgotPasswordScreen()

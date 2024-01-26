@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation
+package com.ravenzip.devicepicker.navigation.root
 
 object RootGraph {
     const val ROOT = "ROOT"

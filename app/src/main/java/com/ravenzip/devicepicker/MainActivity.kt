@@ -8,7 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.navigation.RootNavigationGraph
+import com.ravenzip.devicepicker.navigation.root.RootNavigationGraph
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {

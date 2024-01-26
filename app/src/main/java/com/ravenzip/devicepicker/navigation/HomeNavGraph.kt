@@ -9,6 +9,7 @@ import com.ravenzip.devicepicker.main.FavouritesScreen
 import com.ravenzip.devicepicker.main.HomeScreen
 import com.ravenzip.devicepicker.main.SearchScreen
 import com.ravenzip.devicepicker.main.UserProfileScreen
+import com.ravenzip.devicepicker.navigation.root.RootGraph
 
 @Composable
 fun HomeScreenNavGraph(navController: NavHostController) {
