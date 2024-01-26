@@ -29,24 +29,30 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
@@ -58,8 +64,8 @@ dependencies {
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3:1.2.0-beta02")
-    implementation("com.github.RavenZIP:WorkShop:1.1.1")
+    implementation("androidx.compose.material3:material3:1.2.0-rc01")
+    implementation("com.github.RavenZIP:WorkShop:1.1.2")
 
     implementation("androidx.navigation:navigation-compose:2.7.6")
 
