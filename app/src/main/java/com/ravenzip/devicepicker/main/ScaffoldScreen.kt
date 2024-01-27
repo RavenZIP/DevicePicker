@@ -1,10 +1,6 @@
 package com.ravenzip.devicepicker.main
 
 import android.annotation.SuppressLint
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -14,7 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.navigation.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.HomeScreenNavGraph
-import com.ravenzip.workshop.components.BottomAppBar
+import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
 
@@ -23,14 +19,16 @@ import com.ravenzip.workshop.data.IconParameters
 fun ScaffoldScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         topBar = {},
-        bottomBar = { BottomAppBar(navController = navController, buttonsList = GenerateMenuItems()) }
+        bottomBar = {
+            BottomNavigationBar(navController = navController, buttonsList = generateMenuItems())
+        }
     ) {
         HomeScreenNavGraph(navController = navController)
     }
 }
 
 @Composable
-private fun GenerateMenuItems(): List<BottomNavigationItem> {
+private fun generateMenuItems(): List<BottomNavigationItem> {
     val homeButton =
         BottomNavigationItem(
             label = "Главная",
@@ -43,7 +41,8 @@ private fun GenerateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.isearch), size = 20),
+            icon =
+                IconParameters(value = ImageVector.vectorResource(R.drawable.isearch), size = 20),
             hasNews = false
         )
 
@@ -59,7 +58,8 @@ private fun GenerateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.icompare), size = 20),
+            icon =
+                IconParameters(value = ImageVector.vectorResource(R.drawable.icompare), size = 20),
             hasNews = false
         )
 
