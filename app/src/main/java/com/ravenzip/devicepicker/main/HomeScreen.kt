@@ -3,6 +3,7 @@ package com.ravenzip.devicepicker.main
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,7 +26,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -58,7 +58,10 @@ fun Tovar() {
     ) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
             Text(text = "Заголовок", modifier = Modifier.padding(start = 15.dp))
-            Row(modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState())) {
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Box(
                     modifier =
                         Modifier.padding(start = 15.dp, top = 10.dp, end = 15.dp)
@@ -77,9 +80,9 @@ fun Tovar() {
                 }
                 Box(
                     modifier =
-                    Modifier.padding(top = 10.dp, end = 15.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Modifier.padding(top = 10.dp, end = 15.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 ) {
                     Column(modifier = Modifier.padding(10.dp).width(50.dp)) {
                         Image(
@@ -93,9 +96,9 @@ fun Tovar() {
                 }
                 Box(
                     modifier =
-                    Modifier.padding(top = 10.dp, end = 15.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Modifier.padding(top = 10.dp, end = 15.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 ) {
                     Column(modifier = Modifier.padding(10.dp).width(50.dp)) {
                         Image(
@@ -109,9 +112,9 @@ fun Tovar() {
                 }
                 Box(
                     modifier =
-                    Modifier.padding(top = 10.dp, end = 15.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerHighest)
+                        Modifier.padding(top = 10.dp, end = 15.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHighest)
                 ) {
                     Column(modifier = Modifier.padding(10.dp).width(50.dp)) {
                         Image(
