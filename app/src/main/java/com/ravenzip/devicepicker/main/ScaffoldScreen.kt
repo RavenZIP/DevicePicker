@@ -14,7 +14,6 @@ import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ScaffoldScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
@@ -23,7 +22,7 @@ fun ScaffoldScreen(navController: NavHostController = rememberNavController()) {
             BottomNavigationBar(navController = navController, buttonsList = generateMenuItems())
         }
     ) {
-        HomeScreenNavGraph(navController = navController)
+        HomeScreenNavGraph(navController = navController, padding = it)
     }
 }
 
