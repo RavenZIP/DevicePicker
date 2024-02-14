@@ -15,18 +15,30 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.firebase.reloadUser
+import com.ravenzip.devicepicker.firebase.signInAnonymously
+import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -36,6 +48,9 @@ fun WelcomeScreen(
     continueWithoutAuthClick: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 4 })
+    val alertDialogIsShown = remember { mutableStateOf(false) }
+    val isLoading = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
@@ -77,7 +92,7 @@ fun WelcomeScreen(
                         isFinal = true,
                         registrationClick = registrationClick,
                         loginClick = loginClick,
-                        continueWithoutAuthClick = continueWithoutAuthClick
+                        continueWithoutAuthClick = { alertDialogIsShown.value = true }
                     )
                 }
             }
@@ -91,6 +106,39 @@ fun WelcomeScreen(
                 width = 20
             )
         }
+    }
+
+    if (alertDialogIsShown.value) {
+        AlertDialog(
+            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.sign_in)),
+            title = TextParameters("Вход без регистрации", size = 22),
+            text =
+                TextParameters(
+                    "Вы выполняете вход без регистрации. Это значит, " +
+                        "что вы потеряете свой список избранных в случае переустановки приложения, " +
+                        "не сможете оставлять отзывы и оценки. " +
+                        "По истечению месяца ваш аккаунт будет деактивирован!",
+                    size = 14
+                ),
+            onDismissText = TextParameters("Назад", size = 14),
+            onConfirmationText = TextParameters("Продолжить", size = 14),
+            onDismiss = { alertDialogIsShown.value = false },
+            onConfirmation = {
+                scope.launch(Dispatchers.Main) {
+                    isLoading.value = true
+                    reloadUser()
+                    signInAnonymously()
+
+                    isLoading.value = false
+                    alertDialogIsShown.value = false
+                    continueWithoutAuthClick()
+                }
+            }
+        )
+    }
+
+    if (isLoading.value) {
+        Spinner(text = TextParameters(value = "Авторизация...", size = 16))
     }
 }
 

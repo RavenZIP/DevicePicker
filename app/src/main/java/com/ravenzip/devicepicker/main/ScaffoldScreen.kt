@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.main
 
-import android.annotation.SuppressLint
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -32,7 +31,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Главная",
             route = BottomBarGraph.HOME,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.ihome), size = 20),
+            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
             hasNews = false
         )
 
@@ -41,7 +40,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
             icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.isearch), size = 20),
+                IconParameters(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
             hasNews = false
         )
 
@@ -49,7 +48,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.iheart), size = 20),
+            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
             hasNews = false
         )
 
@@ -58,7 +57,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
             icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.icompare), size = 20),
+                IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
             hasNews = false
         )
 
@@ -66,7 +65,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.iuser), size = 20),
+            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
             hasNews = false
         )
 
