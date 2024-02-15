@@ -3,6 +3,7 @@ package com.ravenzip.devicepicker.navigation.auth
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalView
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -27,7 +28,14 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             WelcomeScreen(
                 registrationClick = { navController.navigate(AuthGraph.REGISTRATION) },
                 loginClick = { navController.navigate(AuthGraph.LOGIN) },
-                continueWithoutAuthClick = { navController.navigate(RootGraph.MAIN) }
+                continueWithoutAuthClick = {
+                    // Для того, чтобы перейти на главный экран и при этом невозможно было вернуться назад
+                    navController.navigate(RootGraph.MAIN) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable(route = AuthGraph.REGISTRATION) {
