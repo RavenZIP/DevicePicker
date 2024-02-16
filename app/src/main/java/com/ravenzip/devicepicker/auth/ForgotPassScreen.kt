@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -74,20 +73,16 @@ fun ForgotPasswordScreen() {
                     value = "Длиннющий текст описания карточки, чтобы увидеть как она выглядит",
                     size = 14
                 ),
-            colors =
-                CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                    contentColor = LocalContentColor.current
-                )
+            colors = getDefaultColors()
         )
+    }
 
-        BottomContainer {
-            Spacer(modifier = Modifier.height(20.dp))
-            SimpleButton(
-                text = TextParameters(value = "Продолжить", size = 16),
-                textAlign = TextAlign.Center
-            ) {}
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+    BottomContainer {
+        Spacer(modifier = Modifier.height(20.dp))
+        SimpleButton(
+            text = TextParameters(value = "Продолжить", size = 16),
+            textAlign = TextAlign.Center
+        ) {}
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }

@@ -32,7 +32,7 @@ suspend fun signInAnonymously(): AuthResult? {
     }
 }
 
-suspend fun logout(){
+suspend fun logout() {
     auth.signOut()
     reloadUser()
 }
