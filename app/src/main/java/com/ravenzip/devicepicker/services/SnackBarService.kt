@@ -5,6 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.ui.theme.errorColor
+import com.ravenzip.devicepicker.ui.theme.successColor
+import com.ravenzip.devicepicker.ui.theme.warningColor
 import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.SnackBarVisualsExtended
 
@@ -23,10 +26,7 @@ fun InitializeSnackBarIcons() {
 
 suspend fun SnackbarHostState.showMessage(message: String) {
     this.showSnackbar(
-        SnackBarVisualsExtended(
-            message = message,
-            icon = IconParameters(value = default)
-        )
+        SnackBarVisualsExtended(message = message, icon = IconParameters(value = default))
     )
 }
 
@@ -34,7 +34,7 @@ suspend fun SnackbarHostState.showDone(message: String) {
     this.showSnackbar(
         SnackBarVisualsExtended(
             message = message,
-            icon = IconParameters(value = done)
+            icon = IconParameters(value = done, color = successColor)
         )
     )
 }
@@ -43,7 +43,7 @@ suspend fun SnackbarHostState.showWarning(message: String) {
     this.showSnackbar(
         SnackBarVisualsExtended(
             message = message,
-            icon = IconParameters(value = warning)
+            icon = IconParameters(value = warning, color = warningColor)
         )
     )
 }
@@ -52,7 +52,7 @@ suspend fun SnackbarHostState.showError(message: String) {
     this.showSnackbar(
         SnackBarVisualsExtended(
             message = message,
-            icon = IconParameters(value = error)
+            icon = IconParameters(value = error, color = errorColor)
         )
     )
 }

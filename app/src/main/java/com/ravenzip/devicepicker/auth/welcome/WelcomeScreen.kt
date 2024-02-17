@@ -117,11 +117,12 @@ fun WelcomeScreen(
                     isLoading.value = true
                     reloadUser()
 
-                    if (logInAnonymously() !== null) continueWithoutAuthClick()
-                    else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
-
+                    val authResult = logInAnonymously()
                     isLoading.value = false
                     alertDialogIsShown.value = false
+
+                    if (authResult !== null) continueWithoutAuthClick()
+                    else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
                 }
             }
         )
