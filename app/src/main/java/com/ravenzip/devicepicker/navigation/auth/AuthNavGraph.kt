@@ -10,8 +10,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.auth.LoginScreen
-import com.ravenzip.devicepicker.auth.RegistrationScreen
-import com.ravenzip.devicepicker.auth.WelcomeScreen
+import com.ravenzip.devicepicker.auth.register.RegistrationScreen
+import com.ravenzip.devicepicker.auth.welcome.WelcomeScreen
 import com.ravenzip.devicepicker.navigation.root.RootGraph
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 

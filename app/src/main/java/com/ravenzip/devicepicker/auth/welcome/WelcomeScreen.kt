@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth
+package com.ravenzip.devicepicker.auth.welcome
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -58,37 +58,29 @@ fun WelcomeScreen(
                 0 -> {
                     ScreenContent(
                         image = painterResource(id = R.drawable.devices),
-                        title = "Больше информации",
-                        text =
-                            "Предоставляем более расширенную информацию о каждом устройстве " +
-                                "(нагрев, производительность, качество сборки, надежность)",
+                        title = WelcomeEnum.MORE_INFORMATION.title,
+                        text = WelcomeEnum.MORE_INFORMATION.text
                     )
                 }
                 1 -> {
                     ScreenContent(
                         image = painterResource(id = R.drawable.search),
-                        title = "Продвинутый поиск",
-                        text =
-                            "Возможность поиска устройства по генерируемым меткам. Благодаря этому " +
-                                "поиск можно сделать точнее или найти необходимое быстрее",
+                        title = WelcomeEnum.ADVANCED_SEARCH.title,
+                        text = WelcomeEnum.ADVANCED_SEARCH.text,
                     )
                 }
                 2 -> {
                     ScreenContent(
                         image = painterResource(id = R.drawable.time),
-                        title = "Необязательная регистрация",
-                        text =
-                            "Регистрация дает возможность писать отзывы, выставлять оценки, " +
-                                "хранить один и тот же список избранных товаров на разных устройствах и " +
-                                "возможность писать в техподдержку. Если это пока что не нужно, " +
-                                "то можно зарегистрироваться позднее",
+                        title = WelcomeEnum.OPTIONAL_REGISTRATION.title,
+                        text = WelcomeEnum.OPTIONAL_REGISTRATION.text,
                     )
                 }
                 3 -> {
                     ScreenContent(
                         image = painterResource(id = R.drawable.devicepicker),
-                        title = "Device Picker",
-                        text = "Лучшее приложение для подбора переносных корпоративных устройств",
+                        title = WelcomeEnum.DEVICE_PICKER.title,
+                        text = WelcomeEnum.DEVICE_PICKER.text,
                         isFinal = true,
                         registrationClick = registrationClick,
                         loginClick = loginClick,
@@ -111,17 +103,10 @@ fun WelcomeScreen(
     if (alertDialogIsShown.value) {
         AlertDialog(
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.sign_in)),
-            title = TextParameters("Вход без регистрации", size = 22),
-            text =
-                TextParameters(
-                    "Вы выполняете вход без регистрации. Это значит, " +
-                        "что вы потеряете свой список избранных в случае переустановки приложения, " +
-                        "не сможете оставлять отзывы и оценки. " +
-                        "По истечению месяца ваш аккаунт будет деактивирован!",
-                    size = 14
-                ),
-            onDismissText = TextParameters("Назад", size = 14),
-            onConfirmationText = TextParameters("Продолжить", size = 14),
+            title = TextParameters(value = WelcomeEnum.DIALOG_WINDOW.title, size = 22),
+            text = TextParameters(value = WelcomeEnum.DIALOG_WINDOW.text, size = 14),
+            onDismissText = TextParameters(value = "Назад", size = 14),
+            onConfirmationText = TextParameters(value = "Продолжить", size = 14),
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 scope.launch(Dispatchers.Main) {

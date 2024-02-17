@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth
+package com.ravenzip.devicepicker.auth.register
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -24,8 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.GetFields
 import com.ravenzip.devicepicker.ui.components.auth.generateAuthVariants
 import com.ravenzip.devicepicker.ui.components.getDefaultColors
@@ -101,9 +101,9 @@ fun RegistrationScreen() {
 
 private fun getCardText(selectedRegisterVariant: String): String {
     return when (selectedRegisterVariant) {
-        "Электронная почта" -> WithEmailDescription
-        "Телефон" -> WithPhoneDescription
-        "Google аккаунт" -> WithGoogleDescription
+        "Электронная почта" -> RegisterEnum.WITH_EMAIL.value
+        "Телефон" -> RegisterEnum.WITH_PHONE.value
+        "Google аккаунт" -> RegisterEnum.WITH_GOOGLE.value
         else -> ""
     }
 }
