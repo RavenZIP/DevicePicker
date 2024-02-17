@@ -13,6 +13,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -29,11 +30,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.firebase.reloadUser
-import com.ravenzip.devicepicker.firebase.signInAnonymously
+import com.ravenzip.devicepicker.services.logInAnonymously
+import com.ravenzip.devicepicker.services.reloadUser
+import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
@@ -51,6 +54,7 @@ fun WelcomeScreen(
     val alertDialogIsShown = remember { mutableStateOf(false) }
     val isLoading = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize()) {
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
@@ -112,11 +116,12 @@ fun WelcomeScreen(
                 scope.launch(Dispatchers.Main) {
                     isLoading.value = true
                     reloadUser()
-                    signInAnonymously()
+
+                    if (logInAnonymously() !== null) continueWithoutAuthClick()
+                    else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
 
                     isLoading.value = false
                     alertDialogIsShown.value = false
-                    continueWithoutAuthClick()
                 }
             }
         )
@@ -125,6 +130,8 @@ fun WelcomeScreen(
     if (isLoading.value) {
         Spinner(text = TextParameters(value = "Авторизация...", size = 16))
     }
+
+    SnackBar(snackBarHostState = snackBarHostState)
 }
 
 @Composable

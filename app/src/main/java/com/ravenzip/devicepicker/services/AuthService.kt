@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.firebase
+package com.ravenzip.devicepicker.services
 
 import android.util.Log
 import com.google.firebase.auth.AuthResult
@@ -34,7 +34,7 @@ suspend fun reloadUser() {
  *
  * @return [AuthResult] или null
  */
-suspend fun signInAnonymously(): AuthResult? {
+suspend fun logInAnonymously(): AuthResult? {
     return try {
         val result = auth.signInAnonymously().await()
         result
