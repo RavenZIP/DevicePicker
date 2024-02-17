@@ -12,14 +12,14 @@ import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.SnackBarVisualsExtended
 
 private lateinit var default: ImageVector
-private lateinit var done: ImageVector
+private lateinit var success: ImageVector
 private lateinit var warning: ImageVector
 private lateinit var error: ImageVector
 
 @Composable
 fun InitializeSnackBarIcons() {
     default = ImageVector.vectorResource(R.drawable.i_message)
-    done = ImageVector.vectorResource(R.drawable.i_done)
+    success = ImageVector.vectorResource(R.drawable.i_success)
     warning = ImageVector.vectorResource(R.drawable.i_warning)
     error = ImageVector.vectorResource(R.drawable.i_error)
 }
@@ -30,11 +30,11 @@ suspend fun SnackbarHostState.showMessage(message: String) {
     )
 }
 
-suspend fun SnackbarHostState.showDone(message: String) {
+suspend fun SnackbarHostState.showSuccess(message: String) {
     this.showSnackbar(
         SnackBarVisualsExtended(
             message = message,
-            icon = IconParameters(value = done, color = successColor)
+            icon = IconParameters(value = success, color = successColor)
         )
     )
 }
