@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.components
+package com.ravenzip.devicepicker.ui.components.default
 
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults

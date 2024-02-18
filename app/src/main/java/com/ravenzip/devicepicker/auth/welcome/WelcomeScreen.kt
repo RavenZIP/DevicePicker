@@ -33,6 +33,7 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.services.logInAnonymously
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.showError
+import com.ravenzip.devicepicker.ui.components.default.getInverseColors
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
@@ -96,7 +97,7 @@ fun WelcomeScreen(
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             HorizontalPagerIndicator(
                 pagerState,
-                MaterialTheme.colorScheme.primary.copy(0.5f),
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 MaterialTheme.colorScheme.primary,
                 height = 10,
                 width = 20
@@ -185,11 +186,7 @@ private fun ScreenContent(
             SimpleButton(
                 text = TextParameters("Продолжить без регистрации", size = 16),
                 textAlign = TextAlign.Center,
-                colors =
-                    ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.surface,
-                        contentColor = MaterialTheme.colorScheme.primary
-                    )
+                colors = getInverseColors()
             ) {
                 continueWithoutAuthClick()
             }

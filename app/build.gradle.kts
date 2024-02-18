@@ -72,7 +72,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
 
     //Библиотека кастомных элементов
-    implementation("com.github.RavenZIP:WorkShop:1.2.4")
+    implementation("com.github.RavenZIP:WorkShop:1.2.5")
 
     //Навигация
     implementation("androidx.navigation:navigation-compose:2.7.7")

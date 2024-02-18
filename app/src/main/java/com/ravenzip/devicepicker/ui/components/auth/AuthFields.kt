@@ -10,20 +10,19 @@ import androidx.compose.ui.unit.dp
 import com.ravenzip.workshop.components.SinglenessTextField
 
 @Composable
-fun GetFields(selectedVariant: () -> String, fields: List<MutableState<String>>) {
+fun GetFields(selectedVariant: () -> AuthEnum, fields: List<MutableState<String>>) {
     when (selectedVariant()) {
-        AuthEnum.EMAIL.value -> {
+        AuthEnum.EMAIL -> {
             SinglenessTextField(text = fields[0], label = "Электронная почта")
 
             Spacer(modifier = Modifier.height(15.dp))
-            SinglenessTextField(text = fields[1], label = "Пароль")
+            SinglenessTextField(text = fields[1], label = "Пароль", isPassword = true)
         }
-        AuthEnum.PHONE.value -> {
+        AuthEnum.PHONE -> {
             SinglenessTextField(text = fields[0], label = "Телефон")
         }
-        AuthEnum.GOOGLE.value -> {
+        AuthEnum.GOOGLE -> {
             Text(text = "Хз че тут пока что")
         }
-        else -> {}
     }
 }

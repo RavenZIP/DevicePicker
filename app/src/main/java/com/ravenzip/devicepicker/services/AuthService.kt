@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.services
 
 import android.util.Log
+import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -20,7 +21,7 @@ fun getUser(): FirebaseUser? {
     return auth.currentUser
 }
 
-/** Проверить, что вход выполнен */
+/** Обновить данные о пользователе */
 suspend fun reloadUser() {
     try {
         auth.currentUser?.reload()?.await()
@@ -74,8 +75,54 @@ suspend fun logInUserWithEmail(email: String, password: String): AuthResult? {
     }
 }
 
+/**
+ * Отправить ссылку на почту для подтверждения регистрации
+ *
+ * @return true - если на почту была отправлена ссылка на подтверждение
+ */
+suspend fun sendEmailVerification(): Boolean {
+    return try {
+        auth.currentUser?.sendEmailVerification()?.await()
+        true
+    } catch (e: FirebaseTooManyRequestsException) {
+        withContext(Dispatchers.Main) {
+            Log.d("EmailVerification", "Слишком часто, попробуйте позднее")
+        }
+        false
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) { Log.d("EmailVerification", "${e.message}") }
+        false
+    }
+}
+
+/**
+ * Проверить, что почта подтверждена
+ *
+ * @return true - если почта подтверждена
+ */
+suspend fun isEmailVerified(): Boolean {
+    reloadUser()
+    return auth.currentUser?.isEmailVerified == true
+}
+
 /** Выполнить выход из аккаунта */
 suspend fun logout() {
     auth.signOut()
     reloadUser()
+}
+
+/**
+ * Удалить аккаунт
+ *
+ * @return true - если аккаунт был удален
+ */
+suspend fun deleteAccount(): Boolean {
+    return try {
+        auth.currentUser?.delete()?.await()
+        reloadUser()
+        true
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
+        false
+    }
 }

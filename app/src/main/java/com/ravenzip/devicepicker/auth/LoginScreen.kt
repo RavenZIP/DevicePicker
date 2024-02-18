@@ -19,11 +19,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.GetFields
 import com.ravenzip.devicepicker.ui.components.auth.generateAuthVariants
-import com.ravenzip.devicepicker.ui.components.getInverseColors
+import com.ravenzip.devicepicker.ui.components.auth.getSelectedVariant
+import com.ravenzip.devicepicker.ui.components.default.getInverseHighColors
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.data.TextParameters
 
@@ -35,9 +36,7 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
     val loginVariants = remember { generateAuthVariants() }
-    val selectedLoginVariant = remember {
-        { loginVariants.first { value -> value.isSelected }.text }
-    }
+    val selectedLoginVariant = remember { { getSelectedVariant(loginVariants) } }
 
     Column(
         modifier =
@@ -80,7 +79,7 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
         SimpleButton(
             text = TextParameters(value = "Забыли пароль?", size = 16),
             textAlign = TextAlign.Center,
-            colors = getInverseColors()
+            colors = getInverseHighColors()
         ) {
             forgotPassClick()
         }
