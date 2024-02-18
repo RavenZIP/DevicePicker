@@ -90,7 +90,8 @@ fun RegistrationScreen() {
         Spacer(modifier = Modifier.height(30.dp))
         GetFields(
             selectedVariant = selectedRegisterVariant,
-            fields = listOf(emailOrPhone, passwordOrCode)
+            fields = listOf(emailOrPhone, passwordOrCode),
+            validation = listOf(isEmailOrPhoneValid.value, isPasswordOrCodeValid.value)
         )
 
         Spacer(modifier = Modifier.height(30.dp))

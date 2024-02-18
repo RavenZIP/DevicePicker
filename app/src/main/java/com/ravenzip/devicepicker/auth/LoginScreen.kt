@@ -61,7 +61,8 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
         Spacer(modifier = Modifier.height(30.dp))
         GetFields(
             selectedVariant = selectedLoginVariant,
-            fields = listOf(emailOrPhone, passwordOrCode)
+            fields = listOf(emailOrPhone, passwordOrCode),
+            validation = listOf()
         )
 
         Spacer(modifier = Modifier.height(30.dp))
