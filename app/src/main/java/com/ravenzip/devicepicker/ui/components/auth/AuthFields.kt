@@ -35,7 +35,7 @@ fun GetFields(
                 text = fields[1],
                 label = "Пароль",
                 leadingIcon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
-                isPassword = true,
+                isHiddenText = true,
                 error = Error(value = !validation[1])
             )
         }
