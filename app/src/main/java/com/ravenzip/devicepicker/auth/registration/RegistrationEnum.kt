@@ -1,6 +1,6 @@
-package com.ravenzip.devicepicker.auth.register
+package com.ravenzip.devicepicker.auth.registration
 
-enum class RegisterEnum(val value: String) {
+enum class RegistrationEnum(val value: String) {
     WITH_EMAIL(
         value =
             "Введите адрес электронной почты и пароль, затем нажмите кнопку \"Продолжить\". " +

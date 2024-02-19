@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -47,9 +46,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
-    registrationClick: () -> Unit,
-    loginClick: () -> Unit,
-    continueWithoutAuthClick: () -> Unit
+    navigateToRegistrationScreen: () -> Unit,
+    navigateToLoginScreen: () -> Unit,
+    navigateToHomeScreen: () -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 4 })
     val alertDialogIsShown = remember { mutableStateOf(false) }
@@ -87,8 +86,8 @@ fun WelcomeScreen(
                         title = WelcomeEnum.DEVICE_PICKER.title,
                         text = WelcomeEnum.DEVICE_PICKER.text,
                         isFinal = true,
-                        registrationClick = registrationClick,
-                        loginClick = loginClick,
+                        navigateToRegistrationScreen = navigateToRegistrationScreen,
+                        navigateToLoginScreen = navigateToLoginScreen,
                         continueWithoutAuthClick = { alertDialogIsShown.value = true }
                     )
                 }
@@ -122,7 +121,7 @@ fun WelcomeScreen(
                     isLoading.value = false
                     alertDialogIsShown.value = false
 
-                    if (authResult !== null) continueWithoutAuthClick()
+                    if (authResult !== null) navigateToHomeScreen()
                     else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
                 }
             }
@@ -142,8 +141,8 @@ private fun ScreenContent(
     title: String,
     text: String,
     isFinal: Boolean = false,
-    registrationClick: () -> Unit = {},
-    loginClick: () -> Unit = {},
+    navigateToRegistrationScreen: () -> Unit = {},
+    navigateToLoginScreen: () -> Unit = {},
     continueWithoutAuthClick: () -> Unit = {}
 ) {
     Column(
@@ -174,12 +173,12 @@ private fun ScreenContent(
                 text = TextParameters("Регистрация", size = 16),
                 textAlign = TextAlign.Center
             ) {
-                registrationClick()
+                navigateToRegistrationScreen()
             }
 
             Spacer(modifier = Modifier.height(20.dp))
             SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {
-                loginClick()
+                navigateToLoginScreen()
             }
 
             Spacer(modifier = Modifier.height(20.dp))

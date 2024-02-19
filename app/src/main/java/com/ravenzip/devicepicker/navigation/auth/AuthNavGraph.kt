@@ -10,7 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.auth.LoginScreen
-import com.ravenzip.devicepicker.auth.register.RegistrationScreen
+import com.ravenzip.devicepicker.auth.registration.RegistrationScreen
 import com.ravenzip.devicepicker.auth.welcome.WelcomeScreen
 import com.ravenzip.devicepicker.navigation.root.RootGraph
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
@@ -26,16 +26,9 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             )
 
             WelcomeScreen(
-                registrationClick = { navController.navigate(AuthGraph.REGISTRATION) },
-                loginClick = { navController.navigate(AuthGraph.LOGIN) },
-                continueWithoutAuthClick = {
-                    // Для того, чтобы перейти на главный экран и при этом невозможно было вернуться назад
-                    navController.navigate(RootGraph.MAIN) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            inclusive = true
-                        }
-                    }
-                }
+                navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
+                navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
+                navigateToHomeScreen = { navigateToHome(navController) }
             )
         }
         composable(route = AuthGraph.REGISTRATION) {
@@ -46,7 +39,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
-            RegistrationScreen()
+            RegistrationScreen(navigateToHomeScreen = { navigateToHome(navController) })
         }
         composable(route = AuthGraph.LOGIN) {
             setWindowStyle(
@@ -56,7 +49,10 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
-            LoginScreen(forgotPassClick = { navController.navigate(AuthGraph.FORGOT_PASS) })
+            LoginScreen(
+                navigateToHomeScreen = { navigateToHome(navController) },
+                navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) }
+            )
         }
         composable(route = AuthGraph.FORGOT_PASS) {
             setWindowStyle(
@@ -68,5 +64,12 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
 
             ForgotPasswordScreen()
         }
+    }
+}
+
+private fun navigateToHome(navController: NavHostController) {
+    // Для того, чтобы перейти на главный экран и при этом невозможно было вернуться назад
+    navController.navigate(RootGraph.MAIN) {
+        popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
     }
 }

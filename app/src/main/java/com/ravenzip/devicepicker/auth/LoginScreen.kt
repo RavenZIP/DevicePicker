@@ -29,9 +29,11 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.data.TextParameters
 
 @Composable
-fun LoginScreen(forgotPassClick: () -> Unit) {
+fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
+    val isEmailOrPhoneValid = remember { mutableStateOf(true) }
+    val isPasswordOrCodeValid = remember { mutableStateOf(true) }
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
@@ -62,7 +64,7 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
         GetFields(
             selectedVariant = selectedLoginVariant,
             fields = listOf(emailOrPhone, passwordOrCode),
-            validation = listOf()
+            validation = listOf(isEmailOrPhoneValid.value, isPasswordOrCodeValid.value)
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -82,7 +84,7 @@ fun LoginScreen(forgotPassClick: () -> Unit) {
             textAlign = TextAlign.Center,
             colors = getInverseHighColors()
         ) {
-            forgotPassClick()
+            navigateToForgotPassScreen()
         }
 
         Spacer(modifier = Modifier.height(20.dp))

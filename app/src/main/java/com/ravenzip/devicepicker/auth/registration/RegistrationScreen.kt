@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth.register
+package com.ravenzip.devicepicker.auth.registration
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -53,10 +53,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegistrationScreen() {
+fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
-    val isEmailOrPhoneValid = remember { mutableStateOf(true) }
     val passwordOrCode = remember { mutableStateOf("") }
+    val isEmailOrPhoneValid = remember { mutableStateOf(true) }
     val isPasswordOrCodeValid = remember { mutableStateOf(true) }
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -136,7 +136,7 @@ fun RegistrationScreen() {
                             createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
                         spinnerText.value = "Отправка письма с подтверждением..."
-                        //TODO необходимо не делать запрос, если isEmailVerified == true
+                        // TODO необходимо не делать запрос, если isEmailVerified == true
                         if (!sendEmailVerification()) {
                             isLoading.value = false
                             snackBarHostState.showWarning(
@@ -155,13 +155,8 @@ fun RegistrationScreen() {
                         }
                         isLoading.value = false
 
-                        if (authResult != null) {
-                            // TODO переход на главный экран
-                        } else {
-                            isLoading.value = false
-                            snackBarHostState.showError("Произошла ошибка при выполнении запроса")
-                            return@launch
-                        }
+                        if (authResult != null) navigateToHomeScreen()
+                        else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
                     }
                     AuthEnum.PHONE -> {}
                     AuthEnum.GOOGLE -> {}
@@ -180,9 +175,9 @@ fun RegistrationScreen() {
 
 private fun getCardText(selectedRegisterVariant: () -> AuthEnum): String {
     return when (selectedRegisterVariant()) {
-        AuthEnum.EMAIL -> RegisterEnum.WITH_EMAIL.value
-        AuthEnum.PHONE -> RegisterEnum.WITH_PHONE.value
-        AuthEnum.GOOGLE -> RegisterEnum.WITH_GOOGLE.value
+        AuthEnum.EMAIL -> RegistrationEnum.WITH_EMAIL.value
+        AuthEnum.PHONE -> RegistrationEnum.WITH_PHONE.value
+        AuthEnum.GOOGLE -> RegistrationEnum.WITH_GOOGLE.value
     }
 }
 
