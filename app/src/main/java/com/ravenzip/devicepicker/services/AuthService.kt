@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -11,6 +12,9 @@ import kotlinx.coroutines.withContext
 
 // Текущие данные об авторизации пользователя
 private val auth: FirebaseAuth = FirebaseAuth.getInstance()
+
+// Результат запроса
+class Result<T>(val value: T?, val error: String?)
 
 /**
  * Получить текущего пользователя
@@ -50,13 +54,25 @@ suspend fun logInAnonymously(): AuthResult? {
  *
  * @return [AuthResult] или null
  */
-suspend fun createUserWithEmail(email: String, password: String): AuthResult? {
+suspend fun createUserWithEmail(email: String, password: String): Result<AuthResult> {
     return try {
         val result = auth.createUserWithEmailAndPassword(email, password).await()
-        result
+        Result(value = result, error = null)
+    } catch (e: FirebaseAuthException) {
+        val error = AuthErrors.getErrorMessage(e)
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "CreateUserWithEmail")
+            Log.d("Error", error)
+        }
+
+        Result(value = null, error = error)
     } catch (e: Exception) {
-        withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-        null
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "CreateUserWithEmail")
+            Log.d("DefaultError", "${e.message}")
+        }
+
+        Result(value = null, error = AuthErrors.ERROR_DEFAULT.value)
     }
 }
 
@@ -80,18 +96,24 @@ suspend fun logInUserWithEmail(email: String, password: String): AuthResult? {
  *
  * @return true - если на почту была отправлена ссылка на подтверждение
  */
-suspend fun sendEmailVerification(): Boolean {
+suspend fun sendEmailVerification(): Result<Boolean> {
     return try {
         auth.currentUser?.sendEmailVerification()?.await()
-        true
+        Result(value = true, error = null)
     } catch (e: FirebaseTooManyRequestsException) {
         withContext(Dispatchers.Main) {
-            Log.d("EmailVerification", "Слишком часто, попробуйте позднее")
+            Log.d("Method", "SendEmailVerification")
+            Log.d("Error", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
         }
-        false
+
+        Result(value = false, error = AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
     } catch (e: Exception) {
-        withContext(Dispatchers.Main) { Log.d("EmailVerification", "${e.message}") }
-        false
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "SendEmailVerification")
+            Log.d("DefaultError", "${e.message}")
+        }
+
+        Result(value = false, error = AuthErrors.ERROR_DEFAULT.value)
     }
 }
 

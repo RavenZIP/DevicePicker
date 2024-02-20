@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.services.createUserWithEmail
 import com.ravenzip.devicepicker.services.deleteAccount
+import com.ravenzip.devicepicker.services.getUser
 import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.isEmailVerified
 import com.ravenzip.devicepicker.services.isPasswordValid
@@ -66,7 +67,7 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
-    val spinnerText = remember { mutableStateOf("") }
+    val spinnerText = remember { mutableStateOf("Регистрация...") }
 
     Column(
         modifier =
@@ -132,16 +133,25 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                         isLoading.value = true
                         reloadUser()
                         spinnerText.value = "Регистрация..."
+
                         val authResult =
                             createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
-                        spinnerText.value = "Отправка письма с подтверждением..."
-                        // TODO необходимо не делать запрос, если isEmailVerified == true
-                        if (!sendEmailVerification()) {
+                        if (authResult.value == null && authResult.error != null) {
                             isLoading.value = false
-                            snackBarHostState.showWarning(
-                                "Слишком частые попытки, попробуйте немного позже"
-                            )
+                            snackBarHostState.showError(authResult.error)
+                            return@launch
+                        }
+
+                        spinnerText.value = "Отправка письма с подтверждением..."
+                        val messageResult = sendEmailVerification()
+                        if (
+                            messageResult.value != null &&
+                                !messageResult.value &&
+                                messageResult.error != null
+                        ) {
+                            isLoading.value = false
+                            snackBarHostState.showWarning(messageResult.error)
                             deleteAccount()
                             return@launch
                         }
@@ -150,13 +160,14 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                         val timer = checkEmailVerificationEverySecondAndGetTimer()
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
-                        if (timer == 0 && isEmailVerified()) {
+                        if (timer == 0 && !isEmailVerified()) {
+                            isLoading.value = false
                             deleteAccount()
+                            return@launch
                         }
-                        isLoading.value = false
 
-                        if (authResult != null) navigateToHomeScreen()
-                        else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
+                        isLoading.value = false
+                        navigateToHomeScreen()
                     }
                     AuthEnum.PHONE -> {}
                     AuthEnum.GOOGLE -> {}
@@ -182,7 +193,7 @@ private fun getCardText(selectedRegisterVariant: () -> AuthEnum): String {
 }
 
 private suspend fun checkEmailVerificationEverySecondAndGetTimer(): Int {
-    var timer = 300 // Время, за которое необходимо зарегистрироваться пользователю
+    var timer = 25 // Время, за которое необходимо зарегистрироваться пользователю
     while (timer > 0) {
         if (isEmailVerified()) {
             timer = 0
