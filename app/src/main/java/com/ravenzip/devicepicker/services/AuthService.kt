@@ -146,6 +146,24 @@ suspend fun isEmailVerified(): Boolean {
     return auth.currentUser?.isEmailVerified == true
 }
 
+/**
+ * Отправить на почту ссылку для сброса пароля
+ *
+ * @return true - ссылка отправлена
+ */
+suspend fun sendPasswordResetEmail(email: String): Boolean {
+    return try {
+        auth.sendPasswordResetEmail(email).await()
+        true
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "SendPasswordResetEmail")
+            Log.d("Exception", "${e.message}")
+        }
+        false
+    }
+}
+
 /** Выполнить выход из аккаунта */
 suspend fun logout() {
     auth.signOut()
