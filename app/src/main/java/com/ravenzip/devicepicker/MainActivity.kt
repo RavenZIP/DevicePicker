@@ -9,7 +9,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.root.RootNavigationGraph
-import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +20,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    InitializeSnackBarIcons()
                     RootNavigationGraph(navController = rememberNavController())
                 }
             }
