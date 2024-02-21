@@ -26,7 +26,10 @@ fun GetFields(
                 text = fields[0],
                 label = "Электронная почта",
                 leadingIcon =
-                    IconParameters(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
+                    IconParameters(
+                        value = ImageVector.vectorResource(R.drawable.i_email),
+                        size = 20
+                    ),
                 error = Error(value = !validation[0])
             )
 
@@ -34,7 +37,8 @@ fun GetFields(
             SinglenessTextField(
                 text = fields[1],
                 label = "Пароль",
-                leadingIcon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
+                leadingIcon =
+                    IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
                 isHiddenText = true,
                 error = Error(value = !validation[1])
             )
@@ -44,7 +48,10 @@ fun GetFields(
                 text = fields[0],
                 label = "Телефон",
                 leadingIcon =
-                    IconParameters(value = ImageVector.vectorResource(R.drawable.i_phone), size = 20),
+                    IconParameters(
+                        value = ImageVector.vectorResource(R.drawable.i_phone),
+                        size = 20
+                    ),
                 error = Error(value = !validation[0])
             )
         }
