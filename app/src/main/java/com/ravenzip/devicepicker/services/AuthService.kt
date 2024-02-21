@@ -62,14 +62,14 @@ suspend fun createUserWithEmail(email: String, password: String): Result<AuthRes
         val error = AuthErrors.getErrorMessage(e)
         withContext(Dispatchers.Main) {
             Log.d("Method", "CreateUserWithEmail")
-            Log.d("Error", error)
+            Log.d("FirebaseAuthException", error)
         }
 
         Result(value = null, error = error)
     } catch (e: Exception) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "CreateUserWithEmail")
-            Log.d("DefaultError", "${e.message}")
+            Log.d("Exception", "${e.message}")
         }
 
         Result(value = null, error = AuthErrors.ERROR_DEFAULT.value)
@@ -81,13 +81,32 @@ suspend fun createUserWithEmail(email: String, password: String): Result<AuthRes
  *
  * @return [AuthResult] или null
  */
-suspend fun logInUserWithEmail(email: String, password: String): AuthResult? {
+suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResult> {
     return try {
         val result = auth.signInWithEmailAndPassword(email, password).await()
-        result
+        Result(value = result, error = null)
+    } catch (e: FirebaseTooManyRequestsException) {
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "LoginUserWithEmail")
+            Log.d("FirebaseTooManyRequestsException", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+        }
+
+        Result(value = null, error = AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+    } catch (e: FirebaseAuthException) {
+        val error = AuthErrors.getErrorMessage(e)
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "LoginUserWithEmail")
+            Log.d("FirebaseAuthException", error)
+        }
+
+        Result(value = null, error = error)
     } catch (e: Exception) {
-        withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-        null
+        withContext(Dispatchers.Main) {
+            Log.d("Method", "LoginUserWithEmail")
+            Log.d("Exception", "${e.message}")
+        }
+
+        Result(value = null, error = AuthErrors.ERROR_DEFAULT.value)
     }
 }
 
@@ -103,14 +122,14 @@ suspend fun sendEmailVerification(): Result<Boolean> {
     } catch (e: FirebaseTooManyRequestsException) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "SendEmailVerification")
-            Log.d("Error", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+            Log.d("FirebaseTooManyRequestsException", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
         }
 
         Result(value = false, error = AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
     } catch (e: Exception) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "SendEmailVerification")
-            Log.d("DefaultError", "${e.message}")
+            Log.d("Exception", "${e.message}")
         }
 
         Result(value = false, error = AuthErrors.ERROR_DEFAULT.value)

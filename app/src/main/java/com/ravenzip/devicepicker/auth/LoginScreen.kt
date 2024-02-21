@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -19,14 +21,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.services.isEmailValid
+import com.ravenzip.devicepicker.services.isPasswordValid
+import com.ravenzip.devicepicker.services.logInUserWithEmail
+import com.ravenzip.devicepicker.services.reloadUser
+import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.auth.AuthEnum
 import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.GetFields
 import com.ravenzip.devicepicker.ui.components.auth.generateAuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.getSelectedVariant
 import com.ravenzip.devicepicker.ui.components.default.getInverseHighColors
 import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.components.SnackBar
+import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.TextParameters
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: () -> Unit) {
@@ -39,6 +51,10 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
     val focusManager = LocalFocusManager.current
     val loginVariants = remember { generateAuthVariants() }
     val selectedLoginVariant = remember { { getSelectedVariant(loginVariants) } }
+    val scope = rememberCoroutineScope()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val isLoading = remember { mutableStateOf(false) }
+    val spinnerText = remember { mutableStateOf("Вход в аккаунт...") }
 
     Column(
         modifier =
@@ -76,7 +92,39 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
         SimpleButton(
             text = TextParameters(value = "Продолжить", size = 16),
             textAlign = TextAlign.Center
-        ) {}
+        ) {
+            scope.launch(Dispatchers.Main) {
+                when (selectedLoginVariant()) {
+                    AuthEnum.EMAIL -> {
+                        isEmailOrPhoneValid.value = isEmailValid(emailOrPhone.value)
+                        isPasswordOrCodeValid.value = isPasswordValid(passwordOrCode.value)
+
+                        if (!isEmailOrPhoneValid.value || !isPasswordOrCodeValid.value) {
+                            snackBarHostState.showError("Проверьте правильность заполнения полей")
+                            return@launch
+                        }
+
+                        isLoading.value = true
+                        reloadUser()
+                        spinnerText.value = "Вход в аккаунт..."
+
+                        val authResult =
+                            logInUserWithEmail(emailOrPhone.value, passwordOrCode.value)
+
+                        if (authResult.value == null && authResult.error != null) {
+                            isLoading.value = false
+                            snackBarHostState.showError(authResult.error)
+                            return@launch
+                        }
+
+                        isLoading.value = false
+                        navigateToHomeScreen()
+                    }
+                    AuthEnum.PHONE -> {}
+                    AuthEnum.GOOGLE -> {}
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
@@ -89,4 +137,10 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
 
         Spacer(modifier = Modifier.height(20.dp))
     }
+
+    if (isLoading.value) {
+        Spinner(text = TextParameters(value = spinnerText.value, size = 16))
+    }
+
+    SnackBar(snackBarHostState = snackBarHostState)
 }

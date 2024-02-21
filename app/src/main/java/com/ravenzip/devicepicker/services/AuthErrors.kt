@@ -5,7 +5,7 @@ import com.google.firebase.auth.FirebaseAuthException
 
 enum class AuthErrors (val value: String) {
     // Ошибки Firebase
-    ERROR_INVALID_CREDENTIAL("Предоставленные учетные данные для проверки подлинности некорректны или срок их действия истек"),
+    ERROR_INVALID_CREDENTIAL("Указанные данные неверны или срок их действия истек"),
     ERROR_INVALID_EMAIL("Некорректный адрес электронной почты!"),
     ERROR_WRONG_PASSWORD("Неверный пароль или пароль не задан!"),
     ERROR_USER_MISMATCH("Предоставленные учетные данные не соответствуют ранее зарегистрированному пользователю"),
