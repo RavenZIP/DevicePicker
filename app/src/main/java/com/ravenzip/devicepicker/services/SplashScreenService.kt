@@ -13,6 +13,7 @@ class SplashScreenService : ViewModel() {
 
     init {
         viewModelScope.launch {
+            reloadUser()
             delay(2000)
             _isLoading.value = false
         }
