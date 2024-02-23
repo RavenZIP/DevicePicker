@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.main
+package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun FavouritesScreen(padding: PaddingValues) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Избранное", fontSize = 25.sp)
     }
 }

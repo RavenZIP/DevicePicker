@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.ui.components.default.getDefaultColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.data.SelectionParameters
@@ -39,14 +40,14 @@ fun AuthVariants(authVariants: SnapshotStateList<SelectionParameters>, title: St
 }
 
 fun generateAuthVariants(): SnapshotStateList<SelectionParameters> {
-    val email = SelectionParameters(isSelected = true, text = AuthEnum.EMAIL.value)
-    val phone = SelectionParameters(isSelected = false, text = AuthEnum.PHONE.value)
-    val google = SelectionParameters(isSelected = false, text = AuthEnum.GOOGLE.value)
+    val email = SelectionParameters(isSelected = true, text = AuthVariantsEnum.EMAIL.value)
+    val phone = SelectionParameters(isSelected = false, text = AuthVariantsEnum.PHONE.value)
+    val google = SelectionParameters(isSelected = false, text = AuthVariantsEnum.GOOGLE.value)
 
     return mutableStateListOf(email, phone, google)
 }
 
-fun getSelectedVariant(registerVariants: SnapshotStateList<SelectionParameters>): AuthEnum {
+fun getSelectedVariant(registerVariants: SnapshotStateList<SelectionParameters>): AuthVariantsEnum {
     val selectedVariantString = registerVariants.first { value -> value.isSelected }.text
-    return AuthEnum.entries.first { it.value === selectedVariantString }
+    return AuthVariantsEnum.entries.first { it.value === selectedVariantString }
 }

@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth.registration
+package com.ravenzip.devicepicker.enums
 
 enum class RegistrationEnum(val value: String) {
     WITH_EMAIL(

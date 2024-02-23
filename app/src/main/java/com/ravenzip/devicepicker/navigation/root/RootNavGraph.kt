@@ -7,8 +7,8 @@ import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ravenzip.devicepicker.main.ScaffoldScreen
 import com.ravenzip.devicepicker.navigation.auth.authNavigationGraph
+import com.ravenzip.devicepicker.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 
 @Composable

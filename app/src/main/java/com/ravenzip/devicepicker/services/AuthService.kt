@@ -6,6 +6,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
+import com.ravenzip.devicepicker.enums.AuthErrorsEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -59,7 +60,7 @@ suspend fun createUserWithEmail(email: String, password: String): Result<AuthRes
         val result = auth.createUserWithEmailAndPassword(email, password).await()
         Result(value = result, error = null)
     } catch (e: FirebaseAuthException) {
-        val error = AuthErrors.getErrorMessage(e)
+        val error = AuthErrorsEnum.getErrorMessage(e)
         withContext(Dispatchers.Main) {
             Log.d("Method", "CreateUserWithEmail")
             Log.d("FirebaseAuthException", error)
@@ -72,7 +73,7 @@ suspend fun createUserWithEmail(email: String, password: String): Result<AuthRes
             Log.d("Exception", "${e.message}")
         }
 
-        Result(value = null, error = AuthErrors.ERROR_DEFAULT.value)
+        Result(value = null, error = AuthErrorsEnum.ERROR_DEFAULT.value)
     }
 }
 
@@ -88,12 +89,12 @@ suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResu
     } catch (e: FirebaseTooManyRequestsException) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "LoginUserWithEmail")
-            Log.d("FirebaseTooManyRequestsException", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+            Log.d("FirebaseTooManyRequestsException", AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         }
 
-        Result(value = null, error = AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+        Result(value = null, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
     } catch (e: FirebaseAuthException) {
-        val error = AuthErrors.getErrorMessage(e)
+        val error = AuthErrorsEnum.getErrorMessage(e)
         withContext(Dispatchers.Main) {
             Log.d("Method", "LoginUserWithEmail")
             Log.d("FirebaseAuthException", error)
@@ -106,7 +107,7 @@ suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResu
             Log.d("Exception", "${e.message}")
         }
 
-        Result(value = null, error = AuthErrors.ERROR_DEFAULT.value)
+        Result(value = null, error = AuthErrorsEnum.ERROR_DEFAULT.value)
     }
 }
 
@@ -122,17 +123,17 @@ suspend fun sendEmailVerification(): Result<Boolean> {
     } catch (e: FirebaseTooManyRequestsException) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "SendEmailVerification")
-            Log.d("FirebaseTooManyRequestsException", AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+            Log.d("FirebaseTooManyRequestsException", AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         }
 
-        Result(value = false, error = AuthErrors.ERROR_TOO_MANY_REQUESTS.value)
+        Result(value = false, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
     } catch (e: Exception) {
         withContext(Dispatchers.Main) {
             Log.d("Method", "SendEmailVerification")
             Log.d("Exception", "${e.message}")
         }
 
-        Result(value = false, error = AuthErrors.ERROR_DEFAULT.value)
+        Result(value = false, error = AuthErrorsEnum.ERROR_DEFAULT.value)
     }
 }
 

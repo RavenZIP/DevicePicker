@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.main
+package com.ravenzip.devicepicker.screens.main
 
 import android.content.ComponentName
 import android.content.Intent

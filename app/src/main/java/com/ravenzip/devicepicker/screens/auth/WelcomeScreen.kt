@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth.welcome
+package com.ravenzip.devicepicker.screens.auth
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.enums.WelcomeEnum
 import com.ravenzip.devicepicker.services.logInAnonymously
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.showError

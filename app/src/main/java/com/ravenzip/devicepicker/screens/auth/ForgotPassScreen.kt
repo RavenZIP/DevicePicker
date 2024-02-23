@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth
+package com.ravenzip.devicepicker.screens.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource

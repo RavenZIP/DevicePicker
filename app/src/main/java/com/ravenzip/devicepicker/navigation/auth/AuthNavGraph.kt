@@ -8,11 +8,11 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ravenzip.devicepicker.auth.ForgotPasswordScreen
-import com.ravenzip.devicepicker.auth.LoginScreen
-import com.ravenzip.devicepicker.auth.registration.RegistrationScreen
-import com.ravenzip.devicepicker.auth.welcome.WelcomeScreen
 import com.ravenzip.devicepicker.navigation.root.RootGraph
+import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
+import com.ravenzip.devicepicker.screens.auth.LoginScreen
+import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
+import com.ravenzip.devicepicker.screens.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 
 fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {

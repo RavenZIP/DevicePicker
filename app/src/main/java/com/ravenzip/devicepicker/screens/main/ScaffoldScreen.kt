@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.main
+package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -48,7 +48,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
+            icon =
+                IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
             hasNews = false
         )
 

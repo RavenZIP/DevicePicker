@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.main
+package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun CompareScreen(padding: PaddingValues) {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-        Text(text = "Сравнение", fontSize = 25.sp)
+fun SearchScreen(padding: PaddingValues) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Поиск", fontSize = 25.sp)
     }
 }

@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.main
+package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

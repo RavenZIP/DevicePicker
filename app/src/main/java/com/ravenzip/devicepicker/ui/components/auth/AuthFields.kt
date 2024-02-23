@@ -10,18 +10,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.data.Error
 import com.ravenzip.workshop.data.IconParameters
 
 @Composable
 fun GetFields(
-    selectedVariant: () -> AuthEnum,
+    selectedVariant: () -> AuthVariantsEnum,
     fields: List<MutableState<String>>,
     validation: List<Boolean>
 ) {
     when (selectedVariant()) {
-        AuthEnum.EMAIL -> {
+        AuthVariantsEnum.EMAIL -> {
             SinglenessTextField(
                 text = fields[0],
                 label = "Электронная почта",
@@ -43,7 +44,7 @@ fun GetFields(
                 error = Error(value = !validation[1])
             )
         }
-        AuthEnum.PHONE -> {
+        AuthVariantsEnum.PHONE -> {
             SinglenessTextField(
                 text = fields[0],
                 label = "Телефон",
@@ -55,7 +56,7 @@ fun GetFields(
                 error = Error(value = !validation[0])
             )
         }
-        AuthEnum.GOOGLE -> {
+        AuthVariantsEnum.GOOGLE -> {
             Text(text = "Хз че тут пока что")
         }
     }

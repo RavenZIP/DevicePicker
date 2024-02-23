@@ -5,12 +5,12 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ravenzip.devicepicker.main.CompareScreen
-import com.ravenzip.devicepicker.main.FavouritesScreen
-import com.ravenzip.devicepicker.main.HomeScreen
-import com.ravenzip.devicepicker.main.SearchScreen
-import com.ravenzip.devicepicker.main.UserProfileScreen
 import com.ravenzip.devicepicker.navigation.root.RootGraph
+import com.ravenzip.devicepicker.screens.main.CompareScreen
+import com.ravenzip.devicepicker.screens.main.FavouritesScreen
+import com.ravenzip.devicepicker.screens.main.HomeScreen
+import com.ravenzip.devicepicker.screens.main.SearchScreen
+import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 
 @Composable
 fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues) {

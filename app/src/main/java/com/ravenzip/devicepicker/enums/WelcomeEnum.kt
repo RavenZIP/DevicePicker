@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.auth.welcome
+package com.ravenzip.devicepicker.enums
 
 enum class WelcomeEnum(val title: String, val text: String) {
     MORE_INFORMATION(

@@ -1,6 +1,6 @@
-package com.ravenzip.devicepicker.ui.components.auth
+package com.ravenzip.devicepicker.enums
 
-enum class AuthEnum(val value: String) {
+enum class AuthVariantsEnum(val value: String) {
     EMAIL(value = "Электронная почта"),
     PHONE(value = "Телефон"),
     GOOGLE(value = "Google аккаунт")
