@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation.root
+package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.ravenzip.devicepicker.navigation.auth.authNavigationGraph
+import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.setWindowStyle
 

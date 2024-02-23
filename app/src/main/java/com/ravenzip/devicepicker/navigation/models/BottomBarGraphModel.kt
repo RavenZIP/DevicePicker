@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation
+package com.ravenzip.devicepicker.navigation.models
 
 object BottomBarGraph {
     const val HOME = "HOME"

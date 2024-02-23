@@ -10,7 +10,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.navigation.root.RootNavigationGraph
+import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.services.SplashScreenService
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme

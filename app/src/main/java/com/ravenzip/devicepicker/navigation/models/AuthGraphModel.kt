@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation.auth
+package com.ravenzip.devicepicker.navigation.models
 
 object AuthGraph {
     const val WELCOME = "WELCOME"

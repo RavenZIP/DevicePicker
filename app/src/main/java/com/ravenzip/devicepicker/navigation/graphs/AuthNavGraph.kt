@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.navigation.auth
+package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -8,7 +8,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.ravenzip.devicepicker.navigation.root.RootGraph
+import com.ravenzip.devicepicker.navigation.models.AuthGraph
+import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
