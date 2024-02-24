@@ -39,20 +39,24 @@ fun DevicePickerTheme(
         }
     val view = LocalView.current
     if (!view.isInEditMode) {
-        SideEffect { setWindowStyle(view, colorScheme.surface, colorScheme.surface, !darkTheme) }
+        SetWindowStyle(view, colorScheme.surface, colorScheme.surface, !darkTheme)
     }
 
     MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
 }
 
-fun setWindowStyle(
+@Composable
+fun SetWindowStyle(
     view: View,
     statusBarColor: Color,
     navigationBarColor: Color,
     isAppearanceLight: Boolean
 ) {
-    val window = (view.context as Activity).window
-    window.statusBarColor = statusBarColor.toArgb()
-    window.navigationBarColor = navigationBarColor.toArgb()
-    WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = isAppearanceLight
+    SideEffect {
+        val window = (view.context as Activity).window
+        window.statusBarColor = statusBarColor.toArgb()
+        window.navigationBarColor = navigationBarColor.toArgb()
+        WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars =
+            isAppearanceLight
+    }
 }

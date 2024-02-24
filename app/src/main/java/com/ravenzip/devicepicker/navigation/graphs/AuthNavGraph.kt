@@ -14,12 +14,12 @@ import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
 import com.ravenzip.devicepicker.screens.auth.WelcomeScreen
-import com.ravenzip.devicepicker.ui.theme.setWindowStyle
+import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 
 fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
         composable(route = AuthGraph.WELCOME) {
-            setWindowStyle(
+            SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surface,
@@ -33,7 +33,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             )
         }
         composable(route = AuthGraph.REGISTRATION) {
-            setWindowStyle(
+            SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -43,7 +43,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             RegistrationScreen(navigateToHomeScreen = { navigateToHome(navController) })
         }
         composable(route = AuthGraph.LOGIN) {
-            setWindowStyle(
+            SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
@@ -56,7 +56,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             )
         }
         composable(route = AuthGraph.FORGOT_PASS) {
-            setWindowStyle(
+            SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
