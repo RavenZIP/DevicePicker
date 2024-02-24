@@ -74,7 +74,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
             title =
@@ -97,7 +97,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
             title =
@@ -120,7 +120,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
             title =
@@ -143,7 +143,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
             title = TextParameters("Выйти", color = MaterialTheme.colorScheme.onSurface, size = 18),
@@ -186,7 +186,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
             title =
@@ -209,7 +209,7 @@ fun UserProfileScreen(padding: PaddingValues) {
             colors = getContainerColor()
         ) {}
 
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 15.dp))
 
         RowIconButton(
             text =
