@@ -6,7 +6,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
-fun getInverseColors(): ButtonColors{
+fun getInverseColors(): ButtonColors {
     return ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.surface,
         contentColor = MaterialTheme.colorScheme.primary
@@ -14,9 +14,14 @@ fun getInverseColors(): ButtonColors{
 }
 
 @Composable
-fun getInverseHighColors(): ButtonColors{
+fun getInverseHighColors(): ButtonColors {
     return ButtonDefaults.buttonColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
         contentColor = MaterialTheme.colorScheme.primary
     )
+}
+
+@Composable
+fun getContainerColor(): ButtonColors {
+    return ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
 }
