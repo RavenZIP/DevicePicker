@@ -18,7 +18,7 @@ private lateinit var error: ImageVector
 
 @Composable
 fun InitializeSnackBarIcons() {
-    default = ImageVector.vectorResource(R.drawable.i_message)
+    default = ImageVector.vectorResource(R.drawable.i_notification)
     success = ImageVector.vectorResource(R.drawable.i_success)
     warning = ImageVector.vectorResource(R.drawable.i_warning)
     error = ImageVector.vectorResource(R.drawable.i_error)
