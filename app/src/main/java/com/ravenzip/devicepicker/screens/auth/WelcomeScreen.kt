@@ -116,7 +116,13 @@ fun WelcomeScreen(
             onConfirmation = {
                 scope.launch(Dispatchers.Main) {
                     isLoading.value = true
-                    reloadUser()
+
+                    val isReloadSuccess = reloadUser()
+                    if (isReloadSuccess.value != true) {
+                        isLoading.value = false
+                        snackBarHostState.showError(isReloadSuccess.error!!)
+                        return@launch
+                    }
 
                     val authResult = logInAnonymously()
                     isLoading.value = false

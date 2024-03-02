@@ -27,11 +27,14 @@ fun getUser(): FirebaseUser? {
 }
 
 /** Обновить данные о пользователе */
-suspend fun reloadUser() {
-    try {
+// TODO: В authService доработать использование метода
+suspend fun reloadUser(): Result<Boolean> {
+    return try {
         auth.currentUser?.reload()?.await()
+        Result(value = true, error = null)
     } catch (e: Exception) {
         withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
+        Result(value = false, error = "Не удалось обновить данные о пользователе")
     }
 }
 

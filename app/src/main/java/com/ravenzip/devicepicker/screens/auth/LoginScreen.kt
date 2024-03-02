@@ -103,17 +103,22 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }
-
                         isLoading.value = true
-                        reloadUser()
-                        spinnerText.value = "Вход в аккаунт..."
 
+                        val isReloadSuccess = reloadUser()
+                        if (isReloadSuccess.value != true) {
+                            isLoading.value = false
+                            snackBarHostState.showError(isReloadSuccess.error!!)
+                            return@launch
+                        }
+
+                        spinnerText.value = "Вход в аккаунт..."
                         val authResult =
                             logInUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
-                        if (authResult.value == null && authResult.error != null) {
+                        if (authResult.value == null) {
                             isLoading.value = false
-                            snackBarHostState.showError(authResult.error)
+                            snackBarHostState.showError(authResult.error!!)
                             return@launch
                         }
 

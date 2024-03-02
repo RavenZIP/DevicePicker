@@ -7,14 +7,13 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
-import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.services.SplashScreenService
-import com.ravenzip.devicepicker.services.getUser
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
@@ -28,13 +27,13 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var startDestination = RootGraph.AUTHENTICATION
-
-                    val splashScreen = installSplashScreen()
-                    splashScreen.setKeepOnScreenCondition { splashScreenService.isLoading.value }
+                    installSplashScreen().setKeepOnScreenCondition {
+                        splashScreenService.isLoading.value
+                    }
                     InitializeSnackBarIcons()
 
-                    if (getUser() !== null) startDestination = RootGraph.MAIN
+                    val startDestination =
+                        splashScreenService.startDestination.collectAsState().value
 
                     RootNavigationGraph(
                         navController = rememberNavController(),

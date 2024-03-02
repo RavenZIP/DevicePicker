@@ -129,29 +129,30 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }
-
                         isLoading.value = true
-                        reloadUser()
-                        spinnerText.value = "Регистрация..."
 
+                        val isReloadSuccess = reloadUser()
+                        if (isReloadSuccess.value != true) {
+                            isLoading.value = false
+                            snackBarHostState.showError(isReloadSuccess.error!!)
+                            return@launch
+                        }
+
+                        spinnerText.value = "Регистрация..."
                         val authResult =
                             createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
-                        if (authResult.value == null && authResult.error != null) {
+                        if (authResult.value == null) {
                             isLoading.value = false
-                            snackBarHostState.showError(authResult.error)
+                            snackBarHostState.showError(authResult.error!!)
                             return@launch
                         }
 
                         spinnerText.value = "Отправка письма с подтверждением..."
                         val messageResult = sendEmailVerification()
-                        if (
-                            messageResult.value != null &&
-                                !messageResult.value &&
-                                messageResult.error != null
-                        ) {
+                        if (messageResult.value != true) {
                             isLoading.value = false
-                            snackBarHostState.showWarning(messageResult.error)
+                            snackBarHostState.showWarning(messageResult.error!!)
                             deleteAccount()
                             return@launch
                         }

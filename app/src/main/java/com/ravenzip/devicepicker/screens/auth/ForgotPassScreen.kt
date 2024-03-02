@@ -114,11 +114,16 @@ fun ForgotPasswordScreen() {
                     snackBarHostState.showError("Проверьте правильность заполнения поля")
                     return@launch
                 }
-
                 isLoading.value = true
-                reloadUser()
-                spinnerText.value = "Отправка ссылки для сброса пароля..."
 
+                val isReloadSuccess = reloadUser()
+                if (isReloadSuccess.value != true) {
+                    isLoading.value = false
+                    snackBarHostState.showError(isReloadSuccess.error!!)
+                    return@launch
+                }
+
+                spinnerText.value = "Отправка ссылки для сброса пароля..."
                 val resetResult = sendPasswordResetEmail(email.value)
                 isLoading.value = false
 
