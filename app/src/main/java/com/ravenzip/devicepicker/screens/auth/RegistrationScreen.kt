@@ -161,7 +161,7 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                         val timer = checkEmailVerificationEverySecondAndGetTimer()
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
-                        if (timer == -1) {
+                        if (timer == 0) {
                             isLoading.value = false
                             deleteAccount()
                             return@launch
