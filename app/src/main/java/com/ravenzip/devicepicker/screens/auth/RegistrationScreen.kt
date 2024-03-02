@@ -26,8 +26,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
-import com.ravenzip.devicepicker.enums.RegistrationEnum
 import com.ravenzip.devicepicker.services.createUserWithEmail
 import com.ravenzip.devicepicker.services.deleteAccount
 import com.ravenzip.devicepicker.services.isEmailValid
@@ -187,9 +187,9 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
 
 private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String {
     return when (selectedRegisterVariant()) {
-        AuthVariantsEnum.EMAIL -> RegistrationEnum.WITH_EMAIL.value
-        AuthVariantsEnum.PHONE -> RegistrationEnum.WITH_PHONE.value
-        AuthVariantsEnum.GOOGLE -> RegistrationEnum.WITH_GOOGLE.value
+        AuthVariantsEnum.EMAIL -> AuthCardEnum.REGISTER_WITH_EMAIL.value
+        AuthVariantsEnum.PHONE -> AuthCardEnum.REGISTER_WITH_PHONE.value
+        AuthVariantsEnum.GOOGLE -> AuthCardEnum.REGISTER_WITH_GOOGLE.value
     }
 }
 

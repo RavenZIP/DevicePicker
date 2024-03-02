@@ -27,6 +27,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.sendPasswordResetEmail
@@ -91,12 +92,8 @@ fun ForgotPasswordScreen() {
                     value = Icons.Outlined.Info,
                     color = MaterialTheme.colorScheme.primary
                 ),
-            title = TextParameters(value = "Заголовок", size = 20),
-            text =
-                TextParameters(
-                    value = "Длиннющий текст описания карточки, чтобы увидеть как она выглядит",
-                    size = 14
-                ),
+            title = TextParameters(value = "Важно!", size = 20),
+            text = TextParameters(value = AuthCardEnum.FORGOT_PASS.value, size = 14),
             colors = getDefaultColors()
         )
     }
