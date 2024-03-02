@@ -36,7 +36,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
-                navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
@@ -46,7 +46,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
-                navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
@@ -59,7 +59,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
-                navigationBarColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 

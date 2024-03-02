@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -89,8 +87,9 @@ fun ForgotPasswordScreen() {
         InfoCard(
             icon =
                 IconParameters(
-                    value = Icons.Outlined.Info,
-                    color = MaterialTheme.colorScheme.primary
+                    value = ImageVector.vectorResource(R.drawable.i_info),
+                    color = MaterialTheme.colorScheme.primary,
+                    size = 20
                 ),
             title = TextParameters(value = "Важно!", size = 20),
             text = TextParameters(value = AuthCardEnum.FORGOT_PASS.value, size = 14),

@@ -20,7 +20,7 @@ fun BottomContainer(content: @Composable () -> Unit) {
             modifier =
                 Modifier.fillMaxWidth()
                     .clip(RoundedTop)
-                    .background(MaterialTheme.colorScheme.surfaceContainerHigh),
+                    .background(MaterialTheme.colorScheme.surfaceContainer),
             verticalArrangement = Arrangement.Bottom,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

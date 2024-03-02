@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -20,12 +18,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.services.createUserWithEmail
@@ -102,8 +103,9 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
         InfoCard(
             icon =
                 IconParameters(
-                    value = Icons.Outlined.Info,
-                    color = MaterialTheme.colorScheme.primary
+                    value = ImageVector.vectorResource(R.drawable.i_info),
+                    color = MaterialTheme.colorScheme.primary,
+                    size = 20
                 ),
             title = TextParameters(value = "Важно!", size = 20),
             text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),

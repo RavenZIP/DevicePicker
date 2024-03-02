@@ -13,10 +13,11 @@ fun getInverseColors(): ButtonColors {
     )
 }
 
+/** Mix - потому что surfaceContainer похож на смесь primary и surface */
 @Composable
-fun getInverseHighColors(): ButtonColors {
+fun getInverseMixColors(): ButtonColors {
     return ButtonDefaults.buttonColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = MaterialTheme.colorScheme.primary
     )
 }

@@ -9,7 +9,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun getDefaultColors(): CardColors {
     return CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+        containerColor = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = LocalContentColor.current
     )
 }

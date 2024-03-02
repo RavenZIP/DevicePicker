@@ -32,7 +32,7 @@ import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.GetFields
 import com.ravenzip.devicepicker.ui.components.auth.generateAuthVariants
 import com.ravenzip.devicepicker.ui.components.auth.getSelectedVariant
-import com.ravenzip.devicepicker.ui.components.default.getInverseHighColors
+import com.ravenzip.devicepicker.ui.components.default.getInverseMixColors
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
@@ -135,7 +135,7 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
         SimpleButton(
             text = TextParameters(value = "Забыли пароль?", size = 16),
             textAlign = TextAlign.Center,
-            colors = getInverseHighColors()
+            colors = getInverseMixColors()
         ) {
             navigateToForgotPassScreen()
         }
