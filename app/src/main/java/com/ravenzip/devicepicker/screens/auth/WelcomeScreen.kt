@@ -120,6 +120,7 @@ fun WelcomeScreen(
                     val isReloadSuccess = reloadUser()
                     if (isReloadSuccess.value != true) {
                         isLoading.value = false
+                        alertDialogIsShown.value = false
                         snackBarHostState.showError(isReloadSuccess.error!!)
                         return@launch
                     }
