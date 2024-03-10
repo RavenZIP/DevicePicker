@@ -50,22 +50,25 @@ dependencies {
 
     // Jetpack Compose
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2024.02.01"))
+    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
 
     // Material 3 элементы
-    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.compose.material3:material3:1.2.1")
 
     // Библиотека кастомных элементов
-    implementation("com.github.RavenZIP:WorkShop:1.2.9")
+    implementation("com.github.RavenZIP:WorkShop:1.3.3")
 
     // Навигация
     implementation("androidx.navigation:navigation-compose:2.7.7")
 
     // FireBase
-    implementation("com.google.firebase:firebase-auth:22.3.1")
+    implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
+    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
 
     // Заставка при запуске
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")
@@ -74,7 +77,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.01"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.02"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
