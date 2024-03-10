@@ -6,6 +6,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
+import com.ravenzip.devicepicker.data.Result
 import com.ravenzip.devicepicker.enums.AuthErrorsEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -13,9 +14,6 @@ import kotlinx.coroutines.withContext
 
 // Текущие данные об авторизации пользователя
 private val auth: FirebaseAuth = FirebaseAuth.getInstance()
-
-// Результат запроса
-class Result<T>(val value: T?, val error: String?)
 
 /**
  * Получить текущего пользователя
