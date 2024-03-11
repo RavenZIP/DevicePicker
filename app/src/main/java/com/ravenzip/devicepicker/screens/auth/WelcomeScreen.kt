@@ -33,7 +33,7 @@ import com.ravenzip.devicepicker.enums.WelcomeEnum
 import com.ravenzip.devicepicker.services.logInAnonymously
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.ui.components.default.getInverseColors
+import com.ravenzip.devicepicker.ui.components.getInverseColors
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton

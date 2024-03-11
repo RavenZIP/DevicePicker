@@ -25,14 +25,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.sendPasswordResetEmail
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
-import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.components.default.getDefaultColors
+import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField

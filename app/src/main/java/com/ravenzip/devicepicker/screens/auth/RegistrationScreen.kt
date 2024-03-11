@@ -27,6 +27,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.components.AuthVariants
+import com.ravenzip.devicepicker.components.BottomContainer
+import com.ravenzip.devicepicker.components.GetFields
+import com.ravenzip.devicepicker.components.generateAuthVariants
+import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.services.createUserWithEmail
@@ -38,12 +43,7 @@ import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.sendEmailVerification
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
-import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.components.auth.AuthVariants
-import com.ravenzip.devicepicker.ui.components.auth.GetFields
-import com.ravenzip.devicepicker.ui.components.auth.generateAuthVariants
-import com.ravenzip.devicepicker.ui.components.auth.getSelectedVariant
-import com.ravenzip.devicepicker.ui.components.default.getDefaultColors
+import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar

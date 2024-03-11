@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.components.auth
+package com.ravenzip.devicepicker.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height

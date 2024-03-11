@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.components
+package com.ravenzip.devicepicker.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

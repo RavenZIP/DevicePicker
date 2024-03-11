@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.components.auth
+package com.ravenzip.devicepicker.components
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
-import com.ravenzip.devicepicker.ui.components.default.getDefaultColors
+import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.data.SelectionParameters
 

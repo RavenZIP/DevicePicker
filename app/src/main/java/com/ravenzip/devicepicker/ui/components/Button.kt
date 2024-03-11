@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.components.default
+package com.ravenzip.devicepicker.ui.components
 
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
