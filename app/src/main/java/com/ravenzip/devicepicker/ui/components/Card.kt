@@ -13,3 +13,11 @@ fun getDefaultColors(): CardColors {
         contentColor = LocalContentColor.current
     )
 }
+
+@Composable
+fun getDefaultHighestColors(): CardColors {
+    return CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+        contentColor = LocalContentColor.current
+    )
+}
