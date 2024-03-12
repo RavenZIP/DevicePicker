@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -27,12 +28,12 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.enums.AuthCardEnum
+import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.sendPasswordResetEmail
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
-import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -93,7 +94,7 @@ fun ForgotPasswordScreen() {
                 ),
             title = TextParameters(value = "Важно!", size = 20),
             text = TextParameters(value = AuthCardEnum.FORGOT_PASS.value, size = 14),
-            colors = getDefaultColors()
+            colors = CardDefaults.defaultCardColors()
         )
     }
 

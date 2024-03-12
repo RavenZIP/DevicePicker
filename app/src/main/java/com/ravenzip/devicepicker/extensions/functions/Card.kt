@@ -1,23 +1,20 @@
-package com.ravenzip.devicepicker.ui.components
+package com.ravenzip.devicepicker.extensions.functions
 
-import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
 @Composable
-fun getDefaultColors(): CardColors {
-    return CardDefaults.cardColors(
+fun CardDefaults.defaultCardColors() =
+    this.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
         contentColor = LocalContentColor.current
     )
-}
 
 @Composable
-fun getDefaultHighestColors(): CardColors {
-    return CardDefaults.cardColors(
-        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+fun CardDefaults.highestCardColors(alpha: Float = 0.75f) =
+    this.cardColors(
+        containerColor = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha),
         contentColor = LocalContentColor.current
     )
-}

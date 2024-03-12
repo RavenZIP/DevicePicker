@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
-import com.ravenzip.devicepicker.ui.components.getDefaultColors
+import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.data.SelectionParameters
 
@@ -24,7 +24,7 @@ fun AuthVariants(authVariants: SnapshotStateList<SelectionParameters>, title: St
     Card(
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
-        colors = getDefaultColors(),
+        colors = CardDefaults.defaultCardColors(),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
         Spacer(modifier = Modifier.padding(top = 20.dp))

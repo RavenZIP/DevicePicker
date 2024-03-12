@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -34,6 +35,7 @@ import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.createUserWithEmail
 import com.ravenzip.devicepicker.services.deleteAccount
 import com.ravenzip.devicepicker.services.isEmailValid
@@ -43,7 +45,6 @@ import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.sendEmailVerification
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
-import com.ravenzip.devicepicker.ui.components.getDefaultColors
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
@@ -109,7 +110,7 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                 ),
             title = TextParameters(value = "Важно!", size = 20),
             text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
-            colors = getDefaultColors()
+            colors = CardDefaults.defaultCardColors()
         )
 
         Spacer(modifier = Modifier.padding(bottom = 120.dp))

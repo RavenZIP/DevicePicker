@@ -27,12 +27,12 @@ import com.ravenzip.devicepicker.components.GetFields
 import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
 import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.isPasswordValid
 import com.ravenzip.devicepicker.services.logInUserWithEmail
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.ui.components.getInverseMixColors
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner

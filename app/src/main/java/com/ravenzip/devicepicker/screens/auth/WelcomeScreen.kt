@@ -30,10 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.WelcomeEnum
+import com.ravenzip.devicepicker.extensions.functions.getInverseColors
 import com.ravenzip.devicepicker.services.logInAnonymously
 import com.ravenzip.devicepicker.services.reloadUser
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.ui.components.getInverseColors
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton

@@ -27,8 +27,8 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.extensions.functions.getContainerColor
 import com.ravenzip.devicepicker.services.logout
-import com.ravenzip.devicepicker.ui.components.getContainerColor
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
