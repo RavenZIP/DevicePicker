@@ -5,6 +5,8 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
+// TODO переписать на fun ButtonDefaults.buttonColors
+
 @Composable
 fun getInverseColors(): ButtonColors {
     return ButtonDefaults.buttonColors(

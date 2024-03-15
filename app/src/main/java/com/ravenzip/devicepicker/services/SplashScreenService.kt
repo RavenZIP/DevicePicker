@@ -21,6 +21,8 @@ class SplashScreenService : ViewModel() {
                 _startDestination.value = RootGraph.MAIN
             }
 
+            hello()
+
             delay(1000)
             _isLoading.value = false
         }
