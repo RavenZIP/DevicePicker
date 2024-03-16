@@ -67,9 +67,9 @@ dependencies {
     // FireBase
     implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
     implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
-    implementation("com.google.firebase:firebase-firestore-ktx:24.10.3")
-    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
     implementation("com.google.firebase:firebase-database-ktx:20.3.1")
+    implementation("com.google.firebase:firebase-storage-ktx:20.3.0")
+    implementation("com.google.firebase:firebase-config:21.6.3")
 
     // Заставка при запуске
     implementation("androidx.core:core-splashscreen:1.1.0-alpha02")

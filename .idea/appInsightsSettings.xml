@@ -9,9 +9,9 @@
               <option name="connection">
                 <ConnectionSetting>
                   <option name="appId" value="com.ravenzip.devicepicker" />
-                  <option name="mobileSdkAppId" value="1:278075940352:android:54ece3736d90dff06282e5" />
-                  <option name="projectId" value="devicepicker-ee3fe" />
-                  <option name="projectNumber" value="278075940352" />
+                  <option name="mobileSdkAppId" value="1:948324568819:android:1e1d3faa17b8445e8af186" />
+                  <option name="projectId" value="devicepicker-d290d" />
+                  <option name="projectNumber" value="948324568819" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />

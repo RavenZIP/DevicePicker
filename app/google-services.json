@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "278075940352",
-    "project_id": "devicepicker-ee3fe",
-    "storage_bucket": "devicepicker-ee3fe.appspot.com"
+    "project_number": "948324568819",
+    "firebase_url": "https://devicepicker-d290d-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "devicepicker-d290d",
+    "storage_bucket": "devicepicker-d290d.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:278075940352:android:54ece3736d90dff06282e5",
+        "mobilesdk_app_id": "1:948324568819:android:1e1d3faa17b8445e8af186",
         "android_client_info": {
           "package_name": "com.ravenzip.devicepicker"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAsWbfk3PBkRM0qB55nca_IUGw0s_lKmH0"
+          "current_key": "AIzaSyBUfwzO75YsvMt4cjUlB--O4islW3DOtnc"
         }
       ],
       "services": {
