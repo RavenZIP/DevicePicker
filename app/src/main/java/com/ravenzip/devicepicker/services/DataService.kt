@@ -1,53 +1,50 @@
 package com.ravenzip.devicepicker.services
 
 import android.util.Log
+import androidx.compose.ui.graphics.ImageBitmap
 import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
 import com.google.firebase.storage.storage
-import com.ravenzip.devicepicker.data.Device
+import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.data.device.compact.FirebaseDeviceCompact
+import com.ravenzip.devicepicker.extensions.functions.convertToImageBitmap
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
-
-// private val database =
-//    FirebaseFirestore.getInstance()
-//        .collection("devices")
-//        .document("smartphones")
-//        .collection("Redmi")
+import kotlinx.coroutines.withContext
 
 private val database_t = FirebaseDatabase.getInstance().getReference("Devices")
 
 private val storage = Firebase.storage
 
-val devices: MutableList<Device> = mutableListOf()
+val devices: MutableList<DeviceCompact> = mutableListOf()
 
-lateinit var image: ByteArray
-
-suspend fun hello() {
-    //    val test = database.get().await().documents
-    //    test.forEach {
-    //        val item = it.toObject<Device>()
-    //        if (item !== null) {
-    //            devices.add(item)
-    //            Log.d("test", item.toString())
-    //        }
-    //    }
-
-    val test2 = database_t.child("Redmi").get().await().children
-
-    test2.forEach {
-        Log.d("TEST", it.toString())
-        val item = it.getValue<Device>()
+/** Получить список устройств */
+suspend fun getDevicesList() {
+    val itemsList = database_t.child("Redmi").get().await().children
+    itemsList.forEach {
+        val item = it.getValue<FirebaseDeviceCompact>()
         if (item !== null) {
-            devices.add(item)
-            Log.d("test", item.toString())
+            val image = getImage(item)
+            val device = item.convertToDeviceCompact(image)
+            devices.add(device)
         }
     }
+}
 
-    if (devices.isEmpty()) {
-        devices.add(Device())
+suspend fun getImage(data: FirebaseDeviceCompact): ImageBitmap {
+    return try {
+        val image =
+            Firebase.storage
+                .getReference(data.model + data.imageExtension)
+                .getBytes(1024 * 1024)
+                .await()
+
+        image.convertToImageBitmap()
+    } catch (e: Exception) {
+        withContext(Dispatchers.Main) { Log.d("getImage", "${e.message}") }
+        ImageBitmap(724, 1500)
     }
-    getAllImages()
-    image = Firebase.storage.getReference("Redmi Note 7.webp").getBytes(1024 * 1024).await()
 }
 
 /** Получить все изображения из корневой директории */

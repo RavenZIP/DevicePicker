@@ -34,12 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.CustomText
-import com.ravenzip.devicepicker.converters.byteArrayToImageBitmap
 import com.ravenzip.devicepicker.extensions.functions.container
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.services.devices
-import com.ravenzip.devicepicker.services.image
 
 @Composable
 fun HomeScreen(padding: PaddingValues) {
@@ -73,7 +71,7 @@ private fun DeviceCard() {
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
             Image(
-                bitmap = byteArrayToImageBitmap(image),
+                bitmap = devices[0].image,
                 contentDescription = null,
                 modifier =
                     Modifier.container(
@@ -169,7 +167,7 @@ private fun SpecialOfferCard() {
     ) {
         Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
             Image(
-                bitmap = byteArrayToImageBitmap(image),
+                bitmap = devices[0].image,
                 contentDescription = null,
                 modifier =
                     Modifier.container(
