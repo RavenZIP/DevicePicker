@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,13 +35,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.CustomText
-import com.ravenzip.devicepicker.extensions.functions.container
+import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
-import com.ravenzip.devicepicker.services.devices
+import com.ravenzip.devicepicker.extensions.functions.imageContainer
+import com.ravenzip.devicepicker.services.DataService
 
 @Composable
-fun HomeScreen(padding: PaddingValues) {
+fun HomeScreen(padding: PaddingValues, dataService: DataService) {
+    val devices = dataService.devices.collectAsState().value
+
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -50,21 +54,21 @@ fun HomeScreen(padding: PaddingValues) {
             modifier = Modifier.fillMaxWidth(0.9f).padding(top = 20.dp, bottom = 20.dp),
             fontSize = 25.sp
         )
-        CarouselDevices()
+        CarouselDevices(devices)
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices()
+        CarouselDevices(devices)
         Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer()
+        SpecialOfferContainer(devices)
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices()
+        CarouselDevices(devices)
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices()
+        CarouselDevices(devices)
         Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
 @Composable
-private fun DeviceCard() {
+private fun DeviceCard(devices: MutableList<DeviceCompact>) {
     Card(
         modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {},
         colors = CardDefaults.highestCardColors()
@@ -74,10 +78,11 @@ private fun DeviceCard() {
                 bitmap = devices[0].image,
                 contentDescription = null,
                 modifier =
-                    Modifier.container(
+                    Modifier.imageContainer(
                         color = Color.White,
-                        padding = PaddingValues(vertical = 5.dp, horizontal = 25.dp),
-                        width = 55.dp
+                        padding = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+                        width = 80.dp,
+                        height = 80.dp
                     )
             )
             Spacer(modifier = Modifier.padding(top = 5.dp))
@@ -98,7 +103,7 @@ private fun DeviceCard() {
 }
 
 @Composable
-private fun CarouselDevices() {
+private fun CarouselDevices(devices: MutableList<DeviceCompact>) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
             Text(
@@ -112,13 +117,13 @@ private fun CarouselDevices() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard()
+                DeviceCard(devices)
                 Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard()
+                DeviceCard(devices)
                 Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard()
+                DeviceCard(devices)
                 Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard()
+                DeviceCard(devices)
                 Spacer(modifier = Modifier.padding(start = 15.dp))
             }
         }
@@ -126,7 +131,7 @@ private fun CarouselDevices() {
 }
 
 @Composable
-private fun SpecialOfferContainer() {
+private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
         colors = CardDefaults.defaultCardColors()
@@ -149,9 +154,9 @@ private fun SpecialOfferContainer() {
                 Spacer(modifier = Modifier.padding(top = 10.dp))
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                     Spacer(modifier = Modifier.padding(start = 15.dp))
-                    SpecialOfferCard()
+                    SpecialOfferCard(devices)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
-                    SpecialOfferCard()
+                    SpecialOfferCard(devices)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
             }
@@ -160,7 +165,7 @@ private fun SpecialOfferContainer() {
 }
 
 @Composable
-private fun SpecialOfferCard() {
+private fun SpecialOfferCard(devices: MutableList<DeviceCompact>) {
     Card(
         modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable {},
         colors = CardDefaults.highestCardColors()
@@ -170,10 +175,11 @@ private fun SpecialOfferCard() {
                 bitmap = devices[0].image,
                 contentDescription = null,
                 modifier =
-                    Modifier.container(
+                    Modifier.imageContainer(
                         color = Color.White,
-                        padding = PaddingValues(vertical = 5.dp, horizontal = 25.dp),
-                        width = 40.dp
+                        padding = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+                        width = 80.dp,
+                        height = 80.dp
                     )
             )
             Column(modifier = Modifier.padding(start = 15.dp)) {

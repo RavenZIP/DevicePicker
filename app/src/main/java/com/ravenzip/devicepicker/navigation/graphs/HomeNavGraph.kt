@@ -12,15 +12,22 @@ import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
+import com.ravenzip.devicepicker.services.DataService
 
 @Composable
-fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues) {
+fun HomeScreenNavGraph(
+    navController: NavHostController,
+    padding: PaddingValues,
+    dataService: DataService
+) {
     NavHost(
         navController = navController,
         route = RootGraph.MAIN,
         startDestination = BottomBarGraph.HOME
     ) {
-        composable(route = BottomBarGraph.HOME) { HomeScreen(padding) }
+        composable(route = BottomBarGraph.HOME) {
+            HomeScreen(padding = padding, dataService = dataService)
+        }
         composable(route = BottomBarGraph.SEARCH) { SearchScreen(padding) }
         composable(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
         composable(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }

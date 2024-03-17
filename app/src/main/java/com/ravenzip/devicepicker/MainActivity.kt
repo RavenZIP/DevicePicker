@@ -10,14 +10,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
+import com.ravenzip.devicepicker.services.DataService
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.services.SplashScreenService
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
-    private val splashScreenService: SplashScreenService by viewModels()
+    private val dataService: DataService by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +31,20 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
+                    // Чтобы не ругался на as T
+                    // По сути ничего страшного именно в данной ситуации нет,
+                    // но as T в общем-то не очень хорошая затея
+                    @Suppress("Unchecked_cast")
+                    val splashScreenService =
+                        viewModel<SplashScreenService>(
+                            factory =
+                                object : ViewModelProvider.Factory {
+                                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                        return SplashScreenService(dataService) as T
+                                    }
+                                }
+                        )
+
                     installSplashScreen().setKeepOnScreenCondition {
                         splashScreenService.isLoading.value
                     }
@@ -37,7 +55,8 @@ class MainActivity : ComponentActivity() {
 
                     RootNavigationGraph(
                         navController = rememberNavController(),
-                        startDestination = startDestination
+                        startDestination = startDestination,
+                        dataService = dataService
                     )
                 }
             }
