@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.CustomText
-import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.data.device.promotions.Promotions
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.imageContainer
@@ -43,7 +43,8 @@ import com.ravenzip.devicepicker.services.DataService
 
 @Composable
 fun HomeScreen(padding: PaddingValues, dataService: DataService) {
-    val devices = dataService.devices.collectAsState().value
+    val devices = dataService.promotions.collectAsState().value
+    val categories = dataService.categories.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -54,28 +55,23 @@ fun HomeScreen(padding: PaddingValues, dataService: DataService) {
             modifier = Modifier.fillMaxWidth(0.9f).padding(top = 20.dp, bottom = 20.dp),
             fontSize = 25.sp
         )
-        CarouselDevices(devices)
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(devices)
-        Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer(devices)
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(devices)
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(devices)
-        Spacer(modifier = Modifier.height(20.dp))
+        categories.forEach {
+            if (it.type == 0) CarouselDevices(devices, it.name)
+            else SpecialOfferContainer(devices, it.name)
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 
 @Composable
-private fun DeviceCard(devices: MutableList<DeviceCompact>) {
+private fun DeviceCard(device: Promotions) {
     Card(
         modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {},
         colors = CardDefaults.highestCardColors()
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
             Image(
-                bitmap = devices[0].image,
+                bitmap = device.image,
                 contentDescription = null,
                 modifier =
                     Modifier.imageContainer(
@@ -86,8 +82,8 @@ private fun DeviceCard(devices: MutableList<DeviceCompact>) {
                     )
             )
             Spacer(modifier = Modifier.padding(top = 5.dp))
-            CustomText(text = "${devices[0].price} ₽", size = 16, weight = FontWeight.W500)
-            CustomText(text = devices[0].model)
+            CustomText(text = "${device.price} ₽", size = 16, weight = FontWeight.W500)
+            CustomText(text = device.model)
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = ImageVector.vectorResource(R.drawable.i_medal),
@@ -96,18 +92,18 @@ private fun DeviceCard(devices: MutableList<DeviceCompact>) {
                     modifier = Modifier.size(14.dp)
                 )
                 Spacer(modifier = Modifier.padding(start = 7.5.dp))
-                CustomText(text = "${devices[0].rating} (${devices[0].reviewsCount})")
+                CustomText(text = "${device.rating} (${device.reviewsCount})")
             }
         }
     }
 }
 
 @Composable
-private fun CarouselDevices(devices: MutableList<DeviceCompact>) {
+private fun CarouselDevices(devices: MutableList<Promotions>, categoryName: String) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
             Text(
-                text = "Заголовок",
+                text = categoryName,
                 modifier = Modifier.padding(start = 15.dp, bottom = 10.dp),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W500
@@ -117,21 +113,19 @@ private fun CarouselDevices(devices: MutableList<DeviceCompact>) {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard(devices)
-                Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard(devices)
-                Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard(devices)
-                Spacer(modifier = Modifier.padding(start = 15.dp))
-                DeviceCard(devices)
-                Spacer(modifier = Modifier.padding(start = 15.dp))
+                devices.forEach {
+                    if (it.category.name == categoryName) {
+                        DeviceCard(it)
+                        Spacer(modifier = Modifier.padding(start = 15.dp))
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
-private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>) {
+private fun SpecialOfferContainer(devices: MutableList<Promotions>, categoryName: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
         colors = CardDefaults.defaultCardColors()
@@ -146,7 +140,7 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>) {
 
             Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Text(
-                    text = "Заголовок",
+                    text = categoryName,
                     modifier = Modifier.padding(start = 15.dp),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W500
@@ -154,10 +148,12 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>) {
                 Spacer(modifier = Modifier.padding(top = 10.dp))
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                     Spacer(modifier = Modifier.padding(start = 15.dp))
-                    SpecialOfferCard(devices)
-                    Spacer(modifier = Modifier.padding(start = 15.dp))
-                    SpecialOfferCard(devices)
-                    Spacer(modifier = Modifier.padding(start = 15.dp))
+                    devices.forEach {
+                        if (it.category.name == categoryName) {
+                            SpecialOfferCard(devices)
+                            Spacer(modifier = Modifier.padding(start = 15.dp))
+                        }
+                    }
                 }
             }
         }
@@ -165,7 +161,7 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>) {
 }
 
 @Composable
-private fun SpecialOfferCard(devices: MutableList<DeviceCompact>) {
+private fun SpecialOfferCard(devices: MutableList<Promotions>) {
     Card(
         modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable {},
         colors = CardDefaults.highestCardColors()

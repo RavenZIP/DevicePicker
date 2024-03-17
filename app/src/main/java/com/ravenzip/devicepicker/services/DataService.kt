@@ -10,6 +10,9 @@ import com.google.firebase.storage.storage
 import com.ravenzip.devicepicker.data.device.FirebaseImageData
 import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.data.device.compact.FirebaseDeviceCompact
+import com.ravenzip.devicepicker.data.device.promotions.FirebasePromotions
+import com.ravenzip.devicepicker.data.device.promotions.Promotions
+import com.ravenzip.devicepicker.data.device.promotions.PromotionsCategory
 import com.ravenzip.devicepicker.extensions.functions.convertToImageBitmap
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,8 +23,14 @@ import kotlinx.coroutines.withContext
 class DataService : ViewModel() {
     private val databaseInstance = FirebaseDatabase.getInstance()
     private val storage = Firebase.storage
+
     private val _devices = MutableStateFlow(mutableListOf<DeviceCompact>())
+    private val _promotions = MutableStateFlow(mutableListOf<Promotions>())
+    private val _categories = MutableStateFlow(mutableListOf<PromotionsCategory>())
+
     val devices = _devices.asStateFlow()
+    val promotions = _promotions.asStateFlow()
+    val categories = _categories.asStateFlow()
 
     /** Получить список устройств, по которым есть акции и специальные предложения */
     suspend fun getPromotions() {
@@ -29,17 +38,23 @@ class DataService : ViewModel() {
             val database = databaseInstance.getReference("Promotions")
             val itemsList = database.get().await().children
 
-            itemsList.forEach {
-                val item = it.getValue<FirebaseDeviceCompact>()
+            itemsList.forEach { data ->
+                val item = data.getValue<FirebasePromotions>()
                 if (item !== null) {
                     val image = getImage(item.model, item.imageData)
-                    val device = item.convertToDeviceCompact(image)
-                    _devices.value.add(device)
+                    val device = item.convertToPromotions(image)
+                    _promotions.value.add(device)
+
+                    if (_categories.value.find { it.name == item.category.name } == null) {
+                        _categories.value.add(item.category)
+                    }
                 }
             }
+
+            _categories.value.sortBy { it.position }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("getPromotions", "${e.message}") }
-            _devices.value.add(DeviceCompact())
+            _promotions.value.add(Promotions())
         }
     }
 
