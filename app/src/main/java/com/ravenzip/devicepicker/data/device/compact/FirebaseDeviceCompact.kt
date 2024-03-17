@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.data.device.compact
 
 import androidx.compose.ui.graphics.ImageBitmap
-import com.ravenzip.devicepicker.data.device.FirebaseImage
+import com.ravenzip.devicepicker.data.device.FirebaseImageData
 
 /** Компактная модель устройства (Firebase Realtime Database) */
 data class FirebaseDeviceCompact(
@@ -11,7 +11,7 @@ data class FirebaseDeviceCompact(
     override val price: Int,
     override val rating: Double,
     override val reviewsCount: Int,
-    val imageData: FirebaseImage
+    val imageData: FirebaseImageData
 ) : BaseDeviceCompact {
     constructor() :
         this(
@@ -21,7 +21,7 @@ data class FirebaseDeviceCompact(
             price = 0,
             rating = 0.0,
             reviewsCount = 0,
-            imageData = FirebaseImage()
+            imageData = FirebaseImageData()
         )
 
     fun convertToDeviceCompact(image: ImageBitmap): DeviceCompact {

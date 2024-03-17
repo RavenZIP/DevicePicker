@@ -6,7 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
 import com.google.firebase.storage.storage
-import com.ravenzip.devicepicker.data.device.FirebaseImage
+import com.ravenzip.devicepicker.data.device.FirebaseImageData
 import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.data.device.compact.FirebaseDeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.convertToImageBitmap
@@ -33,7 +33,7 @@ suspend fun getDevicesList() {
     }
 }
 
-suspend fun getImage(fileName: String, imageData: FirebaseImage): ImageBitmap {
+suspend fun getImage(fileName: String, imageData: FirebaseImageData): ImageBitmap {
     return try {
         val image =
             Firebase.storage
