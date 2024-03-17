@@ -22,6 +22,7 @@ import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
     private val dataService: DataService by viewModels()
+    private lateinit var splashScreenService: SplashScreenService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     // По сути ничего страшного именно в данной ситуации нет,
                     // но as T в общем-то не очень хорошая затея
                     @Suppress("Unchecked_cast")
-                    val splashScreenService =
+                    splashScreenService =
                         viewModel<SplashScreenService>(
                             factory =
                                 object : ViewModelProvider.Factory {
