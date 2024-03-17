@@ -6,6 +6,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.getValue
 import com.google.firebase.storage.storage
+import com.ravenzip.devicepicker.data.device.FirebaseImage
 import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.data.device.compact.FirebaseDeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.convertToImageBitmap
@@ -25,21 +26,20 @@ suspend fun getDevicesList() {
     itemsList.forEach {
         val item = it.getValue<FirebaseDeviceCompact>()
         if (item !== null) {
-            val image = getImage(item)
+            val image = getImage(item.model, item.imageData)
             val device = item.convertToDeviceCompact(image)
             devices.add(device)
         }
     }
 }
 
-suspend fun getImage(data: FirebaseDeviceCompact): ImageBitmap {
+suspend fun getImage(fileName: String, imageData: FirebaseImage): ImageBitmap {
     return try {
         val image =
             Firebase.storage
-                .getReference(data.model + data.imageExtension)
-                .getBytes(1024 * 1024)
+                .getReference(fileName + imageData.extension)
+                .getBytes(imageData.size)
                 .await()
-
         image.convertToImageBitmap()
     } catch (e: Exception) {
         withContext(Dispatchers.Main) { Log.d("getImage", "${e.message}") }
