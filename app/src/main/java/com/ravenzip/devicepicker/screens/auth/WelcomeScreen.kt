@@ -179,7 +179,6 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(40.dp))
             SimpleButton(
                 text = TextParameters("Регистрация", size = 16),
-                textAlign = TextAlign.Center
             ) {
                 navigateToRegistrationScreen()
             }
@@ -192,7 +191,6 @@ private fun ScreenContent(
             Spacer(modifier = Modifier.height(20.dp))
             SimpleButton(
                 text = TextParameters("Продолжить без регистрации", size = 16),
-                textAlign = TextAlign.Center,
                 colors = getInverseColors()
             ) {
                 continueWithoutAuthClick()

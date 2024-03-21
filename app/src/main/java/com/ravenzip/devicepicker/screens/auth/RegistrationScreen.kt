@@ -24,7 +24,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
@@ -120,7 +119,6 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
             text = TextParameters(value = "Продолжить", size = 16),
-            textAlign = TextAlign.Center
         ) {
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
