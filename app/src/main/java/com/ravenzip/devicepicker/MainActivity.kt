@@ -7,22 +7,23 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
 import com.ravenzip.devicepicker.services.DataService
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.services.SplashScreenService
+import com.ravenzip.devicepicker.services.getUser
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 
 class MainActivity : ComponentActivity() {
     private val dataService: DataService by viewModels()
-    private lateinit var splashScreenService: SplashScreenService
+    private val splashScreenService: SplashScreenService by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,20 +33,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    // Чтобы не ругался на as T
-                    // По сути ничего страшного именно в данной ситуации нет,
-                    // но as T в общем-то не очень хорошая затея
-                    @Suppress("Unchecked_cast")
-                    splashScreenService =
-                        viewModel<SplashScreenService>(
-                            factory =
-                                object : ViewModelProvider.Factory {
-                                    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                        return SplashScreenService(dataService) as T
-                                    }
-                                }
-                        )
-
                     installSplashScreen().setKeepOnScreenCondition {
                         splashScreenService.isLoading.value
                     }
@@ -53,6 +40,42 @@ class MainActivity : ComponentActivity() {
 
                     val startDestination =
                         splashScreenService.startDestination.collectAsState().value
+
+                    // Если пользователь авторизован,
+                    // то параллельно грузим каждую категорию
+                    // TODO: переписать с использованием сторонней библиотеки распараллеливания
+                    if (getUser() !== null) {
+                        val isLoading = remember {
+                            mutableStateListOf(true, true, true, true, true)
+                        }
+
+                        LaunchedEffect(keys = isLoading.toList().toBooleanArray().toTypedArray()) {
+                            if (isLoading[0]) {
+                                dataService.getPopularThisWeek()
+                                isLoading[0] = false
+                            }
+
+                            if (isLoading[1]) {
+                                dataService.getSimilarDevices()
+                                isLoading[1] = false
+                            }
+
+                            if (isLoading[2]) {
+                                dataService.getCompanyBestDevices()
+                                isLoading[2] = false
+                            }
+
+                            if (isLoading[3]) {
+                                dataService.getLowPrice()
+                                isLoading[3] = false
+                            }
+
+                            if (isLoading[4]) {
+                                dataService.getUnknown()
+                                isLoading[4] = false
+                            }
+                        }
+                    }
 
                     RootNavigationGraph(
                         navController = rememberNavController(),
