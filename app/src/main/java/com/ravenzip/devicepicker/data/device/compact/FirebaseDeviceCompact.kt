@@ -24,7 +24,9 @@ data class FirebaseDeviceCompact(
             imageData = FirebaseImageData()
         )
 
-    fun convertToDeviceCompact(image: ImageBitmap): DeviceCompact {
+    fun convertToDeviceCompact(
+        image: ImageBitmap = ImageBitmap(width = 200, height = 100)
+    ): DeviceCompact {
         return DeviceCompact(
             id = this.id,
             type = this.type,

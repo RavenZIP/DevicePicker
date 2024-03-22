@@ -45,10 +45,10 @@ import com.ravenzip.devicepicker.services.DataService
 
 @Composable
 fun HomeScreen(padding: PaddingValues, dataService: DataService) {
-    val popularThisWeek = dataService.popularThisWeek.collectAsState().value
+    val popularThisWeek = mutableListOf(DeviceCompact())
     val similarDevices = dataService.similarDevices.collectAsState().value
     val companyBestDevices = dataService.companyBestDevices.collectAsState().value
-    val lowPrice = dataService.lowPrice.collectAsState().value
+    val lowPrice = mutableListOf(DeviceCompact())
     val unknown = dataService.unknown.collectAsState().value
     val isLoading = dataService.isLoading.collectAsState().value
 
@@ -62,10 +62,9 @@ fun HomeScreen(padding: PaddingValues, dataService: DataService) {
             fontSize = 25.sp
         )
 
-        Log.d("TEST", popularThisWeek.count().toString())
         CarouselDevices(popularThisWeek, "Популярные на этой неделе", isLoading)
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(similarDevices, "На основе просмотренных вами", isLoading)
+        CarouselDevices(lowPrice, "Низкая цена", isLoading)
         Spacer(modifier = Modifier.height(20.dp))
         SpecialOfferContainer(companyBestDevices, "Redmi: лучшие устройства", isLoading)
         Spacer(modifier = Modifier.height(20.dp))
