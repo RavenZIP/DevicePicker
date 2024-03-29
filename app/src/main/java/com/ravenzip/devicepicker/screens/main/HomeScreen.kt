@@ -41,16 +41,18 @@ import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.imageContainer
-import com.ravenzip.devicepicker.services.DataService
+import com.ravenzip.devicepicker.services.LowPriceDevicesService
+import com.ravenzip.devicepicker.services.PopularDevicesService
 
 @Composable
-fun HomeScreen(padding: PaddingValues, dataService: DataService) {
-    val popularThisWeek = mutableListOf(DeviceCompact())
-    val similarDevices = dataService.similarDevices.collectAsState().value
-    val companyBestDevices = dataService.companyBestDevices.collectAsState().value
-    val lowPrice = mutableListOf(DeviceCompact())
-    val unknown = dataService.unknown.collectAsState().value
-    val isLoading = dataService.isLoading.collectAsState().value
+fun HomeScreen(
+    padding: PaddingValues,
+    popularDevicesService: PopularDevicesService,
+    lowPriceDevicesService: LowPriceDevicesService
+) {
+    val popularThisWeek = popularDevicesService.devices.collectAsState().value
+    val lowPrice = lowPriceDevicesService.devices.collectAsState().value
+    val companyBestDevices = mutableListOf(DeviceCompact())
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -62,16 +64,16 @@ fun HomeScreen(padding: PaddingValues, dataService: DataService) {
             fontSize = 25.sp
         )
 
-        CarouselDevices(popularThisWeek, "Популярные на этой неделе", isLoading)
+        CarouselDevices(popularThisWeek, "Популярные на этой неделе")
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(lowPrice, "Низкая цена", isLoading)
+        CarouselDevices(lowPrice, "Низкая цена")
         Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer(companyBestDevices, "Redmi: лучшие устройства", isLoading)
+        SpecialOfferContainer(companyBestDevices, "Redmi: лучшие устройства")
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(lowPrice, "Низкая цена", isLoading)
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(unknown, "Заголовок", isLoading)
-        Spacer(modifier = Modifier.height(20.dp))
+        /// CarouselDevices(lowPrice, "Низкая цена", isLoading)
+        /// Spacer(modifier = Modifier.height(20.dp))
+        /// CarouselDevices(unknown, "Заголовок", isLoading)
+        /// Spacer(modifier = Modifier.height(20.dp))
     }
 }
 
@@ -111,11 +113,7 @@ private fun DeviceCard(device: DeviceCompact) {
 }
 
 @Composable
-private fun CarouselDevices(
-    devices: MutableList<DeviceCompact>,
-    categoryName: String,
-    isLoading: Boolean
-) {
+private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: String) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
             Text(
@@ -139,11 +137,7 @@ private fun CarouselDevices(
 }
 
 @Composable
-private fun SpecialOfferContainer(
-    devices: MutableList<DeviceCompact>,
-    categoryName: String,
-    isLoading: Boolean
-) {
+private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryName: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
         colors = CardDefaults.defaultCardColors()

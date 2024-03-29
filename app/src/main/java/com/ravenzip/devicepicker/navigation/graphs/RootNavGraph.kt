@@ -9,15 +9,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.main.ScaffoldScreen
-import com.ravenzip.devicepicker.services.DataService
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 
 @Composable
-fun RootNavigationGraph(
-    navController: NavHostController,
-    startDestination: String,
-    dataService: DataService
-) {
+fun RootNavigationGraph(navController: NavHostController, startDestination: String) {
     NavHost(
         navController = navController,
         route = RootGraph.ROOT,
@@ -32,7 +27,7 @@ fun RootNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
-            ScaffoldScreen(dataService = dataService)
+            ScaffoldScreen()
         }
     }
 }

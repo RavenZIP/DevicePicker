@@ -9,23 +9,19 @@ import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.navigation.graphs.HomeScreenNavGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
-import com.ravenzip.devicepicker.services.DataService
 import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
 
 @Composable
-fun ScaffoldScreen(
-    navController: NavHostController = rememberNavController(),
-    dataService: DataService
-) {
+fun ScaffoldScreen(navController: NavHostController = rememberNavController()) {
     Scaffold(
         topBar = {},
         bottomBar = {
             BottomNavigationBar(navController = navController, buttonsList = generateMenuItems())
         }
     ) {
-        HomeScreenNavGraph(navController = navController, padding = it, dataService = dataService)
+        HomeScreenNavGraph(navController = navController, padding = it)
     }
 }
 
