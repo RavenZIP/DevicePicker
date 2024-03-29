@@ -6,7 +6,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.data.Result
+import com.ravenzip.devicepicker.data.result.Result
 import com.ravenzip.devicepicker.enums.AuthErrorsEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
