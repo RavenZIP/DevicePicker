@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.screens.main
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -160,7 +159,6 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryN
                 Spacer(modifier = Modifier.padding(top = 10.dp))
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
                     Spacer(modifier = Modifier.padding(start = 15.dp))
-                    Log.d("DEVICES", devices.count().toString())
                     devices.forEach {
                         SpecialOfferCard(it)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
