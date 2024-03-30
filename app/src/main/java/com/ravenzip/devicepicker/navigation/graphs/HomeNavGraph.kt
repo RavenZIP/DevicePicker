@@ -22,6 +22,7 @@ import com.ravenzip.devicepicker.services.LowPriceDevicesService
 import com.ravenzip.devicepicker.services.PopularDevicesService
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
@@ -44,40 +45,37 @@ fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues)
 
             // Получаем текстовую инфорацию по всем категориям
             LaunchedEffect(key1 = isLoading[0]) {
-                if (isLoading[0]) {
-                    flowOf(popularDevicesService.get(), lowPriceDevicesService.get())
-                        .flatMapMerge { it }
-                        .onCompletion {
-                            isLoading[0] = false
-                            isLoading[1] = true
-                            isLoading[2] = true
-                        }
-                        .collect {}
-                }
+                flowOf(popularDevicesService.get(), lowPriceDevicesService.get())
+                    .filter { isLoading[0] }
+                    .flatMapMerge { it }
+                    .onCompletion {
+                        isLoading[0] = false
+                        isLoading[1] = true
+                        isLoading[2] = true
+                    }
+                    .collect {}
             }
 
             // Грузим изображения из первой категории и обновляем модель устройств
             LaunchedEffect(key1 = isLoading[1]) {
-                if (isLoading[1]) {
-                    images
-                        .map { imagesService.getImage(it) }
-                        .asFlow()
-                        .flatMapMerge { it }
-                        .onCompletion { isLoading[1] = false }
-                        .collect { popularDevicesService.setImage(it) }
-                }
+                images
+                    .map { imagesService.getImage(it) }
+                    .asFlow()
+                    .filter { isLoading[1] }
+                    .flatMapMerge { it }
+                    .onCompletion { isLoading[1] = false }
+                    .collect { popularDevicesService.setImage(it) }
             }
 
             // Грузим изображения из второй категории и обновляем модель устройств
             LaunchedEffect(key1 = isLoading[2]) {
-                if (isLoading[2]) {
-                    images2
-                        .map { imagesService.getImage(it) }
-                        .asFlow()
-                        .flatMapMerge { it }
-                        .onCompletion { isLoading[2] = false }
-                        .collect { lowPriceDevicesService.setImage(it) }
-                }
+                images2
+                    .map { imagesService.getImage(it) }
+                    .asFlow()
+                    .filter { isLoading[2] }
+                    .flatMapMerge { it }
+                    .onCompletion { isLoading[2] = false }
+                    .collect { lowPriceDevicesService.setImage(it) }
             }
 
             HomeScreen(
