@@ -1,7 +1,7 @@
 # DevicePicker
 
 <p align="center">
-      <img alt="Logo" src="img/Logo.png" width="100%">
+      <img alt="Logo" src="https://github.com/RavenZIP/DevicePicker/assets/131264945/fdcf514c-d177-429d-b80c-c982ac34a65d" width="100%">
 </p>
 
 <p align="center">
