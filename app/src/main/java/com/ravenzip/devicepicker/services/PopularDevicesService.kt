@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class PopularDevicesService @Inject constructor() : ViewModel() {
     private val databaseRef =
-        FirebaseDatabase.getInstance().getReference("PromotionsNew").child("Popular this week")
+        FirebaseDatabase.getInstance().getReference("Promotions").child("Popular this week")
 
     private val _devices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _firebaseImagesData = MutableStateFlow(mutableListOf<FirebaseImageData>())
