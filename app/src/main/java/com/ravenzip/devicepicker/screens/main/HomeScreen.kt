@@ -40,18 +40,18 @@ import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.imageContainer
-import com.ravenzip.devicepicker.services.LowPriceDevicesService
-import com.ravenzip.devicepicker.services.PopularDevicesService
+import com.ravenzip.devicepicker.services.HomeScreenService
 
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
-    popularDevicesService: PopularDevicesService,
-    lowPriceDevicesService: LowPriceDevicesService
+    homeScreenService: HomeScreenService,
 ) {
-    val popularThisWeek = popularDevicesService.devices.collectAsState().value
-    val lowPrice = lowPriceDevicesService.devices.collectAsState().value
-    val companyBestDevices = mutableListOf(DeviceCompact())
+    val popularDevices = homeScreenService.popularDevices.collectAsState().value
+    val lowPriceDevices = homeScreenService.lowPriceDevices.collectAsState().value
+    val bestOfCompanyDevices = homeScreenService.bestOfCompanyDevices.collectAsState().value
+    val recentlyViewedDevices = homeScreenService.recentlyViewedDevices.collectAsState().value
+    val highPerformanceDevices = homeScreenService.highPerformanceDevices.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -63,16 +63,16 @@ fun HomeScreen(
             fontSize = 25.sp
         )
 
-        CarouselDevices(popularThisWeek, "Популярные на этой неделе")
+        CarouselDevices(popularDevices, "Популярные")
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(lowPrice, "Низкая цена")
+        CarouselDevices(lowPriceDevices, "Низкая цена")
         Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer(companyBestDevices, "Redmi: лучшие устройства")
+        SpecialOfferContainer(bestOfCompanyDevices, "Redmi: лучшие устройства")
         Spacer(modifier = Modifier.height(20.dp))
-        /// CarouselDevices(lowPrice, "Низкая цена", isLoading)
-        /// Spacer(modifier = Modifier.height(20.dp))
-        /// CarouselDevices(unknown, "Заголовок", isLoading)
-        /// Spacer(modifier = Modifier.height(20.dp))
+        CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
+        Spacer(modifier = Modifier.height(20.dp))
+        CarouselDevices(highPerformanceDevices, "Производительные")
+        Spacer(modifier = Modifier.height(20.dp))
     }
 }
 

@@ -6,15 +6,7 @@ class FirebaseDeviceCompactInfo(
     override val model: String,
     override val price: Int,
     override val rating: Double,
-    override val reviewsCount: Int,
+    override val reviewsCount: Int
 ) : BaseDeviceCompact {
-    constructor() :
-        this(
-            id = 0,
-            type = "",
-            model = "",
-            price = 0,
-            rating = 0.0,
-            reviewsCount = 0,
-        )
+    constructor() : this(id = 0, type = "", model = "", price = 0, rating = 0.0, reviewsCount = 0)
 }

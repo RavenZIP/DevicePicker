@@ -4,7 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -17,17 +17,13 @@ import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
+import com.ravenzip.devicepicker.services.DeviceCompactService
+import com.ravenzip.devicepicker.services.HomeScreenService
 import com.ravenzip.devicepicker.services.ImageService
-import com.ravenzip.devicepicker.services.LowPriceDevicesService
-import com.ravenzip.devicepicker.services.PopularDevicesService
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.onCompletion
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues) {
     NavHost(
@@ -36,53 +32,44 @@ fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues)
         startDestination = BottomBarGraph.HOME
     ) {
         composable(route = BottomBarGraph.HOME) {
-            val popularDevicesService = hiltViewModel<PopularDevicesService>()
-            val lowPriceDevicesService = hiltViewModel<LowPriceDevicesService>()
             val imagesService = hiltViewModel<ImageService>()
-            val isLoading = remember { mutableStateListOf(true, false, false, false, false) }
-            val images = popularDevicesService.images.collectAsState().value
-            val images2 = lowPriceDevicesService.images.collectAsState().value
+            val isLoadingDeviceCompact = remember { mutableStateOf(true) }
+            val isLoadingImages = remember { mutableStateOf(false) }
+            val deviceCompactService = hiltViewModel<DeviceCompactService>()
+            val homeScreenService = hiltViewModel<HomeScreenService>()
+            val devices = deviceCompactService.devices.collectAsState().value
+            val images = deviceCompactService.images.collectAsState().value
 
-            // Получаем текстовую инфорацию по всем категориям
-            LaunchedEffect(key1 = isLoading[0]) {
-                flowOf(popularDevicesService.get(), lowPriceDevicesService.get())
-                    .filter { isLoading[0] }
-                    .flatMapMerge { it }
-                    .onCompletion {
-                        isLoading[0] = false
-                        isLoading[1] = true
-                        isLoading[2] = true
-                    }
-                    .collect {}
+            // Получаем компактную модель устройств
+            LaunchedEffect(isLoadingDeviceCompact.value) {
+                if (isLoadingDeviceCompact.value) {
+                    deviceCompactService
+                        .get()
+                        .onCompletion {
+                            isLoadingDeviceCompact.value = false
+                            isLoadingImages.value = true
+                        }
+                        .collect { homeScreenService.setDevicesFromCategories(devices) }
+                }
             }
 
-            // Грузим изображения из первой категории и обновляем модель устройств
-            LaunchedEffect(key1 = isLoading[1]) {
-                images
-                    .map { imagesService.getImage(it) }
-                    .asFlow()
-                    .filter { isLoading[1] }
-                    .flatMapMerge { it }
-                    .onCompletion { isLoading[1] = false }
-                    .collect { popularDevicesService.setImage(it) }
+            // Грузим изображения
+            LaunchedEffect(key1 = isLoadingImages.value) {
+                if (isLoadingImages.value) {
+                    images
+                        .map { imagesService.getImage(it) }
+                        .asFlow()
+                        .flatMapMerge(concurrency = 3) { it }
+                        .onCompletion { isLoadingImages.value = false }
+                        .collect {
+                            homeScreenService.tryToSetImageFromPopularDevices(it)
+                            homeScreenService.tryToSetImageFromLowPriceDevices(it)
+                            homeScreenService.tryToSetImageFromHighPerformanceDevices(it)
+                        }
+                }
             }
 
-            // Грузим изображения из второй категории и обновляем модель устройств
-            LaunchedEffect(key1 = isLoading[2]) {
-                images2
-                    .map { imagesService.getImage(it) }
-                    .asFlow()
-                    .filter { isLoading[2] }
-                    .flatMapMerge { it }
-                    .onCompletion { isLoading[2] = false }
-                    .collect { lowPriceDevicesService.setImage(it) }
-            }
-
-            HomeScreen(
-                padding = padding,
-                popularDevicesService = popularDevicesService,
-                lowPriceDevicesService = lowPriceDevicesService
-            )
+            HomeScreen(padding = padding, homeScreenService = homeScreenService)
         }
         composable(route = BottomBarGraph.SEARCH) { SearchScreen(padding) }
         composable(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
