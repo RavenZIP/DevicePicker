@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.data.device.compact
 
 /** Интерфейс, описывающий общую компактную модель устройства */
-interface BaseDeviceCompact {
+interface IDeviceCompact {
     val id: Int
     val type: String
     val model: String

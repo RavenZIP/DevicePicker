@@ -13,7 +13,7 @@ data class DeviceCompact(
     override val reviewsCount: Int,
     val tags: Tag,
     val image: ImageBitmap
-) : BaseDeviceCompact {
+) : IDeviceCompact {
     constructor() :
         this(
             id = 0,
