@@ -26,49 +26,51 @@ import kotlinx.coroutines.flow.onCompletion
 
 @Composable
 fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues) {
+    val imagesService = hiltViewModel<ImageService>()
+    val isLoadingDeviceCompact = remember { mutableStateOf(true) }
+    val isLoadingImages = remember { mutableStateOf(false) }
+    val deviceCompactService = hiltViewModel<DeviceCompactService>()
+    val homeScreenService = hiltViewModel<HomeScreenService>()
+    val devices = deviceCompactService.devices.collectAsState().value
+    val images = deviceCompactService.images.collectAsState().value
+
+    // Получаем компактную модель устройств
+    // Грузим сразу все устройства, т.к. в дальнейшем компактная
+    // модель будет использоваться для других экранов
+    LaunchedEffect(isLoadingDeviceCompact.value) {
+        if (isLoadingDeviceCompact.value) {
+            deviceCompactService
+                .get()
+                .onCompletion {
+                    isLoadingDeviceCompact.value = false
+                    isLoadingImages.value = true
+                }
+                .collect { homeScreenService.setDevicesFromCategories(devices) }
+        }
+    }
+
+    // Грузим изображения
+    LaunchedEffect(key1 = isLoadingImages.value) {
+        if (isLoadingImages.value) {
+            images
+                .map { imagesService.getImage(it) }
+                .asFlow()
+                .flatMapMerge(concurrency = 3) { it }
+                .onCompletion { isLoadingImages.value = false }
+                .collect {
+                    homeScreenService.tryToSetImageFromPopularDevices(it)
+                    homeScreenService.tryToSetImageFromLowPriceDevices(it)
+                    homeScreenService.tryToSetImageFromHighPerformanceDevices(it)
+                }
+        }
+    }
+
     NavHost(
         navController = navController,
         route = RootGraph.MAIN,
         startDestination = BottomBarGraph.HOME
     ) {
         composable(route = BottomBarGraph.HOME) {
-            val imagesService = hiltViewModel<ImageService>()
-            val isLoadingDeviceCompact = remember { mutableStateOf(true) }
-            val isLoadingImages = remember { mutableStateOf(false) }
-            val deviceCompactService = hiltViewModel<DeviceCompactService>()
-            val homeScreenService = hiltViewModel<HomeScreenService>()
-            val devices = deviceCompactService.devices.collectAsState().value
-            val images = deviceCompactService.images.collectAsState().value
-
-            // Получаем компактную модель устройств
-            LaunchedEffect(isLoadingDeviceCompact.value) {
-                if (isLoadingDeviceCompact.value) {
-                    deviceCompactService
-                        .get()
-                        .onCompletion {
-                            isLoadingDeviceCompact.value = false
-                            isLoadingImages.value = true
-                        }
-                        .collect { homeScreenService.setDevicesFromCategories(devices) }
-                }
-            }
-
-            // Грузим изображения
-            LaunchedEffect(key1 = isLoadingImages.value) {
-                if (isLoadingImages.value) {
-                    images
-                        .map { imagesService.getImage(it) }
-                        .asFlow()
-                        .flatMapMerge(concurrency = 3) { it }
-                        .onCompletion { isLoadingImages.value = false }
-                        .collect {
-                            homeScreenService.tryToSetImageFromPopularDevices(it)
-                            homeScreenService.tryToSetImageFromLowPriceDevices(it)
-                            homeScreenService.tryToSetImageFromHighPerformanceDevices(it)
-                        }
-                }
-            }
-
             HomeScreen(padding = padding, homeScreenService = homeScreenService)
         }
         composable(route = BottomBarGraph.SEARCH) { SearchScreen(padding) }
