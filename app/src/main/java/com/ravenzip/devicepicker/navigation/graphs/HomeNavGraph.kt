@@ -20,12 +20,17 @@ import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.DeviceCompactService
 import com.ravenzip.devicepicker.services.HomeScreenService
 import com.ravenzip.devicepicker.services.ImageService
+import com.ravenzip.devicepicker.services.TopAppBarService
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
 
 @Composable
-fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues) {
+fun HomeScreenNavGraph(
+    navController: NavHostController,
+    padding: PaddingValues,
+    topAppBarService: TopAppBarService
+) {
     val imagesService = hiltViewModel<ImageService>()
     val isLoadingDeviceCompact = remember { mutableStateOf(true) }
     val isLoadingImages = remember { mutableStateOf(false) }
@@ -71,11 +76,28 @@ fun HomeScreenNavGraph(navController: NavHostController, padding: PaddingValues)
         startDestination = BottomBarGraph.HOME
     ) {
         composable(route = BottomBarGraph.HOME) {
+            topAppBarService.setTitle("Главная")
             HomeScreen(padding = padding, homeScreenService = homeScreenService)
         }
-        composable(route = BottomBarGraph.SEARCH) { SearchScreen(padding) }
-        composable(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
-        composable(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
-        composable(route = BottomBarGraph.USER_PROFILE) { UserProfileScreen(padding) }
+
+        composable(route = BottomBarGraph.SEARCH) {
+            topAppBarService.setTitle("Поиск")
+            SearchScreen(padding)
+        }
+
+        composable(route = BottomBarGraph.FAVOURITES) {
+            topAppBarService.setTitle("Избранное")
+            FavouritesScreen(padding)
+        }
+
+        composable(route = BottomBarGraph.COMPARE) {
+            topAppBarService.setTitle("Сравнение")
+            CompareScreen(padding)
+        }
+
+        composable(route = BottomBarGraph.USER_PROFILE) {
+            topAppBarService.setTitle("Профиль")
+            UserProfileScreen(padding)
+        }
     }
 }

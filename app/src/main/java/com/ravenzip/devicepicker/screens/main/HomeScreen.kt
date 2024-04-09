@@ -57,12 +57,7 @@ fun HomeScreen(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Главная",
-            modifier = Modifier.fillMaxWidth(0.9f).padding(top = 20.dp, bottom = 20.dp),
-            fontSize = 25.sp
-        )
-
+        Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(popularDevices, "Популярные")
         Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(lowPriceDevices, "Низкая цена")

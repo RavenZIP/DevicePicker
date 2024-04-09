@@ -2,26 +2,37 @@ package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.navigation.graphs.HomeScreenNavGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
+import com.ravenzip.devicepicker.services.TopAppBarService
 import com.ravenzip.workshop.components.BottomNavigationBar
+import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
 
 @Composable
 fun ScaffoldScreen(navController: NavHostController = rememberNavController()) {
+    val topAppBarService = hiltViewModel<TopAppBarService>()
+    val title = topAppBarService.title.collectAsState().value
+
     Scaffold(
-        topBar = {},
+        topBar = { TopAppBar(title = title) },
         bottomBar = {
             BottomNavigationBar(navController = navController, buttonsList = generateMenuItems())
         }
     ) {
-        HomeScreenNavGraph(navController = navController, padding = it)
+        HomeScreenNavGraph(
+            navController = navController,
+            padding = it,
+            topAppBarService = topAppBarService
+        )
     }
 }
 
