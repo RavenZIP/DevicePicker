@@ -35,13 +35,12 @@ import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.firebase.createUserWithEmail
 import com.ravenzip.devicepicker.services.firebase.deleteAccount
 import com.ravenzip.devicepicker.services.firebase.isEmailVerified
 import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.firebase.sendEmailVerification
-import com.ravenzip.devicepicker.services.isEmailValid
-import com.ravenzip.devicepicker.services.isPasswordValid
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
 import com.ravenzip.workshop.components.InfoCard
@@ -69,6 +68,7 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Регистрация...") }
+    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -123,8 +123,10 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        isEmailOrPhoneValid.value = isEmailValid(emailOrPhone.value)
-                        isPasswordOrCodeValid.value = isPasswordValid(passwordOrCode.value)
+                        isEmailOrPhoneValid.value =
+                            validationService.isEmailValid(emailOrPhone.value)
+                        isPasswordOrCodeValid.value =
+                            validationService.isPasswordValid(passwordOrCode.value)
 
                         if (!isEmailOrPhoneValid.value || !isPasswordOrCodeValid.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")

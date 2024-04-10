@@ -28,9 +28,9 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.firebase.sendPasswordResetEmail
-import com.ravenzip.devicepicker.services.isEmailValid
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
 import com.ravenzip.workshop.components.InfoCard
@@ -54,6 +54,7 @@ fun ForgotPasswordScreen() {
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Отправка ссылки для сброса пароля...") }
+    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -103,7 +104,7 @@ fun ForgotPasswordScreen() {
             text = TextParameters(value = "Продолжить", size = 16),
         ) {
             scope.launch(Dispatchers.Main) {
-                isEmailValid.value = isEmailValid(email.value)
+                isEmailValid.value = validationService.isEmailValid(email.value)
 
                 if (!isEmailValid.value) {
                     snackBarHostState.showError("Проверьте правильность заполнения поля")

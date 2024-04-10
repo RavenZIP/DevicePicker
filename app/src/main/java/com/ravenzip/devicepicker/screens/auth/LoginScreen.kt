@@ -27,10 +27,9 @@ import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
+import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.firebase.logInUserWithEmail
 import com.ravenzip.devicepicker.services.firebase.reloadUser
-import com.ravenzip.devicepicker.services.isEmailValid
-import com.ravenzip.devicepicker.services.isPasswordValid
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
@@ -54,6 +53,7 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Вход в аккаунт...") }
+    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -94,8 +94,10 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
             scope.launch(Dispatchers.Main) {
                 when (selectedLoginVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        isEmailOrPhoneValid.value = isEmailValid(emailOrPhone.value)
-                        isPasswordOrCodeValid.value = isPasswordValid(passwordOrCode.value)
+                        isEmailOrPhoneValid.value =
+                            validationService.isEmailValid(emailOrPhone.value)
+                        isPasswordOrCodeValid.value =
+                            validationService.isPasswordValid(passwordOrCode.value)
 
                         if (!isEmailOrPhoneValid.value || !isPasswordOrCodeValid.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
