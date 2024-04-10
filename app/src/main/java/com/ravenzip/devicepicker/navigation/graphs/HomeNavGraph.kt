@@ -10,6 +10,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ravenzip.devicepicker.enums.TopAppBarEnum
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.main.CompareScreen
@@ -76,27 +77,32 @@ fun HomeScreenNavGraph(
         startDestination = BottomBarGraph.HOME
     ) {
         composable(route = BottomBarGraph.HOME) {
-            topAppBarService.setTitle("Главная")
+            topAppBarService.setText("Главная")
+            topAppBarService.setState(TopAppBarEnum.TopAppBar)
             HomeScreen(padding = padding, homeScreenService = homeScreenService)
         }
 
         composable(route = BottomBarGraph.SEARCH) {
-            topAppBarService.setTitle("Поиск")
+            topAppBarService.setText("Введите текст...")
+            topAppBarService.setState(TopAppBarEnum.SearchBar)
             SearchScreen(padding)
         }
 
         composable(route = BottomBarGraph.FAVOURITES) {
-            topAppBarService.setTitle("Избранное")
+            topAppBarService.setText("Избранное")
+            topAppBarService.setState(TopAppBarEnum.TopAppBar)
             FavouritesScreen(padding)
         }
 
         composable(route = BottomBarGraph.COMPARE) {
-            topAppBarService.setTitle("Сравнение")
+            topAppBarService.setText("Сравнение")
+            topAppBarService.setState(TopAppBarEnum.TopAppBar)
             CompareScreen(padding)
         }
 
         composable(route = BottomBarGraph.USER_PROFILE) {
-            topAppBarService.setTitle("Профиль")
+            topAppBarService.setText("Профиль")
+            topAppBarService.setState(TopAppBarEnum.TopAppBar)
             UserProfileScreen(padding)
         }
     }
