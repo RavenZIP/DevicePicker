@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.services
+package com.ravenzip.devicepicker.services.firebase
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

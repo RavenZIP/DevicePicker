@@ -28,9 +28,9 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.services.firebase.reloadUser
+import com.ravenzip.devicepicker.services.firebase.sendPasswordResetEmail
 import com.ravenzip.devicepicker.services.isEmailValid
-import com.ravenzip.devicepicker.services.reloadUser
-import com.ravenzip.devicepicker.services.sendPasswordResetEmail
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
 import com.ravenzip.workshop.components.InfoCard

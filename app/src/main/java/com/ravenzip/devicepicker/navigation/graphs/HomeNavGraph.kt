@@ -18,10 +18,10 @@ import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.services.DeviceCompactService
 import com.ravenzip.devicepicker.services.HomeScreenService
-import com.ravenzip.devicepicker.services.ImageService
 import com.ravenzip.devicepicker.services.TopAppBarService
+import com.ravenzip.devicepicker.services.firebase.DeviceCompactService
+import com.ravenzip.devicepicker.services.firebase.ImageService
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion

@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.getInverseColors
-import com.ravenzip.devicepicker.services.logInAnonymously
-import com.ravenzip.devicepicker.services.reloadUser
+import com.ravenzip.devicepicker.services.firebase.logInAnonymously
+import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator

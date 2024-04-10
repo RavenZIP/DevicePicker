@@ -3,6 +3,8 @@ package com.ravenzip.devicepicker.services
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.navigation.models.RootGraph
+import com.ravenzip.devicepicker.services.firebase.getUser
+import com.ravenzip.devicepicker.services.firebase.reloadUser
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
