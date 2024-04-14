@@ -49,7 +49,7 @@ fun HomeScreen(
 ) {
     val popularDevices = homeScreenService.popularDevices.collectAsState().value
     val lowPriceDevices = homeScreenService.lowPriceDevices.collectAsState().value
-    val bestOfCompanyDevices = homeScreenService.bestOfCompanyDevices.collectAsState().value
+    val theBestDevices = homeScreenService.theBestDevices.collectAsState().value
     val recentlyViewedDevices = homeScreenService.recentlyViewedDevices.collectAsState().value
     val highPerformanceDevices = homeScreenService.highPerformanceDevices.collectAsState().value
 
@@ -62,7 +62,7 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(lowPriceDevices, "Низкая цена")
         Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer(bestOfCompanyDevices, "Redmi: лучшие устройства")
+        SpecialOfferContainer(theBestDevices, "Redmi: лучшие устройства")
         Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
         Spacer(modifier = Modifier.height(20.dp))

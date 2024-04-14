@@ -14,26 +14,27 @@ class HomeScreenService @Inject constructor() : ViewModel() {
     private val _popularDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _lowPriceDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _highPerformanceDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
-    private val _bestOfCompanyDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
+    private val _theBestDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _recentlyViewedDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
 
     val popularDevices = _popularDevices.asStateFlow()
     val lowPriceDevices = _lowPriceDevices.asStateFlow()
     val highPerformanceDevices = _highPerformanceDevices.asStateFlow()
-    val bestOfCompanyDevices = _bestOfCompanyDevices.asStateFlow()
+    val theBestDevices = _theBestDevices.asStateFlow()
     val recentlyViewedDevices = _recentlyViewedDevices.asStateFlow()
 
     fun setDevicesFromCategories(devices: MutableList<DeviceCompact>) {
         val popularDevices = devices.filter { it.tags.popular }
         val lowPriceDevices = devices.filter { it.tags.lowPrice }
         val highPerformance = devices.filter { it.tags.highPerformance }
+        val theBest = devices.filter { it.tags.theBest }
 
         _popularDevices.value.addAll(popularDevices)
         _lowPriceDevices.value.addAll(lowPriceDevices)
         _highPerformanceDevices.value.addAll(highPerformance)
+        _theBestDevices.value.addAll(theBest)
 
-        // TODO фильтровать лучшие устройства компании и недавно просмотренные
-        _bestOfCompanyDevices.value.add(DeviceCompact())
+        // TODO фильтровать недавно просмотренные
         _recentlyViewedDevices.value.add(DeviceCompact())
     }
 
