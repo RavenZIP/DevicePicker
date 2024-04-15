@@ -14,7 +14,7 @@ class HomeScreenService @Inject constructor() : ViewModel() {
     private val _popularDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _lowPriceDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
     private val _highPerformanceDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
-    private val _theBestDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
+    private val _theBestDevices = MutableStateFlow(mutableListOf<MutableList<DeviceCompact>>())
     private val _recentlyViewedDevices = MutableStateFlow(mutableListOf<DeviceCompact>())
 
     val popularDevices = _popularDevices.asStateFlow()
@@ -32,7 +32,13 @@ class HomeScreenService @Inject constructor() : ViewModel() {
         _popularDevices.value.addAll(popularDevices)
         _lowPriceDevices.value.addAll(lowPriceDevices)
         _highPerformanceDevices.value.addAll(highPerformance)
-        _theBestDevices.value.addAll(theBest)
+        theBest.forEach {
+            val listIndex =
+                _theBestDevices.value.indexOfFirst { deviceList -> deviceList[0].brand == it.brand }
+
+            if (listIndex >= 0) _theBestDevices.value[listIndex].add(it)
+            else _theBestDevices.value.add(mutableListOf(it))
+        }
 
         // TODO фильтровать недавно просмотренные
         _recentlyViewedDevices.value.add(DeviceCompact())

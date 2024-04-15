@@ -62,12 +62,24 @@ fun HomeScreen(
         Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(lowPriceDevices, "Низкая цена")
         Spacer(modifier = Modifier.height(20.dp))
-        SpecialOfferContainer(theBestDevices, "Redmi: лучшие устройства")
+        if (theBestDevices.size > 0) {
+            SpecialOfferContainer(
+                theBestDevices[0],
+                "${theBestDevices[0][0].brand}: лучшие устройства"
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
+        CarouselDevices(highPerformanceDevices, "Производительные")
         Spacer(modifier = Modifier.height(20.dp))
         CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
         Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(highPerformanceDevices, "Производительные")
-        Spacer(modifier = Modifier.height(20.dp))
+        if (theBestDevices.size > 1) {
+            SpecialOfferContainer(
+                theBestDevices[1],
+                "${theBestDevices[1][0].brand}: лучшие устройства"
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+        }
     }
 }
 
