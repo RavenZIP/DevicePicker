@@ -22,6 +22,7 @@ data class FirebaseDeviceCompact(
             price = this.info.price,
             rating = this.info.rating,
             reviewsCount = this.info.reviewsCount,
+            brand = this.info.model.split(' ')[0],
             tags = this.tags,
             image = image
         )

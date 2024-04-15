@@ -11,6 +11,7 @@ data class DeviceCompact(
     override val price: Int,
     override val rating: Double,
     override val reviewsCount: Int,
+    val brand: String,
     val tags: Tag,
     val image: ImageBitmap
 ) : IDeviceCompact {
@@ -22,6 +23,7 @@ data class DeviceCompact(
             price = 0,
             rating = 0.0,
             reviewsCount = 0,
+            brand = "",
             tags = Tag(),
             image = ImageBitmap(100, 200)
         )
