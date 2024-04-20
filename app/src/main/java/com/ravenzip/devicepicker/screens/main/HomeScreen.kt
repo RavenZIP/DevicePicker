@@ -85,41 +85,6 @@ fun HomeScreen(
 }
 
 @Composable
-private fun DeviceCard(device: DeviceCompact) {
-    Card(
-        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {}.widthIn(0.dp, 130.dp),
-        colors = CardDefaults.highestCardColors()
-    ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-            Image(
-                bitmap = device.image,
-                contentDescription = null,
-                modifier =
-                    Modifier.imageContainer(
-                        color = Color.White,
-                        padding = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
-                        width = 80.dp,
-                        height = 80.dp
-                    )
-            )
-            Spacer(modifier = Modifier.padding(top = 5.dp))
-            CustomText(text = "${device.price} ₽", size = 16, weight = FontWeight.W500)
-            CustomText(text = device.model)
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.i_medal),
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.padding(start = 7.5.dp))
-                CustomText(text = "${device.rating} (${device.reviewsCount})")
-            }
-        }
-    }
-}
-
-@Composable
 private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: String) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -135,7 +100,7 @@ private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: S
             ) {
                 item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                items(devices) {
+                items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
                     DeviceCard(it)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
@@ -172,11 +137,46 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryN
                 ) {
                     item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                    items(devices) {
+                    items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
                         SpecialOfferCard(it)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DeviceCard(device: DeviceCompact) {
+    Card(
+        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {}.widthIn(0.dp, 130.dp),
+        colors = CardDefaults.highestCardColors()
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+            Image(
+                bitmap = device.image,
+                contentDescription = null,
+                modifier =
+                    Modifier.imageContainer(
+                        color = Color.White,
+                        padding = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+                        width = 80.dp,
+                        height = 80.dp
+                    )
+            )
+            Spacer(modifier = Modifier.padding(top = 5.dp))
+            CustomText(text = "${device.price} ₽", size = 16, weight = FontWeight.W500)
+            CustomText(text = device.model)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.i_medal),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.size(14.dp)
+                )
+                Spacer(modifier = Modifier.padding(start = 7.5.dp))
+                CustomText(text = "${device.rating} (${device.reviewsCount})")
             }
         }
     }
