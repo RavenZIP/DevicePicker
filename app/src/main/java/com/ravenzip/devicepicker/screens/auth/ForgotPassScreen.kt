@@ -5,8 +5,8 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -70,7 +70,7 @@ fun ForgotPasswordScreen() {
         Spacer(modifier = Modifier.height(40.dp))
         Text(
             text = "Сброс и восстановление",
-            modifier = Modifier.align(Alignment.Start).padding(start = 20.dp, end = 20.dp),
+            modifier = Modifier.fillMaxWidth(0.9f),
             fontSize = 25.sp,
             fontWeight = FontWeight.Medium,
             letterSpacing = 0.sp
