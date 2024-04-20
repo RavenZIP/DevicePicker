@@ -75,10 +75,10 @@ private fun BrandCard(modifier: Modifier, brandName: String) {
     ) {
         Text(
             text = brandName,
-            modifier = Modifier.padding(top = 20.dp, bottom = 20.dp).fillMaxWidth(),
+            modifier = Modifier.padding(20.dp).fillMaxWidth(),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.W500,
-            letterSpacing = 1.sp
+            letterSpacing = 1.sp,
         )
     }
 }
