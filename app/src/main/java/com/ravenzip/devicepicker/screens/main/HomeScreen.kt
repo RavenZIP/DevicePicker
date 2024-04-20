@@ -2,7 +2,6 @@ package com.ravenzip.devicepicker.screens.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -128,12 +129,13 @@ private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: S
                 fontSize = 20.sp,
                 fontWeight = FontWeight.W500
             )
-            Row(
-                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()),
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                Spacer(modifier = Modifier.padding(start = 15.dp))
-                devices.forEach {
+                item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
+
+                items(devices) {
                     DeviceCard(it)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
@@ -164,9 +166,13 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryN
                     fontWeight = FontWeight.W500
                 )
                 Spacer(modifier = Modifier.padding(top = 10.dp))
-                Row(modifier = Modifier.horizontalScroll(rememberScrollState())) {
-                    Spacer(modifier = Modifier.padding(start = 15.dp))
-                    devices.forEach {
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
+
+                    items(devices) {
                         SpecialOfferCard(it)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
