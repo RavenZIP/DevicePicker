@@ -38,6 +38,7 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.Error
 import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
@@ -82,6 +83,7 @@ fun ForgotPasswordScreen() {
             label = "Электронная почта",
             leadingIcon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
+            error = Error(value = !isEmailValid.value)
         )
 
         Spacer(modifier = Modifier.height(30.dp))
