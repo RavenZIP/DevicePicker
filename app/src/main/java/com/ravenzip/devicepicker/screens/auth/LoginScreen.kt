@@ -34,6 +34,7 @@ import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.Error
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -42,18 +43,22 @@ import kotlinx.coroutines.launch
 fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
-    val isEmailOrPhoneValid = remember { mutableStateOf(true) }
-    val isPasswordOrCodeValid = remember { mutableStateOf(true) }
+
+    val validationService = ValidationService()
+    val emailOrPhoneError = remember { mutableStateOf(Error()) }
+    val passwordOrCodeError = remember { mutableStateOf(Error()) }
+
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     val loginVariants = remember { generateAuthVariants() }
     val selectedLoginVariant = remember { { getSelectedVariant(loginVariants) } }
+
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Вход в аккаунт...") }
-    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -79,7 +84,7 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
         GetFields(
             selectedVariant = selectedLoginVariant,
             fields = listOf(emailOrPhone, passwordOrCode),
-            validation = listOf(isEmailOrPhoneValid.value, isPasswordOrCodeValid.value)
+            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value)
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -94,12 +99,11 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
             scope.launch(Dispatchers.Main) {
                 when (selectedLoginVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        isEmailOrPhoneValid.value =
-                            validationService.isEmailValid(emailOrPhone.value)
-                        isPasswordOrCodeValid.value =
-                            validationService.isPasswordValid(passwordOrCode.value)
+                        emailOrPhoneError.value = validationService.checkEmail(emailOrPhone.value)
+                        passwordOrCodeError.value =
+                            validationService.checkPassword(passwordOrCode.value)
 
-                        if (!isEmailOrPhoneValid.value || !isPasswordOrCodeValid.value) {
+                        if (emailOrPhoneError.value.value || passwordOrCodeError.value.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }

@@ -47,15 +47,18 @@ import kotlinx.coroutines.launch
 @Composable
 fun ForgotPasswordScreen() {
     val email = remember { mutableStateOf("") }
-    val isEmailValid = remember { mutableStateOf(true) }
+
+    val validationService = ValidationService()
+    val emailError = remember { mutableStateOf(Error()) }
+
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Отправка ссылки для сброса пароля...") }
-    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -83,7 +86,7 @@ fun ForgotPasswordScreen() {
             label = "Электронная почта",
             leadingIcon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
-            error = Error(value = !isEmailValid.value)
+            error = emailError.value
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -106,9 +109,9 @@ fun ForgotPasswordScreen() {
             text = TextParameters(value = "Продолжить", size = 16),
         ) {
             scope.launch(Dispatchers.Main) {
-                isEmailValid.value = validationService.isEmailValid(email.value)
+                emailError.value = validationService.checkEmail(email.value)
 
-                if (!isEmailValid.value) {
+                if (emailError.value.value) {
                     snackBarHostState.showError("Проверьте правильность заполнения поля")
                     return@launch
                 }

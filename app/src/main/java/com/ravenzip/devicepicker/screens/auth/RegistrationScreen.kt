@@ -50,6 +50,7 @@ import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.Error
 import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
@@ -60,18 +61,21 @@ import kotlinx.coroutines.launch
 fun RegistrationScreen(userService: UserService, navigateToHomeScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
-    val isEmailOrPhoneValid = remember { mutableStateOf(true) }
-    val isPasswordOrCodeValid = remember { mutableStateOf(true) }
+
+    val validationService = ValidationService()
+    val emailOrPhoneError = remember { mutableStateOf(Error()) }
+    val passwordOrCodeError = remember { mutableStateOf(Error()) }
+
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+
     val registerVariants = remember { generateAuthVariants() }
     val selectedRegisterVariant = remember { { getSelectedVariant(registerVariants) } }
     val scope = rememberCoroutineScope()
     val snackBarHostState = remember { SnackbarHostState() }
     val isLoading = remember { mutableStateOf(false) }
     val spinnerText = remember { mutableStateOf("Регистрация...") }
-    val validationService = ValidationService()
 
     Column(
         modifier =
@@ -96,7 +100,7 @@ fun RegistrationScreen(userService: UserService, navigateToHomeScreen: () -> Uni
         GetFields(
             selectedVariant = selectedRegisterVariant,
             fields = listOf(emailOrPhone, passwordOrCode),
-            validation = listOf(isEmailOrPhoneValid.value, isPasswordOrCodeValid.value)
+            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value)
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -126,12 +130,11 @@ fun RegistrationScreen(userService: UserService, navigateToHomeScreen: () -> Uni
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        isEmailOrPhoneValid.value =
-                            validationService.isEmailValid(emailOrPhone.value)
-                        isPasswordOrCodeValid.value =
-                            validationService.isPasswordValid(passwordOrCode.value)
+                        emailOrPhoneError.value = validationService.checkEmail(emailOrPhone.value)
+                        passwordOrCodeError.value =
+                            validationService.checkPassword(passwordOrCode.value)
 
-                        if (!isEmailOrPhoneValid.value || !isPasswordOrCodeValid.value) {
+                        if (emailOrPhoneError.value.value || passwordOrCodeError.value.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }

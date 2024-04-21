@@ -19,7 +19,7 @@ import com.ravenzip.workshop.data.IconParameters
 fun GetFields(
     selectedVariant: () -> AuthVariantsEnum,
     fields: List<MutableState<String>>,
-    validation: List<Boolean>
+    vararg validation: Error
 ) {
     when (selectedVariant()) {
         AuthVariantsEnum.EMAIL -> {
@@ -31,7 +31,7 @@ fun GetFields(
                         value = ImageVector.vectorResource(R.drawable.i_email),
                         size = 20
                     ),
-                error = Error(value = !validation[0])
+                error = validation[0]
             )
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -41,7 +41,7 @@ fun GetFields(
                 leadingIcon =
                     IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
                 isHiddenText = true,
-                error = Error(value = !validation[1])
+                error = validation[1]
             )
         }
         AuthVariantsEnum.PHONE -> {
@@ -53,7 +53,7 @@ fun GetFields(
                         value = ImageVector.vectorResource(R.drawable.i_phone),
                         size = 20
                     ),
-                error = Error(value = !validation[0])
+                error = validation[0]
             )
         }
         AuthVariantsEnum.GOOGLE -> {
