@@ -1,10 +1,14 @@
 package com.ravenzip.devicepicker.screens.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,18 +35,25 @@ fun ScaffoldScreen(
     val text = topAppBarService.text.collectAsState().value
     val state = topAppBarService.state.collectAsState().value
     val onSearch = topAppBarService.onSearch.collectAsState().value
+    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
     Scaffold(
         topBar = { GetTopAppBar(state = state, text = text, onSearch = onSearch) },
         bottomBar = {
-            BottomNavigationBar(navController = navController, buttonsList = generateMenuItems())
+            AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
+                BottomNavigationBar(
+                    navController = navController,
+                    buttonsList = generateMenuItems()
+                )
+            }
         }
     ) {
         HomeScreenNavGraph(
             navController = navController,
             padding = it,
             topAppBarService = topAppBarService,
-            userService = userService
+            userService = userService,
+            bottomBarState = bottomBarState
         )
     }
 }
@@ -99,7 +110,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
     val userProfileButton =
         BottomNavigationItem(
             label = "Профиль",
-            route = BottomBarGraph.USER_PROFILE,
+            route = BottomBarGraph.USER_PROFILE_ROOT,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
             hasNews = false
         )

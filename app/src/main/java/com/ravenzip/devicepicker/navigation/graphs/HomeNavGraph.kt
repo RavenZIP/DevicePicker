@@ -3,15 +3,15 @@ package com.ravenzip.devicepicker.navigation.graphs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import com.ravenzip.devicepicker.enums.TopAppBarEnum
+import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.main.CompareScreen
@@ -33,7 +33,8 @@ fun HomeScreenNavGraph(
     navController: NavHostController,
     padding: PaddingValues,
     topAppBarService: TopAppBarService,
-    userService: UserService
+    userService: UserService,
+    bottomBarState: MutableState<Boolean>
 ) {
     val imagesService = hiltViewModel<ImageService>()
     val deviceCompactService = hiltViewModel<DeviceCompactService>()
@@ -113,12 +114,12 @@ fun HomeScreenNavGraph(
             CompareScreen(padding)
         }
 
-        composable(route = BottomBarGraph.USER_PROFILE) {
-            UserProfileNavigationGraph(
-                padding,
-                topAppBarService = topAppBarService,
-                userService = userService,
-            )
-        }
+        userProfileNavigationGraph(
+            padding,
+            topAppBarService = topAppBarService,
+            bottomBarState = bottomBarState,
+            userService = userService,
+            navController = navController
+        )
     }
 }

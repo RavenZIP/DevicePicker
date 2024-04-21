@@ -5,5 +5,5 @@ object BottomBarGraph {
     const val SEARCH = "SEARCH"
     const val FAVOURITES = "FAVOURITES"
     const val COMPARE = "COMPARE"
-    const val USER_PROFILE = "USER_PROFILE"
+    const val USER_PROFILE_ROOT = "USER_PROFILE_ROOT"
 }
