@@ -37,8 +37,10 @@ import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.ValidationService
+import com.ravenzip.devicepicker.services.firebase.UserService
 import com.ravenzip.devicepicker.services.firebase.createUserWithEmail
 import com.ravenzip.devicepicker.services.firebase.deleteAccount
+import com.ravenzip.devicepicker.services.firebase.getUser
 import com.ravenzip.devicepicker.services.firebase.isEmailVerified
 import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.firebase.sendEmailVerification
@@ -55,7 +57,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
+fun RegistrationScreen(userService: UserService, navigateToHomeScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
     val isEmailOrPhoneValid = remember { mutableStateOf(true) }
@@ -171,6 +173,7 @@ fun RegistrationScreen(navigateToHomeScreen: () -> Unit) {
                             return@launch
                         }
 
+                        userService.add(getUser()).collect {}
                         isLoading.value = false
                         navigateToHomeScreen()
                     }

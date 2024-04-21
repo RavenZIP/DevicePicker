@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -17,11 +18,12 @@ import com.ravenzip.devicepicker.screens.main.CompareScreen
 import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
-import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.HomeScreenService
 import com.ravenzip.devicepicker.services.TopAppBarService
 import com.ravenzip.devicepicker.services.firebase.DeviceCompactService
 import com.ravenzip.devicepicker.services.firebase.ImageService
+import com.ravenzip.devicepicker.services.firebase.UserService
+import com.ravenzip.devicepicker.services.firebase.getUser
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
@@ -30,13 +32,17 @@ import kotlinx.coroutines.flow.onCompletion
 fun HomeScreenNavGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    topAppBarService: TopAppBarService
+    topAppBarService: TopAppBarService,
+    userService: UserService
 ) {
     val imagesService = hiltViewModel<ImageService>()
-    val isLoadingDeviceCompact = remember { mutableStateOf(true) }
-    val isLoadingImages = remember { mutableStateOf(false) }
     val deviceCompactService = hiltViewModel<DeviceCompactService>()
     val homeScreenService = hiltViewModel<HomeScreenService>()
+
+    val isLoadingDeviceCompact = remember { mutableStateOf(true) }
+    val isLoadingImages = remember { mutableStateOf(false) }
+    val isLoadingUserData = remember { mutableStateOf(true) }
+
     val devices = deviceCompactService.devices.collectAsState().value
     val images = deviceCompactService.images.collectAsState().value
 
@@ -71,6 +77,13 @@ fun HomeScreenNavGraph(
         }
     }
 
+    // Грузим данные о пользователе
+    LaunchedEffect(key1 = isLoadingUserData.value) {
+        if (isLoadingUserData.value) {
+            userService.get(getUser()).onCompletion { isLoadingUserData.value = false }.collect {}
+        }
+    }
+
     NavHost(
         navController = navController,
         route = RootGraph.MAIN,
@@ -101,9 +114,11 @@ fun HomeScreenNavGraph(
         }
 
         composable(route = BottomBarGraph.USER_PROFILE) {
-            topAppBarService.setText("Профиль")
-            topAppBarService.setState(TopAppBarEnum.TopAppBar)
-            UserProfileScreen(padding)
+            UserProfileNavigationGraph(
+                padding,
+                topAppBarService = topAppBarService,
+                userService = userService,
+            )
         }
     }
 }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -26,6 +27,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.getContainerColor
+import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
+import com.ravenzip.devicepicker.services.firebase.UserService
 import com.ravenzip.devicepicker.services.firebase.logout
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.workshop.components.AlertDialog
@@ -39,11 +42,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun UserProfileScreen(padding: PaddingValues) {
+fun UserProfileScreen(
+    padding: PaddingValues,
+    userService: UserService,
+    vararg onClick: () -> Unit
+) {
     val isLoading = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val alertDialogIsShown = remember { mutableStateOf(false) }
+    val userData = userService.user.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -53,6 +61,26 @@ fun UserProfileScreen(padding: PaddingValues) {
         Text(text = "Аккаунт", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
         Spacer(modifier = Modifier.padding(top = 10.dp))
+
+        if (userData.admin) {
+            RowIconButton(
+                text =
+                    TextParameters(
+                        value = "Панель администратора",
+                        color = MaterialTheme.colorScheme.onSurface,
+                        size = 18
+                    ),
+                icon =
+                    IconParameters(
+                        value = ImageVector.vectorResource(R.drawable.i_rocket),
+                        color = MaterialTheme.colorScheme.tertiary
+                    ),
+                colors = getInverseMixColors()
+            ) {
+                onClick[0]()
+            }
+            Spacer(modifier = Modifier.padding(top = 15.dp))
+        }
 
         RowIconButton(
             text =
@@ -242,6 +270,7 @@ fun UserProfileScreen(padding: PaddingValues) {
                     val componentName: ComponentName? = intent?.component
                     val mainIntent: Intent = Intent.makeRestartActivityTask(componentName)
 
+                    alertDialogIsShown.value = false
                     isLoading.value = true
                     logout()
                     var timer = 3
