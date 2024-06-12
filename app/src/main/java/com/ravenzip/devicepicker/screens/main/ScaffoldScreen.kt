@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.TopAppBarEnum
+import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.navigation.graphs.HomeScreenNavGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.services.TopAppBarService
@@ -38,7 +38,7 @@ fun ScaffoldScreen(
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
     Scaffold(
-        topBar = { GetTopAppBar(state = state, text = text, onSearch = onSearch) },
+        topBar = { TopAppBar(state = state, text = text, onSearch = onSearch) },
         bottomBar = {
             AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
                 BottomNavigationBar(
@@ -59,11 +59,11 @@ fun ScaffoldScreen(
 }
 
 @Composable
-private fun GetTopAppBar(state: TopAppBarEnum, text: String, onSearch: () -> Unit) {
+private fun TopAppBar(state: TopAppBarStateEnum, text: String, onSearch: () -> Unit) {
     when (state) {
-        TopAppBarEnum.TopAppBar -> TopAppBar(title = text)
-        TopAppBarEnum.TopAppBarWithMenu -> {}
-        TopAppBarEnum.SearchBar -> {
+        TopAppBarStateEnum.TopAppBar -> TopAppBar(title = text)
+        TopAppBarStateEnum.TopAppBarWithMenu -> {}
+        TopAppBarStateEnum.SearchBar -> {
             val query = remember { mutableStateOf("") }
             SearchBar(query = query, placeholder = text, onSearch = { onSearch() })
         }

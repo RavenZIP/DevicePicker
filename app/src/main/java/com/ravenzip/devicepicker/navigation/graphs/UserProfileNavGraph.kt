@@ -5,7 +5,7 @@ import androidx.compose.runtime.MutableState
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
-import com.ravenzip.devicepicker.enums.TopAppBarEnum
+import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
@@ -27,7 +27,7 @@ fun NavGraphBuilder.userProfileNavigationGraph(
     ) {
         composable(route = UserProfileGraph.USER_PROFILE) {
             topAppBarService.setText("Профиль")
-            topAppBarService.setState(TopAppBarEnum.TopAppBar)
+            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
             bottomBarState.value = true
 
             UserProfileScreen(

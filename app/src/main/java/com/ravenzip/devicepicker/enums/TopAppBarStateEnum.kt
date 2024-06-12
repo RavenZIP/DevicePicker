@@ -1,6 +1,6 @@
 package com.ravenzip.devicepicker.enums
 
-enum class TopAppBarEnum {
+enum class TopAppBarStateEnum {
     TopAppBar,
     TopAppBarWithMenu,
     SearchBar

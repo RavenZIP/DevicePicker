@@ -1,8 +1,7 @@
 package com.ravenzip.devicepicker.services
 
 import androidx.lifecycle.ViewModel
-import com.ravenzip.devicepicker.enums.TopAppBarEnum
-import com.ravenzip.workshop.components.TopAppBar
+import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,7 +10,7 @@ import kotlinx.coroutines.flow.asStateFlow
 @HiltViewModel
 class TopAppBarService @Inject constructor() : ViewModel() {
     private val _text = MutableStateFlow("")
-    private val _state = MutableStateFlow(TopAppBarEnum.TopAppBar)
+    private val _state = MutableStateFlow(TopAppBarStateEnum.TopAppBar)
     private val _onSearch = MutableStateFlow {}
 
     val text = _text.asStateFlow()
@@ -22,7 +21,7 @@ class TopAppBarService @Inject constructor() : ViewModel() {
         _text.value = text
     }
 
-    fun setState(state: TopAppBarEnum) {
+    fun setState(state: TopAppBarStateEnum) {
         _state.value = state
     }
 
