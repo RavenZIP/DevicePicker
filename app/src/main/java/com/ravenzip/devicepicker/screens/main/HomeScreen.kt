@@ -14,11 +14,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -54,32 +53,49 @@ fun HomeScreen(
     val recentlyViewedDevices = homeScreenService.recentlyViewedDevices.collectAsState().value
     val highPerformanceDevices = homeScreenService.highPerformanceDevices.collectAsState().value
 
-    Column(
-        modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(popularDevices, "Популярные")
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(lowPriceDevices, "Низкая цена")
-        Spacer(modifier = Modifier.height(20.dp))
-        if (theBestDevices.size > 0) {
-            SpecialOfferContainer(
-                theBestDevices[0],
-                "${theBestDevices[0][0].brand}: лучшие устройства"
-            )
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            CarouselDevices(popularDevices, "Популярные")
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            CarouselDevices(lowPriceDevices, "Низкая цена")
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            if (theBestDevices.size > 0) {
+                SpecialOfferContainer(
+                    theBestDevices[0],
+                    "${theBestDevices[0][0].brand}: лучшие устройства"
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+        }
+
+        item {
+            CarouselDevices(highPerformanceDevices, "Производительные")
             Spacer(modifier = Modifier.height(20.dp))
         }
-        CarouselDevices(highPerformanceDevices, "Производительные")
-        Spacer(modifier = Modifier.height(20.dp))
-        CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
-        Spacer(modifier = Modifier.height(20.dp))
-        if (theBestDevices.size > 1) {
-            SpecialOfferContainer(
-                theBestDevices[1],
-                "${theBestDevices[1][0].brand}: лучшие устройства"
-            )
+
+        item {
+            CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
             Spacer(modifier = Modifier.height(20.dp))
+        }
+
+        item {
+            if (theBestDevices.size > 1) {
+                SpecialOfferContainer(
+                    theBestDevices[1],
+                    "${theBestDevices[1][0].brand}: лучшие устройства"
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
         }
     }
 }
