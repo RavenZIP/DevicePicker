@@ -1,10 +1,11 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    id("com.google.gms.google-services")
+    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.dagger.hilt.android)
+    alias(libs.plugins.kotlin.compose.compiler)
+    alias(libs.plugins.google.devtools.ksp)
+    id("com.google.gms.google-services")
     id("dagger.hilt.android.plugin")
-    kotlin("kapt")
 }
 
 android {
@@ -37,19 +38,15 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kapt { correctErrorTypes = true }
-
     kotlinOptions { jvmTarget = "17" }
 
     buildFeatures { compose = true }
-
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.3" }
 
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
 }
 
 dependencies {
-    // Android
+    // Android и Kotlin
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -83,7 +80,7 @@ dependencies {
     // Dagger Hilt
     implementation(libs.hilt.android)
     implementation(libs.androidx.hilt.navigation.compose)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 
     // Testing
     testImplementation(libs.junit)
