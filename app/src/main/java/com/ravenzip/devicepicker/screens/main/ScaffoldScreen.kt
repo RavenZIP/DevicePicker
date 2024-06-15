@@ -110,7 +110,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
     val userProfileButton =
         BottomNavigationItem(
             label = "Профиль",
-            route = BottomBarGraph.USER_PROFILE_ROOT,
+            route = BottomBarGraph.USER_PROFILE,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
             hasNews = false
         )

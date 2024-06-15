@@ -22,10 +22,10 @@ fun NavGraphBuilder.userProfileNavigationGraph(
     navController: NavController
 ) {
     navigation(
-        route = BottomBarGraph.USER_PROFILE_ROOT,
-        startDestination = UserProfileGraph.USER_PROFILE
+        route = UserProfileGraph.USER_PROFILE_ROOT,
+        startDestination = BottomBarGraph.USER_PROFILE
     ) {
-        composable(route = UserProfileGraph.USER_PROFILE) {
+        composable(route = BottomBarGraph.USER_PROFILE) {
             topAppBarService.setText("Профиль")
             topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
             bottomBarState.value = true
