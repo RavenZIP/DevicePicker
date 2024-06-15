@@ -15,10 +15,12 @@ import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
+import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.screens.main.CompareScreen
 import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
+import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.HomeScreenService
 import com.ravenzip.devicepicker.services.TopAppBarService
 import com.ravenzip.devicepicker.services.firebase.DeviceCompactService
@@ -128,12 +130,22 @@ fun HomeScreenNavGraph(
             CompareScreen(padding)
         }
 
+        composable(route = BottomBarGraph.USER_PROFILE) {
+            topAppBarService.setText("Профиль")
+            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            bottomBarState.value = true
+
+            UserProfileScreen(
+                padding = padding,
+                userService = userService,
+                onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) })
+            )
+        }
+
         userProfileNavigationGraph(
             padding,
             topAppBarService = topAppBarService,
             bottomBarState = bottomBarState,
-            userService = userService,
-            navController = navController
         )
     }
 }
