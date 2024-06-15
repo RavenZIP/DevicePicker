@@ -13,6 +13,7 @@ import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
+import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.main.CompareScreen
 import com.ravenzip.devicepicker.screens.main.FavouritesScreen
@@ -94,8 +95,17 @@ fun HomeScreenNavGraph(
             topAppBarService.setText("Главная")
             topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
 
-            HomeScreen(padding = padding, homeScreenService = homeScreenService)
+            HomeScreen(
+                padding = padding,
+                homeScreenService = homeScreenService,
+                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) }
+            )
         }
+
+        homeNavigationGraph(
+            padding = padding,
+            topAppBarService = topAppBarService,
+        )
 
         composable(route = BottomBarGraph.SEARCH) {
             topAppBarService.setText("Введите текст...")

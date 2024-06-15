@@ -46,6 +46,7 @@ import com.ravenzip.devicepicker.services.HomeScreenService
 fun HomeScreen(
     padding: PaddingValues,
     homeScreenService: HomeScreenService,
+    navigateToDevice: () -> Unit
 ) {
     val popularDevices = homeScreenService.popularDevices.collectAsState().value
     val lowPriceDevices = homeScreenService.lowPriceDevices.collectAsState().value
@@ -59,40 +60,58 @@ fun HomeScreen(
     ) {
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            CarouselDevices(popularDevices, "Популярные")
+            CarouselDevices(
+                devices = popularDevices,
+                categoryName = "Популярные",
+                cardClick = navigateToDevice
+            )
         }
 
         item {
             Spacer(modifier = Modifier.height(20.dp))
-            CarouselDevices(lowPriceDevices, "Низкая цена")
+            CarouselDevices(
+                devices = lowPriceDevices,
+                categoryName = "Низкая цена",
+                cardClick = navigateToDevice
+            )
         }
 
         item {
             Spacer(modifier = Modifier.height(20.dp))
             if (theBestDevices.size > 0) {
                 SpecialOfferContainer(
-                    theBestDevices[0],
-                    "${theBestDevices[0][0].brand}: лучшие устройства"
+                    devices = theBestDevices[0],
+                    categoryName = "${theBestDevices[0][0].brand}: лучшие устройства",
+                    cardClick = navigateToDevice
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }
 
         item {
-            CarouselDevices(highPerformanceDevices, "Производительные")
+            CarouselDevices(
+                devices = highPerformanceDevices,
+                categoryName = "Производительные",
+                cardClick = navigateToDevice
+            )
             Spacer(modifier = Modifier.height(20.dp))
         }
 
         item {
-            CarouselDevices(recentlyViewedDevices, "Вы недавно смотрели")
+            CarouselDevices(
+                devices = recentlyViewedDevices,
+                categoryName = "Вы недавно смотрели",
+                cardClick = navigateToDevice
+            )
             Spacer(modifier = Modifier.height(20.dp))
         }
 
         item {
             if (theBestDevices.size > 1) {
                 SpecialOfferContainer(
-                    theBestDevices[1],
-                    "${theBestDevices[1][0].brand}: лучшие устройства"
+                    devices = theBestDevices[1],
+                    categoryName = "${theBestDevices[1][0].brand}: лучшие устройства",
+                    cardClick = navigateToDevice
                 )
                 Spacer(modifier = Modifier.height(20.dp))
             }
@@ -101,7 +120,11 @@ fun HomeScreen(
 }
 
 @Composable
-private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: String) {
+private fun CarouselDevices(
+    devices: MutableList<DeviceCompact>,
+    categoryName: String,
+    cardClick: () -> Unit
+) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
             Text(
@@ -117,7 +140,7 @@ private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: S
                 item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
                 items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
-                    DeviceCard(it)
+                    DeviceCard(device = it, cardClick = cardClick)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
             }
@@ -126,7 +149,11 @@ private fun CarouselDevices(devices: MutableList<DeviceCompact>, categoryName: S
 }
 
 @Composable
-private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryName: String) {
+private fun SpecialOfferContainer(
+    devices: MutableList<DeviceCompact>,
+    categoryName: String,
+    cardClick: () -> Unit
+) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
         colors = CardDefaults.defaultCardColors()
@@ -154,7 +181,7 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryN
                     item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
                     items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
-                        SpecialOfferCard(it)
+                        SpecialOfferCard(device = it, cardClick = cardClick)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
                 }
@@ -164,9 +191,12 @@ private fun SpecialOfferContainer(devices: MutableList<DeviceCompact>, categoryN
 }
 
 @Composable
-private fun DeviceCard(device: DeviceCompact) {
+private fun DeviceCard(device: DeviceCompact, cardClick: () -> Unit) {
     Card(
-        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable {}.widthIn(0.dp, 130.dp),
+        modifier =
+            Modifier.clip(RoundedCornerShape(12.dp))
+                .clickable { cardClick() }
+                .widthIn(0.dp, 130.dp),
         colors = CardDefaults.highestCardColors()
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -199,9 +229,9 @@ private fun DeviceCard(device: DeviceCompact) {
 }
 
 @Composable
-private fun SpecialOfferCard(device: DeviceCompact) {
+private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
     Card(
-        modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable {},
+        modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable { cardClick() },
         colors = CardDefaults.highestCardColors()
     ) {
         Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
