@@ -16,7 +16,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
-import com.ravenzip.devicepicker.navigation.graphs.HomeScreenNavGraph
+import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
@@ -48,7 +48,7 @@ fun ScaffoldScreen(
             }
         }
     ) {
-        HomeScreenNavGraph(
+        MainNavigationGraph(
             navController = navController,
             padding = it,
             topAppBarViewModel = topAppBarViewModel,

@@ -30,7 +30,7 @@ import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
 
 @Composable
-fun HomeScreenNavGraph(
+fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
     topAppBarViewModel: TopAppBarViewModel,
