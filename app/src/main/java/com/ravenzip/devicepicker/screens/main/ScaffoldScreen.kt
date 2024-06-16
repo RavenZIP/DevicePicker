@@ -23,6 +23,7 @@ import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.components.SearchBar
 import com.ravenzip.workshop.components.TopAppBar
+import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
 
@@ -62,7 +63,9 @@ fun ScaffoldScreen(
 private fun TopAppBar(state: TopAppBarStateEnum, text: String, onSearch: () -> Unit) {
     when (state) {
         TopAppBarStateEnum.TopAppBar -> TopAppBar(title = text)
-        TopAppBarStateEnum.TopAppBarWithMenu -> {}
+        TopAppBarStateEnum.TopAppBarWithMenu -> {
+            TopAppBarWithMenu(title = text)
+        }
         TopAppBarStateEnum.SearchBar -> {
             val query = remember { mutableStateOf("") }
             SearchBar(query = query, placeholder = text, onSearch = { onSearch() })
