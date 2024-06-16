@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.getContainerColor
 import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
-import com.ravenzip.devicepicker.services.firebase.UserService
 import com.ravenzip.devicepicker.services.firebase.logout
 import com.ravenzip.devicepicker.ui.theme.errorColor
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
@@ -44,14 +44,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun UserProfileScreen(
     padding: PaddingValues,
-    userService: UserService,
+    userViewModel: UserViewModel,
     vararg onClick: () -> Unit
 ) {
     val isLoading = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val alertDialogIsShown = remember { mutableStateOf(false) }
-    val userData = userService.user.collectAsState().value
+    val userData = userViewModel.user.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),

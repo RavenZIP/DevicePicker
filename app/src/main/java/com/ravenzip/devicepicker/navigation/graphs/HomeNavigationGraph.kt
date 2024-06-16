@@ -7,16 +7,16 @@ import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.screens.main.DeviceInfoScreen
-import com.ravenzip.devicepicker.services.TopAppBarService
+import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 
 fun NavGraphBuilder.homeNavigationGraph(
     padding: PaddingValues,
-    topAppBarService: TopAppBarService,
+    topAppBarViewModel: TopAppBarViewModel,
 ) {
     navigation(route = HomeGraph.HOME_ROOT, startDestination = HomeGraph.DEVICE_INFO) {
         composable(route = HomeGraph.DEVICE_INFO) {
-            topAppBarService.setText("Информация об устройстве")
-            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            topAppBarViewModel.setText("Информация об устройстве")
+            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
 
             DeviceInfoScreen(padding = padding)
         }

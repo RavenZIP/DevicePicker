@@ -7,11 +7,11 @@ import androidx.navigation.navigation
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.screens.user.AdminPanelScreen
-import com.ravenzip.devicepicker.services.TopAppBarService
+import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 
 fun NavGraphBuilder.userProfileNavigationGraph(
     padding: PaddingValues,
-    topAppBarService: TopAppBarService,
+    topAppBarViewModel: TopAppBarViewModel,
     bottomBarState: MutableState<Boolean>,
 ) {
     navigation(
@@ -19,7 +19,7 @@ fun NavGraphBuilder.userProfileNavigationGraph(
         startDestination = UserProfileGraph.ADMIN_PANEL
     ) {
         composable(route = UserProfileGraph.ADMIN_PANEL) {
-            topAppBarService.setText("Панель администратора")
+            topAppBarViewModel.setText("Панель администратора")
             bottomBarState.value = false
 
             AdminPanelScreen(padding = padding)

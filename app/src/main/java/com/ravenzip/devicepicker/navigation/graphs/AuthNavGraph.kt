@@ -14,12 +14,12 @@ import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
 import com.ravenzip.devicepicker.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
 import com.ravenzip.devicepicker.screens.auth.WelcomeScreen
-import com.ravenzip.devicepicker.services.firebase.UserService
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 fun NavGraphBuilder.authNavigationGraph(
     navController: NavHostController,
-    userService: UserService
+    userViewModel: UserViewModel
 ) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
         composable(route = AuthGraph.WELCOME) {
@@ -45,7 +45,7 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             RegistrationScreen(
-                userService = userService,
+                userViewModel = userViewModel,
                 navigateToHomeScreen = { navigateToHome(navController) }
             )
         }

@@ -22,12 +22,11 @@ import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.HomeScreenService
-import com.ravenzip.devicepicker.services.TopAppBarService
-import com.ravenzip.devicepicker.services.firebase.DeviceCompactService
-import com.ravenzip.devicepicker.services.firebase.ImageService
-import com.ravenzip.devicepicker.services.firebase.UserService
 import com.ravenzip.devicepicker.services.firebase.getUser
-import kotlinx.coroutines.flow.asFlow
+import com.ravenzip.devicepicker.viewmodels.DeviceCompactViewModel
+import com.ravenzip.devicepicker.viewmodels.ImageViewModel
+import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
 
@@ -35,28 +34,28 @@ import kotlinx.coroutines.flow.onCompletion
 fun HomeScreenNavGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    topAppBarService: TopAppBarService,
-    userService: UserService,
+    topAppBarViewModel: TopAppBarViewModel,
+    userViewModel: UserViewModel,
     bottomBarState: MutableState<Boolean>
 ) {
-    val imagesService = hiltViewModel<ImageService>()
-    val deviceCompactService = hiltViewModel<DeviceCompactService>()
+    val imageViewModel = hiltViewModel<ImageViewModel>()
+    val deviceCompactViewModel = hiltViewModel<DeviceCompactViewModel>()
     val homeScreenService = hiltViewModel<HomeScreenService>()
 
     val isLoadingDeviceCompact = remember { mutableStateOf(true) }
     val isLoadingImages = remember { mutableStateOf(false) }
     val isLoadingUserData = remember { mutableStateOf(true) }
 
-    val devices = deviceCompactService.devices.collectAsState().value
-    val images = deviceCompactService.images.collectAsState().value
+    val devices = deviceCompactViewModel.devices.collectAsState().value
+    val images = deviceCompactViewModel.images.collectAsState().value
 
     // Получаем компактную модель устройств
     // Грузим сразу все устройства, т.к. в дальнейшем компактная
     // модель будет использоваться для других экранов
     LaunchedEffect(isLoadingDeviceCompact.value) {
         if (isLoadingDeviceCompact.value) {
-            deviceCompactService
-                .get()
+            deviceCompactViewModel
+                .getDevices()
                 .onCompletion {
                     isLoadingDeviceCompact.value = false
                     isLoadingImages.value = true
@@ -68,9 +67,8 @@ fun HomeScreenNavGraph(
     // Грузим изображения
     LaunchedEffect(key1 = isLoadingImages.value) {
         if (isLoadingImages.value) {
-            images
-                .map { imagesService.getImage(it) }
-                .asFlow()
+            imageViewModel
+                .getImages(images)
                 .flatMapMerge(concurrency = 3) { it }
                 .onCompletion { isLoadingImages.value = false }
                 .collect {
@@ -84,7 +82,7 @@ fun HomeScreenNavGraph(
     // Грузим данные о пользователе
     LaunchedEffect(key1 = isLoadingUserData.value) {
         if (isLoadingUserData.value) {
-            userService.get(getUser()).onCompletion { isLoadingUserData.value = false }.collect {}
+            userViewModel.get(getUser()).onCompletion { isLoadingUserData.value = false }.collect {}
         }
     }
 
@@ -94,8 +92,8 @@ fun HomeScreenNavGraph(
         startDestination = BottomBarGraph.HOME
     ) {
         composable(route = BottomBarGraph.HOME) {
-            topAppBarService.setText("Главная")
-            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            topAppBarViewModel.setText("Главная")
+            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
 
             HomeScreen(
                 padding = padding,
@@ -106,45 +104,45 @@ fun HomeScreenNavGraph(
 
         homeNavigationGraph(
             padding = padding,
-            topAppBarService = topAppBarService,
+            topAppBarViewModel = topAppBarViewModel,
         )
 
         composable(route = BottomBarGraph.SEARCH) {
-            topAppBarService.setText("Введите текст...")
-            topAppBarService.setState(TopAppBarStateEnum.SearchBar)
+            topAppBarViewModel.setText("Введите текст...")
+            topAppBarViewModel.setState(TopAppBarStateEnum.SearchBar)
 
             SearchScreen(padding)
         }
 
         composable(route = BottomBarGraph.FAVOURITES) {
-            topAppBarService.setText("Избранное")
-            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            topAppBarViewModel.setText("Избранное")
+            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
 
             FavouritesScreen(padding)
         }
 
         composable(route = BottomBarGraph.COMPARE) {
-            topAppBarService.setText("Сравнение")
-            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            topAppBarViewModel.setText("Сравнение")
+            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
 
             CompareScreen(padding)
         }
 
         composable(route = BottomBarGraph.USER_PROFILE) {
-            topAppBarService.setText("Профиль")
-            topAppBarService.setState(TopAppBarStateEnum.TopAppBar)
+            topAppBarViewModel.setText("Профиль")
+            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
             bottomBarState.value = true
 
             UserProfileScreen(
                 padding = padding,
-                userService = userService,
+                userViewModel = userViewModel,
                 onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) })
             )
         }
 
         userProfileNavigationGraph(
             padding,
-            topAppBarService = topAppBarService,
+            topAppBarViewModel = topAppBarViewModel,
             bottomBarState = bottomBarState,
         )
     }

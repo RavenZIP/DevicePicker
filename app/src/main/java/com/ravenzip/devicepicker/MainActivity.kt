@@ -13,13 +13,13 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
-import com.ravenzip.devicepicker.services.SplashScreenService
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
+import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val splashScreenService: SplashScreenService by viewModels()
+    private val splashScreenViewModel: SplashScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,12 +30,12 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     installSplashScreen().setKeepOnScreenCondition {
-                        splashScreenService.isLoading.value
+                        splashScreenViewModel.isLoading.value
                     }
                     InitializeSnackBarIcons()
 
                     val startDestination =
-                        splashScreenService.startDestination.collectAsState().value
+                        splashScreenViewModel.startDestination.collectAsState().value
 
                     RootNavigationGraph(
                         navController = rememberNavController(),

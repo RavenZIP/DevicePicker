@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.services
+package com.ravenzip.devicepicker.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SplashScreenService : ViewModel() {
+class SplashScreenViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     private val _startDestination = MutableStateFlow(RootGraph.AUTHENTICATION)
     val isLoading = _isLoading.asStateFlow()

@@ -18,8 +18,8 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.navigation.graphs.HomeScreenNavGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
-import com.ravenzip.devicepicker.services.TopAppBarService
-import com.ravenzip.devicepicker.services.firebase.UserService
+import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.components.SearchBar
 import com.ravenzip.workshop.components.TopAppBar
@@ -29,12 +29,12 @@ import com.ravenzip.workshop.data.IconParameters
 @Composable
 fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
-    userService: UserService
+    userViewModel: UserViewModel
 ) {
-    val topAppBarService = hiltViewModel<TopAppBarService>()
-    val text = topAppBarService.text.collectAsState().value
-    val state = topAppBarService.state.collectAsState().value
-    val onSearch = topAppBarService.onSearch.collectAsState().value
+    val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
+    val text = topAppBarViewModel.text.collectAsState().value
+    val state = topAppBarViewModel.state.collectAsState().value
+    val onSearch = topAppBarViewModel.onSearch.collectAsState().value
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
     Scaffold(
@@ -51,8 +51,8 @@ fun ScaffoldScreen(
         HomeScreenNavGraph(
             navController = navController,
             padding = it,
-            topAppBarService = topAppBarService,
-            userService = userService,
+            topAppBarViewModel = topAppBarViewModel,
+            userViewModel = userViewModel,
             bottomBarState = bottomBarState
         )
     }
