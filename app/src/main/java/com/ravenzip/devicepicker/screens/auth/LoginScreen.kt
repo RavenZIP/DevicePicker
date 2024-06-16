@@ -28,9 +28,8 @@ import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.firebase.logInUserWithEmail
-import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.showError
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
@@ -40,7 +39,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: () -> Unit) {
+fun LoginScreen(
+    userViewModel: UserViewModel,
+    navigateToHomeScreen: () -> Unit,
+    navigateToForgotPassScreen: () -> Unit
+) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
 
@@ -109,7 +112,7 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
                         }
                         isLoading.value = true
 
-                        val isReloadSuccess = reloadUser()
+                        val isReloadSuccess = userViewModel.reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
                             snackBarHostState.showError(isReloadSuccess.error!!)
@@ -118,7 +121,10 @@ fun LoginScreen(navigateToHomeScreen: () -> Unit, navigateToForgotPassScreen: ()
 
                         spinnerText.value = "Вход в аккаунт..."
                         val authResult =
-                            logInUserWithEmail(emailOrPhone.value, passwordOrCode.value)
+                            userViewModel.logInUserWithEmail(
+                                emailOrPhone.value,
+                                passwordOrCode.value
+                            )
 
                         if (authResult.value == null) {
                             isLoading.value = false

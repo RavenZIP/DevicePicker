@@ -37,12 +37,6 @@ import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.firebase.createUserWithEmail
-import com.ravenzip.devicepicker.services.firebase.deleteAccount
-import com.ravenzip.devicepicker.services.firebase.getUser
-import com.ravenzip.devicepicker.services.firebase.isEmailVerified
-import com.ravenzip.devicepicker.services.firebase.reloadUser
-import com.ravenzip.devicepicker.services.firebase.sendEmailVerification
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
@@ -140,7 +134,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         }
                         isLoading.value = true
 
-                        val isReloadSuccess = reloadUser()
+                        val isReloadSuccess = userViewModel.reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
                             snackBarHostState.showError(isReloadSuccess.error!!)
@@ -149,7 +143,10 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
 
                         spinnerText.value = "Регистрация..."
                         val authResult =
-                            createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
+                            userViewModel.createUserWithEmail(
+                                emailOrPhone.value,
+                                passwordOrCode.value
+                            )
 
                         if (authResult.value == null) {
                             isLoading.value = false
@@ -158,25 +155,25 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         }
 
                         spinnerText.value = "Отправка письма с подтверждением..."
-                        val messageResult = sendEmailVerification()
+                        val messageResult = userViewModel.sendEmailVerification()
                         if (messageResult.value != true) {
                             isLoading.value = false
                             snackBarHostState.showWarning(messageResult.error!!)
-                            deleteAccount()
+                            userViewModel.deleteAccount()
                             return@launch
                         }
 
                         spinnerText.value = "Ожидание подтверждения электронной почты..."
-                        val timer = checkEmailVerificationEverySecondAndGetTimer()
+                        val timer = checkEmailVerificationEverySecondAndGetTimer(userViewModel)
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
                         if (timer == 0) {
                             isLoading.value = false
-                            deleteAccount()
+                            userViewModel.deleteAccount()
                             return@launch
                         }
 
-                        userViewModel.add(getUser()).collect {}
+                        userViewModel.add(userViewModel.getUser()).collect {}
                         isLoading.value = false
                         navigateToHomeScreen()
                     }
@@ -203,10 +200,12 @@ private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String
     }
 }
 
-private suspend fun checkEmailVerificationEverySecondAndGetTimer(): Int {
+private suspend fun checkEmailVerificationEverySecondAndGetTimer(
+    userViewModel: UserViewModel
+): Int {
     var timer = 25 // Время, за которое необходимо зарегистрироваться пользователю
     while (timer > 0) {
-        if (isEmailVerified()) {
+        if (userViewModel.isEmailVerified()) {
             timer = -1
         } else {
             timer -= 1

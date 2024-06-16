@@ -29,10 +29,9 @@ import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.firebase.reloadUser
-import com.ravenzip.devicepicker.services.firebase.sendPasswordResetEmail
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -45,7 +44,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun ForgotPasswordScreen() {
+fun ForgotPasswordScreen(userViewModel: UserViewModel) {
     val email = remember { mutableStateOf("") }
 
     val validationService = ValidationService()
@@ -117,7 +116,7 @@ fun ForgotPasswordScreen() {
                 }
                 isLoading.value = true
 
-                val isReloadSuccess = reloadUser()
+                val isReloadSuccess = userViewModel.reloadUser()
                 if (isReloadSuccess.value != true) {
                     isLoading.value = false
                     snackBarHostState.showError(isReloadSuccess.error!!)
@@ -125,7 +124,7 @@ fun ForgotPasswordScreen() {
                 }
 
                 spinnerText.value = "Отправка ссылки для сброса пароля..."
-                val resetResult = sendPasswordResetEmail(email.value)
+                val resetResult = userViewModel.sendPasswordResetEmail(email.value)
                 isLoading.value = false
 
                 if (resetResult) {

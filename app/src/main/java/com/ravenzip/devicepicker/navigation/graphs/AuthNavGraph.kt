@@ -31,6 +31,7 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             WelcomeScreen(
+                userViewModel = userViewModel,
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
                 navigateToHomeScreen = { navigateToHome(navController) }
@@ -58,6 +59,7 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             LoginScreen(
+                userViewModel = userViewModel,
                 navigateToHomeScreen = { navigateToHome(navController) },
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) }
             )
@@ -70,7 +72,7 @@ fun NavGraphBuilder.authNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme()
             )
 
-            ForgotPasswordScreen()
+            ForgotPasswordScreen(userViewModel)
         }
     }
 }

@@ -31,9 +31,8 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.getInverseColors
-import com.ravenzip.devicepicker.services.firebase.logInAnonymously
-import com.ravenzip.devicepicker.services.firebase.reloadUser
 import com.ravenzip.devicepicker.services.showError
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
@@ -47,6 +46,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
+    userViewModel: UserViewModel,
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit
@@ -117,7 +117,7 @@ fun WelcomeScreen(
                 scope.launch(Dispatchers.Main) {
                     isLoading.value = true
 
-                    val isReloadSuccess = reloadUser()
+                    val isReloadSuccess = userViewModel.reloadUser()
                     if (isReloadSuccess.value != true) {
                         isLoading.value = false
                         alertDialogIsShown.value = false
@@ -125,7 +125,7 @@ fun WelcomeScreen(
                         return@launch
                     }
 
-                    val authResult = logInAnonymously()
+                    val authResult = userViewModel.logInAnonymously()
                     isLoading.value = false
                     alertDialogIsShown.value = false
 

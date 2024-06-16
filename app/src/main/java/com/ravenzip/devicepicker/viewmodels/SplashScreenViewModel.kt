@@ -3,14 +3,12 @@ package com.ravenzip.devicepicker.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.services.firebase.getUser
-import com.ravenzip.devicepicker.services.firebase.reloadUser
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SplashScreenViewModel : ViewModel() {
+class SplashScreenViewModel(userViewModel: UserViewModel) : ViewModel() {
     private val _isLoading = MutableStateFlow(true)
     private val _startDestination = MutableStateFlow(RootGraph.AUTHENTICATION)
     val isLoading = _isLoading.asStateFlow()
@@ -18,8 +16,8 @@ class SplashScreenViewModel : ViewModel() {
 
     init {
         viewModelScope.launch {
-            val isReloadSuccess = reloadUser().value
-            if (isReloadSuccess == true && getUser() !== null) {
+            val isReloadSuccess = userViewModel.reloadUser().value
+            if (isReloadSuccess == true && userViewModel.getUser() !== null) {
                 _startDestination.value = RootGraph.MAIN
             }
 

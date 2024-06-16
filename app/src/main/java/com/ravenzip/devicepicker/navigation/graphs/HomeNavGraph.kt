@@ -22,7 +22,6 @@ import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.HomeScreenService
-import com.ravenzip.devicepicker.services.firebase.getUser
 import com.ravenzip.devicepicker.viewmodels.DeviceCompactViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
@@ -82,7 +81,10 @@ fun HomeScreenNavGraph(
     // Грузим данные о пользователе
     LaunchedEffect(key1 = isLoadingUserData.value) {
         if (isLoadingUserData.value) {
-            userViewModel.get(getUser()).onCompletion { isLoadingUserData.value = false }.collect {}
+            userViewModel
+                .get(userViewModel.getUser())
+                .onCompletion { isLoadingUserData.value = false }
+                .collect {}
         }
     }
 

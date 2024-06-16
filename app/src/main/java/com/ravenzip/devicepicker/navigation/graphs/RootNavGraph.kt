@@ -4,7 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,8 +13,11 @@ import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController, startDestination: String) {
-    val userViewModel = hiltViewModel<UserViewModel>()
+fun RootNavigationGraph(
+    navController: NavHostController,
+    startDestination: String,
+    userViewModel: UserViewModel
+) {
 
     NavHost(
         navController = navController,

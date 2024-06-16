@@ -10,21 +10,35 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
 import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val splashScreenViewModel: SplashScreenViewModel by viewModels()
+    private val userViewModel: UserViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             DevicePickerTheme {
+                val splashScreenViewModel =
+                    viewModel<SplashScreenViewModel>(
+                        factory =
+                            object : ViewModelProvider.Factory {
+                                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                                    return SplashScreenViewModel(userViewModel) as T
+                                }
+                            }
+                    )
+
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -39,7 +53,8 @@ class MainActivity : ComponentActivity() {
 
                     RootNavigationGraph(
                         navController = rememberNavController(),
-                        startDestination = startDestination
+                        startDestination = startDestination,
+                        userViewModel = userViewModel
                     )
                 }
             }

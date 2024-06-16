@@ -28,7 +28,6 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.getContainerColor
 import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
-import com.ravenzip.devicepicker.services.firebase.logout
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
@@ -272,7 +271,7 @@ fun UserProfileScreen(
 
                     alertDialogIsShown.value = false
                     isLoading.value = true
-                    logout()
+                    userViewModel.logout()
                     var timer = 3
                     while (timer != 0) {
                         delay(1000)
