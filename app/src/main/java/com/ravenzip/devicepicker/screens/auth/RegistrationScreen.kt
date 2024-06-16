@@ -159,7 +159,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         if (messageResult.value != true) {
                             isLoading.value = false
                             snackBarHostState.showWarning(messageResult.error!!)
-                            userViewModel.deleteAccount()
+                            userViewModel.deleteAccount() // TODO проверять падение запроса
                             return@launch
                         }
 

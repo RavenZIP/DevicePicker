@@ -55,13 +55,13 @@ constructor(
      *
      * @return [AuthResult] или null
      */
-    suspend fun logInAnonymously(): AuthResult? {
+    suspend fun logInAnonymously(): Result<AuthResult> {
         return try {
             val result = authRepository.logInAnonymously()
-            result
+            Result(value = result, error = null)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-            null
+            Result(value = null, error = "Произошла ошибка при выполнении запроса")
         }
     }
 
@@ -172,16 +172,16 @@ constructor(
      *
      * @return true - ссылка отправлена
      */
-    suspend fun sendPasswordResetEmail(email: String): Boolean {
+    suspend fun sendPasswordResetEmail(email: String): Result<Boolean> {
         return try {
             authRepository.sendPasswordResetEmail(email)
-            true
+            Result(value = true, error = null)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendPasswordResetEmail")
                 Log.d("Exception", "${e.message}")
             }
-            false
+            Result(value = false, error = "Ошибка сброса пароля")
         }
     }
 
@@ -195,13 +195,13 @@ constructor(
      *
      * @return true - если аккаунт был удален
      */
-    suspend fun deleteAccount(): Boolean {
+    suspend fun deleteAccount(): Result<Boolean> {
         return try {
             authRepository.deleteAccount()
-            true
+            Result(value = true, error = null)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
-            false
+            Result(value = false, error = "Ошибка сброса пароля")
         }
     }
 

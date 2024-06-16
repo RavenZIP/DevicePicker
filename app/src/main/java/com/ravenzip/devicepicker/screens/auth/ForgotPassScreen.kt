@@ -127,12 +127,12 @@ fun ForgotPasswordScreen(userViewModel: UserViewModel) {
                 val resetResult = userViewModel.sendPasswordResetEmail(email.value)
                 isLoading.value = false
 
-                if (resetResult) {
+                if (resetResult.value == true) {
                     snackBarHostState.showSuccess(
                         "Письмо со ссылкой для сброса было успешно отправлено на почту"
                     )
                 } else {
-                    snackBarHostState.showError("Ошибка сброса пароля")
+                    snackBarHostState.showError(resetResult.error!!)
                 }
             }
         }

@@ -129,8 +129,8 @@ fun WelcomeScreen(
                     isLoading.value = false
                     alertDialogIsShown.value = false
 
-                    if (authResult !== null) navigateToHomeScreen()
-                    else snackBarHostState.showError("Произошла ошибка при выполнении запроса")
+                    if (authResult.value !== null) navigateToHomeScreen()
+                    else snackBarHostState.showError(authResult.error!!)
                 }
             }
         )
