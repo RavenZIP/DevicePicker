@@ -6,7 +6,7 @@ import androidx.navigation.navigation
 import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
-import com.ravenzip.devicepicker.screens.main.DeviceInfoScreen
+import com.ravenzip.devicepicker.screens.home.DeviceInfoScreen
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 
 fun NavGraphBuilder.homeNavigationGraph(

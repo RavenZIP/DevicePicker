@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.main
+package com.ravenzip.devicepicker.screens.home
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
