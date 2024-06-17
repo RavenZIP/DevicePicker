@@ -9,11 +9,11 @@ import javax.inject.Singleton
 class AuthSources @Inject constructor() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    fun auth(): FirebaseAuth {
+    fun authSource(): FirebaseAuth {
         return firebaseAuth
     }
 
-    fun currentUser(): FirebaseUser? {
+    fun currentUserSource(): FirebaseUser? {
         return firebaseAuth.currentUser
     }
 }

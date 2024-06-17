@@ -10,7 +10,7 @@ import kotlinx.coroutines.tasks.await
 @Singleton
 class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     fun getUser(): FirebaseUser? {
-        return authSources.currentUser()
+        return authSources.currentUserSource()
     }
 
     suspend fun reloadUser() {
@@ -18,15 +18,15 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     }
 
     suspend fun logInAnonymously(): AuthResult {
-        return authSources.auth().signInAnonymously().await()
+        return authSources.authSource().signInAnonymously().await()
     }
 
     suspend fun createUserWithEmail(email: String, password: String): AuthResult? {
-        return authSources.auth().createUserWithEmailAndPassword(email, password).await()
+        return authSources.authSource().createUserWithEmailAndPassword(email, password).await()
     }
 
     suspend fun logInUserWithEmail(email: String, password: String): AuthResult? {
-        return authSources.auth().signInWithEmailAndPassword(email, password).await()
+        return authSources.authSource().signInWithEmailAndPassword(email, password).await()
     }
 
     suspend fun sendEmailVerification() {
@@ -39,11 +39,11 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     }
 
     suspend fun sendPasswordResetEmail(email: String) {
-        authSources.auth().sendPasswordResetEmail(email).await()
+        authSources.authSource().sendPasswordResetEmail(email).await()
     }
 
     suspend fun logout() {
-        authSources.auth().signOut()
+        authSources.authSource().signOut()
         reloadUser()
     }
 
