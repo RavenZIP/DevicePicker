@@ -22,7 +22,7 @@ import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.services.HomeScreenService
-import com.ravenzip.devicepicker.viewmodels.DeviceCompactViewModel
+import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
@@ -38,28 +38,28 @@ fun MainNavigationGraph(
     bottomBarState: MutableState<Boolean>
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
-    val deviceCompactViewModel = hiltViewModel<DeviceCompactViewModel>()
+    val deviceViewModel = hiltViewModel<DeviceViewModel>()
     val homeScreenService = hiltViewModel<HomeScreenService>()
 
     val isLoadingDeviceCompact = remember { mutableStateOf(true) }
     val isLoadingImages = remember { mutableStateOf(false) }
     val isLoadingUserData = remember { mutableStateOf(true) }
 
-    val devices = deviceCompactViewModel.devices.collectAsState().value
-    val images = deviceCompactViewModel.images.collectAsState().value
+    val deviceCompactList = deviceViewModel.deviceCompactList.collectAsState().value
+    val images = deviceViewModel.images.collectAsState().value
 
     // Получаем компактную модель устройств
     // Грузим сразу все устройства, т.к. в дальнейшем компактная
     // модель будет использоваться для других экранов
     LaunchedEffect(isLoadingDeviceCompact.value) {
         if (isLoadingDeviceCompact.value) {
-            deviceCompactViewModel
-                .getDevices()
+            deviceViewModel
+                .getDeviceCompact()
                 .onCompletion {
                     isLoadingDeviceCompact.value = false
                     isLoadingImages.value = true
                 }
-                .collect { homeScreenService.setDevicesFromCategories(devices) }
+                .collect { homeScreenService.setDevicesFromCategories(deviceCompactList) }
         }
     }
 
@@ -100,6 +100,7 @@ fun MainNavigationGraph(
             HomeScreen(
                 padding = padding,
                 homeScreenService = homeScreenService,
+                deviceViewModel = deviceViewModel,
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) }
             )
         }
@@ -107,6 +108,7 @@ fun MainNavigationGraph(
         homeNavigationGraph(
             padding = padding,
             topAppBarViewModel = topAppBarViewModel,
+            deviceViewModel = deviceViewModel
         )
 
         composable(route = BottomBarGraph.SEARCH) {

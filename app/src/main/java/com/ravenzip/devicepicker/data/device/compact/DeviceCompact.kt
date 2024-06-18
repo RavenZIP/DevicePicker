@@ -5,7 +5,7 @@ import com.ravenzip.devicepicker.data.Tag
 
 /** Компактная модель устройства */
 data class DeviceCompact(
-    override val id: Int,
+    override val uid: String,
     override val type: String,
     override val model: String,
     override val price: Int,
@@ -17,7 +17,7 @@ data class DeviceCompact(
 ) : IDeviceCompact {
     constructor() :
         this(
-            id = 0,
+            uid = "",
             type = "",
             model = "",
             price = 0,

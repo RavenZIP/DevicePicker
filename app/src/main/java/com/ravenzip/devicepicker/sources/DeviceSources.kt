@@ -6,8 +6,17 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DeviceCompactSources @Inject constructor() {
+class DeviceSources @Inject constructor() {
+    private val deviceRef = FirebaseDatabase.getInstance().getReference("Device")
     private val deviceCompactRef = FirebaseDatabase.getInstance().getReference("DeviceCompact")
+
+    fun deviceSource(): DatabaseReference {
+        return deviceRef
+    }
+
+    fun deviceSourceByPath(brand: String, uid: String): DatabaseReference {
+        return deviceRef.child(brand).child(uid)
+    }
 
     fun deviceCompactSource(): DatabaseReference {
         return deviceCompactRef

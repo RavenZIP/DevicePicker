@@ -25,6 +25,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,11 +42,14 @@ import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.imageContainer
 import com.ravenzip.devicepicker.services.HomeScreenService
+import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
     homeScreenService: HomeScreenService,
+    deviceViewModel: DeviceViewModel,
     navigateToDevice: () -> Unit
 ) {
     val popularDevices = homeScreenService.popularDevices.collectAsState().value
@@ -63,6 +67,7 @@ fun HomeScreen(
             CarouselDevices(
                 devices = popularDevices,
                 categoryName = "Популярные",
+                deviceViewModel = deviceViewModel,
                 cardClick = navigateToDevice
             )
         }
@@ -72,6 +77,7 @@ fun HomeScreen(
             CarouselDevices(
                 devices = lowPriceDevices,
                 categoryName = "Низкая цена",
+                deviceViewModel = deviceViewModel,
                 cardClick = navigateToDevice
             )
         }
@@ -92,6 +98,7 @@ fun HomeScreen(
             CarouselDevices(
                 devices = highPerformanceDevices,
                 categoryName = "Производительные",
+                deviceViewModel = deviceViewModel,
                 cardClick = navigateToDevice
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -101,6 +108,7 @@ fun HomeScreen(
             CarouselDevices(
                 devices = recentlyViewedDevices,
                 categoryName = "Вы недавно смотрели",
+                deviceViewModel = deviceViewModel,
                 cardClick = navigateToDevice
             )
             Spacer(modifier = Modifier.height(20.dp))
@@ -123,6 +131,7 @@ fun HomeScreen(
 private fun CarouselDevices(
     devices: MutableList<DeviceCompact>,
     categoryName: String,
+    deviceViewModel: DeviceViewModel,
     cardClick: () -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
@@ -139,8 +148,8 @@ private fun CarouselDevices(
             ) {
                 item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
-                    DeviceCard(device = it, cardClick = cardClick)
+                items(devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
+                    DeviceCard(device = it, deviceViewModel, cardClick = cardClick)
                     Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
             }
@@ -180,7 +189,7 @@ private fun SpecialOfferContainer(
                 ) {
                     item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                    items(devices, key = { it.id }, contentType = { DeviceCompact::class }) {
+                    items(devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
                         SpecialOfferCard(device = it, cardClick = cardClick)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
@@ -191,11 +200,22 @@ private fun SpecialOfferContainer(
 }
 
 @Composable
-private fun DeviceCard(device: DeviceCompact, cardClick: () -> Unit) {
+private fun DeviceCard(
+    device: DeviceCompact,
+    deviceViewModel: DeviceViewModel,
+    cardClick: () -> Unit
+) {
+    val scope = rememberCoroutineScope()
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
-                .clickable { cardClick() }
+                .clickable {
+                    scope.launch {
+                        deviceViewModel
+                            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+                            .collect { cardClick() }
+                    }
+                }
                 .widthIn(0.dp, 130.dp),
         colors = CardDefaults.highestCardColors()
     ) {
