@@ -10,7 +10,7 @@ import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
+import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
@@ -21,6 +21,8 @@ import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
+import com.ravenzip.devicepicker.state.SearchBarState
+import com.ravenzip.devicepicker.state.TopAppBarState
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
@@ -93,8 +95,9 @@ fun MainNavigationGraph(
         startDestination = BottomBarGraph.HOME) {
             /// Домашний экран
             composable(route = BottomBarGraph.HOME) {
-                topAppBarViewModel.setText("Главная")
-                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Главная"))
+                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+                bottomBarState.value = true
 
                 HomeScreen(
                     padding = padding,
@@ -106,36 +109,38 @@ fun MainNavigationGraph(
             homeNavigationGraph(
                 padding = padding,
                 topAppBarViewModel = topAppBarViewModel,
-                deviceViewModel = deviceViewModel)
+                deviceViewModel = deviceViewModel,
+                bottomBarState = bottomBarState,
+                navController = navController)
 
             /// Поиск
             composable(route = BottomBarGraph.SEARCH) {
-                topAppBarViewModel.setText("Введите текст...")
-                topAppBarViewModel.setState(TopAppBarStateEnum.SearchBar)
+                topAppBarViewModel.setSearchBarState(SearchBarState())
+                topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
 
                 SearchScreen(padding)
             }
 
             /// Избранное
             composable(route = BottomBarGraph.FAVOURITES) {
-                topAppBarViewModel.setText("Избранное")
-                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Избранное"))
+                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
 
                 FavouritesScreen(padding)
             }
 
             /// Сравнение
             composable(route = BottomBarGraph.COMPARE) {
-                topAppBarViewModel.setText("Сравнение")
-                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Сравнение"))
+                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
 
                 CompareScreen(padding)
             }
 
             /// Профиль пользователя
             composable(route = BottomBarGraph.USER_PROFILE) {
-                topAppBarViewModel.setText("Профиль")
-                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Профиль"))
+                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
                 bottomBarState.value = true
 
                 UserProfileScreen(

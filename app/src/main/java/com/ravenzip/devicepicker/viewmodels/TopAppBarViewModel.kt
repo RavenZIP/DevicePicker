@@ -1,7 +1,9 @@
 package com.ravenzip.devicepicker.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
+import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
+import com.ravenzip.devicepicker.state.SearchBarState
+import com.ravenzip.devicepicker.state.TopAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,23 +11,23 @@ import kotlinx.coroutines.flow.asStateFlow
 
 @HiltViewModel
 class TopAppBarViewModel @Inject constructor() : ViewModel() {
-    private val _text = MutableStateFlow("")
-    private val _state = MutableStateFlow(TopAppBarStateEnum.TopAppBar)
-    private val _onSearch = MutableStateFlow {}
+    private val _type = MutableStateFlow(TopAppBarTypeEnum.TopAppBar)
+    private val _topAppBarState = MutableStateFlow(TopAppBarState())
+    private val _searchBarState = MutableStateFlow(SearchBarState())
 
-    val text = _text.asStateFlow()
-    val state = _state.asStateFlow()
-    val onSearch = _onSearch.asStateFlow()
+    val type = _type.asStateFlow()
+    val topAppBarState = _topAppBarState.asStateFlow()
+    val searchBarState = _searchBarState.asStateFlow()
 
-    fun setText(text: String) {
-        _text.value = text
+    fun setType(type: TopAppBarTypeEnum) {
+        _type.value = type
     }
 
-    fun setState(state: TopAppBarStateEnum) {
-        _state.value = state
+    fun setTopBarState(topAppBarState: TopAppBarState) {
+        _topAppBarState.value = topAppBarState
     }
 
-    fun setOnSearch(onSearch: () -> Unit) {
-        _onSearch.value = onSearch
+    fun setSearchBarState(searchBarState: SearchBarState) {
+        _searchBarState.value = searchBarState
     }
 }

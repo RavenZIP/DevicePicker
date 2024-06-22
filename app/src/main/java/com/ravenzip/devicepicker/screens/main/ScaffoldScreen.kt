@@ -15,9 +15,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.TopAppBarStateEnum
+import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
+import com.ravenzip.devicepicker.state.SearchBarState
+import com.ravenzip.devicepicker.state.TopAppBarState
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.BottomNavigationBar
@@ -33,13 +35,20 @@ fun ScaffoldScreen(
     userViewModel: UserViewModel
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
-    val text = topAppBarViewModel.text.collectAsState().value
-    val state = topAppBarViewModel.state.collectAsState().value
-    val onSearch = topAppBarViewModel.onSearch.collectAsState().value
+    val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
+    val searchBarState = topAppBarViewModel.searchBarState.collectAsState().value
+    val topAppBarType = topAppBarViewModel.type.collectAsState().value
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
+    topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Главная"))
+
     Scaffold(
-        topBar = { TopAppBar(state = state, text = text, onSearch = onSearch) },
+        topBar = {
+            TopAppBar(
+                type = topAppBarType,
+                topAppBarState = topAppBarState,
+                searchBarState = searchBarState)
+        },
         bottomBar = {
             AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
                 BottomNavigationBar(
@@ -56,15 +65,28 @@ fun ScaffoldScreen(
 }
 
 @Composable
-private fun TopAppBar(state: TopAppBarStateEnum, text: String, onSearch: () -> Unit) {
-    when (state) {
-        TopAppBarStateEnum.TopAppBar -> TopAppBar(title = text)
-        TopAppBarStateEnum.TopAppBarWithMenu -> {
-            TopAppBarWithMenu(title = text)
+private fun TopAppBar(
+    type: TopAppBarTypeEnum,
+    topAppBarState: TopAppBarState,
+    searchBarState: SearchBarState
+) {
+    when (type) {
+        TopAppBarTypeEnum.TopAppBar ->
+            TopAppBar(
+                title = topAppBarState.text,
+                backArrow = topAppBarState.backArrow,
+                items = topAppBarState.menuItems)
+
+        TopAppBarTypeEnum.TopAppBarWithMenu -> {
+            TopAppBarWithMenu(title = "")
         }
-        TopAppBarStateEnum.SearchBar -> {
+
+        TopAppBarTypeEnum.SearchBar -> {
             val query = remember { mutableStateOf("") }
-            SearchBar(query = query, placeholder = text, onSearch = { onSearch() })
+            SearchBar(
+                query = query,
+                placeholder = searchBarState.placeholder,
+                onSearch = { searchBarState.onSearch() })
         }
     }
 }
