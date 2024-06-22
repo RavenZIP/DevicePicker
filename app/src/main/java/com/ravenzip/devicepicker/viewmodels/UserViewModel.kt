@@ -6,9 +6,9 @@ import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.data.User
-import com.ravenzip.devicepicker.data.result.Result
 import com.ravenzip.devicepicker.enums.AuthErrorsEnum
+import com.ravenzip.devicepicker.model.User
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -106,8 +106,7 @@ constructor(
                 Log.d("Method", "LoginUserWithEmail")
                 Log.d(
                     "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value
-                )
+                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
             }
 
             Result(value = null, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
@@ -143,8 +142,7 @@ constructor(
                 Log.d("Method", "SendEmailVerification")
                 Log.d(
                     "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value
-                )
+                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
             }
 
             Result(value = false, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)

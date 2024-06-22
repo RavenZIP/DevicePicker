@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.data.device.compact
+package com.ravenzip.devicepicker.model.device.compact
 
 class FirebaseDeviceCompactInfo(
     override val uid: String,

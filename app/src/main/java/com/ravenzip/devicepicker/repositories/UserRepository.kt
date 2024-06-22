@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.repositories
 
 import com.google.firebase.database.getValue
-import com.ravenzip.devicepicker.data.User
+import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.sources.UserSources
 import javax.inject.Inject
 import javax.inject.Singleton

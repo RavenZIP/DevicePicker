@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.data
+package com.ravenzip.devicepicker.model
 
 class Tag(
     val popular: Boolean,

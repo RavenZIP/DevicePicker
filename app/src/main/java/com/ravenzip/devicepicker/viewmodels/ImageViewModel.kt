@@ -1,10 +1,9 @@
 package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
-import com.ravenzip.devicepicker.data.device.FirebaseImageData
-import com.ravenzip.devicepicker.data.result.ImageResult
+import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import com.ravenzip.devicepicker.repositories.ImageRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,29 +19,26 @@ class ImageViewModel @Inject constructor(private val imageServiceRepository: Ima
     ViewModel() {
 
     /** Получить основное изображение конкретного товара */
-    suspend fun getImage(imageData: FirebaseImageData): Flow<ImageResult<ImageBitmap>> =
+    suspend fun getImageUrl(
+        deviceUid: String,
+        brand: String,
+        model: String
+    ): Flow<ImageUrlResult<String>> =
         flow {
-                val image =
-                    imageServiceRepository.getImage(
-                        path = imageData.name + imageData.extension,
-                        size = imageData.size
-                    )
-                emit(ImageResult(value = image, imageName = imageData.name))
+                val imageUrl = imageServiceRepository.getMainImageUrlByFolder(brand, model)
+                emit(ImageUrlResult(value = imageUrl, deviceUid = deviceUid))
             }
             .catch {
-                withContext(Dispatchers.Main) { Log.d("getImage", "${it.message}") }
-                emit(
-                    ImageResult(
-                        value = ImageBitmap(width = 150, height = 150),
-                        imageName = imageData.name
-                    )
-                )
+                withContext(Dispatchers.Main) { Log.d("getImageUrl", "${it.message}") }
+                emit(ImageUrlResult(value = "", deviceUid = deviceUid))
             }
 
     /** Получение нескольких изображений */
-    suspend fun getImages(
-        imagesData: List<FirebaseImageData>
-    ): Flow<Flow<ImageResult<ImageBitmap>>> {
-        return imagesData.map { image -> getImage(image) }.asFlow()
+    suspend fun getImageUrls(
+        deviceCompactList: List<DeviceCompact>
+    ): Flow<Flow<ImageUrlResult<String>>> {
+        return deviceCompactList
+            .map { device -> getImageUrl(device.uid, device.brand, device.model) }
+            .asFlow()
     }
 }

@@ -10,11 +10,13 @@ import javax.inject.Singleton
 class ImageSources @Inject constructor() {
     private val storageRef = Firebase.storage
 
+    /** Корневая директория */
     fun imageSource(): StorageReference {
         return storageRef.reference
     }
 
-    fun imageSourceByPath(path: String): StorageReference {
-        return storageRef.getReference(path)
+    /** Путь до файла конкретного устройства */
+    fun imageSourceByPath(brand: String, model: String): StorageReference {
+        return storageRef.getReference(brand).child(model)
     }
 }

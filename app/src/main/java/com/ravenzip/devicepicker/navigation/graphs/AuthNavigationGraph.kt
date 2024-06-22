@@ -27,50 +27,43 @@ fun NavGraphBuilder.authNavigationGraph(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surface,
-                isAppearanceLight = !isSystemInDarkTheme()
-            )
+                isAppearanceLight = !isSystemInDarkTheme())
 
             WelcomeScreen(
                 userViewModel = userViewModel,
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
-                navigateToHomeScreen = { navigateToHome(navController) }
-            )
+                navigateToHomeScreen = { navigateToHome(navController) })
         }
         composable(route = AuthGraph.REGISTRATION) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme()
-            )
+                isAppearanceLight = !isSystemInDarkTheme())
 
             RegistrationScreen(
                 userViewModel = userViewModel,
-                navigateToHomeScreen = { navigateToHome(navController) }
-            )
+                navigateToHomeScreen = { navigateToHome(navController) })
         }
         composable(route = AuthGraph.LOGIN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme()
-            )
+                isAppearanceLight = !isSystemInDarkTheme())
 
             LoginScreen(
                 userViewModel = userViewModel,
                 navigateToHomeScreen = { navigateToHome(navController) },
-                navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) }
-            )
+                navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) })
         }
         composable(route = AuthGraph.FORGOT_PASS) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme()
-            )
+                isAppearanceLight = !isSystemInDarkTheme())
 
             ForgotPasswordScreen(userViewModel)
         }

@@ -1,7 +1,9 @@
 package com.ravenzip.devicepicker.extensions.functions
 
+import androidx.annotation.FloatRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -12,12 +14,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
-fun Modifier.imageContainer(
+/** Контейнер для маленького изображения */
+fun Modifier.smallImageContainer(
     shape: Dp = 10.dp,
-    color: Color,
-    padding: PaddingValues,
-    width: Dp,
-    height: Dp
+    color: Color = Color.White,
+    padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+    width: Dp = 80.dp,
+    height: Dp = 80.dp
 ) =
     this then
         (this.clip(RoundedCornerShape(shape))
@@ -25,3 +28,18 @@ fun Modifier.imageContainer(
             .padding(padding)
             .width(width)
             .height(height))
+
+/** Контейнер для большого изображения */
+fun Modifier.bigImageContainer(
+    @FloatRange(from = 0.0, to = 1.0) width: Float = 0.9f,
+    height: Dp = 400.dp,
+    shape: Dp = 10.dp,
+    color: Color = Color.White,
+    padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+) =
+    this then
+        (this.fillMaxWidth(width)
+            .height(height)
+            .clip(RoundedCornerShape(shape))
+            .background(color)
+            .padding(padding))

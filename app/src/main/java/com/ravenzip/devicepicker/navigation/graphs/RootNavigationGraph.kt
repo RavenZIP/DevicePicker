@@ -22,18 +22,16 @@ fun RootNavigationGraph(
     NavHost(
         navController = navController,
         route = RootGraph.ROOT,
-        startDestination = startDestination
-    ) {
-        authNavigationGraph(navController = navController, userViewModel = userViewModel)
-        composable(route = RootGraph.MAIN) {
-            SetWindowStyle(
-                view = LocalView.current,
-                statusBarColor = MaterialTheme.colorScheme.surface,
-                navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme()
-            )
+        startDestination = startDestination) {
+            authNavigationGraph(navController = navController, userViewModel = userViewModel)
+            composable(route = RootGraph.MAIN) {
+                SetWindowStyle(
+                    view = LocalView.current,
+                    statusBarColor = MaterialTheme.colorScheme.surface,
+                    navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
+                    isAppearanceLight = !isSystemInDarkTheme())
 
-            ScaffoldScreen(userViewModel = userViewModel)
+                ScaffoldScreen(userViewModel = userViewModel)
+            }
         }
-    }
 }

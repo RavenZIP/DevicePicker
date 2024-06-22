@@ -16,13 +16,12 @@ fun NavGraphBuilder.userProfileNavigationGraph(
 ) {
     navigation(
         route = UserProfileGraph.USER_PROFILE_ROOT,
-        startDestination = UserProfileGraph.ADMIN_PANEL
-    ) {
-        composable(route = UserProfileGraph.ADMIN_PANEL) {
-            topAppBarViewModel.setText("Панель администратора")
-            bottomBarState.value = false
+        startDestination = UserProfileGraph.ADMIN_PANEL) {
+            composable(route = UserProfileGraph.ADMIN_PANEL) {
+                topAppBarViewModel.setText("Панель администратора")
+                bottomBarState.value = false
 
-            AdminPanelScreen(padding = padding)
+                AdminPanelScreen(padding = padding)
+            }
         }
-    }
 }

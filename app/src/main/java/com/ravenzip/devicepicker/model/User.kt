@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.data
+package com.ravenzip.devicepicker.model
 
 // Пока что тип для List - String,
 // но с большой долей вероятности изменится к моменту полноценной реализации

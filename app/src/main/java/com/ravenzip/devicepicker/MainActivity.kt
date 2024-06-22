@@ -36,27 +36,24 @@ class MainActivity : ComponentActivity() {
                                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
                                     return SplashScreenViewModel(userViewModel) as T
                                 }
-                            }
-                    )
+                            })
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    installSplashScreen().setKeepOnScreenCondition {
-                        splashScreenViewModel.isLoading.value
+                    color = MaterialTheme.colorScheme.background) {
+                        installSplashScreen().setKeepOnScreenCondition {
+                            splashScreenViewModel.isLoading.value
+                        }
+                        InitializeSnackBarIcons()
+
+                        val startDestination =
+                            splashScreenViewModel.startDestination.collectAsState().value
+
+                        RootNavigationGraph(
+                            navController = rememberNavController(),
+                            startDestination = startDestination,
+                            userViewModel = userViewModel)
                     }
-                    InitializeSnackBarIcons()
-
-                    val startDestination =
-                        splashScreenViewModel.startDestination.collectAsState().value
-
-                    RootNavigationGraph(
-                        navController = rememberNavController(),
-                        startDestination = startDestination,
-                        userViewModel = userViewModel
-                    )
-                }
             }
         }
     }

@@ -21,11 +21,11 @@ import com.ravenzip.devicepicker.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.screens.main.HomeScreen
 import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.services.HomeScreenService
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
 
@@ -39,14 +39,13 @@ fun MainNavigationGraph(
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
-    val homeScreenService = hiltViewModel<HomeScreenService>()
 
     val isLoadingDeviceCompact = remember { mutableStateOf(true) }
-    val isLoadingImages = remember { mutableStateOf(false) }
+    val isLoadingImageUrls = remember { mutableStateOf(false) }
     val isLoadingUserData = remember { mutableStateOf(true) }
 
-    val deviceCompactList = deviceViewModel.deviceCompactList.collectAsState().value
-    val images = deviceViewModel.images.collectAsState().value
+    val deviceCompactsState = deviceViewModel.deviceCompactState.collectAsState().value
+    val deviceCompactList = deviceCompactsState.deviceCompactList
 
     // Получаем компактную модель устройств
     // Грузим сразу все устройства, т.к. в дальнейшем компактная
@@ -54,26 +53,26 @@ fun MainNavigationGraph(
     LaunchedEffect(isLoadingDeviceCompact.value) {
         if (isLoadingDeviceCompact.value) {
             deviceViewModel
-                .getDeviceCompact()
+                .getDeviceCompactList()
                 .onCompletion {
                     isLoadingDeviceCompact.value = false
-                    isLoadingImages.value = true
+                    isLoadingImageUrls.value = true
                 }
-                .collect { homeScreenService.setDevicesFromCategories(deviceCompactList) }
+                .collect { deviceViewModel.setDevicesFromCategories(deviceCompactList) }
         }
     }
 
-    // Грузим изображения
-    LaunchedEffect(key1 = isLoadingImages.value) {
-        if (isLoadingImages.value) {
+    // Получаем урлы изображений
+    LaunchedEffect(key1 = isLoadingImageUrls.value) {
+        if (isLoadingImageUrls.value) {
             imageViewModel
-                .getImages(images)
+                .getImageUrls(deviceCompactList)
                 .flatMapMerge(concurrency = 3) { it }
-                .onCompletion { isLoadingImages.value = false }
+                .onCompletion { isLoadingImageUrls.value = false }
                 .collect {
-                    homeScreenService.tryToSetImageFromPopularDevices(it)
-                    homeScreenService.tryToSetImageFromLowPriceDevices(it)
-                    homeScreenService.tryToSetImageFromHighPerformanceDevices(it)
+                    deviceViewModel.setImageUrlToDevices(it)
+                    delay(100)
+                    deviceViewModel.updateDevicesCategories()
                 }
         }
     }
@@ -91,63 +90,63 @@ fun MainNavigationGraph(
     NavHost(
         navController = navController,
         route = RootGraph.MAIN,
-        startDestination = BottomBarGraph.HOME
-    ) {
-        composable(route = BottomBarGraph.HOME) {
-            topAppBarViewModel.setText("Главная")
-            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+        startDestination = BottomBarGraph.HOME) {
+            /// Домашний экран
+            composable(route = BottomBarGraph.HOME) {
+                topAppBarViewModel.setText("Главная")
+                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
 
-            HomeScreen(
+                HomeScreen(
+                    padding = padding,
+                    deviceViewModel = deviceViewModel,
+                    navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) })
+            }
+
+            homeNavigationGraph(
                 padding = padding,
-                homeScreenService = homeScreenService,
-                deviceViewModel = deviceViewModel,
-                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) }
+                topAppBarViewModel = topAppBarViewModel,
+                deviceViewModel = deviceViewModel)
+
+            /// Поиск
+            composable(route = BottomBarGraph.SEARCH) {
+                topAppBarViewModel.setText("Введите текст...")
+                topAppBarViewModel.setState(TopAppBarStateEnum.SearchBar)
+
+                SearchScreen(padding)
+            }
+
+            /// Избранное
+            composable(route = BottomBarGraph.FAVOURITES) {
+                topAppBarViewModel.setText("Избранное")
+                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+
+                FavouritesScreen(padding)
+            }
+
+            /// Сравнение
+            composable(route = BottomBarGraph.COMPARE) {
+                topAppBarViewModel.setText("Сравнение")
+                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+
+                CompareScreen(padding)
+            }
+
+            /// Профиль пользователя
+            composable(route = BottomBarGraph.USER_PROFILE) {
+                topAppBarViewModel.setText("Профиль")
+                topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
+                bottomBarState.value = true
+
+                UserProfileScreen(
+                    padding = padding,
+                    userViewModel = userViewModel,
+                    onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) }))
+            }
+
+            userProfileNavigationGraph(
+                padding,
+                topAppBarViewModel = topAppBarViewModel,
+                bottomBarState = bottomBarState,
             )
         }
-
-        homeNavigationGraph(
-            padding = padding,
-            topAppBarViewModel = topAppBarViewModel,
-            deviceViewModel = deviceViewModel
-        )
-
-        composable(route = BottomBarGraph.SEARCH) {
-            topAppBarViewModel.setText("Введите текст...")
-            topAppBarViewModel.setState(TopAppBarStateEnum.SearchBar)
-
-            SearchScreen(padding)
-        }
-
-        composable(route = BottomBarGraph.FAVOURITES) {
-            topAppBarViewModel.setText("Избранное")
-            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
-
-            FavouritesScreen(padding)
-        }
-
-        composable(route = BottomBarGraph.COMPARE) {
-            topAppBarViewModel.setText("Сравнение")
-            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
-
-            CompareScreen(padding)
-        }
-
-        composable(route = BottomBarGraph.USER_PROFILE) {
-            topAppBarViewModel.setText("Профиль")
-            topAppBarViewModel.setState(TopAppBarStateEnum.TopAppBar)
-            bottomBarState.value = true
-
-            UserProfileScreen(
-                padding = padding,
-                userViewModel = userViewModel,
-                onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) })
-            )
-        }
-
-        userProfileNavigationGraph(
-            padding,
-            topAppBarViewModel = topAppBarViewModel,
-            bottomBarState = bottomBarState,
-        )
-    }
 }

@@ -43,20 +43,16 @@ fun ScaffoldScreen(
         bottomBar = {
             AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
                 BottomNavigationBar(
-                    navController = navController,
-                    buttonsList = generateMenuItems()
-                )
+                    navController = navController, buttonsList = generateMenuItems())
             }
+        }) {
+            MainNavigationGraph(
+                navController = navController,
+                padding = it,
+                topAppBarViewModel = topAppBarViewModel,
+                userViewModel = userViewModel,
+                bottomBarState = bottomBarState)
         }
-    ) {
-        MainNavigationGraph(
-            navController = navController,
-            padding = it,
-            topAppBarViewModel = topAppBarViewModel,
-            userViewModel = userViewModel,
-            bottomBarState = bottomBarState
-        )
-    }
 }
 
 @Composable
@@ -80,8 +76,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             label = "Главная",
             route = BottomBarGraph.HOME,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
-            hasNews = false
-        )
+            hasNews = false)
 
     val searchButton =
         BottomNavigationItem(
@@ -89,8 +84,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.SEARCH,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
-            hasNews = false
-        )
+            hasNews = false)
 
     val favouriteButton =
         BottomNavigationItem(
@@ -98,8 +92,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.FAVOURITES,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
-            hasNews = false
-        )
+            hasNews = false)
 
     val compareButton =
         BottomNavigationItem(
@@ -107,16 +100,14 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.COMPARE,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
-            hasNews = false
-        )
+            hasNews = false)
 
     val userProfileButton =
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
-            hasNews = false
-        )
+            hasNews = false)
 
     return listOf(homeButton, searchButton, favouriteButton, compareButton, userProfileButton)
 }

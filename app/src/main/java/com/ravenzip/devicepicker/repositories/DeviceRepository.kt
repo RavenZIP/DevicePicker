@@ -1,9 +1,9 @@
 package com.ravenzip.devicepicker.repositories
 
 import com.google.firebase.database.getValue
-import com.ravenzip.devicepicker.data.device.compact.FirebaseDevice
-import com.ravenzip.devicepicker.data.device.compact.FirebaseDeviceCompact
 import com.ravenzip.devicepicker.extensions.functions.convertToClass
+import com.ravenzip.devicepicker.model.device.FirebaseDevice
+import com.ravenzip.devicepicker.model.device.compact.FirebaseDeviceCompact
 import com.ravenzip.devicepicker.sources.DeviceSources
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +17,7 @@ class DeviceRepository @Inject constructor(private val deviceSources: DeviceSour
         return convertedData ?: FirebaseDevice()
     }
 
-    suspend fun getDeviceCompact(): List<FirebaseDeviceCompact> {
+    suspend fun getDeviceCompactList(): List<FirebaseDeviceCompact> {
         val response = deviceSources.deviceCompactSource().get().await().children
         return response.convertToClass<FirebaseDeviceCompact>()
     }

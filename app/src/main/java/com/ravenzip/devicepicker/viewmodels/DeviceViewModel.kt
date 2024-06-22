@@ -2,10 +2,11 @@ package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.ravenzip.devicepicker.data.device.Device
-import com.ravenzip.devicepicker.data.device.FirebaseImageData
-import com.ravenzip.devicepicker.data.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import com.ravenzip.devicepicker.repositories.DeviceRepository
+import com.ravenzip.devicepicker.state.DeviceCompactState
+import com.ravenzip.devicepicker.state.DeviceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
@@ -19,56 +20,43 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRepository) :
     ViewModel() {
-    /** Список устройств (полная модель) */
-    // Является неким кэшем устройств на время работы с приложением
-    // В дальнейшем необходимо доработать
-    private val _deviceList = MutableStateFlow(mutableListOf<Device>())
+    /** Состояние данных об устройстве (компактная модель) */
+    private val _deviceCompactState = MutableStateFlow(DeviceCompactState())
 
-    /** Текущее выбранное устройство */
-    private val _device = MutableStateFlow(Device())
+    /** Состояние данных об устройстве (полная модель) */
+    private val _deviceState = MutableStateFlow(DeviceState())
 
-    /** Список устройств (компактная модель) */
-    private val _deviceCompactList = MutableStateFlow(mutableListOf<DeviceCompact>())
-
-    /** Данные по изображению устройства */
-    private val _firebaseImagesData = MutableStateFlow(mutableListOf<FirebaseImageData>())
-
-    val deviceList = _deviceList.asStateFlow()
-    val device = _device.asStateFlow()
-    val deviceCompactList = _deviceCompactList.asStateFlow()
-    val images = _firebaseImagesData.asStateFlow()
+    val deviceCompactState = _deviceCompactState.asStateFlow()
+    val deviceState = _deviceState.asStateFlow()
 
     /** Получение списка устройств (компактная модель) */
-    suspend fun getDeviceCompact(): Flow<Boolean> =
+    suspend fun getDeviceCompactList(): Flow<Boolean> =
         flow {
-                val devices = deviceRepository.getDeviceCompact()
-                devices.forEach { item ->
-                    _deviceCompactList.value.add(item.convertToDeviceCompact())
-                    _firebaseImagesData.value.add(
-                        FirebaseImageData(item.info.model, item.image.size, item.image.extension)
-                    )
-                }
+                val devices = deviceRepository.getDeviceCompactList()
+                _deviceCompactState.value.deviceCompactList.addAll(
+                    devices.map { device -> device.convertToDeviceCompact() })
 
                 emit(true)
             }
             .catch {
                 withContext(Dispatchers.Main) { Log.e("DeviceCompactViewModel", "${it.message}") }
-                _deviceCompactList.value.add(DeviceCompact())
-                _firebaseImagesData.value.add(FirebaseImageData())
+
                 emit(false)
             }
 
+    /** Получение устройства по бренду и уникальному идентификатору */
     suspend fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Boolean> =
         flow {
-                val cachedDevice = _deviceList.value.find { device -> device.uid == uid }
+                val cachedDevice =
+                    _deviceState.value.deviceList.find { device -> device.uid == uid }
 
                 if (cachedDevice !== null) {
-                    _device.value = cachedDevice
+                    deviceState.value.device = cachedDevice
                 } else {
                     val firebaseDevice = deviceRepository.getDeviceByBrandAndUid(brand, uid)
                     val device = firebaseDevice.convertToDevice()
-                    _device.value = device
-                    _deviceList.value.add(device)
+                    deviceState.value.device = device
+                    deviceState.value.deviceList.add(device)
                 }
 
                 emit(true)
@@ -77,4 +65,78 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
                 withContext(Dispatchers.Main) { Log.e("DeviceCompactViewModel", "${it.message}") }
                 emit(false)
             }
+
+    fun setDevicesFromCategories(devices: MutableList<DeviceCompact>) {
+        val popularDevices = devices.filter { it.tags.popular }
+        val lowPriceDevices = devices.filter { it.tags.lowPrice }
+        val highPerformance = devices.filter { it.tags.highPerformance }
+        val theBest = devices.filter { it.tags.theBest }
+
+        _deviceCompactState.value.popularDevices.addAll(popularDevices)
+        _deviceCompactState.value.lowPriceDevices.addAll(lowPriceDevices)
+        _deviceCompactState.value.highPerformanceDevices.addAll(highPerformance)
+
+        theBest.forEach {
+            val listIndex =
+                _deviceCompactState.value.theBestDevices.indexOfFirst { deviceList ->
+                    deviceList[0].brand == it.brand
+                }
+
+            if (listIndex >= 0) _deviceCompactState.value.theBestDevices[listIndex].add(it)
+            else _deviceCompactState.value.theBestDevices.add(mutableListOf(it))
+        }
+
+        // TODO фильтровать недавно просмотренные
+        _deviceCompactState.value.recentlyViewedDevices.add(DeviceCompact())
+    }
+
+    /** Заполнить урл изображения для конкретного устройства */
+    fun setImageUrlToDevices(imageUrl: ImageUrlResult<String>) {
+        val deviceIndex =
+            _deviceCompactState.value.deviceCompactList.indexOfFirst { device ->
+                device.uid == imageUrl.deviceUid
+            }
+
+        if (deviceIndex != -1) {
+            _deviceCompactState.value.deviceCompactList[deviceIndex] =
+                _deviceCompactState.value.deviceCompactList[deviceIndex].copy(
+                    imageUrl = imageUrl.value)
+        }
+    }
+
+    /// TODO временное решение, обязательно переделать
+    fun updateDevicesCategories() {
+        val deviceCompactList = _deviceCompactState.value.deviceCompactList
+        _deviceCompactState.value =
+            DeviceCompactState(
+                deviceCompactList = deviceCompactList,
+                popularDevices = mutableListOf(),
+                lowPriceDevices = mutableListOf(),
+                highPerformanceDevices = mutableListOf(),
+                theBestDevices = mutableListOf(),
+                recentlyViewedDevices = mutableListOf(),
+            )
+
+        val popularDevices = deviceCompactList.filter { it.tags.popular }
+        val lowPriceDevices = deviceCompactList.filter { it.tags.lowPrice }
+        val highPerformance = deviceCompactList.filter { it.tags.highPerformance }
+        val theBest = deviceCompactList.filter { it.tags.theBest }
+
+        _deviceCompactState.value.popularDevices.addAll(popularDevices)
+        _deviceCompactState.value.lowPriceDevices.addAll(lowPriceDevices)
+        _deviceCompactState.value.highPerformanceDevices.addAll(highPerformance)
+
+        theBest.forEach {
+            val listIndex =
+                _deviceCompactState.value.theBestDevices.indexOfFirst { deviceList ->
+                    deviceList[0].brand == it.brand
+                }
+
+            if (listIndex >= 0) _deviceCompactState.value.theBestDevices[listIndex].add(it)
+            else _deviceCompactState.value.theBestDevices.add(mutableListOf(it))
+        }
+
+        // TODO фильтровать недавно просмотренные
+        _deviceCompactState.value.recentlyViewedDevices.add(DeviceCompact())
+    }
 }

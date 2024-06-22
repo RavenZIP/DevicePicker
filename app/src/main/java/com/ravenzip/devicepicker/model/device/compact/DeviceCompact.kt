@@ -1,7 +1,6 @@
-package com.ravenzip.devicepicker.data.device.compact
+package com.ravenzip.devicepicker.model.device.compact
 
-import androidx.compose.ui.graphics.ImageBitmap
-import com.ravenzip.devicepicker.data.Tag
+import com.ravenzip.devicepicker.model.Tag
 
 /** Компактная модель устройства */
 data class DeviceCompact(
@@ -13,7 +12,7 @@ data class DeviceCompact(
     override val reviewsCount: Int,
     val brand: String,
     val tags: Tag,
-    val image: ImageBitmap
+    val imageUrl: String
 ) : IDeviceCompact {
     constructor() :
         this(
@@ -25,6 +24,5 @@ data class DeviceCompact(
             reviewsCount = 0,
             brand = "",
             tags = Tag(),
-            image = ImageBitmap(100, 200)
-        )
+            imageUrl = "")
 }
