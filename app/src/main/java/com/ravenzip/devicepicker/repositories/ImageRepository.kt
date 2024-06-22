@@ -24,6 +24,6 @@ class ImageRepository @Inject constructor(private val imageSources: ImageSources
         val response =
             imageSources.imageSourceByPath(brand = brand, model = model).listAll().await()
 
-        return response.items.map { it.downloadUrl.toString() }
+        return response.items.map { it.downloadUrl.await().toString() }
     }
 }

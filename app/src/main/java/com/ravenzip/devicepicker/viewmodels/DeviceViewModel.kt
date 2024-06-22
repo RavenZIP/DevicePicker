@@ -104,6 +104,11 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
         }
     }
 
+    /** Заполнить урл изображения для конкретного устройства */
+    fun setImageUrlToDevices(imageUrls: List<String>) {
+        _deviceState.value.device = _deviceState.value.device.copy(imageUrls = imageUrls)
+    }
+
     /// TODO временное решение, обязательно переделать
     fun updateDevicesCategories() {
         val deviceCompactList = _deviceCompactState.value.deviceCompactList

@@ -41,4 +41,15 @@ class ImageViewModel @Inject constructor(private val imageServiceRepository: Ima
             .map { device -> getImageUrl(device.uid, device.brand, device.model) }
             .asFlow()
     }
+
+    /** Получение нескольких изображений */
+    suspend fun getImageUrls(brand: String, model: String): Flow<List<String>> =
+        flow {
+                val imageUrls = imageServiceRepository.getImageListByFolder(brand, model)
+                emit(imageUrls)
+            }
+            .catch {
+                withContext(Dispatchers.Main) { Log.d("getImageUrls", "${it.message}") }
+                emit(listOf())
+            }
 }

@@ -44,18 +44,20 @@ import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
+import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
     deviceViewModel: DeviceViewModel,
+    imageViewModel: ImageViewModel,
     navigateToDevice: () -> Unit
 ) {
     val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
@@ -70,6 +72,7 @@ fun HomeScreen(
                     devices = deviceCompactState.popularDevices,
                     categoryName = "Популярные",
                     deviceViewModel = deviceViewModel,
+                    imageViewModel = imageViewModel,
                     spinner = spinner,
                     cardClick = navigateToDevice)
             }
@@ -80,6 +83,7 @@ fun HomeScreen(
                     devices = deviceCompactState.lowPriceDevices,
                     categoryName = "Низкая цена",
                     deviceViewModel = deviceViewModel,
+                    imageViewModel = imageViewModel,
                     spinner = spinner,
                     cardClick = navigateToDevice)
             }
@@ -101,6 +105,7 @@ fun HomeScreen(
                     devices = deviceCompactState.highPerformanceDevices,
                     categoryName = "Производительные",
                     deviceViewModel = deviceViewModel,
+                    imageViewModel = imageViewModel,
                     spinner = spinner,
                     cardClick = navigateToDevice)
                 Spacer(modifier = Modifier.height(20.dp))
@@ -111,6 +116,7 @@ fun HomeScreen(
                     devices = deviceCompactState.recentlyViewedDevices,
                     categoryName = "Вы недавно смотрели",
                     deviceViewModel = deviceViewModel,
+                    imageViewModel = imageViewModel,
                     spinner = spinner,
                     cardClick = navigateToDevice)
                 Spacer(modifier = Modifier.height(20.dp))
@@ -138,6 +144,7 @@ private fun CarouselDevices(
     devices: MutableList<DeviceCompact>,
     categoryName: String,
     deviceViewModel: DeviceViewModel,
+    imageViewModel: ImageViewModel,
     spinner: MutableState<SpinnerState>,
     cardClick: () -> Unit
 ) {
@@ -154,7 +161,11 @@ private fun CarouselDevices(
 
                     items(devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
                         DeviceCard(
-                            device = it, deviceViewModel, spinner = spinner, cardClick = cardClick)
+                            device = it,
+                            deviceViewModel = deviceViewModel,
+                            imageViewModel = imageViewModel,
+                            spinner = spinner,
+                            cardClick = cardClick)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
                 }
@@ -213,6 +224,7 @@ private fun SpecialOfferContainer(
 private fun DeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
+    imageViewModel: ImageViewModel,
     spinner: MutableState<SpinnerState>,
     cardClick: () -> Unit
 ) {
@@ -225,11 +237,16 @@ private fun DeviceCard(
                     scope.launch {
                         spinner.value =
                             SpinnerState(isLoading = true, TextParameters("Загрузка..."))
+
                         deviceViewModel
                             .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+                            .flatMapConcat {
+                                imageViewModel.getImageUrls(
+                                    brand = device.brand, model = device.model)
+                            }
                             .collect {
+                                deviceViewModel.setImageUrlToDevices(it)
                                 spinner.value = SpinnerState()
-                                delay(100)
                                 cardClick()
                             }
                     }

@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.extensions.functions
 
-import androidx.annotation.FloatRange
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,15 +30,7 @@ fun Modifier.smallImageContainer(
 
 /** Контейнер для большого изображения */
 fun Modifier.bigImageContainer(
-    @FloatRange(from = 0.0, to = 1.0) width: Float = 0.9f,
     height: Dp = 400.dp,
-    shape: Dp = 10.dp,
     color: Color = Color.White,
     padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
-) =
-    this then
-        (this.fillMaxWidth(width)
-            .height(height)
-            .clip(RoundedCornerShape(shape))
-            .background(color)
-            .padding(padding))
+) = this then (this.fillMaxWidth().height(height).background(color).padding(padding))

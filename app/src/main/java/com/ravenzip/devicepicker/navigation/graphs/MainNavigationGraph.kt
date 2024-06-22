@@ -99,6 +99,7 @@ fun MainNavigationGraph(
                 HomeScreen(
                     padding = padding,
                     deviceViewModel = deviceViewModel,
+                    imageViewModel = imageViewModel,
                     navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) })
             }
 
