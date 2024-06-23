@@ -64,8 +64,7 @@ fun WelcomeScreen(
                     ScreenContent(
                         image = painterResource(id = R.drawable.devices),
                         title = WelcomeEnum.MORE_INFORMATION.title,
-                        text = WelcomeEnum.MORE_INFORMATION.text
-                    )
+                        text = WelcomeEnum.MORE_INFORMATION.text)
                 }
                 1 -> {
                     ScreenContent(
@@ -89,8 +88,7 @@ fun WelcomeScreen(
                         isFinal = true,
                         navigateToRegistrationScreen = navigateToRegistrationScreen,
                         navigateToLoginScreen = navigateToLoginScreen,
-                        continueWithoutAuthClick = { alertDialogIsShown.value = true }
-                    )
+                        continueWithoutAuthClick = { alertDialogIsShown.value = true })
                 }
             }
         }
@@ -100,8 +98,7 @@ fun WelcomeScreen(
                 MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
                 MaterialTheme.colorScheme.primary,
                 height = 10,
-                width = 20
-            )
+                width = 20)
         }
     }
 
@@ -132,12 +129,11 @@ fun WelcomeScreen(
                     if (authResult.value !== null) navigateToHomeScreen()
                     else snackBarHostState.showError(authResult.error!!)
                 }
-            }
-        )
+            })
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = "Авторизация...", size = 16))
+        Spinner(text = TextParameters(value = "Анонимный вход...", size = 16))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
@@ -156,45 +152,42 @@ private fun ScreenContent(
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(painter = image, contentDescription = "")
-        Spacer(modifier = Modifier.height(80.dp))
+        verticalArrangement = Arrangement.Center) {
+            Image(painter = image, contentDescription = "")
+            Spacer(modifier = Modifier.height(80.dp))
 
-        Column(
-            modifier = Modifier.fillMaxWidth(0.9f),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(
-                text = title,
-                fontSize = if (isFinal) 24.sp else 22.sp,
-                fontWeight = FontWeight.W500,
-                letterSpacing = 0.sp
-            )
-            Spacer(modifier = Modifier.height(if (isFinal) 10.dp else 20.dp))
-            Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)
-        }
+            Column(
+                modifier = Modifier.fillMaxWidth(0.9f),
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(
+                        text = title,
+                        fontSize = if (isFinal) 24.sp else 22.sp,
+                        fontWeight = FontWeight.W500,
+                        letterSpacing = 0.sp)
+                    Spacer(modifier = Modifier.height(if (isFinal) 10.dp else 20.dp))
+                    Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)
+                }
 
-        if (isFinal) {
-            Spacer(modifier = Modifier.height(40.dp))
-            SimpleButton(
-                text = TextParameters("Регистрация", size = 16),
-            ) {
-                navigateToRegistrationScreen()
-            }
+            if (isFinal) {
+                Spacer(modifier = Modifier.height(40.dp))
+                SimpleButton(
+                    text = TextParameters("Регистрация", size = 16),
+                ) {
+                    navigateToRegistrationScreen()
+                }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            SimpleButton(text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {
-                navigateToLoginScreen()
-            }
+                Spacer(modifier = Modifier.height(20.dp))
+                SimpleButton(
+                    text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {
+                        navigateToLoginScreen()
+                    }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            SimpleButton(
-                text = TextParameters("Продолжить без регистрации", size = 16),
-                colors = getInverseColors()
-            ) {
-                continueWithoutAuthClick()
+                Spacer(modifier = Modifier.height(20.dp))
+                SimpleButton(
+                    text = TextParameters("Продолжить без регистрации", size = 16),
+                    colors = getInverseColors()) {
+                        continueWithoutAuthClick()
+                    }
             }
         }
-    }
 }
