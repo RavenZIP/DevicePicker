@@ -23,11 +23,14 @@ import com.ravenzip.devicepicker.screens.main.SearchScreen
 import com.ravenzip.devicepicker.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.state.SearchBarState
 import com.ravenzip.devicepicker.state.TopAppBarState
+import com.ravenzip.devicepicker.viewmodels.BrandViewModel
+import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onCompletion
 
@@ -41,10 +44,13 @@ fun MainNavigationGraph(
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
+    val brandViewModel = hiltViewModel<BrandViewModel>()
+    val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
 
     val isLoadingDeviceCompact = remember { mutableStateOf(true) }
     val isLoadingImageUrls = remember { mutableStateOf(false) }
-    val isLoadingUserData = remember { mutableStateOf(true) }
+    val isLoadingUserData = remember { mutableStateOf(false) }
+    val isLoadingBrandAndDeviceType = remember { mutableStateOf(false) }
 
     val deviceCompactsState = deviceViewModel.deviceCompactState.collectAsState().value
     val deviceCompactList = deviceCompactsState.deviceCompactList
@@ -70,7 +76,10 @@ fun MainNavigationGraph(
             imageViewModel
                 .getImageUrls(deviceCompactList)
                 .flatMapMerge(concurrency = 3) { it }
-                .onCompletion { isLoadingImageUrls.value = false }
+                .onCompletion {
+                    isLoadingImageUrls.value = false
+                    isLoadingUserData.value = true
+                }
                 .collect {
                     deviceViewModel.setImageUrlToDevices(it)
                     delay(100)
@@ -84,7 +93,21 @@ fun MainNavigationGraph(
         if (isLoadingUserData.value) {
             userViewModel
                 .get(userViewModel.getUser())
-                .onCompletion { isLoadingUserData.value = false }
+                .onCompletion {
+                    isLoadingUserData.value = false
+                    isLoadingBrandAndDeviceType.value = true
+                }
+                .collect {}
+        }
+    }
+
+    // Грузим данные о брендах и типах устройств
+    LaunchedEffect(key1 = isLoadingBrandAndDeviceType.value) {
+        if (isLoadingBrandAndDeviceType.value) {
+            brandViewModel
+                .getBrandList()
+                .flatMapConcat { deviceTypeViewModel.getDeviceTypeList() }
+                .onCompletion { isLoadingBrandAndDeviceType.value = false }
                 .collect {}
         }
     }
@@ -118,7 +141,10 @@ fun MainNavigationGraph(
                 topAppBarViewModel.setSearchBarState(SearchBarState())
                 topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
 
-                SearchScreen(padding)
+                SearchScreen(
+                    padding,
+                    brandViewModel = brandViewModel,
+                    deviceTypeViewModel = deviceTypeViewModel)
             }
 
             /// Избранное
