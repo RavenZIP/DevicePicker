@@ -4,9 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -29,10 +26,10 @@ import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainNavigationGraph(
@@ -47,67 +44,35 @@ fun MainNavigationGraph(
     val brandViewModel = hiltViewModel<BrandViewModel>()
     val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
 
-    val isLoadingDeviceCompact = remember { mutableStateOf(true) }
-    val isLoadingImageUrls = remember { mutableStateOf(false) }
-    val isLoadingUserData = remember { mutableStateOf(false) }
-    val isLoadingBrandAndDeviceType = remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        // Получаем компактную модель устройств и данные о пользователе
+        // Грузим сразу все устройства, т.к. в дальнейшем компактная
+        // модель будет использоваться для других экранов
 
-    val deviceCompactsState = deviceViewModel.deviceCompactState.collectAsState().value
-    val deviceCompactList = deviceCompactsState.deviceCompactList
-
-    // Получаем компактную модель устройств
-    // Грузим сразу все устройства, т.к. в дальнейшем компактная
-    // модель будет использоваться для других экранов
-    LaunchedEffect(isLoadingDeviceCompact.value) {
-        if (isLoadingDeviceCompact.value) {
+        // Затем грузим урлы изображений
+        launch {
             deviceViewModel
                 .getDeviceCompactList()
-                .onCompletion {
-                    isLoadingDeviceCompact.value = false
-                    isLoadingImageUrls.value = true
+                .zip(userViewModel.get(userViewModel.getUser())) { deviceCompactList, user ->
+                    deviceViewModel.setDevicesFromCategories(deviceCompactList, user.searchHistory)
+                    return@zip deviceCompactList
                 }
-                .collect { deviceViewModel.setDevicesFromCategories(deviceCompactList) }
-        }
-    }
-
-    // Получаем урлы изображений
-    LaunchedEffect(key1 = isLoadingImageUrls.value) {
-        if (isLoadingImageUrls.value) {
-            imageViewModel
-                .getImageUrls(deviceCompactList)
-                .flatMapMerge(concurrency = 3) { it }
-                .onCompletion {
-                    isLoadingImageUrls.value = false
-                    isLoadingUserData.value = true
+                .flatMapConcat { deviceCompactList ->
+                    imageViewModel.getImageUrls(deviceCompactList).flatMapMerge(concurrency = 3) {
+                        it
+                    }
                 }
                 .collect {
                     deviceViewModel.setImageUrlToDevices(it)
-                    delay(100)
                     deviceViewModel.updateDevicesCategories()
                 }
         }
-    }
 
-    // Грузим данные о пользователе
-    LaunchedEffect(key1 = isLoadingUserData.value) {
-        if (isLoadingUserData.value) {
-            userViewModel
-                .get(userViewModel.getUser())
-                .onCompletion {
-                    isLoadingUserData.value = false
-                    isLoadingBrandAndDeviceType.value = true
-                }
-                .collect {}
-        }
-    }
-
-    // Грузим данные о брендах и типах устройств
-    LaunchedEffect(key1 = isLoadingBrandAndDeviceType.value) {
-        if (isLoadingBrandAndDeviceType.value) {
+        // Грузим данные о брендах и типах устройств
+        launch {
             brandViewModel
                 .getBrandList()
                 .flatMapConcat { deviceTypeViewModel.getDeviceTypeList() }
-                .onCompletion { isLoadingBrandAndDeviceType.value = false }
                 .collect {}
         }
     }

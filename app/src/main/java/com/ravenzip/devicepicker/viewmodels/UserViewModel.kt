@@ -207,15 +207,16 @@ constructor(
     suspend fun get(currentUser: FirebaseUser?) =
         flow {
                 if (currentUser != null) {
-                    _user.value = userRepository.getUser(currentUser.uid)
-                    emit(true)
+                    val user = userRepository.getUser(currentUser.uid)
+                    _user.value = user
+                    emit(user)
                 } else {
                     throw Exception("currentUser is null")
                 }
             }
             .catch {
                 withContext(Dispatchers.Main) { Log.e("UserService: Get", "${it.message}") }
-                emit(false)
+                emit(User())
             }
 
     /** Добавить новые данные о пользователе */

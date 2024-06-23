@@ -30,18 +30,20 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
     val deviceState = _deviceState.asStateFlow()
 
     /** Получение списка устройств (компактная модель) */
-    suspend fun getDeviceCompactList(): Flow<Boolean> =
+    suspend fun getDeviceCompactList(): Flow<List<DeviceCompact>> =
         flow {
-                val devices = deviceRepository.getDeviceCompactList()
-                _deviceCompactState.value.deviceCompactList.addAll(
-                    devices.map { device -> device.convertToDeviceCompact() })
+                val devices =
+                    deviceRepository.getDeviceCompactList().map { device ->
+                        device.convertToDeviceCompact()
+                    }
+                _deviceCompactState.value.deviceCompactList.addAll(devices)
 
-                emit(true)
+                emit(devices)
             }
             .catch {
                 withContext(Dispatchers.Main) { Log.e("DeviceCompactViewModel", "${it.message}") }
 
-                emit(false)
+                emit(listOf())
             }
 
     /** Получение устройства по бренду и уникальному идентификатору */
@@ -66,7 +68,7 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
                 emit(false)
             }
 
-    fun setDevicesFromCategories(devices: MutableList<DeviceCompact>) {
+    fun setDevicesFromCategories(devices: List<DeviceCompact>, userSearchHistory: List<String>) {
         val popularDevices = devices.filter { it.tags.popular }
         val lowPriceDevices = devices.filter { it.tags.lowPrice }
         val highPerformance = devices.filter { it.tags.highPerformance }
@@ -86,7 +88,7 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
             else _deviceCompactState.value.theBestDevices.add(mutableListOf(it))
         }
 
-        // TODO фильтровать недавно просмотренные
+        // TODO формировать недавно просмотренные благодаря userSearchHistory
         _deviceCompactState.value.recentlyViewedDevices.add(DeviceCompact())
     }
 
