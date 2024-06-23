@@ -266,7 +266,7 @@ private fun DeviceCard(
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.i_medal),
+                        imageVector = ImageVector.vectorResource(R.drawable.i_medal_filled),
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.primary,
                         modifier = Modifier.size(14.dp))
@@ -297,7 +297,7 @@ private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Icon(
-                                imageVector = ImageVector.vectorResource(R.drawable.i_medal),
+                                imageVector = ImageVector.vectorResource(R.drawable.i_medal_filled),
                                 contentDescription = null,
                                 tint = MaterialTheme.colorScheme.primary,
                                 modifier = Modifier.size(14.dp))

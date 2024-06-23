@@ -1,10 +1,10 @@
 package com.ravenzip.devicepicker.model.device
 
 import com.ravenzip.devicepicker.model.Tag
-import com.ravenzip.devicepicker.model.device.compact.FirebaseDeviceCompactInfo
+import com.ravenzip.devicepicker.model.device.compact.FirebaseDeviceInfo
 
-data class FirebaseDevice(val info: FirebaseDeviceCompactInfo, val tags: Tag) {
-    constructor() : this(info = FirebaseDeviceCompactInfo(), tags = Tag())
+data class FirebaseDevice(val info: FirebaseDeviceInfo, val tags: Tag) {
+    constructor() : this(info = FirebaseDeviceInfo(), tags = Tag())
 
     fun convertToDevice(imageUrls: List<String> = listOf()): Device {
         return Device(
@@ -14,6 +14,11 @@ data class FirebaseDevice(val info: FirebaseDeviceCompactInfo, val tags: Tag) {
             price = this.info.price,
             rating = this.info.rating,
             reviewsCount = this.info.reviewsCount,
+            diagonal = this.info.diagonal,
+            year = this.info.year,
+            randomAccessMemory = this.info.randomAccessMemory,
+            internalMemory = this.info.internalMemory,
+            color = this.info.color,
             brand = this.info.model.split(' ')[0],
             tags = this.tags,
             imageUrls = imageUrls)

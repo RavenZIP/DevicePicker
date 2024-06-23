@@ -1,10 +1,6 @@
-package com.ravenzip.devicepicker.model.device
+package com.ravenzip.devicepicker.model.device.compact
 
-import com.ravenzip.devicepicker.model.Tag
-import com.ravenzip.devicepicker.model.device.compact.IDeviceCompact
-
-/** Полная модель устройства */
-data class Device(
+class FirebaseDeviceInfo(
     override val uid: String,
     override val type: String,
     override val model: String,
@@ -15,10 +11,7 @@ data class Device(
     val year: Int,
     val randomAccessMemory: Int,
     val internalMemory: Int,
-    val color: String,
-    val brand: String,
-    val tags: Tag,
-    val imageUrls: List<String>
+    val color: String
 ) : IDeviceCompact {
     constructor() :
         this(
@@ -32,8 +25,5 @@ data class Device(
             year = 0,
             randomAccessMemory = 0,
             internalMemory = 0,
-            color = "",
-            brand = "",
-            tags = Tag(),
-            imageUrls = listOf())
+            color = "")
 }
