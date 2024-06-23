@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -30,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.enums.WelcomeEnum
-import com.ravenzip.devicepicker.extensions.functions.getInverseColors
+import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
@@ -185,7 +186,7 @@ private fun ScreenContent(
                 Spacer(modifier = Modifier.height(20.dp))
                 SimpleButton(
                     text = TextParameters("Продолжить без регистрации", size = 16),
-                    colors = getInverseColors()) {
+                    colors = ButtonDefaults.inverseColors()) {
                         continueWithoutAuthClick()
                     }
             }

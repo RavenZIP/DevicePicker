@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +27,7 @@ import com.ravenzip.devicepicker.components.GetFields
 import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
-import com.ravenzip.devicepicker.extensions.functions.getInverseMixColors
+import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
@@ -66,33 +67,28 @@ fun LoginScreen(
     Column(
         modifier =
             Modifier.fillMaxSize().clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) {
-                focusManager.clearFocus()
-                keyboardController?.hide()
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        Text(
-            text = "Войти в аккаунт",
-            modifier = Modifier.fillMaxWidth(0.9f),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = 0.sp
-        )
+                interactionSource = interactionSource, indication = null) {
+                    focusManager.clearFocus()
+                    keyboardController?.hide()
+                },
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(40.dp))
+            Text(
+                text = "Войти в аккаунт",
+                modifier = Modifier.fillMaxWidth(0.9f),
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Medium,
+                letterSpacing = 0.sp)
 
-        Spacer(modifier = Modifier.height(30.dp))
-        GetFields(
-            selectedVariant = selectedLoginVariant,
-            fields = listOf(emailOrPhone, passwordOrCode),
-            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value)
-        )
+            Spacer(modifier = Modifier.height(30.dp))
+            GetFields(
+                selectedVariant = selectedLoginVariant,
+                fields = listOf(emailOrPhone, passwordOrCode),
+                validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value))
 
-        Spacer(modifier = Modifier.height(30.dp))
-        AuthVariants(authVariants = loginVariants, title = "Выбор варианта входа")
-    }
+            Spacer(modifier = Modifier.height(30.dp))
+            AuthVariants(authVariants = loginVariants, title = "Выбор варианта входа")
+        }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
@@ -122,9 +118,7 @@ fun LoginScreen(
                         spinnerText.value = "Вход в аккаунт..."
                         val authResult =
                             userViewModel.logInUserWithEmail(
-                                emailOrPhone.value,
-                                passwordOrCode.value
-                            )
+                                emailOrPhone.value, passwordOrCode.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false
@@ -144,10 +138,9 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
             text = TextParameters(value = "Забыли пароль?", size = 16),
-            colors = getInverseMixColors()
-        ) {
-            navigateToForgotPassScreen()
-        }
+            colors = ButtonDefaults.inverseMixColors()) {
+                navigateToForgotPassScreen()
+            }
 
         Spacer(modifier = Modifier.height(20.dp))
     }
