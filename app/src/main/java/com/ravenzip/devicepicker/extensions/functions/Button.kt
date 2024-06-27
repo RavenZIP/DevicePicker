@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.extensions.functions
 
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 
@@ -21,3 +22,9 @@ fun ButtonDefaults.inverseMixColors() =
 @Composable
 fun ButtonDefaults.containerColor() =
     this.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+
+@Composable
+fun ButtonDefaults.surfaceVariant() =
+    this.buttonColors(
+        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        contentColor = LocalContentColor.current)

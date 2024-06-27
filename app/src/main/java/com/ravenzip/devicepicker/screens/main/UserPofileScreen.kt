@@ -56,7 +56,7 @@ fun UserProfileScreen(
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Text(text = "Аккаунт", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
             Spacer(modifier = Modifier.padding(top = 10.dp))

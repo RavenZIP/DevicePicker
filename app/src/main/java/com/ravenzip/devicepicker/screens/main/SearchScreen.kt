@@ -40,7 +40,7 @@ fun SearchScreen(
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             Text(
                 text = "Категории устройств",
                 modifier = Modifier.fillMaxSize(0.9f),

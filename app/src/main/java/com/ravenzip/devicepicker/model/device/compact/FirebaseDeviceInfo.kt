@@ -11,7 +11,7 @@ class FirebaseDeviceInfo(
     val year: Int,
     val randomAccessMemory: Int,
     val internalMemory: Int,
-    val color: String
+    val colors: List<String>
 ) : IDeviceCompact {
     constructor() :
         this(
@@ -25,5 +25,5 @@ class FirebaseDeviceInfo(
             year = 0,
             randomAccessMemory = 0,
             internalMemory = 0,
-            color = "")
+            colors = listOf())
 }

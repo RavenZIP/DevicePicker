@@ -15,9 +15,10 @@ data class Device(
     val year: Int,
     val randomAccessMemory: Int,
     val internalMemory: Int,
-    val color: String,
+    val colors: List<String>,
     val brand: String,
     val tags: Tag,
+    val configurations: List<PhoneConfiguration>,
     val imageUrls: List<String>
 ) : IDeviceCompact {
     constructor() :
@@ -32,8 +33,9 @@ data class Device(
             year = 0,
             randomAccessMemory = 0,
             internalMemory = 0,
-            color = "",
+            colors = listOf(),
             brand = "",
             tags = Tag(),
+            configurations = listOf(),
             imageUrls = listOf())
 }

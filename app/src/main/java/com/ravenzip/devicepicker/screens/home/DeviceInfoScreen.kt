@@ -2,7 +2,7 @@ package com.ravenzip.devicepicker.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,13 +13,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,11 +35,16 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.components.Price
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
-import com.ravenzip.devicepicker.extensions.functions.highestCardColors
+import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
+import com.ravenzip.devicepicker.model.UserReviewsInfo
+import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.skydoves.landscapist.ImageOptions
@@ -52,7 +59,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
     val title =
         "${device.type} ${device.model}, " +
             "${device.randomAccessMemory}/${device.internalMemory}Gb " +
-            "${device.diagonal}\" ${device.year} ${device.color}"
+            "${device.diagonal}\" ${device.year} ${device.colors[0]}"
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -72,9 +79,16 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
             }
 
             item {
-                Spacer(modifier = Modifier.padding(top = 20.dp))
-                UserReviewsContainer(device.rating, device.reviewsCount)
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                UserReviewsContainer(generateUserReviewsList(device.rating, device.reviewsCount))
             }
+
+            item {
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                PriceAndConfigurations(device.price, device.configurations, device.colors)
+            }
+
+            item { Spacer(modifier = Modifier.padding(top = 500.dp)) }
         }
 }
 
@@ -103,54 +117,152 @@ private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
 }
 
 @Composable
-private fun UserReviewsContainer(rating: Double, reviewsCount: Int) {
+private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
     Row(
         modifier =
             Modifier.fillMaxWidth(0.9f)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(10.dp)) {
-            UserReviewsInfo(
-                icon = ImageVector.vectorResource(R.drawable.i_medal_filled),
-                count = rating.toString(),
-                text = "Оценка")
+                .padding(10.dp),
+        horizontalArrangement = Arrangement.Center) {
+            userReviewsInfo.forEach { userReviewsInfo ->
+                Button(
+                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
+                    onClick = { /*TODO*/ },
+                    shape = RoundedCornerShape(10.dp),
+                    colors = ButtonDefaults.surfaceVariant(),
+                    contentPadding = PaddingValues(5.dp)) {
+                        Column(
+                            modifier = Modifier.padding(vertical = 0.dp, horizontal = 0.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                                Spacer(modifier = Modifier.padding(top = 5.dp))
+                                TextWithIcon(
+                                    icon = userReviewsInfo.icon,
+                                    iconSize = 16.dp,
+                                    text = userReviewsInfo.value,
+                                    spacerWidth = 5.dp)
 
-            Box(modifier = Modifier.weight(1f))
-
-            UserReviewsInfo(
-                icon = ImageVector.vectorResource(R.drawable.i_comment),
-                count = reviewsCount.toString(),
-                text = "Отзывы")
-
-            Box(modifier = Modifier.weight(1f))
-
-            UserReviewsInfo(
-                icon = ImageVector.vectorResource(R.drawable.i_question),
-                count = reviewsCount.toString(),
-                text = "Вопросы")
+                                Text(text = userReviewsInfo.text, fontWeight = FontWeight.W400)
+                                Spacer(modifier = Modifier.padding(top = 5.dp))
+                            }
+                    }
+            }
         }
 }
 
 @Composable
-private fun UserReviewsInfo(icon: ImageVector, count: String, text: String) {
-    Card(
-        modifier = Modifier.clip(RoundedCornerShape(10.dp)).clickable {},
-        colors = CardDefaults.highestCardColors(0.75f)) {
-            Column(
-                modifier = Modifier.padding(vertical = 5.dp, horizontal = 15.dp),
-                horizontalAlignment = Alignment.CenterHorizontally) {
-                    Spacer(modifier = Modifier.padding(top = 5.dp))
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(
-                            imageVector = icon,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = Modifier.size(16.dp))
-                        Spacer(modifier = Modifier.padding(start = 5.dp))
-                        Text(text = count)
-                    }
-                    Text(text = text)
-                    Spacer(modifier = Modifier.padding(top = 5.dp))
+private fun PriceAndConfigurations(
+    price: Int,
+    configurations: List<PhoneConfiguration>,
+    colors: List<String>
+) {
+    Column(
+        modifier =
+            Modifier.fillMaxWidth(0.9f)
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .padding(10.dp)) {
+            Price(price)
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            TextWithIcon(
+                icon = ImageVector.vectorResource(R.drawable.i_configuration),
+                text = "Конфигурации устройства")
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            DeviceConfigurations(configurations)
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            TextWithIcon(
+                icon = ImageVector.vectorResource(R.drawable.i_palette), text = "Цвета устройства")
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            DeviceColors(colors)
+
+            Spacer(modifier = Modifier.height(15.dp))
+        }
+}
+
+@Composable
+private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        configurations.forEach { configuration ->
+            val text = "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
+                shape = RoundedCornerShape(10.dp)) {
+                    Text(
+                        modifier = Modifier.padding(10.dp).fillMaxWidth(),
+                        text = text,
+                        textAlign = TextAlign.Center)
                 }
         }
+    }
+}
+
+@Composable
+private fun DeviceColors(colors: List<String>) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        colors.forEach { color ->
+            Card(
+                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
+                shape = RoundedCornerShape(10.dp)) {
+                    Text(
+                        modifier = Modifier.padding(10.dp).fillMaxWidth(),
+                        text = color,
+                        textAlign = TextAlign.Center)
+                }
+        }
+    }
+}
+
+@Composable
+private fun generateUserReviewsList(
+    deviceRating: Double,
+    deviceReviewsCount: Int
+): List<UserReviewsInfo> {
+    val rating =
+        UserReviewsInfo(
+            icon = ImageVector.vectorResource(R.drawable.i_medal),
+            value = deviceRating.toString(),
+            text = "Оценка")
+
+    val reviewsCount =
+        UserReviewsInfo(
+            icon = ImageVector.vectorResource(R.drawable.i_comment),
+            value = deviceReviewsCount.toString(),
+            text = "Отзывы")
+
+    val questionsCount =
+        UserReviewsInfo(
+            icon = ImageVector.vectorResource(R.drawable.i_question),
+            value = deviceReviewsCount.toString(),
+            text = "Вопросы")
+
+    return listOf(rating, reviewsCount, questionsCount)
+}
+
+@Composable
+private fun TextWithIcon(
+    icon: ImageVector,
+    iconSize: Dp = 22.dp,
+    text: String,
+    fontWeight: FontWeight = FontWeight.W400,
+    spacerWidth: Dp = 10.dp
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            modifier = Modifier.size(iconSize),
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary)
+
+        Spacer(modifier = Modifier.width(spacerWidth))
+
+        Text(text = text, fontWeight = fontWeight)
+    }
 }
