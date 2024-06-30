@@ -103,7 +103,7 @@ fun MainNavigationGraph(
 
             /// Поиск
             composable(route = BottomBarGraph.SEARCH) {
-                topAppBarViewModel.setSearchBarState(SearchBarState())
+                topAppBarViewModel.setSearchBarState(SearchBarState.createSearchBarState())
                 topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
 
                 SearchScreen(

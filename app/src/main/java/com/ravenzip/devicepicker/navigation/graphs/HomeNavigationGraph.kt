@@ -3,6 +3,8 @@ package com.ravenzip.devicepicker.navigation.graphs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraphBuilder
@@ -44,17 +46,15 @@ fun NavGraphBuilder.homeNavigationGraph(
 
 @Composable
 private fun topAppBarItemList(): List<AppBarItem> {
-    val favouriteButton =
-        AppBarItem(
-            icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
-            onClick = {})
+    val favouriteIcon =
+        IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20)
+    val compareIcon =
+        IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20)
 
-    val compareButton =
-        AppBarItem(
-            icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
-            onClick = {})
+    val favouriteButton = remember {
+        mutableStateOf(AppBarItem(icon = favouriteIcon, onClick = {}))
+    }
+    val compareButton = remember { mutableStateOf(AppBarItem(icon = compareIcon, onClick = {})) }
 
-    return listOf(favouriteButton, compareButton)
+    return listOf(favouriteButton.value, compareButton.value)
 }
