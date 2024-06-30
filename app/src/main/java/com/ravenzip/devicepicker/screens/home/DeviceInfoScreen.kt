@@ -22,7 +22,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -36,13 +35,15 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.Price
+import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
+import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
@@ -211,10 +212,25 @@ private fun DeviceColors(colors: List<String>) {
             Card(
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
                 shape = RoundedCornerShape(10.dp)) {
-                    Text(
-                        modifier = Modifier.padding(10.dp).fillMaxWidth(),
-                        text = color,
-                        textAlign = TextAlign.Center)
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(10.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center) {
+                            Box(
+                                modifier =
+                                    Modifier.size(10.dp)
+                                        .clip(RoundedCornerShape(2.dp))
+                                        .background(colorMap[color]!!))
+
+                            Spacer(modifier = Modifier.width(5.dp))
+
+                            Text(
+                                modifier = Modifier.fillMaxWidth(0.85f),
+                                text = color,
+                                textAlign = TextAlign.Center,
+                                softWrap = false,
+                                overflow = TextOverflow.Ellipsis)
+                        }
                 }
         }
     }
@@ -244,25 +260,4 @@ private fun generateUserReviewsList(
             text = "Вопросы")
 
     return listOf(rating, reviewsCount, questionsCount)
-}
-
-@Composable
-private fun TextWithIcon(
-    icon: ImageVector,
-    iconSize: Dp = 22.dp,
-    text: String,
-    fontWeight: FontWeight = FontWeight.W400,
-    spacerWidth: Dp = 10.dp
-) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            modifier = Modifier.size(iconSize),
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary)
-
-        Spacer(modifier = Modifier.width(spacerWidth))
-
-        Text(text = text, fontWeight = fontWeight)
-    }
 }

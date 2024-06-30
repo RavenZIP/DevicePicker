@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,18 +18,19 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import java.text.DecimalFormat
 
 @Composable
-fun CustomText(text: String, size: Int = 14, weight: FontWeight = FontWeight.W400) {
+fun CustomText(text: String, size: Int = 14, fontWeight: FontWeight = FontWeight.W400) {
     Text(
         text = text,
         modifier = Modifier.fillMaxWidth(),
         fontSize = size.sp,
-        fontWeight = weight,
+        fontWeight = fontWeight,
         textAlign = TextAlign.Start)
 }
 
@@ -53,4 +55,25 @@ fun Price(price: Int) {
                     contentDescription = null)
             }
         }
+}
+
+@Composable
+fun TextWithIcon(
+    icon: ImageVector,
+    iconSize: Dp = 22.dp,
+    text: String,
+    fontWeight: FontWeight = FontWeight.W400,
+    spacerWidth: Dp = 10.dp
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Icon(
+            modifier = Modifier.size(iconSize),
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary)
+
+        Spacer(modifier = Modifier.width(spacerWidth))
+
+        CustomText(text = text, fontWeight = fontWeight)
+    }
 }
