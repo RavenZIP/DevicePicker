@@ -88,7 +88,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
                 PriceAndConfigurations(device.price, device.configurations, device.colors)
             }
 
-            item { Spacer(modifier = Modifier.padding(top = 500.dp)) }
+            item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
         }
 }
 
