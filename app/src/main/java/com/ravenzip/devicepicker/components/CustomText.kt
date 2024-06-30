@@ -3,7 +3,6 @@ package com.ravenzip.devicepicker.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -24,19 +23,26 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import java.text.DecimalFormat
 
+private val pattern = DecimalFormat("###,###,###")
+
 @Composable
-fun CustomText(text: String, size: Int = 14, fontWeight: FontWeight = FontWeight.W400) {
+fun CustomText(
+    text: String,
+    modifier: Modifier = Modifier,
+    size: Int = 14,
+    fontWeight: FontWeight = FontWeight.W400
+) {
     Text(
         text = text,
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         fontSize = size.sp,
         fontWeight = fontWeight,
         textAlign = TextAlign.Start)
 }
 
+// TODO выводить диапазон цен (сейчас выводится конкретная цена)
 @Composable
-fun Price(price: Int) {
-    val pattern = DecimalFormat("###,###,###")
+fun PriceRange(price: Int) {
     val formattedPrice = pattern.format(price).replace(",", " ") + " ₽"
 
     // TODO красить кнопку исходя из цены \ диапазона цен
@@ -55,6 +61,13 @@ fun Price(price: Int) {
                     contentDescription = null)
             }
         }
+}
+
+@Composable
+fun Price(price: Int) {
+    val formattedPrice = pattern.format(price).replace(",", " ") + " ₽"
+
+    Text(text = formattedPrice, fontSize = 16.sp, fontWeight = FontWeight.Bold)
 }
 
 @Composable

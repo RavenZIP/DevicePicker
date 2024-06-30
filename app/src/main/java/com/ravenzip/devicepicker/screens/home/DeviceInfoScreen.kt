@@ -39,7 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.Price
+import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
@@ -163,7 +163,7 @@ private fun PriceAndConfigurations(
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp)) {
-            Price(price)
+            PriceRange(price)
 
             Spacer(modifier = Modifier.height(15.dp))
 
