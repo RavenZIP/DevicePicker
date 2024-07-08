@@ -235,6 +235,7 @@ private fun DeviceCard(
                         spinner.value =
                             SpinnerState(isLoading = true, TextParameters("Загрузка..."))
 
+                        // TODO кешировать изображения точно также, как и устройства
                         deviceViewModel
                             .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
                             .flatMapConcat {

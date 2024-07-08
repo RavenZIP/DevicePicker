@@ -42,12 +42,16 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
+import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
+import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
+import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
@@ -58,9 +62,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
     val device = deviceState.device
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
     val title =
-        "${device.type} ${device.model}, " +
-            "${device.randomAccessMemory}/${device.internalMemory}Gb " +
-            "${device.diagonal}\" ${device.year} ${device.colors[0]}"
+        "${device.info.type} ${device.info.model}, " +
+            "${device.configurations[0].randomAccessMemory}/${device.configurations[0].internalMemory}Gb " +
+            "${device.specifications.diagonal}\" ${device.specifications.year} ${device.colors[0]}"
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -81,12 +85,19 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                UserReviewsContainer(generateUserReviewsList(device.rating, device.reviewsCount))
+                UserReviewsContainer(
+                    generateUserReviewsList(
+                        device.info.rating, device.info.reviewsCount, device.info.questionsCount))
             }
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                PriceAndConfigurations(device.price, device.configurations, device.colors)
+                PriceAndConfigurations(device.info.price, device.configurations, device.colors)
+            }
+
+            item {
+                Spacer(modifier = Modifier.padding(top = 15.dp))
+                Specifications(device.specifications)
             }
 
             item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
@@ -169,7 +180,7 @@ private fun PriceAndConfigurations(
 
             TextWithIcon(
                 icon = ImageVector.vectorResource(R.drawable.i_configuration),
-                text = "Конфигурации устройства")
+                text = "Конфигурации")
 
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -177,8 +188,7 @@ private fun PriceAndConfigurations(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            TextWithIcon(
-                icon = ImageVector.vectorResource(R.drawable.i_palette), text = "Цвета устройства")
+            TextWithIcon(icon = ImageVector.vectorResource(R.drawable.i_palette), text = "Цвета")
 
             Spacer(modifier = Modifier.height(15.dp))
 
@@ -188,6 +198,7 @@ private fun PriceAndConfigurations(
         }
 }
 
+/** Список конфигураций устройства */
 @Composable
 private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -205,6 +216,7 @@ private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
     }
 }
 
+/** Список цветов устройства */
 @Composable
 private fun DeviceColors(colors: List<String>) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -239,7 +251,8 @@ private fun DeviceColors(colors: List<String>) {
 @Composable
 private fun generateUserReviewsList(
     deviceRating: Double,
-    deviceReviewsCount: Int
+    deviceReviewsCount: Int,
+    deviceQuestionsCount: Int
 ): List<UserReviewsInfo> {
     val rating =
         UserReviewsInfo(
@@ -256,8 +269,26 @@ private fun generateUserReviewsList(
     val questionsCount =
         UserReviewsInfo(
             icon = ImageVector.vectorResource(R.drawable.i_question),
-            value = deviceReviewsCount.toString(),
+            value = deviceQuestionsCount.toString(),
             text = "Вопросы")
 
     return listOf(rating, reviewsCount, questionsCount)
+}
+
+/** Характеристики */
+@Composable
+private fun Specifications(specifications: DeviceSpecifications) {
+    Column(
+        modifier =
+            Modifier.fillMaxWidth(0.9f)
+                .clip(RoundedCornerShape(10.dp))
+                .background(MaterialTheme.colorScheme.surfaceContainer)
+                .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(text = "")
+            SimpleButton(
+                width = 1f,
+                text = TextParameters(value = "Показать полностью"),
+                colors = ButtonDefaults.inverseColors())
+        }
 }

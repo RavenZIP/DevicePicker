@@ -134,7 +134,7 @@ fun WelcomeScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = "Анонимный вход...", size = 16))
+        Spinner(text = TextParameters(value = "Анонимный вход..."))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
@@ -172,20 +172,19 @@ private fun ScreenContent(
             if (isFinal) {
                 Spacer(modifier = Modifier.height(40.dp))
                 SimpleButton(
-                    text = TextParameters("Регистрация", size = 16),
+                    text = TextParameters("Регистрация"),
                 ) {
                     navigateToRegistrationScreen()
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                SimpleButton(
-                    text = TextParameters("Вход", size = 16), textAlign = TextAlign.Center) {
-                        navigateToLoginScreen()
-                    }
+                SimpleButton(text = TextParameters("Вход"), textAlign = TextAlign.Center) {
+                    navigateToLoginScreen()
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
                 SimpleButton(
-                    text = TextParameters("Продолжить без регистрации", size = 16),
+                    text = TextParameters("Продолжить без регистрации"),
                     colors = ButtonDefaults.inverseColors()) {
                         continueWithoutAuthClick()
                     }
