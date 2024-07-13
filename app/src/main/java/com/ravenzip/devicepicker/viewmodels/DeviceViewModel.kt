@@ -50,7 +50,7 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
     suspend fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Boolean> =
         flow {
                 val cachedDevice =
-                    _deviceState.value.deviceList.find { device -> device.info.uid == uid }
+                    _deviceState.value.deviceList.find { device -> device.uid == uid }
 
                 if (cachedDevice !== null) {
                     deviceState.value.device = cachedDevice

@@ -1,23 +1,28 @@
 package com.ravenzip.devicepicker.model.device
 
+import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 
 /** Полная модель устройства */
 data class Device(
-    val info: DeviceInfo,
+    val uid: String,
     val specifications: DeviceSpecifications,
     val colors: List<String>,
     val tags: Tag,
     val configurations: List<PhoneConfiguration>,
-    val imageUrls: List<String>
+    val imageUrls: List<String>,
+    val feedback: Feedback,
+    val price: Int,
 ) {
     constructor() :
         this(
-            info = DeviceInfo(),
+            uid = "",
             specifications = DeviceSpecifications(),
             colors = listOf(),
             tags = Tag(),
             configurations = listOf(),
-            imageUrls = listOf())
+            imageUrls = listOf(),
+            feedback = Feedback(),
+            price = 0)
 }

@@ -43,13 +43,12 @@ import com.ravenzip.devicepicker.components.DefaultText
 import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
-import com.ravenzip.devicepicker.components.Title
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
-import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
+import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.map
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.skydoves.landscapist.ImageOptions
@@ -62,9 +61,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
     val device = deviceState.device
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
     val title =
-        "${device.info.type} ${device.info.model}, " +
+        "${device.specifications.baseInfo.type} ${device.specifications.baseInfo.model}, " +
             "${device.configurations[0].randomAccessMemory}/${device.configurations[0].internalMemory}Gb " +
-            "${device.specifications.diagonal}\" ${device.specifications.year} ${device.colors[0]}"
+            "${device.specifications.diagonal}\" ${device.specifications.baseInfo.year} ${device.colors[0]}"
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -87,17 +86,19 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
                 UserReviewsContainer(
                     generateUserReviewsList(
-                        device.info.rating, device.info.reviewsCount, device.info.questionsCount))
+                        device.feedback.rating,
+                        device.feedback.reviewsCount,
+                        device.feedback.questionsCount))
             }
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                PriceAndConfigurations(device.info.price, device.configurations, device.colors)
+                PriceAndConfigurations(device.price, device.configurations, device.colors)
             }
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                Specifications(device.specifications)
+                Specifications(device.specifications.map())
             }
 
             item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
@@ -278,7 +279,7 @@ private fun generateUserReviewsList(
 
 /** Характеристики */
 @Composable
-private fun Specifications(specifications: DeviceSpecifications) {
+private fun Specifications(specificationsMap: Map<String, Map<String, String>>) {
     Column(
         modifier =
             Modifier.fillMaxWidth(0.9f)
@@ -289,37 +290,23 @@ private fun Specifications(specifications: DeviceSpecifications) {
             TextWithIcon(
                 icon = ImageVector.vectorResource(R.drawable.i_lamp), text = "Характеристики")
             Column(Modifier.fillMaxWidth().padding(10.dp)) {
-                BaseInfo(specifications)
-                Title(text = "")
-                Title(text = "Экран")
-                Title(text = "Корпус и защита")
-                Title(text = "Процессор")
-                Title(text = "Память")
-                Title(text = "Камера")
-                Title(text = "Аудио")
-                Title(text = "Сеть")
-                Title(text = "Питание")
-                Title(text = "Габариты, вес")
-                Title(text = "Дополнительная информация")
+                for (specificationCategory in specificationsMap.entries) {
+                    SpecificationCategory(specificationCategory)
+                }
             }
         }
 }
 
 @Composable
-fun BaseInfo(specifications: DeviceSpecifications) {
-    Spacer(modifier = Modifier.height(15.dp))
-    DefaultText(text = "Общая информация", modifier = Modifier.fillMaxWidth())
+fun SpecificationCategory(category: Map.Entry<String, Map<String, String>>) {
+    Spacer(modifier = Modifier.height(10.dp))
+    DefaultText(text = category.key, modifier = Modifier.fillMaxWidth())
     Spacer(modifier = Modifier.height(5.dp))
-    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-        SmallText(text = "Тип")
-        SmallText(text = "Смартфон")
-    }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        SmallText(text = "Модель")
-        SmallText(text = "Xiaomi 12")
-    }
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        SmallText(text = "Год выпуска")
-        SmallText(text = "2023 год")
+
+    for (baseInfoEntries in category.value) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            SmallText(text = baseInfoEntries.key)
+            SmallText(text = baseInfoEntries.value)
+        }
     }
 }
