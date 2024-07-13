@@ -1,8 +1,10 @@
 package com.ravenzip.devicepicker.components
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,6 +28,16 @@ import java.text.DecimalFormat
 private val pattern = DecimalFormat("###,###,###")
 
 @Composable
+fun ScreenTitle(text: String) {
+    Text(
+        text = text,
+        modifier = Modifier.fillMaxWidth(0.9f),
+        fontSize = 25.sp,
+        fontWeight = FontWeight.Medium,
+        letterSpacing = 0.sp)
+}
+
+@Composable
 fun CustomText(
     text: String,
     modifier: Modifier = Modifier,
@@ -38,6 +50,29 @@ fun CustomText(
         fontSize = size.sp,
         fontWeight = fontWeight,
         textAlign = TextAlign.Start)
+}
+
+@Composable
+fun SmallText(
+    text: String,
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight.W400
+) {
+    Text(text = text, modifier = modifier, fontSize = 14.sp, fontWeight = fontWeight)
+}
+
+@Composable
+fun DefaultText(
+    text: String,
+    modifier: Modifier = Modifier,
+    fontWeight: FontWeight = FontWeight.W400
+) {
+    Text(text = text, modifier = modifier, fontWeight = fontWeight)
+}
+
+@Composable
+fun BigText(text: String, modifier: Modifier = Modifier, fontWeight: FontWeight = FontWeight.W400) {
+    Text(text = text, modifier = modifier, fontSize = 18.sp, fontWeight = fontWeight)
 }
 
 // TODO выводить диапазон цен (сейчас выводится конкретная цена)
@@ -66,7 +101,6 @@ fun PriceRange(price: Int) {
 @Composable
 fun Price(price: Int) {
     val formattedPrice = pattern.format(price).replace(",", " ") + " ₽"
-
     Text(text = formattedPrice, fontSize = 16.sp, fontWeight = FontWeight.Bold)
 }
 
@@ -76,17 +110,26 @@ fun TextWithIcon(
     iconSize: Dp = 22.dp,
     text: String,
     fontWeight: FontWeight = FontWeight.W400,
-    spacerWidth: Dp = 10.dp
+    spacerWidth: Dp = 10.dp,
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
 ) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        Icon(
-            modifier = Modifier.size(iconSize),
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = horizontalArrangement) {
+            Icon(
+                modifier = Modifier.size(iconSize),
+                imageVector = icon,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary)
 
-        Spacer(modifier = Modifier.width(spacerWidth))
+            Spacer(modifier = Modifier.width(spacerWidth))
 
-        CustomText(text = text, fontWeight = fontWeight)
-    }
+            SmallText(text = text, fontWeight = fontWeight)
+        }
+}
+
+@Composable
+fun Title(text: String) {
+    Text(text = text, fontSize = 18.sp, fontWeight = FontWeight.Bold)
 }

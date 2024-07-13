@@ -5,11 +5,9 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,12 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.components.AuthVariants
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.components.GetFields
+import com.ravenzip.devicepicker.components.ScreenTitle
 import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthVariantsEnum
@@ -73,12 +70,7 @@ fun LoginScreen(
                 },
         horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.height(40.dp))
-            Text(
-                text = "Войти в аккаунт",
-                modifier = Modifier.fillMaxWidth(0.9f),
-                fontSize = 25.sp,
-                fontWeight = FontWeight.Medium,
-                letterSpacing = 0.sp)
+            ScreenTitle(text = "Войти в аккаунт")
 
             Spacer(modifier = Modifier.height(30.dp))
             GetFields(

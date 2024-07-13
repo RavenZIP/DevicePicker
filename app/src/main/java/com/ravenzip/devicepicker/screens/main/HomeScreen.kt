@@ -37,8 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.CustomText
 import com.ravenzip.devicepicker.components.Price
+import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.highestCardColors
@@ -260,7 +260,7 @@ private fun DeviceCard(
                 Spacer(modifier = Modifier.padding(top = 5.dp))
 
                 Price(price = device.price)
-                CustomText(text = device.model)
+                SmallText(text = device.model)
 
                 TextWithIcon(
                     icon = ImageVector.vectorResource(R.drawable.i_medal),
@@ -286,8 +286,8 @@ private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
 
                     Column(modifier = Modifier.padding(start = 15.dp)) {
                         Price(price = device.price)
-                        CustomText(text = device.type)
-                        CustomText(text = device.model)
+                        SmallText(text = device.type)
+                        SmallText(text = device.model)
 
                         TextWithIcon(
                             icon = ImageVector.vectorResource(R.drawable.i_medal),

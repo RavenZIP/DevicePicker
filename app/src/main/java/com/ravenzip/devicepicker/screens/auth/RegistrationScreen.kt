@@ -5,7 +5,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -13,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -24,13 +22,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.AuthVariants
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.components.GetFields
+import com.ravenzip.devicepicker.components.ScreenTitle
 import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.enums.AuthCardEnum
@@ -79,42 +76,32 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                     keyboardController?.hide()
                 }
                 .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(40.dp))
-        Text(
-            text = "Регистрация",
-            modifier = Modifier.fillMaxWidth(0.9f),
-            fontSize = 25.sp,
-            fontWeight = FontWeight.Medium,
-            letterSpacing = 0.sp
-        )
+        horizontalAlignment = Alignment.CenterHorizontally) {
+            Spacer(modifier = Modifier.height(40.dp))
+            ScreenTitle(text = "Регистрация")
 
-        Spacer(modifier = Modifier.height(30.dp))
-        GetFields(
-            selectedVariant = selectedRegisterVariant,
-            fields = listOf(emailOrPhone, passwordOrCode),
-            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value)
-        )
+            Spacer(modifier = Modifier.height(30.dp))
+            GetFields(
+                selectedVariant = selectedRegisterVariant,
+                fields = listOf(emailOrPhone, passwordOrCode),
+                validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value))
 
-        Spacer(modifier = Modifier.height(30.dp))
-        AuthVariants(authVariants = registerVariants, title = "Выбор варианта регистрации")
+            Spacer(modifier = Modifier.height(30.dp))
+            AuthVariants(authVariants = registerVariants, title = "Выбор варианта регистрации")
 
-        Spacer(modifier = Modifier.height(20.dp))
-        InfoCard(
-            icon =
-                IconParameters(
-                    value = ImageVector.vectorResource(R.drawable.i_info),
-                    color = MaterialTheme.colorScheme.primary,
-                    size = 20
-                ),
-            title = TextParameters(value = "Важно!", size = 20),
-            text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
-            colors = CardDefaults.defaultCardColors()
-        )
+            Spacer(modifier = Modifier.height(20.dp))
+            InfoCard(
+                icon =
+                    IconParameters(
+                        value = ImageVector.vectorResource(R.drawable.i_info),
+                        color = MaterialTheme.colorScheme.primary,
+                        size = 20),
+                title = TextParameters(value = "Важно!", size = 20),
+                text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
+                colors = CardDefaults.defaultCardColors())
 
-        Spacer(modifier = Modifier.padding(bottom = 120.dp))
-    }
+            Spacer(modifier = Modifier.padding(bottom = 120.dp))
+        }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
@@ -144,9 +131,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         spinnerText.value = "Регистрация..."
                         val authResult =
                             userViewModel.createUserWithEmail(
-                                emailOrPhone.value,
-                                passwordOrCode.value
-                            )
+                                emailOrPhone.value, passwordOrCode.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false

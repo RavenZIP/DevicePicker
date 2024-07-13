@@ -39,10 +39,12 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.components.DefaultText
 import com.ravenzip.devicepicker.components.PriceRange
+import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
+import com.ravenzip.devicepicker.components.Title
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
-import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
@@ -50,8 +52,6 @@ import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
-import com.ravenzip.workshop.components.SimpleButton
-import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
@@ -152,7 +152,8 @@ private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
                                     icon = userReviewsInfo.icon,
                                     iconSize = 16.dp,
                                     text = userReviewsInfo.value,
-                                    spacerWidth = 5.dp)
+                                    spacerWidth = 5.dp,
+                                    horizontalArrangement = Arrangement.Center)
 
                                 Text(text = userReviewsInfo.text, fontWeight = FontWeight.W400)
                                 Spacer(modifier = Modifier.padding(top = 5.dp))
@@ -285,10 +286,40 @@ private fun Specifications(specifications: DeviceSpecifications) {
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            Text(text = "")
-            SimpleButton(
-                width = 1f,
-                text = TextParameters(value = "Показать полностью"),
-                colors = ButtonDefaults.inverseColors())
+            TextWithIcon(
+                icon = ImageVector.vectorResource(R.drawable.i_lamp), text = "Характеристики")
+            Column(Modifier.fillMaxWidth().padding(10.dp)) {
+                BaseInfo(specifications)
+                Title(text = "")
+                Title(text = "Экран")
+                Title(text = "Корпус и защита")
+                Title(text = "Процессор")
+                Title(text = "Память")
+                Title(text = "Камера")
+                Title(text = "Аудио")
+                Title(text = "Сеть")
+                Title(text = "Питание")
+                Title(text = "Габариты, вес")
+                Title(text = "Дополнительная информация")
+            }
         }
+}
+
+@Composable
+fun BaseInfo(specifications: DeviceSpecifications) {
+    Spacer(modifier = Modifier.height(15.dp))
+    DefaultText(text = "Общая информация", modifier = Modifier.fillMaxWidth())
+    Spacer(modifier = Modifier.height(5.dp))
+    Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        SmallText(text = "Тип")
+        SmallText(text = "Смартфон")
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        SmallText(text = "Модель")
+        SmallText(text = "Xiaomi 12")
+    }
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        SmallText(text = "Год выпуска")
+        SmallText(text = "2023 год")
+    }
 }
