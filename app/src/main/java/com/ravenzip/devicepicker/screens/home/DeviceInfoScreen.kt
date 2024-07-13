@@ -39,7 +39,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.DefaultText
 import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
@@ -300,7 +299,7 @@ private fun Specifications(specificationsMap: Map<String, Map<String, String>>) 
 @Composable
 fun SpecificationCategory(category: Map.Entry<String, Map<String, String>>) {
     Spacer(modifier = Modifier.height(10.dp))
-    DefaultText(text = category.key, modifier = Modifier.fillMaxWidth())
+    SmallText(text = category.key, modifier = Modifier.fillMaxWidth(), fontWeight = FontWeight.W500)
     Spacer(modifier = Modifier.height(5.dp))
 
     for (baseInfoEntries in category.value) {

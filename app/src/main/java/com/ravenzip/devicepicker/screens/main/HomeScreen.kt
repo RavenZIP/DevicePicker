@@ -266,7 +266,8 @@ private fun DeviceCard(
                     icon = ImageVector.vectorResource(R.drawable.i_medal),
                     iconSize = 14.dp,
                     text = "${device.rating} (${device.reviewsCount})",
-                    spacerWidth = 5.dp)
+                    spacerWidth = 5.dp,
+                    smallText = true)
             }
         }
 }
@@ -293,7 +294,8 @@ private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
                             icon = ImageVector.vectorResource(R.drawable.i_medal),
                             iconSize = 14.dp,
                             text = "${device.rating} (${device.reviewsCount})",
-                            spacerWidth = 5.dp)
+                            spacerWidth = 5.dp,
+                            smallText = true)
                     }
                 }
         }

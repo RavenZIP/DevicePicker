@@ -111,7 +111,8 @@ fun TextWithIcon(
     text: String,
     fontWeight: FontWeight = FontWeight.W400,
     spacerWidth: Dp = 10.dp,
-    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start
+    horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
+    smallText: Boolean = false
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -125,7 +126,8 @@ fun TextWithIcon(
 
             Spacer(modifier = Modifier.width(spacerWidth))
 
-            SmallText(text = text, fontWeight = fontWeight)
+            if (smallText) SmallText(text = text, fontWeight = fontWeight)
+            else DefaultText(text = text)
         }
 }
 
