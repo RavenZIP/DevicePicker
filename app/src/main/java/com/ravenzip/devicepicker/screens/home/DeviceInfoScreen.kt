@@ -291,6 +291,12 @@ private fun Specifications(specificationsMap: Map<String, Map<String, String>>) 
                 icon = ImageVector.vectorResource(R.drawable.i_lamp), text = "Характеристики")
             Column(Modifier.fillMaxWidth().padding(10.dp)) {
                 for (specificationCategory in specificationsMap.entries) {
+                    if (specificationCategory.key == "Общая информация") {
+                        Spacer(modifier = Modifier.height(10.dp))
+                    } else {
+                        Spacer(modifier = Modifier.height(30.dp))
+                    }
+
                     SpecificationCategory(specificationCategory)
                 }
             }
@@ -299,14 +305,23 @@ private fun Specifications(specificationsMap: Map<String, Map<String, String>>) 
 
 @Composable
 fun SpecificationCategory(category: Map.Entry<String, Map<String, String>>) {
-    Spacer(modifier = Modifier.height(10.dp))
     SmallText(text = category.key, modifier = Modifier.fillMaxWidth(), fontWeight = FontWeight.W500)
     Spacer(modifier = Modifier.height(5.dp))
 
     for (baseInfoEntries in category.value) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            SmallText(text = baseInfoEntries.key)
-            SmallText(text = baseInfoEntries.value)
-        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically) {
+                SmallText(
+                    text = baseInfoEntries.key,
+                    modifier = Modifier.weight(1f),
+                    letterSpacing = 0.sp)
+                SmallText(
+                    text = baseInfoEntries.value,
+                    modifier = Modifier.weight(0.8f),
+                    textAlign = TextAlign.End,
+                    letterSpacing = 0.sp)
+            }
     }
 }

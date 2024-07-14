@@ -20,6 +20,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
@@ -56,9 +57,17 @@ fun CustomText(
 fun SmallText(
     text: String,
     modifier: Modifier = Modifier,
-    fontWeight: FontWeight = FontWeight.W400
+    fontWeight: FontWeight = FontWeight.W400,
+    textAlign: TextAlign? = null,
+    letterSpacing: TextUnit = TextUnit.Unspecified
 ) {
-    Text(text = text, modifier = modifier, fontSize = 14.sp, fontWeight = fontWeight)
+    Text(
+        text = text,
+        modifier = modifier,
+        fontSize = 14.sp,
+        fontWeight = fontWeight,
+        textAlign = textAlign,
+        letterSpacing = letterSpacing)
 }
 
 @Composable
