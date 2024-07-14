@@ -46,7 +46,7 @@ import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.map.colorMap
-import com.ravenzip.devicepicker.model.UserReviewsInfo
+import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
@@ -86,8 +86,8 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                UserReviewsContainer(
-                    generateUserReviewsList(
+                FeedbackContainer(
+                    generateFeedbackList(
                         device.feedback.rating,
                         device.feedback.reviewsCount,
                         device.feedback.questionsCount))
@@ -132,7 +132,7 @@ private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
 }
 
 @Composable
-private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
+private fun FeedbackContainer(feedback: List<ButtonData>) {
     Row(
         modifier =
             Modifier.fillMaxWidth(0.9f)
@@ -140,10 +140,10 @@ private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp),
         horizontalArrangement = Arrangement.Center) {
-            userReviewsInfo.forEach { userReviewsInfo ->
+            feedback.forEach { feedback ->
                 Button(
                     modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                    onClick = { /*TODO*/ },
+                    onClick = { feedback.onClick() },
                     shape = RoundedCornerShape(10.dp),
                     colors = ButtonDefaults.veryLightPrimary(),
                     contentPadding = PaddingValues(5.dp)) {
@@ -152,13 +152,13 @@ private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
                             horizontalAlignment = Alignment.CenterHorizontally) {
                                 Spacer(modifier = Modifier.padding(top = 5.dp))
                                 TextWithIcon(
-                                    icon = userReviewsInfo.icon,
+                                    icon = feedback.icon,
                                     iconSize = 16.dp,
-                                    text = userReviewsInfo.value,
+                                    text = feedback.value,
                                     spacerWidth = 5.dp,
                                     horizontalArrangement = Arrangement.Center)
 
-                                Text(text = userReviewsInfo.text, fontWeight = FontWeight.W400)
+                                Text(text = feedback.text, fontWeight = FontWeight.W400)
                                 Spacer(modifier = Modifier.padding(top = 5.dp))
                             }
                     }
@@ -245,28 +245,31 @@ private fun DeviceColor(modifier: Modifier, color: String) {
 }
 
 @Composable
-private fun generateUserReviewsList(
+private fun generateFeedbackList(
     deviceRating: Double,
     deviceReviewsCount: Int,
     deviceQuestionsCount: Int
-): List<UserReviewsInfo> {
+): List<ButtonData> {
     val rating =
-        UserReviewsInfo(
+        ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_medal),
             value = deviceRating.toString(),
-            text = "Оценка")
+            text = "Оценка",
+            onClick = {})
 
     val reviewsCount =
-        UserReviewsInfo(
+        ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_comment),
             value = deviceReviewsCount.toString(),
-            text = "Отзывы")
+            text = "Отзывы",
+            onClick = {})
 
     val questionsCount =
-        UserReviewsInfo(
+        ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_question),
             value = deviceQuestionsCount.toString(),
-            text = "Вопросы")
+            text = "Вопросы",
+            onClick = {})
 
     return listOf(rating, reviewsCount, questionsCount)
 }
