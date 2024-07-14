@@ -188,7 +188,9 @@ private fun PriceAndConfigurations(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            DeviceConfigurations(configurations)
+            VerticalGrid(width = 1f, items = configurations) { modifier, configuration ->
+                DeviceConfiguration(modifier, configuration)
+            }
 
             Spacer(modifier = Modifier.height(20.dp))
 
@@ -197,35 +199,29 @@ private fun PriceAndConfigurations(
             Spacer(modifier = Modifier.height(15.dp))
 
             VerticalGrid(width = 1f, items = colors) { modifier, color ->
-                DeviceColors(modifier, color)
+                DeviceColor(modifier, color)
             }
-
-            Spacer(modifier = Modifier.height(15.dp))
         }
 }
 
-/** Список конфигураций устройства */
+/** Конфигурация устройства */
 @Composable
-private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        configurations.forEach { configuration ->
-            val text = "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
-            Card(
-                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.veryLightPrimary()) {
-                    Text(
-                        modifier = Modifier.padding(10.dp).fillMaxWidth(),
-                        text = text,
-                        textAlign = TextAlign.Center)
-                }
+private fun DeviceConfiguration(modifier: Modifier, configuration: PhoneConfiguration) {
+    val text = "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.veryLightPrimary()) {
+            Text(
+                modifier = Modifier.padding(10.dp).fillMaxWidth(),
+                text = text,
+                textAlign = TextAlign.Center)
         }
-    }
 }
 
-/** Список цветов устройства */
+/** Цвет устройства */
 @Composable
-private fun DeviceColors(modifier: Modifier, color: String) {
+private fun DeviceColor(modifier: Modifier, color: String) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
