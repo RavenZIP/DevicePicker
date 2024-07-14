@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
@@ -40,6 +39,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
@@ -52,6 +52,7 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Compa
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
+import com.ravenzip.workshop.components.VerticalGrid
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
@@ -195,7 +196,9 @@ private fun PriceAndConfigurations(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            DeviceColors(colors)
+            VerticalGrid(width = 1f, items = colors) { modifier, color ->
+                DeviceColors(modifier, color)
+            }
 
             Spacer(modifier = Modifier.height(15.dp))
         }
@@ -222,35 +225,27 @@ private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
 
 /** Список цветов устройства */
 @Composable
-private fun DeviceColors(colors: List<String>) {
-    Row(verticalAlignment = Alignment.CenterVertically) {
-        colors.forEach { color ->
-            Card(
-                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.veryLightPrimary()) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth().padding(10.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center) {
-                            Box(
-                                modifier =
-                                    Modifier.size(10.dp)
-                                        .clip(RoundedCornerShape(2.dp))
-                                        .background(colorMap[color]!!))
+private fun DeviceColors(modifier: Modifier, color: String) {
+    Card(
+        modifier = modifier,
+        shape = RoundedCornerShape(10.dp),
+        colors = CardDefaults.veryLightPrimary()) {
+            Row(
+                modifier = Modifier.padding(10.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center) {
+                    ColoredBoxWithBorder(colorMap[color]!!)
+                    Spacer(modifier = Modifier.width(5.dp))
 
-                            Spacer(modifier = Modifier.width(5.dp))
-
-                            Text(
-                                modifier = Modifier.fillMaxWidth(0.85f),
-                                text = color,
-                                textAlign = TextAlign.Center,
-                                softWrap = false,
-                                overflow = TextOverflow.Ellipsis)
-                        }
+                    Text(
+                        modifier = Modifier.weight(1f),
+                        text = color,
+                        textAlign = TextAlign.Center,
+                        softWrap = false,
+                        overflow = TextOverflow.Ellipsis)
+                    Spacer(modifier = Modifier.width(22.dp))
                 }
         }
-    }
 }
 
 @Composable
