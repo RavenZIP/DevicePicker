@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -41,8 +40,8 @@ import com.ravenzip.devicepicker.components.Price
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
-import com.ravenzip.devicepicker.extensions.functions.highestCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
+import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
@@ -250,7 +249,7 @@ private fun DeviceCard(
                     }
                 }
                 .widthIn(0.dp, 130.dp),
-        colors = CardDefaults.highestCardColors()) {
+        colors = CardDefaults.veryLightPrimary()) {
             Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
                 FrescoImage(
                     imageUrl = device.imageUrl,
@@ -276,7 +275,7 @@ private fun DeviceCard(
 private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
     Card(
         modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable { cardClick() },
-        colors = CardDefaults.highestCardColors()) {
+        colors = CardDefaults.veryLightPrimary()) {
             Row(
                 modifier = Modifier.padding(10.dp),
                 verticalAlignment = Alignment.CenterVertically) {

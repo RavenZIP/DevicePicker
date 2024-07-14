@@ -23,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ravenzip.devicepicker.extensions.functions.highestCardColors
+import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.viewmodels.BrandViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.workshop.components.VerticalGrid
@@ -63,7 +63,7 @@ fun SearchScreen(
 private fun BrandCard(modifier: Modifier, brandName: String) {
     Card(
         modifier = modifier.clip(RoundedCornerShape(12.dp)).clickable {},
-        colors = CardDefaults.highestCardColors()) {
+        colors = CardDefaults.veryLightPrimary()) {
             Text(
                 text = brandName,
                 modifier = Modifier.padding(20.dp).fillMaxWidth(),

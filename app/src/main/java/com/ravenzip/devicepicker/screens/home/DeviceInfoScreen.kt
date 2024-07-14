@@ -22,6 +22,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,7 +44,7 @@ import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
-import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
+import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
@@ -143,7 +144,7 @@ private fun UserReviewsContainer(userReviewsInfo: List<UserReviewsInfo>) {
                     modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
                     onClick = { /*TODO*/ },
                     shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.surfaceVariant(),
+                    colors = ButtonDefaults.veryLightPrimary(),
                     contentPadding = PaddingValues(5.dp)) {
                         Column(
                             modifier = Modifier.padding(vertical = 0.dp, horizontal = 0.dp),
@@ -208,7 +209,8 @@ private fun DeviceConfigurations(configurations: List<PhoneConfiguration>) {
             val text = "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
             Card(
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                shape = RoundedCornerShape(10.dp)) {
+                shape = RoundedCornerShape(10.dp),
+                colors = CardDefaults.veryLightPrimary()) {
                     Text(
                         modifier = Modifier.padding(10.dp).fillMaxWidth(),
                         text = text,
@@ -225,7 +227,8 @@ private fun DeviceColors(colors: List<String>) {
         colors.forEach { color ->
             Card(
                 modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                shape = RoundedCornerShape(10.dp)) {
+                shape = RoundedCornerShape(10.dp),
+                colors = CardDefaults.veryLightPrimary()) {
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(10.dp),
                         verticalAlignment = Alignment.CenterVertically,

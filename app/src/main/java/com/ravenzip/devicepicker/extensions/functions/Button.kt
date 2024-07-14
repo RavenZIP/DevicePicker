@@ -24,7 +24,7 @@ fun ButtonDefaults.containerColor() =
     this.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
 
 @Composable
-fun ButtonDefaults.surfaceVariant() =
+fun ButtonDefaults.veryLightPrimary() =
     this.buttonColors(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+        containerColor = MaterialTheme.colorScheme.primary.copy(0.08f),
         contentColor = LocalContentColor.current)
