@@ -19,7 +19,7 @@ data class Screen(
             diagonal = 0,
             width = 0,
             height = 0,
-            typeOfMatrix = "",
+            typeOfMatrix = "Не определено",
             brightness = 0,
             screenRefreshRate = 0,
             pixelDensity = 0,
@@ -27,7 +27,7 @@ data class Screen(
             verticalRatio = 0,
             horizontalRatio = 0,
             sensorSamplingRate = 0,
-            features = "")
+            features = "Не определено")
 
     companion object {
         fun Screen.toMap(): Map<String, String> {
