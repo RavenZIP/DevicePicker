@@ -47,7 +47,7 @@ import com.ravenzip.devicepicker.extensions.functions.surfaceVariant
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
-import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.map
+import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
@@ -98,7 +98,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
 
             item {
                 Spacer(modifier = Modifier.padding(top = 15.dp))
-                Specifications(device.specifications.map())
+                Specifications(device.specifications.toMap())
             }
 
             item { Spacer(modifier = Modifier.padding(top = 20.dp)) }

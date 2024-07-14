@@ -17,7 +17,7 @@ data class BaseInfo(
         )
 
     companion object {
-        fun BaseInfo.map(): Map<String, String> {
+        fun BaseInfo.toMap(): Map<String, String> {
             return mapOf(
                 "Тип" to this.type,
                 "Модель" to this.model,
