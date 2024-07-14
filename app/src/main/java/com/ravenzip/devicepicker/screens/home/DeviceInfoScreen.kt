@@ -48,6 +48,7 @@ import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.UserReviewsInfo
 import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.map
+import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.skydoves.landscapist.ImageOptions
@@ -62,7 +63,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
     val title =
         "${device.specifications.baseInfo.type} ${device.specifications.baseInfo.model}, " +
             "${device.configurations[0].randomAccessMemory}/${device.configurations[0].internalMemory}Gb " +
-            "${device.specifications.diagonal}\" ${device.specifications.baseInfo.year} ${device.colors[0]}"
+            "${device.specifications.screen.diagonal()} ${device.specifications.baseInfo.year} ${device.colors[0]}"
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
