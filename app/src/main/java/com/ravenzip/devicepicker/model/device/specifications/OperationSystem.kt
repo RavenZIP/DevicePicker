@@ -20,8 +20,7 @@ data class OperationSystem(
             return mapOf(
                 "Операционная система" to this.typeOfOperationSystem,
                 "Версия ОС" to this.operationSystemVersion(),
-                "Оболочка" to this.shellOfTheOperationSystem,
-                "Версия оболочки" to this.shellVersion(),
+                "Оболочка" to this.shellOfTheOperationSystem(),
                 "Поддержка Google Services" to supportGoogleServices())
         }
 
@@ -29,7 +28,7 @@ data class OperationSystem(
             return "${this.typeOfOperationSystem} ${this.operationSystemVersion}"
         }
 
-        fun OperationSystem.shellVersion(): String {
+        fun OperationSystem.shellOfTheOperationSystem(): String {
             return "${this.shellOfTheOperationSystem} ${this.shellVersion}"
         }
 
