@@ -3,6 +3,7 @@ package com.ravenzip.devicepicker.model.device
 import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
+import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 
 /** Полная модель устройства */
 data class Device(

@@ -47,8 +47,8 @@ import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.map.colorMap
 import com.ravenzip.devicepicker.model.ButtonData
-import com.ravenzip.devicepicker.model.device.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
+import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
@@ -305,17 +305,17 @@ fun SpecificationCategory(category: Map.Entry<String, Map<String, String>>) {
     SmallText(text = category.key, modifier = Modifier.fillMaxWidth(), fontWeight = FontWeight.W500)
     Spacer(modifier = Modifier.height(5.dp))
 
-    for (baseInfoEntries in category.value) {
+    for (specificationEntries in category.value) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically) {
                 SmallText(
-                    text = baseInfoEntries.key,
+                    text = specificationEntries.key,
                     modifier = Modifier.weight(1f),
                     letterSpacing = 0.sp)
                 SmallText(
-                    text = baseInfoEntries.value,
+                    text = specificationEntries.value,
                     modifier = Modifier.weight(0.8f),
                     textAlign = TextAlign.End,
                     letterSpacing = 0.sp)
