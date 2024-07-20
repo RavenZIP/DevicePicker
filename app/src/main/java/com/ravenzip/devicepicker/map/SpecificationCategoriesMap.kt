@@ -15,4 +15,6 @@ val specificationCategoriesMap =
         "Аудио" to R.drawable.i_headphones,
         "Сеть" to R.drawable.i_satellite,
         "Разъемы" to R.drawable.i_split,
-        "Питание" to R.drawable.i_lightning)
+        "Питание" to R.drawable.i_lightning,
+        "Дополнительная информация" to R.drawable.i_document,
+        "Габариты, вес" to R.drawable.i_document_more)

@@ -1,5 +1,7 @@
 package com.ravenzip.devicepicker.model.device.compact
 
+import com.ravenzip.devicepicker.model.device.specifications.AdditionalInfo
+import com.ravenzip.devicepicker.model.device.specifications.AdditionalInfo.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Audio
 import com.ravenzip.devicepicker.model.device.specifications.Audio.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.BaseInfo
@@ -13,6 +15,8 @@ import com.ravenzip.devicepicker.model.device.specifications.Construction
 import com.ravenzip.devicepicker.model.device.specifications.Construction.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Cpu
 import com.ravenzip.devicepicker.model.device.specifications.Cpu.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.Dimensions
+import com.ravenzip.devicepicker.model.device.specifications.Dimensions.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Memory
 import com.ravenzip.devicepicker.model.device.specifications.Memory.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.OperationSystem
@@ -35,7 +39,9 @@ class DeviceSpecifications(
     val audio: Audio,
     val communication: Communication,
     val connectors: Connectors,
-    val power: Power
+    val power: Power,
+    val additionalInfo: AdditionalInfo,
+    val dimensions: Dimensions
 ) {
     constructor() :
         this(
@@ -49,7 +55,9 @@ class DeviceSpecifications(
             audio = Audio(),
             communication = Communication(),
             connectors = Connectors(),
-            power = Power())
+            power = Power(),
+            additionalInfo = AdditionalInfo(),
+            dimensions = Dimensions())
 
     companion object {
         fun DeviceSpecifications.toMap(): Map<String, Map<String, String>> {
@@ -65,11 +73,9 @@ class DeviceSpecifications(
                 "Аудио" to this.audio.toMap(),
                 "Сеть" to this.communication.toMap(),
                 "Разъемы" to this.connectors.toMap(),
-                "Питание" to this.power.toMap())
+                "Питание" to this.power.toMap(),
+                "Дополнительная информация" to this.additionalInfo.toMap(),
+                "Габариты, вес" to this.dimensions.toMap())
         }
-
-        // TODO добавить остальные характеристики
-        // "Питание", "Габариты, вес",
-        // "Дополнительная информация"
     }
 }
