@@ -25,7 +25,7 @@ data class Cpu(
                 "Максимальная частота" to "${this.maxFrequency} Ггц",
                 "Конфигурация" to this.configuration,
                 "Техпроцесс" to this.technicalProcess,
-                "GPU" to this.gpu)
+                "Графический ускоритель" to this.gpu)
         }
     }
 }
