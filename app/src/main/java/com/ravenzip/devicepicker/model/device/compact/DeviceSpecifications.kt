@@ -1,8 +1,12 @@
 package com.ravenzip.devicepicker.model.device.compact
 
+import com.ravenzip.devicepicker.model.device.specifications.Audio
+import com.ravenzip.devicepicker.model.device.specifications.Audio.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.BaseInfo
 import com.ravenzip.devicepicker.model.device.specifications.BaseInfo.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Camera
+import com.ravenzip.devicepicker.model.device.specifications.Communication
+import com.ravenzip.devicepicker.model.device.specifications.Communication.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Construction
 import com.ravenzip.devicepicker.model.device.specifications.Construction.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Cpu
@@ -23,7 +27,9 @@ class DeviceSpecifications(
     val operationSystem: OperationSystem,
     val cpu: Cpu,
     val memory: Memory,
-    val camera: Camera
+    val camera: Camera,
+    val audio: Audio,
+    val communication: Communication
 ) {
     constructor() :
         this(
@@ -33,7 +39,9 @@ class DeviceSpecifications(
             operationSystem = OperationSystem(),
             cpu = Cpu(),
             memory = Memory(),
-            camera = Camera())
+            camera = Camera(),
+            audio = Audio(),
+            communication = Communication())
 
     companion object {
         fun DeviceSpecifications.toMap(): Map<String, Map<String, String>> {
@@ -45,11 +53,13 @@ class DeviceSpecifications(
                 "Процессор" to this.cpu.toMap(),
                 "Память" to this.memory.toMap(),
                 "Основная камера" to this.camera.back.toMap(),
-                "Фронтальная камера" to this.camera.front.toMap())
-
-            // TODO добавить остальные характеристики
-            // "Аудио", "Сеть", "Питание", "Габариты, вес",
-            // "Дополнительная информация"
+                "Фронтальная камера" to this.camera.front.toMap(),
+                "Аудио" to this.audio.toMap(),
+                "Сеть" to this.communication.toMap())
         }
+
+        // TODO добавить остальные характеристики
+        // "Питание", "Габариты, вес",
+        // "Дополнительная информация"
     }
 }

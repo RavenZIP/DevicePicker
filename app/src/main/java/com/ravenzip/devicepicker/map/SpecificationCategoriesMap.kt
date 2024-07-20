@@ -11,4 +11,6 @@ val specificationCategoriesMap =
         "Процессор" to R.drawable.i_microchip,
         "Память" to R.drawable.i_memory,
         "Основная камера" to R.drawable.i_camera,
-        "Фронтальная камера" to R.drawable.i_camera)
+        "Фронтальная камера" to R.drawable.i_camera,
+        "Аудио" to R.drawable.i_headphones,
+        "Сеть" to R.drawable.i_satellite)
