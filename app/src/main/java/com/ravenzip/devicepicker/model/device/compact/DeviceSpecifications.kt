@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.model.device.compact
 
 import com.ravenzip.devicepicker.model.device.specifications.BaseInfo
 import com.ravenzip.devicepicker.model.device.specifications.BaseInfo.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.Camera
 import com.ravenzip.devicepicker.model.device.specifications.Construction
 import com.ravenzip.devicepicker.model.device.specifications.Construction.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Cpu
@@ -12,6 +13,8 @@ import com.ravenzip.devicepicker.model.device.specifications.OperationSystem
 import com.ravenzip.devicepicker.model.device.specifications.OperationSystem.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Screen
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.camera.BackCamera.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.camera.FrontCamera.Companion.toMap
 
 class DeviceSpecifications(
     val baseInfo: BaseInfo,
@@ -19,7 +22,8 @@ class DeviceSpecifications(
     val construction: Construction,
     val operationSystem: OperationSystem,
     val cpu: Cpu,
-    val memory: Memory
+    val memory: Memory,
+    val camera: Camera
 ) {
     constructor() :
         this(
@@ -28,7 +32,8 @@ class DeviceSpecifications(
             construction = Construction(),
             operationSystem = OperationSystem(),
             cpu = Cpu(),
-            memory = Memory())
+            memory = Memory(),
+            camera = Camera())
 
     companion object {
         fun DeviceSpecifications.toMap(): Map<String, Map<String, String>> {
@@ -38,10 +43,12 @@ class DeviceSpecifications(
                 "Корпус и защита" to this.construction.toMap(),
                 "Операционная система" to this.operationSystem.toMap(),
                 "Процессор" to this.cpu.toMap(),
-                "Память" to this.memory.toMap())
+                "Память" to this.memory.toMap(),
+                "Основная камера" to this.camera.back.toMap(),
+                "Фронтальная камера" to this.camera.front.toMap())
 
             // TODO добавить остальные характеристики
-            // "Камера", "Аудио", "Сеть", "Питание", "Габариты, вес",
+            // "Аудио", "Сеть", "Питание", "Габариты, вес",
             // "Дополнительная информация"
         }
     }

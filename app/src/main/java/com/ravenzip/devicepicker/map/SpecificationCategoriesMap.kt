@@ -9,4 +9,6 @@ val specificationCategoriesMap =
         "Корпус и защита" to R.drawable.i_tools,
         "Операционная система" to R.drawable.i_program,
         "Процессор" to R.drawable.i_microchip,
-        "Память" to R.drawable.i_memory)
+        "Память" to R.drawable.i_memory,
+        "Основная камера" to R.drawable.i_camera,
+        "Фронтальная камера" to R.drawable.i_camera)

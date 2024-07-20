@@ -141,7 +141,7 @@ private fun FeedbackContainer(feedback: List<ButtonData>) {
             Modifier.fillMaxWidth(0.9f)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(10.dp),
+                .padding(horizontal = 5.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.Center) {
             feedback.forEach { feedback ->
                 Button(
