@@ -22,9 +22,9 @@ data class Cpu(
             return mapOf(
                 "Модель" to this.model,
                 "Количество ядер" to this.numberOfCores.toString(),
-                "Макс. частота" to "${this.maxFrequency} Ггц",
+                "Максимальная частота" to "${this.maxFrequency} Ггц",
                 "Конфигурация" to this.configuration,
-                "Технический процесс" to this.technicalProcess,
+                "Техпроцесс" to this.technicalProcess,
                 "GPU" to this.gpu)
         }
     }
