@@ -22,7 +22,7 @@ data class BaseInfo(
                 "Тип" to this.type,
                 "Модель" to this.model,
                 "Год выпуска" to this.year.toString(),
-                "Страна-производитель" to this.country,
+                "Страна- производитель" to this.country,
                 "Гарантия" to this.warranty)
         }
     }

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -46,6 +47,7 @@ import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.map.colorMap
+import com.ravenzip.devicepicker.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
@@ -66,6 +68,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
         "${device.specifications.baseInfo.type} ${device.specifications.baseInfo.model}, " +
             "${device.configurations[0].randomAccessMemory}/${device.configurations[0].internalMemory}Gb " +
             "${device.specifications.screen.diagonal()} ${device.specifications.baseInfo.year} ${device.colors[0]}"
+    val specificationsMap = device.specifications.toMap()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -98,9 +101,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
                 PriceAndConfigurations(device.price, device.configurations, device.colors)
             }
 
-            item {
-                Spacer(modifier = Modifier.padding(top = 15.dp))
-                Specifications(device.specifications.toMap())
+            items(specificationsMap.keys.toList()) { categoryKey ->
+                Specifications(
+                    category = categoryKey, specifications = specificationsMap[categoryKey]!!)
             }
 
             item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
@@ -276,7 +279,11 @@ private fun generateFeedbackList(
 
 /** Характеристики */
 @Composable
-private fun Specifications(specificationsMap: Map<String, Map<String, String>>) {
+private fun Specifications(category: String, specifications: Map<String, String>) {
+    val specificationCategoryIcon =
+        ImageVector.vectorResource(specificationCategoriesMap[category]!!)
+
+    Spacer(modifier = Modifier.padding(top = 15.dp))
     Column(
         modifier =
             Modifier.fillMaxWidth(0.9f)
@@ -284,41 +291,40 @@ private fun Specifications(specificationsMap: Map<String, Map<String, String>>) 
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            TextWithIcon(
-                icon = ImageVector.vectorResource(R.drawable.i_lamp), text = "Характеристики")
-            Column(Modifier.fillMaxWidth().padding(10.dp)) {
-                for (specificationCategory in specificationsMap.entries) {
-                    if (specificationCategory.key == "Общая информация") {
-                        Spacer(modifier = Modifier.height(10.dp))
-                    } else {
-                        Spacer(modifier = Modifier.height(30.dp))
-                    }
+            TextWithIcon(icon = specificationCategoryIcon, text = category)
 
-                    SpecificationCategory(specificationCategory)
-                }
-            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            SpecificationCategory(specifications)
         }
 }
 
 @Composable
-fun SpecificationCategory(category: Map.Entry<String, Map<String, String>>) {
-    SmallText(text = category.key, modifier = Modifier.fillMaxWidth(), fontWeight = FontWeight.W500)
-    Spacer(modifier = Modifier.height(5.dp))
+fun SpecificationCategory(category: Map<String, String>) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        for (specificationEntries in category.entries) {
+            Spacer(modifier = Modifier.height(5.dp))
 
-    for (specificationEntries in category.value) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically) {
-                SmallText(
-                    text = specificationEntries.key,
-                    modifier = Modifier.weight(1f),
-                    letterSpacing = 0.sp)
-                SmallText(
-                    text = specificationEntries.value,
-                    modifier = Modifier.weight(0.8f),
-                    textAlign = TextAlign.End,
-                    letterSpacing = 0.sp)
-            }
+            Card(
+                Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(10.dp),
+                colors = CardDefaults.veryLightPrimary()) {
+                    Row(
+                        modifier = Modifier.padding(10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically) {
+                            SmallText(
+                                text = specificationEntries.key + ":",
+                                fontWeight = FontWeight.W500,
+                                modifier = Modifier.weight(1f),
+                                letterSpacing = 0.sp)
+                            SmallText(
+                                text = specificationEntries.value,
+                                modifier = Modifier.padding(start = 10.dp).weight(1f),
+                                textAlign = TextAlign.Start,
+                                letterSpacing = 0.sp)
+                        }
+                }
+        }
     }
 }
