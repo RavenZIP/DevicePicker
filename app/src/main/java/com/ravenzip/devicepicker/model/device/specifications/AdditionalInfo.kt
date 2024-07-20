@@ -1,7 +1,5 @@
 package com.ravenzip.devicepicker.model.device.specifications
 
-import com.ravenzip.devicepicker.extensions.functions.convertToString
-
 data class AdditionalInfo(
     val biometricProtection: List<String>,
     val sensors: List<String>,
@@ -24,8 +22,8 @@ data class AdditionalInfo(
     companion object {
         fun AdditionalInfo.toMap(): Map<String, String> {
             return mapOf(
-                "Биометрическая защита" to this.biometricProtection.convertToString(),
-                "Датчики" to this.sensors.convertToString(),
+                "Биометрическая защита" to this.biometricProtection.joinToString(),
+                "Датчики" to this.sensors.joinToString(),
                 "Наушники" to if (this.headphonesIsIncluded) "Есть" else "Отсутствует",
                 "Зарядное устройство" to if (this.chargerIsIncluded) "Есть" else "Отсутствует",
                 "Комплектация" to this.equipment,

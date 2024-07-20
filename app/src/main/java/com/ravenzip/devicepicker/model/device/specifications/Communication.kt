@@ -1,7 +1,5 @@
 package com.ravenzip.devicepicker.model.device.specifications
 
-import com.ravenzip.devicepicker.extensions.functions.convertToString
-
 data class Communication(
     val bluetoothVersion: Double,
     val wifi: List<Int>,
@@ -23,7 +21,7 @@ data class Communication(
         fun Communication.toMap(): Map<String, String> {
             return mapOf(
                 "Bluetooth" to this.bluetoothVersion.toString(),
-                "Wi-Fi" to this.wifi.convertToString(),
+                "Wi-Fi" to this.wifi.joinToString(),
                 "NFC" to if (this.nfc) "Есть" else "Отсутствует",
                 "Системы навигации" to this.navigationSystems,
                 "ИК-порт" to if (this.irPort) "Есть" else "Отсутствует",

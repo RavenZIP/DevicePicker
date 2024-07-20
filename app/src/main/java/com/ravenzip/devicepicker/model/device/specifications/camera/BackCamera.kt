@@ -1,7 +1,5 @@
 package com.ravenzip.devicepicker.model.device.specifications.camera
 
-import com.ravenzip.devicepicker.extensions.functions.convertToString
-
 data class BackCamera(
     override val count: Int,
     override val megapixels: List<Int>,
@@ -41,11 +39,10 @@ data class BackCamera(
         fun BackCamera.toMap(): Map<String, String> {
             return mapOf(
                 "Количество камер" to this.count.toString(),
-                "Количество мегапикселей" to
-                    "${this.megapixels.convertToString(separator = "+")} Мп",
-                "Типы модулей" to this.types.convertToString(),
-                "Модели сенсоров" to this.sensors.convertToString(),
-                "Апертура камер" to this.apertures.convertToString(),
+                "Количество мегапикселей" to "${this.megapixels.joinToString(separator = "+")} Мп",
+                "Типы модулей" to this.types.joinToString(),
+                "Модели сенсоров" to this.sensors.joinToString(),
+                "Апертура камер" to this.apertures.joinToString(),
                 "Автофокусировка камеры" to if (this.autofocus) "Есть" else "Отсутствует",
                 "Тип вспышки" to this.flashType,
                 "Угол обзора" to this.viewingAngle.toString(),
