@@ -7,6 +7,8 @@ import com.ravenzip.devicepicker.model.device.specifications.BaseInfo.Companion.
 import com.ravenzip.devicepicker.model.device.specifications.Camera
 import com.ravenzip.devicepicker.model.device.specifications.Communication
 import com.ravenzip.devicepicker.model.device.specifications.Communication.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.Connectors
+import com.ravenzip.devicepicker.model.device.specifications.Connectors.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Construction
 import com.ravenzip.devicepicker.model.device.specifications.Construction.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Cpu
@@ -15,6 +17,8 @@ import com.ravenzip.devicepicker.model.device.specifications.Memory
 import com.ravenzip.devicepicker.model.device.specifications.Memory.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.OperationSystem
 import com.ravenzip.devicepicker.model.device.specifications.OperationSystem.Companion.toMap
+import com.ravenzip.devicepicker.model.device.specifications.Power
+import com.ravenzip.devicepicker.model.device.specifications.Power.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.Screen
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.toMap
 import com.ravenzip.devicepicker.model.device.specifications.camera.BackCamera.Companion.toMap
@@ -29,7 +33,9 @@ class DeviceSpecifications(
     val memory: Memory,
     val camera: Camera,
     val audio: Audio,
-    val communication: Communication
+    val communication: Communication,
+    val connectors: Connectors,
+    val power: Power
 ) {
     constructor() :
         this(
@@ -41,7 +47,9 @@ class DeviceSpecifications(
             memory = Memory(),
             camera = Camera(),
             audio = Audio(),
-            communication = Communication())
+            communication = Communication(),
+            connectors = Connectors(),
+            power = Power())
 
     companion object {
         fun DeviceSpecifications.toMap(): Map<String, Map<String, String>> {
@@ -55,7 +63,9 @@ class DeviceSpecifications(
                 "Основная камера" to this.camera.back.toMap(),
                 "Фронтальная камера" to this.camera.front.toMap(),
                 "Аудио" to this.audio.toMap(),
-                "Сеть" to this.communication.toMap())
+                "Сеть" to this.communication.toMap(),
+                "Разъемы" to this.connectors.toMap(),
+                "Питание" to this.power.toMap())
         }
 
         // TODO добавить остальные характеристики

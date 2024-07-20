@@ -13,4 +13,6 @@ val specificationCategoriesMap =
         "Основная камера" to R.drawable.i_camera,
         "Фронтальная камера" to R.drawable.i_camera,
         "Аудио" to R.drawable.i_headphones,
-        "Сеть" to R.drawable.i_satellite)
+        "Сеть" to R.drawable.i_satellite,
+        "Разъемы" to R.drawable.i_split,
+        "Питание" to R.drawable.i_lightning)
