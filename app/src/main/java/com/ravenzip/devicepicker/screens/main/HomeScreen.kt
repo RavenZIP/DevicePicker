@@ -161,7 +161,7 @@ private fun CarouselDevices(
                             deviceViewModel = deviceViewModel,
                             imageViewModel = imageViewModel,
                             spinner = spinner,
-                            cardClick = cardClick)
+                            navigateToDevice = cardClick)
                         Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
                 }
@@ -207,7 +207,7 @@ private fun SpecialOfferContainer(
                                     devices,
                                     key = { it.uid },
                                     contentType = { DeviceCompact::class }) {
-                                        SpecialOfferCard(device = it, cardClick = cardClick)
+                                        SpecialOfferCard(device = it, navigateToDevice = cardClick)
                                         Spacer(modifier = Modifier.padding(start = 15.dp))
                                     }
                             }
@@ -222,7 +222,7 @@ private fun DeviceCard(
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
     spinner: MutableState<SpinnerState>,
-    cardClick: () -> Unit
+    navigateToDevice: () -> Unit
 ) {
     val scope = rememberCoroutineScope()
 
@@ -231,21 +231,8 @@ private fun DeviceCard(
             Modifier.clip(RoundedCornerShape(12.dp))
                 .clickable {
                     scope.launch {
-                        spinner.value =
-                            SpinnerState(isLoading = true, TextParameters("Загрузка..."))
-
-                        // TODO кешировать изображения точно также, как и устройства
-                        deviceViewModel
-                            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-                            .flatMapConcat {
-                                imageViewModel.getImageUrls(
-                                    brand = device.brand, model = device.model)
-                            }
-                            .collect {
-                                deviceViewModel.setImageUrlToDevices(it)
-                                spinner.value = SpinnerState()
-                                cardClick()
-                            }
+                        onClickDeviceCard(
+                            device, deviceViewModel, imageViewModel, spinner, navigateToDevice)
                     }
                 }
                 .widthIn(0.dp, 130.dp),
@@ -272,9 +259,10 @@ private fun DeviceCard(
 }
 
 @Composable
-private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
+private fun SpecialOfferCard(device: DeviceCompact, navigateToDevice: () -> Unit) {
     Card(
-        modifier = Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable { cardClick() },
+        modifier =
+            Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable { navigateToDevice() },
         colors = CardDefaults.veryLightPrimary()) {
             Row(
                 modifier = Modifier.padding(10.dp),
@@ -298,4 +286,28 @@ private fun SpecialOfferCard(device: DeviceCompact, cardClick: () -> Unit) {
                     }
                 }
         }
+}
+
+private suspend fun onClickDeviceCard(
+    device: DeviceCompact,
+    deviceViewModel: DeviceViewModel,
+    imageViewModel: ImageViewModel,
+    spinner: MutableState<SpinnerState>,
+    navigateToDevice: () -> Unit
+) {
+    spinner.value = SpinnerState(isLoading = true, TextParameters("Загрузка..."))
+
+    val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
+
+    if (cachedDevice == null) {
+        deviceViewModel
+            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+            .flatMapConcat {
+                imageViewModel.getImageUrls(brand = device.brand, model = device.model)
+            }
+            .collect { deviceViewModel.setImageUrlToDevices(it) }
+    }
+
+    spinner.value = SpinnerState()
+    navigateToDevice()
 }

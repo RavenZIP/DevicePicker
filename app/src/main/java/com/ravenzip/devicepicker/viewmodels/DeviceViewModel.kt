@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import com.ravenzip.devicepicker.repositories.DeviceRepository
@@ -46,20 +47,17 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
                 emit(listOf())
             }
 
+    /** Получить закешированное устройство */
+    fun getCachedDevice(uid: String): Device? =
+        _deviceState.value.deviceList.find { device -> device.uid == uid }
+
     /** Получение устройства по бренду и уникальному идентификатору */
     suspend fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Boolean> =
         flow {
-                val cachedDevice =
-                    _deviceState.value.deviceList.find { device -> device.uid == uid }
-
-                if (cachedDevice !== null) {
-                    deviceState.value.device = cachedDevice
-                } else {
-                    val firebaseDevice = deviceRepository.getDeviceByBrandAndUid(brand, uid)
-                    val device = firebaseDevice.convertToDevice()
-                    deviceState.value.device = device
-                    deviceState.value.deviceList.add(device)
-                }
+                val firebaseDevice = deviceRepository.getDeviceByBrandAndUid(brand, uid)
+                val device = firebaseDevice.convertToDevice()
+                deviceState.value.device = device
+                deviceState.value.deviceList.add(device)
 
                 emit(true)
             }
