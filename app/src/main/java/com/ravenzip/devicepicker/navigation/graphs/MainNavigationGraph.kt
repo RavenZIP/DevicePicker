@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -27,7 +28,9 @@ import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
@@ -44,20 +47,24 @@ fun MainNavigationGraph(
     val brandViewModel = hiltViewModel<BrandViewModel>()
     val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
 
+    val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
+    val deviceCompactList = deviceCompactState.deviceCompactList
+
     LaunchedEffect(Unit) {
         // Получаем компактную модель устройств и данные о пользователе
         // Грузим сразу все устройства, т.к. в дальнейшем компактная
         // модель будет использоваться для других экранов
-
-        // Затем грузим урлы изображений
         launch {
             deviceViewModel
                 .getDeviceCompactList()
                 .zip(userViewModel.get(userViewModel.getUser())) { deviceCompactList, user ->
                     deviceViewModel.setDevicesFromCategories(deviceCompactList, user.searchHistory)
-                    return@zip deviceCompactList
                 }
-                .flatMapConcat { deviceCompactList ->
+                .collect {}
+
+            // Грузим урлы изображений
+            flowOf(deviceCompactList)
+                .flatMapLatest { deviceCompactList ->
                     imageViewModel.getImageUrls(deviceCompactList).flatMapMerge(concurrency = 3) {
                         it
                     }
