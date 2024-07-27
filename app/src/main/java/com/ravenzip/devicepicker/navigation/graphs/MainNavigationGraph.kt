@@ -28,9 +28,7 @@ import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
@@ -63,12 +61,9 @@ fun MainNavigationGraph(
                 .collect {}
 
             // Грузим урлы изображений
-            flowOf(deviceCompactList)
-                .flatMapLatest { deviceCompactList ->
-                    imageViewModel.getImageUrls(deviceCompactList).flatMapMerge(concurrency = 3) {
-                        it
-                    }
-                }
+            imageViewModel
+                .getImageUrls(deviceCompactList)
+                .flatMapMerge(concurrency = 3) { it }
                 .collect {
                     deviceViewModel.setImageUrlToDevices(it)
                     deviceViewModel.updateDevicesCategories()
