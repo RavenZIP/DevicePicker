@@ -48,8 +48,14 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
             }
 
     /** Получить закешированное устройство */
-    fun getCachedDevice(uid: String): Device? =
-        _deviceState.value.deviceList.find { device -> device.uid == uid }
+    fun getCachedDevice(uid: String): Device? {
+        val cachedDevice = _deviceState.value.deviceList.find { device -> device.uid == uid }
+        if (cachedDevice !== null) {
+            _deviceState.value.device = cachedDevice
+        }
+
+        return cachedDevice
+    }
 
     /** Получение устройства по бренду и уникальному идентификатору */
     suspend fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Boolean> =
