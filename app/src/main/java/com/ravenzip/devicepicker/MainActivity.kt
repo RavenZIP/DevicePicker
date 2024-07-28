@@ -27,6 +27,11 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Скрываем ActionBar, который появляется после отображения SplashScreen
+        // Проблема актуальна для эмуляторов, на рельном устройстве не отображается
+        // Скорее всего связано с тем, что не срабатывает postSplashScreenTheme
+        actionBar?.hide()
+
         setContent {
             DevicePickerTheme {
                 val splashScreenViewModel =
