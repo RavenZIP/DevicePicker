@@ -27,7 +27,6 @@ import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
-import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -71,7 +70,7 @@ fun MainNavigationGraph(
         launch {
             brandViewModel
                 .getBrandList()
-                .flatMapConcat { deviceTypeViewModel.getDeviceTypeList() }
+                .zip(deviceTypeViewModel.getDeviceTypeList()) { _, _ -> }
                 .collect {}
         }
     }
