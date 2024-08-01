@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.model.device
 
 import com.ravenzip.devicepicker.model.Feedback
-import com.ravenzip.devicepicker.model.Tag
+import com.ravenzip.devicepicker.model.Tags
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 
@@ -10,7 +10,7 @@ data class Device(
     val uid: String,
     val specifications: DeviceSpecifications,
     val colors: List<String>,
-    val tags: Tag,
+    val tags: Tags,
     val configurations: List<PhoneConfiguration>,
     val imageUrls: List<String>,
     val feedback: Feedback,
@@ -21,7 +21,7 @@ data class Device(
             uid = "",
             specifications = DeviceSpecifications(),
             colors = listOf(),
-            tags = Tag(),
+            tags = Tags(),
             configurations = listOf(),
             imageUrls = listOf(),
             feedback = Feedback(),

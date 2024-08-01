@@ -1,14 +1,14 @@
 package com.ravenzip.devicepicker.model.device
 
 import com.ravenzip.devicepicker.model.Feedback
-import com.ravenzip.devicepicker.model.Tag
+import com.ravenzip.devicepicker.model.Tags
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 
 data class FirebaseDevice(
     val uid: String,
     val specifications: DeviceSpecifications,
-    val tags: Tag,
+    val tags: Tags,
     val colors: List<String>,
     val configurations: List<PhoneConfiguration>,
     val feedback: Feedback,
@@ -18,7 +18,7 @@ data class FirebaseDevice(
         this(
             uid = "",
             specifications = DeviceSpecifications(),
-            tags = Tag(),
+            tags = Tags(),
             colors = listOf(),
             configurations = listOf(),
             feedback = Feedback(),
