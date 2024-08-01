@@ -55,8 +55,8 @@ fun MainNavigationGraph(
         launch {
             deviceViewModel
                 .getDeviceCompactList()
-                .zip(userViewModel.get(userViewModel.getUser())) { deviceCompactList, user ->
-                    deviceViewModel.setDevicesFromCategories(deviceCompactList, user.searchHistory)
+                .zip(userViewModel.get(userViewModel.getUser())) { _, user ->
+                    deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
                 }
                 .collect {}
 
@@ -64,10 +64,7 @@ fun MainNavigationGraph(
             imageViewModel
                 .getImageUrls(deviceCompactList)
                 .flatMapMerge(concurrency = 3) { it }
-                .collect {
-                    deviceViewModel.setImageUrlToDevices(it)
-                    deviceViewModel.updateDevicesCategories()
-                }
+                .collect { deviceViewModel.setImageUrlToDevices(it) }
         }
 
         // Грузим данные о брендах и типах устройств

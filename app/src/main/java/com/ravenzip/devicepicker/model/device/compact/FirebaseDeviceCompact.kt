@@ -1,9 +1,9 @@
 package com.ravenzip.devicepicker.model.device.compact
 
-import com.ravenzip.devicepicker.model.Tag
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
 
-data class FirebaseDeviceCompact(val info: FirebaseDeviceCompactInfo, val tags: Tag) {
-    constructor() : this(info = FirebaseDeviceCompactInfo(), tags = Tag())
+data class FirebaseDeviceCompact(val info: FirebaseDeviceCompactInfo, val tags: List<TagsEnum>) {
+    constructor() : this(info = FirebaseDeviceCompactInfo(), tags = listOf())
 
     fun convertToDeviceCompact(imageUrl: String = ""): DeviceCompact {
         return DeviceCompact(

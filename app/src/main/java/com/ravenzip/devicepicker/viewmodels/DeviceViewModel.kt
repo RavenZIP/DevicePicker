@@ -72,28 +72,8 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
                 emit(false)
             }
 
-    fun setDevicesFromCategories(devices: List<DeviceCompact>, userSearchHistory: List<String>) {
-        val popularDevices = devices.filter { it.tags.popular }
-        val lowPriceDevices = devices.filter { it.tags.lowPrice }
-        val highPerformance = devices.filter { it.tags.highPerformance }
-        val theBest = devices.filter { it.tags.theBest }
-
-        _deviceCompactState.value.popularDevices.addAll(popularDevices)
-        _deviceCompactState.value.lowPriceDevices.addAll(lowPriceDevices)
-        _deviceCompactState.value.highPerformanceDevices.addAll(highPerformance)
-
-        theBest.forEach {
-            val listIndex =
-                _deviceCompactState.value.theBestDevices.indexOfFirst { deviceList ->
-                    deviceList[0].brand == it.brand
-                }
-
-            if (listIndex >= 0) _deviceCompactState.value.theBestDevices[listIndex].add(it)
-            else _deviceCompactState.value.theBestDevices.add(mutableListOf(it))
-        }
-
-        // TODO формировать недавно просмотренные благодаря userSearchHistory
-        _deviceCompactState.value.recentlyViewedDevices.add(DeviceCompact())
+    fun setUserSearchHistoryUidList(userSearchHistory: List<String>) {
+        deviceCompactState.value.userSearchHistoryUidList.addAll(userSearchHistory)
     }
 
     /** Заполнить урл изображения для конкретного устройства */
@@ -123,41 +103,5 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
             _deviceState.value.deviceList[deviceIndex] =
                 _deviceState.value.deviceList[deviceIndex].copy(imageUrls = imageUrls)
         }
-    }
-
-    /// TODO временное решение, обязательно переделать
-    fun updateDevicesCategories() {
-        val deviceCompactList = _deviceCompactState.value.deviceCompactList
-        _deviceCompactState.value =
-            DeviceCompactState(
-                deviceCompactList = deviceCompactList,
-                popularDevices = mutableListOf(),
-                lowPriceDevices = mutableListOf(),
-                highPerformanceDevices = mutableListOf(),
-                theBestDevices = mutableListOf(),
-                recentlyViewedDevices = mutableListOf(),
-            )
-
-        val popularDevices = deviceCompactList.filter { it.tags.popular }
-        val lowPriceDevices = deviceCompactList.filter { it.tags.lowPrice }
-        val highPerformance = deviceCompactList.filter { it.tags.highPerformance }
-        val theBest = deviceCompactList.filter { it.tags.theBest }
-
-        _deviceCompactState.value.popularDevices.addAll(popularDevices)
-        _deviceCompactState.value.lowPriceDevices.addAll(lowPriceDevices)
-        _deviceCompactState.value.highPerformanceDevices.addAll(highPerformance)
-
-        theBest.forEach {
-            val listIndex =
-                _deviceCompactState.value.theBestDevices.indexOfFirst { deviceList ->
-                    deviceList[0].brand == it.brand
-                }
-
-            if (listIndex >= 0) _deviceCompactState.value.theBestDevices[listIndex].add(it)
-            else _deviceCompactState.value.theBestDevices.add(mutableListOf(it))
-        }
-
-        // TODO фильтровать недавно просмотренные
-        _deviceCompactState.value.recentlyViewedDevices.add(DeviceCompact())
     }
 }

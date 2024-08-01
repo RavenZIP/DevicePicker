@@ -1,6 +1,6 @@
 package com.ravenzip.devicepicker.model.device.compact
 
-import com.ravenzip.devicepicker.model.Tag
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
 
 /** Компактная модель устройства */
 data class DeviceCompact(
@@ -11,7 +11,7 @@ data class DeviceCompact(
     override val rating: Double,
     override val reviewsCount: Int,
     val brand: String,
-    val tags: Tag,
+    val tags: List<TagsEnum>,
     val imageUrl: String
 ) : IDeviceCompact {
     constructor() :
@@ -23,6 +23,6 @@ data class DeviceCompact(
             rating = 0.0,
             reviewsCount = 0,
             brand = "",
-            tags = Tag(),
+            tags = listOf(),
             imageUrl = "")
 }

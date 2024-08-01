@@ -39,10 +39,12 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.Price
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
+import com.ravenzip.devicepicker.constants.enums.ContainerTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.deviceCompactStateToList
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.workshop.components.Spinner
@@ -61,72 +63,31 @@ fun HomeScreen(
     navigateToDevice: () -> Unit
 ) {
     val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
+    val listOfDeviceCategories = deviceCompactState.deviceCompactStateToList()
     val spinner = remember { mutableStateOf(SpinnerState()) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally) {
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                CarouselDevices(
-                    devices = deviceCompactState.popularDevices,
-                    categoryName = "Популярные",
-                    deviceViewModel = deviceViewModel,
-                    imageViewModel = imageViewModel,
-                    spinner = spinner,
-                    cardClick = navigateToDevice)
+            item { Spacer(modifier = Modifier.height(10.dp)) }
 
-                Spacer(modifier = Modifier.height(20.dp))
-                CarouselDevices(
-                    devices = deviceCompactState.lowPriceDevices,
-                    categoryName = "Низкая цена",
-                    deviceViewModel = deviceViewModel,
-                    imageViewModel = imageViewModel,
-                    spinner = spinner,
-                    cardClick = navigateToDevice)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-                if (deviceCompactState.theBestDevices.size > 0) {
-                    SpecialOfferContainer(
-                        devices = deviceCompactState.theBestDevices[0],
-                        categoryName =
-                            "${deviceCompactState.theBestDevices[0][0].brand}: лучшие устройства",
+            items(listOfDeviceCategories) { category ->
+                if (category.containerType === ContainerTypeEnum.Default) {
+                    CarouselDevices(
+                        devices = category.devices,
+                        categoryName = category.categoryName,
+                        deviceViewModel = deviceViewModel,
+                        imageViewModel = imageViewModel,
+                        spinner = spinner,
                         cardClick = navigateToDevice)
-                    Spacer(modifier = Modifier.height(20.dp))
-                }
-            }
-
-            item {
-                CarouselDevices(
-                    devices = deviceCompactState.highPerformanceDevices,
-                    categoryName = "Производительные",
-                    deviceViewModel = deviceViewModel,
-                    imageViewModel = imageViewModel,
-                    spinner = spinner,
-                    cardClick = navigateToDevice)
-
-                Spacer(modifier = Modifier.height(20.dp))
-                CarouselDevices(
-                    devices = deviceCompactState.recentlyViewedDevices,
-                    categoryName = "Вы недавно смотрели",
-                    deviceViewModel = deviceViewModel,
-                    imageViewModel = imageViewModel,
-                    spinner = spinner,
-                    cardClick = navigateToDevice)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-                if (deviceCompactState.theBestDevices.size > 1) {
+                } else {
                     SpecialOfferContainer(
-                        devices = deviceCompactState.theBestDevices[1],
-                        categoryName =
-                            "${deviceCompactState.theBestDevices[1][0].brand}: лучшие устройства",
+                        devices = category.devices,
+                        categoryName = category.categoryName,
                         cardClick = navigateToDevice)
-                    Spacer(modifier = Modifier.height(20.dp))
                 }
+
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
 
@@ -137,7 +98,7 @@ fun HomeScreen(
 
 @Composable
 private fun CarouselDevices(
-    devices: MutableList<DeviceCompact>,
+    devices: List<DeviceCompact>,
     categoryName: String,
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
@@ -171,7 +132,7 @@ private fun CarouselDevices(
 
 @Composable
 private fun SpecialOfferContainer(
-    devices: MutableList<DeviceCompact>,
+    devices: List<DeviceCompact>,
     categoryName: String,
     cardClick: () -> Unit
 ) {
