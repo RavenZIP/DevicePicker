@@ -30,7 +30,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.WelcomeEnum
+import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.viewmodels.UserViewModel

@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ravenzip.devicepicker.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.data.SelectionParameters
@@ -25,18 +25,16 @@ fun AuthVariants(authVariants: SnapshotStateList<SelectionParameters>, title: St
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.defaultCardColors(),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-        Spacer(modifier = Modifier.padding(top = 20.dp))
-        Text(
-            text = title,
-            modifier = Modifier.padding(start = 15.dp),
-            fontSize = 18.sp,
-            fontWeight = FontWeight.W500
-        )
-        Spacer(modifier = Modifier.padding(top = 10.dp))
-        RadioGroup(width = 1f, list = authVariants, textSize = 16)
-    }
+        elevation = CardDefaults.cardElevation(0.dp)) {
+            Spacer(modifier = Modifier.padding(top = 20.dp))
+            Text(
+                text = title,
+                modifier = Modifier.padding(start = 15.dp),
+                fontSize = 18.sp,
+                fontWeight = FontWeight.W500)
+            Spacer(modifier = Modifier.padding(top = 10.dp))
+            RadioGroup(width = 1f, list = authVariants, textSize = 16)
+        }
 }
 
 fun generateAuthVariants(): SnapshotStateList<SelectionParameters> {

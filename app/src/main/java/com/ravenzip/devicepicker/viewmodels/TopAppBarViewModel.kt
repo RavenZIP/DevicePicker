@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
+import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.state.SearchBarState
 import com.ravenzip.devicepicker.state.TopAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel

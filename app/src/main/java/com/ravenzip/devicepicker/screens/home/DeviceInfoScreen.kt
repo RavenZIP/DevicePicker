@@ -44,10 +44,10 @@ import com.ravenzip.devicepicker.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.components.PriceRange
 import com.ravenzip.devicepicker.components.SmallText
 import com.ravenzip.devicepicker.components.TextWithIcon
+import com.ravenzip.devicepicker.constants.map.colorMap
+import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.map.colorMap
-import com.ravenzip.devicepicker.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration

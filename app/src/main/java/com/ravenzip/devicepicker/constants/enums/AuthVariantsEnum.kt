@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.enums
+package com.ravenzip.devicepicker.constants.enums
 
 enum class AuthVariantsEnum(val value: String) {
     EMAIL(value = "Электронная почта"),

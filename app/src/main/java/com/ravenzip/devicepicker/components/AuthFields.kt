@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.data.Error
 import com.ravenzip.workshop.data.IconParameters
@@ -28,11 +28,8 @@ fun GetFields(
                 label = "Электронная почта",
                 leadingIcon =
                     IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_email),
-                        size = 20
-                    ),
-                error = validation[0]
-            )
+                        value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
+                error = validation[0])
 
             Spacer(modifier = Modifier.height(15.dp))
             SinglenessTextField(
@@ -41,8 +38,7 @@ fun GetFields(
                 leadingIcon =
                     IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
                 isHiddenText = true,
-                error = validation[1]
-            )
+                error = validation[1])
         }
         AuthVariantsEnum.PHONE -> {
             SinglenessTextField(
@@ -50,11 +46,8 @@ fun GetFields(
                 label = "Телефон",
                 leadingIcon =
                     IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_phone),
-                        size = 20
-                    ),
-                error = validation[0]
-            )
+                        value = ImageVector.vectorResource(R.drawable.i_phone), size = 20),
+                error = validation[0])
         }
         AuthVariantsEnum.GOOGLE -> {
             Text(text = "Хз че тут пока что")

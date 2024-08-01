@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.map
+package com.ravenzip.devicepicker.constants.map
 
 import com.ravenzip.devicepicker.ui.theme.blue
 import com.ravenzip.devicepicker.ui.theme.gray

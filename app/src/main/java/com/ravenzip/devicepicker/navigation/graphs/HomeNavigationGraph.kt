@@ -11,7 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
+import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.screens.home.DeviceInfoScreen

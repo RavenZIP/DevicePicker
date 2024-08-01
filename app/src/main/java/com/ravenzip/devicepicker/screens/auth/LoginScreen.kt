@@ -23,7 +23,7 @@ import com.ravenzip.devicepicker.components.GetFields
 import com.ravenzip.devicepicker.components.ScreenTitle
 import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
-import com.ravenzip.devicepicker.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError

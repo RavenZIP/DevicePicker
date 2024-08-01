@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.enums.TopAppBarTypeEnum
+import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.state.SearchBarState

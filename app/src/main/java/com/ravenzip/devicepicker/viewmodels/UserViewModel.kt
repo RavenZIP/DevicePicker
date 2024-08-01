@@ -6,7 +6,7 @@ import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.enums.AuthErrorsEnum
+import com.ravenzip.devicepicker.constants.enums.AuthErrorsEnum
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository

@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.components.ScreenTitle
-import com.ravenzip.devicepicker.enums.AuthCardEnum
+import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
