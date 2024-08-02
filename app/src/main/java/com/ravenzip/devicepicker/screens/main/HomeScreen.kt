@@ -42,6 +42,7 @@ import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.constants.enums.ContainerTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
+import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.deviceCompactStateToList
@@ -53,7 +54,6 @@ import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(
@@ -116,15 +116,16 @@ private fun CarouselDevices(
                 modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                     item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                    items(devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
-                        DeviceCard(
-                            device = it,
-                            deviceViewModel = deviceViewModel,
-                            imageViewModel = imageViewModel,
-                            spinner = spinner,
-                            navigateToDevice = cardClick)
-                        Spacer(modifier = Modifier.padding(start = 15.dp))
-                    }
+                    items(
+                        items = devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
+                            DeviceCard(
+                                device = it,
+                                deviceViewModel = deviceViewModel,
+                                imageViewModel = imageViewModel,
+                                spinner = spinner,
+                                navigateToDevice = cardClick)
+                            Spacer(modifier = Modifier.padding(start = 15.dp))
+                        }
                 }
         }
     }
@@ -165,7 +166,7 @@ private fun SpecialOfferContainer(
                                 item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
                                 items(
-                                    devices,
+                                    items = devices,
                                     key = { it.uid },
                                     contentType = { DeviceCompact::class }) {
                                         SpecialOfferCard(device = it, navigateToDevice = cardClick)
@@ -185,16 +186,18 @@ private fun DeviceCard(
     spinner: MutableState<SpinnerState>,
     navigateToDevice: () -> Unit
 ) {
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
 
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
-                .clickable {
-                    scope.launch {
-                        onClickDeviceCard(
-                            device, deviceViewModel, imageViewModel, spinner, navigateToDevice)
-                    }
+                .suspendOnClick(coroutineScope) {
+                    onClickDeviceCard(
+                        device = device,
+                        deviceViewModel = deviceViewModel,
+                        imageViewModel = imageViewModel,
+                        spinner = spinner,
+                        navigateToDevice = navigateToDevice)
                 }
                 .widthIn(0.dp, 130.dp),
         colors = CardDefaults.veryLightPrimary()) {
