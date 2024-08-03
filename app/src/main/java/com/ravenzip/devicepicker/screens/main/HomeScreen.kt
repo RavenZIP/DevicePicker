@@ -56,7 +56,7 @@ import kotlinx.coroutines.flow.StateFlow
 fun HomeScreen(
     padding: PaddingValues,
     deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
-    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
@@ -75,14 +75,14 @@ fun HomeScreen(
                         categoryName = category.categoryName,
                         isLoading = isLoading,
                         coroutineScope = coroutineScope,
-                        onClickToCard = onClickToCard)
+                        onClickToDeviceCard = onClickToDeviceCard)
                 } else {
                     SpecialOfferContainer(
                         devices = category.devices,
                         categoryName = category.categoryName,
                         isLoading = isLoading,
                         coroutineScope = coroutineScope,
-                        onClickToCard = onClickToCard)
+                        onClickToDeviceCard = onClickToDeviceCard)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -100,7 +100,7 @@ private fun CarouselDevices(
     categoryName: String,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -121,7 +121,7 @@ private fun CarouselDevices(
                                 device = device,
                                 isLoading = isLoading,
                                 coroutineScope = coroutineScope,
-                                onClickToCard = onClickToCard)
+                                onClickToDeviceCard = onClickToDeviceCard)
                             Spacer(modifier = Modifier.padding(start = 15.dp))
                         }
                 }
@@ -135,7 +135,7 @@ private fun SpecialOfferContainer(
     categoryName: String,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
@@ -173,7 +173,7 @@ private fun SpecialOfferContainer(
                                             device = it,
                                             isLoading = isLoading,
                                             coroutineScope = coroutineScope,
-                                            onClickToCard = onClickToCard)
+                                            onClickToDeviceCard = onClickToDeviceCard)
                                         Spacer(modifier = Modifier.padding(start = 15.dp))
                                     }
                             }
@@ -187,12 +187,12 @@ private fun DeviceCard(
     device: DeviceCompact,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
-                .suspendOnClick(coroutineScope) { onClickToCard(device, isLoading) }
+                .suspendOnClick(coroutineScope) { onClickToDeviceCard(device, isLoading) }
                 .widthIn(0.dp, 130.dp),
         colors = CardDefaults.veryLightPrimary()) {
             Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -221,12 +221,12 @@ private fun SpecialOfferCard(
     device: DeviceCompact,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(
         modifier =
             Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToCard(device, isLoading)
+                onClickToDeviceCard(device, isLoading)
             },
         colors = CardDefaults.veryLightPrimary()) {
             Row(

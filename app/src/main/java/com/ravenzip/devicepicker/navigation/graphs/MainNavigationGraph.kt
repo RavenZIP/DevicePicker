@@ -28,11 +28,13 @@ import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun MainNavigationGraph(
     navController: NavHostController,
@@ -91,22 +93,13 @@ fun MainNavigationGraph(
                 HomeScreen(
                     padding = padding,
                     deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
-                    onClickToCard = { device, isLoading ->
-                        isLoading.value = true
-                        val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
-
-                        if (cachedDevice == null) {
-                            deviceViewModel
-                                .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-                                .flatMapLatest {
-                                    imageViewModel.getImageUrls(
-                                        brand = device.brand, model = device.model)
-                                }
-                                .collect { deviceViewModel.setImageUrlToDevices(it) }
-                        }
-
-                        isLoading.value = false
-                        navController.navigate(HomeGraph.DEVICE_INFO)
+                    onClickToDeviceCard = { device, isLoading ->
+                        onClickToDeviceCard(
+                            device = device,
+                            deviceViewModel = deviceViewModel,
+                            imageViewModel = imageViewModel,
+                            isLoading = isLoading,
+                            navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) })
                     })
             }
 
@@ -162,4 +155,28 @@ fun MainNavigationGraph(
                 bottomBarState = bottomBarState,
             )
         }
+}
+
+@OptIn(ExperimentalCoroutinesApi::class)
+private suspend fun onClickToDeviceCard(
+    device: DeviceCompact,
+    deviceViewModel: DeviceViewModel,
+    imageViewModel: ImageViewModel,
+    isLoading: MutableState<Boolean>,
+    navigateToDevice: () -> Unit
+) {
+    isLoading.value = true
+    val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
+
+    if (cachedDevice == null) {
+        deviceViewModel
+            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+            .flatMapLatest {
+                imageViewModel.getImageUrls(brand = device.brand, model = device.model)
+            }
+            .collect { deviceViewModel.setImageUrlToDevices(it) }
+    }
+
+    isLoading.value = false
+    navigateToDevice()
 }
