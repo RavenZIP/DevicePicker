@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.screens.main
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,24 +44,23 @@ import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
-import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
-import com.ravenzip.devicepicker.viewmodels.ImageViewModel
+import com.ravenzip.devicepicker.state.DeviceCompactState
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun HomeScreen(
     padding: PaddingValues,
-    deviceViewModel: DeviceViewModel,
-    imageViewModel: ImageViewModel,
-    navigateToDevice: () -> Unit
+    deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
+    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
-    val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
+    val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
+    val coroutineScope = rememberCoroutineScope()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -75,15 +73,16 @@ fun HomeScreen(
                     CarouselDevices(
                         devices = category.devices,
                         categoryName = category.categoryName,
-                        deviceViewModel = deviceViewModel,
-                        imageViewModel = imageViewModel,
                         isLoading = isLoading,
-                        cardClick = navigateToDevice)
+                        coroutineScope = coroutineScope,
+                        onClickToCard = onClickToCard)
                 } else {
                     SpecialOfferContainer(
                         devices = category.devices,
                         categoryName = category.categoryName,
-                        cardClick = navigateToDevice)
+                        isLoading = isLoading,
+                        coroutineScope = coroutineScope,
+                        onClickToCard = onClickToCard)
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
@@ -99,10 +98,9 @@ fun HomeScreen(
 private fun CarouselDevices(
     devices: List<DeviceCompact>,
     categoryName: String,
-    deviceViewModel: DeviceViewModel,
-    imageViewModel: ImageViewModel,
     isLoading: MutableState<Boolean>,
-    cardClick: () -> Unit
+    coroutineScope: CoroutineScope,
+    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -116,13 +114,14 @@ private fun CarouselDevices(
                     item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
                     items(
-                        items = devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
+                        items = devices,
+                        key = { it.uid },
+                        contentType = { DeviceCompact::class }) { device ->
                             DeviceCard(
-                                device = it,
-                                deviceViewModel = deviceViewModel,
-                                imageViewModel = imageViewModel,
+                                device = device,
                                 isLoading = isLoading,
-                                navigateToDevice = cardClick)
+                                coroutineScope = coroutineScope,
+                                onClickToCard = onClickToCard)
                             Spacer(modifier = Modifier.padding(start = 15.dp))
                         }
                 }
@@ -134,7 +133,9 @@ private fun CarouselDevices(
 private fun SpecialOfferContainer(
     devices: List<DeviceCompact>,
     categoryName: String,
-    cardClick: () -> Unit
+    isLoading: MutableState<Boolean>,
+    coroutineScope: CoroutineScope,
+    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
@@ -168,7 +169,11 @@ private fun SpecialOfferContainer(
                                     items = devices,
                                     key = { it.uid },
                                     contentType = { DeviceCompact::class }) {
-                                        SpecialOfferCard(device = it, navigateToDevice = cardClick)
+                                        SpecialOfferCard(
+                                            device = it,
+                                            isLoading = isLoading,
+                                            coroutineScope = coroutineScope,
+                                            onClickToCard = onClickToCard)
                                         Spacer(modifier = Modifier.padding(start = 15.dp))
                                     }
                             }
@@ -180,24 +185,14 @@ private fun SpecialOfferContainer(
 @Composable
 private fun DeviceCard(
     device: DeviceCompact,
-    deviceViewModel: DeviceViewModel,
-    imageViewModel: ImageViewModel,
     isLoading: MutableState<Boolean>,
-    navigateToDevice: () -> Unit
+    coroutineScope: CoroutineScope,
+    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
 ) {
-    val coroutineScope = rememberCoroutineScope()
-
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
-                .suspendOnClick(coroutineScope) {
-                    onClickDeviceCard(
-                        device = device,
-                        deviceViewModel = deviceViewModel,
-                        imageViewModel = imageViewModel,
-                        isLoading = isLoading,
-                        navigateToDevice = navigateToDevice)
-                }
+                .suspendOnClick(coroutineScope) { onClickToCard(device, isLoading) }
                 .widthIn(0.dp, 130.dp),
         colors = CardDefaults.veryLightPrimary()) {
             Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -222,10 +217,17 @@ private fun DeviceCard(
 }
 
 @Composable
-private fun SpecialOfferCard(device: DeviceCompact, navigateToDevice: () -> Unit) {
+private fun SpecialOfferCard(
+    device: DeviceCompact,
+    isLoading: MutableState<Boolean>,
+    coroutineScope: CoroutineScope,
+    onClickToCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+) {
     Card(
         modifier =
-            Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).clickable { navigateToDevice() },
+            Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
+                onClickToCard(device, isLoading)
+            },
         colors = CardDefaults.veryLightPrimary()) {
             Row(
                 modifier = Modifier.padding(10.dp),
@@ -249,28 +251,4 @@ private fun SpecialOfferCard(device: DeviceCompact, navigateToDevice: () -> Unit
                     }
                 }
         }
-}
-
-@OptIn(ExperimentalCoroutinesApi::class)
-private suspend fun onClickDeviceCard(
-    device: DeviceCompact,
-    deviceViewModel: DeviceViewModel,
-    imageViewModel: ImageViewModel,
-    isLoading: MutableState<Boolean>,
-    navigateToDevice: () -> Unit
-) {
-    isLoading.value = true
-    val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
-
-    if (cachedDevice == null) {
-        deviceViewModel
-            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-            .flatMapLatest {
-                imageViewModel.getImageUrls(brand = device.brand, model = device.model)
-            }
-            .collect { deviceViewModel.setImageUrlToDevices(it) }
-    }
-
-    isLoading.value = false
-    navigateToDevice()
 }

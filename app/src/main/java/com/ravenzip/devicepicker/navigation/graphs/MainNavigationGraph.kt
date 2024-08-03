@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
@@ -27,6 +28,7 @@ import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -88,9 +90,24 @@ fun MainNavigationGraph(
 
                 HomeScreen(
                     padding = padding,
-                    deviceViewModel = deviceViewModel,
-                    imageViewModel = imageViewModel,
-                    navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) })
+                    deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
+                    onClickToCard = { device, isLoading ->
+                        isLoading.value = true
+                        val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
+
+                        if (cachedDevice == null) {
+                            deviceViewModel
+                                .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+                                .flatMapLatest {
+                                    imageViewModel.getImageUrls(
+                                        brand = device.brand, model = device.model)
+                                }
+                                .collect { deviceViewModel.setImageUrlToDevices(it) }
+                        }
+
+                        isLoading.value = false
+                        navController.navigate(HomeGraph.DEVICE_INFO)
+                    })
             }
 
             homeNavigationGraph(
