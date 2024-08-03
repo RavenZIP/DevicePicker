@@ -56,6 +56,7 @@ fun MainNavigationGraph(
                 .getDeviceCompactList()
                 .zip(userViewModel.get(userViewModel.getUser())) { _, user ->
                     deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
+                    deviceViewModel.createDeviceCompactStateList()
                 }
                 .collect {}
 

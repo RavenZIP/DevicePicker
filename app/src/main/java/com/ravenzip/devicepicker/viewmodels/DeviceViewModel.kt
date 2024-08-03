@@ -7,6 +7,7 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import com.ravenzip.devicepicker.repositories.DeviceRepository
 import com.ravenzip.devicepicker.state.DeviceCompactState
+import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.deviceCompactStateToList
 import com.ravenzip.devicepicker.state.DeviceState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -83,6 +84,20 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
                 device.uid == imageUrl.deviceUid
             }
 
+        _deviceCompactState.value.deviceCategoryStateList.forEachIndexed {
+            indexOfDeviceCategory,
+            deviceCategoryState ->
+            deviceCategoryState.devices.forEachIndexed { indexOfDevice, deviceCompact ->
+                if (deviceCompact.uid == imageUrl.deviceUid) {
+                    _deviceCompactState.value.deviceCategoryStateList[indexOfDeviceCategory]
+                        .devices[indexOfDevice] =
+                        _deviceCompactState.value.deviceCategoryStateList[indexOfDeviceCategory]
+                            .devices[indexOfDevice]
+                            .copy(imageUrl = imageUrl.value)
+                }
+            }
+        }
+
         if (deviceIndex != -1) {
             _deviceCompactState.value.deviceCompactList[deviceIndex] =
                 _deviceCompactState.value.deviceCompactList[deviceIndex].copy(
@@ -103,5 +118,10 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
             _deviceState.value.deviceList[deviceIndex] =
                 _deviceState.value.deviceList[deviceIndex].copy(imageUrls = imageUrls)
         }
+    }
+
+    fun createDeviceCompactStateList() {
+        _deviceCompactState.value.deviceCategoryStateList.addAll(
+            _deviceCompactState.value.deviceCompactStateToList())
     }
 }

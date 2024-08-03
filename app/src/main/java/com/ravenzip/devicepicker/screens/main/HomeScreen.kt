@@ -45,7 +45,6 @@ import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
-import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.deviceCompactStateToList
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.workshop.components.Spinner
@@ -63,7 +62,6 @@ fun HomeScreen(
     navigateToDevice: () -> Unit
 ) {
     val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
-    val listOfDeviceCategories = deviceCompactState.deviceCompactStateToList()
     val isLoading = remember { mutableStateOf(false) }
 
     LazyColumn(
@@ -71,7 +69,8 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
             item { Spacer(modifier = Modifier.height(10.dp)) }
 
-            items(listOfDeviceCategories) { category ->
+            items(deviceCompactState.deviceCategoryStateList, key = { it.categoryName }) { category
+                ->
                 if (category.containerType === ContainerTypeEnum.Default) {
                     CarouselDevices(
                         devices = category.devices,

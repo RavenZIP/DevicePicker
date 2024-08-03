@@ -18,8 +18,9 @@ import com.ravenzip.workshop.data.IconParameters
 class Tags(val computedTags: List<TagsEnum>, val manualTags: List<TagsEnum>) {
     constructor() : this(computedTags = listOf(), manualTags = listOf())
 
+    fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
+
     companion object {
-        fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
 
         @Composable
         fun Tags.createListOfChipIcons() =
