@@ -49,11 +49,11 @@ import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.deviceCompac
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flatMapLatest
 
 @Composable
 fun HomeScreen(
@@ -64,7 +64,7 @@ fun HomeScreen(
 ) {
     val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
     val listOfDeviceCategories = deviceCompactState.deviceCompactStateToList()
-    val spinner = remember { mutableStateOf(SpinnerState()) }
+    val isLoading = remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -78,7 +78,7 @@ fun HomeScreen(
                         categoryName = category.categoryName,
                         deviceViewModel = deviceViewModel,
                         imageViewModel = imageViewModel,
-                        spinner = spinner,
+                        isLoading = isLoading,
                         cardClick = navigateToDevice)
                 } else {
                     SpecialOfferContainer(
@@ -91,8 +91,8 @@ fun HomeScreen(
             }
         }
 
-    if (spinner.value.isLoading) {
-        Spinner(text = spinner.value.text)
+    if (isLoading.value) {
+        Spinner(text = TextParameters("Загрузка..."))
     }
 }
 
@@ -102,7 +102,7 @@ private fun CarouselDevices(
     categoryName: String,
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
-    spinner: MutableState<SpinnerState>,
+    isLoading: MutableState<Boolean>,
     cardClick: () -> Unit
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
@@ -122,7 +122,7 @@ private fun CarouselDevices(
                                 device = it,
                                 deviceViewModel = deviceViewModel,
                                 imageViewModel = imageViewModel,
-                                spinner = spinner,
+                                isLoading = isLoading,
                                 navigateToDevice = cardClick)
                             Spacer(modifier = Modifier.padding(start = 15.dp))
                         }
@@ -183,7 +183,7 @@ private fun DeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
-    spinner: MutableState<SpinnerState>,
+    isLoading: MutableState<Boolean>,
     navigateToDevice: () -> Unit
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -196,7 +196,7 @@ private fun DeviceCard(
                         device = device,
                         deviceViewModel = deviceViewModel,
                         imageViewModel = imageViewModel,
-                        spinner = spinner,
+                        isLoading = isLoading,
                         navigateToDevice = navigateToDevice)
                 }
                 .widthIn(0.dp, 130.dp),
@@ -252,26 +252,26 @@ private fun SpecialOfferCard(device: DeviceCompact, navigateToDevice: () -> Unit
         }
 }
 
+@OptIn(ExperimentalCoroutinesApi::class)
 private suspend fun onClickDeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
-    spinner: MutableState<SpinnerState>,
+    isLoading: MutableState<Boolean>,
     navigateToDevice: () -> Unit
 ) {
-    spinner.value = SpinnerState(isLoading = true, TextParameters("Загрузка..."))
-
+    isLoading.value = true
     val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
 
     if (cachedDevice == null) {
         deviceViewModel
             .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-            .flatMapConcat {
+            .flatMapLatest {
                 imageViewModel.getImageUrls(brand = device.brand, model = device.model)
             }
             .collect { deviceViewModel.setImageUrlToDevices(it) }
     }
 
-    spinner.value = SpinnerState()
+    isLoading.value = false
     navigateToDevice()
 }
