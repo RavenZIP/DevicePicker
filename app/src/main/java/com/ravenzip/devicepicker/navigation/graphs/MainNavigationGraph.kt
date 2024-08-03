@@ -8,8 +8,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
@@ -26,9 +28,9 @@ import com.ravenzip.devicepicker.viewmodels.BrandViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
-import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
@@ -39,8 +41,13 @@ import kotlinx.coroutines.launch
 fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    topAppBarViewModel: TopAppBarViewModel,
-    userViewModel: UserViewModel,
+    setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
+    setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
+    setSearchBarState: (searchBarState: SearchBarState) -> Unit,
+    userDataByViewModel: StateFlow<User>,
+    getUser: () -> FirebaseUser?,
+    getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
+    logout: suspend () -> Unit,
     bottomBarState: MutableState<Boolean>
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
@@ -58,7 +65,7 @@ fun MainNavigationGraph(
         launch {
             deviceViewModel
                 .getDeviceCompactList()
-                .zip(userViewModel.get(userViewModel.getUser())) { _, user ->
+                .zip(getUserData(getUser())) { _, user ->
                     deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
                     deviceViewModel.createDeviceCompactStateList()
                 }
@@ -86,8 +93,8 @@ fun MainNavigationGraph(
         startDestination = BottomBarGraph.HOME) {
             /// Домашний экран
             composable(route = BottomBarGraph.HOME) {
-                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Главная"))
-                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+                setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
+                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
                 bottomBarState.value = true
 
                 HomeScreen(
@@ -105,60 +112,55 @@ fun MainNavigationGraph(
 
             homeNavigationGraph(
                 padding = padding,
-                createTopAppBarState = { onClickToBackArrow, menuItems ->
-                    TopAppBarState.createTopAppBarState(
-                        onClickToBackArrow = onClickToBackArrow, menuItems = menuItems)
-                },
-                setTopAppBarState = { topAppBarState ->
-                    topAppBarViewModel.setTopBarState(topAppBarState)
-                },
-                setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
-                hideBottomBar = { bottomBarState.value = false },
+                setTopAppBarState = { topAppBarState -> setTopAppBarState(topAppBarState) },
+                setTopAppBarType = { topAppBarType -> setTopAppBarType(topAppBarType) },
+                bottomBarState = bottomBarState,
                 deviceStateByViewModel = deviceViewModel.deviceState,
                 navController = navController)
 
             /// Поиск
             composable(route = BottomBarGraph.SEARCH) {
-                topAppBarViewModel.setSearchBarState(SearchBarState.createSearchBarState())
-                topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
+                setSearchBarState(SearchBarState.createSearchBarState())
+                setTopAppBarType(TopAppBarTypeEnum.SearchBar)
 
                 SearchScreen(
-                    padding,
-                    brandViewModel = brandViewModel,
-                    deviceTypeViewModel = deviceTypeViewModel)
+                    padding = padding,
+                    listOfBrandByViewModel = brandViewModel.listOfBrand,
+                    listOfDeviceTypeByViewModel = deviceTypeViewModel.listOfDeviceType)
             }
 
             /// Избранное
             composable(route = BottomBarGraph.FAVOURITES) {
-                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Избранное"))
-                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+                setTopAppBarState(TopAppBarState.createTopAppBarState("Избранное"))
+                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
 
                 FavouritesScreen(padding)
             }
 
             /// Сравнение
             composable(route = BottomBarGraph.COMPARE) {
-                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Сравнение"))
-                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+                setTopAppBarState(TopAppBarState.createTopAppBarState("Сравнение"))
+                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
 
                 CompareScreen(padding)
             }
 
             /// Профиль пользователя
             composable(route = BottomBarGraph.USER_PROFILE) {
-                topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Профиль"))
-                topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+                setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
+                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
                 bottomBarState.value = true
 
                 UserProfileScreen(
                     padding = padding,
-                    userViewModel = userViewModel,
+                    userDataByViewModel = userDataByViewModel,
+                    logout = logout,
                     onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) }))
             }
 
             userProfileNavigationGraph(
-                padding,
-                topAppBarViewModel = topAppBarViewModel,
+                padding = padding,
+                setTopAppBarState = { topAppBarState -> setTopAppBarState(topAppBarState) },
                 bottomBarState = bottomBarState,
             )
         }

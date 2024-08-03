@@ -16,6 +16,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,18 +25,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.viewmodels.BrandViewModel
-import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.workshop.components.VerticalGrid
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SearchScreen(
     padding: PaddingValues,
-    brandViewModel: BrandViewModel,
-    deviceTypeViewModel: DeviceTypeViewModel
+    listOfBrandByViewModel: StateFlow<SnapshotStateList<String>>,
+    listOfDeviceTypeByViewModel: StateFlow<SnapshotStateList<String>>
 ) {
-    val brandList = brandViewModel.brandList.collectAsState().value
-    val deviceTypeList = deviceTypeViewModel.deviceTypeList.collectAsState().value
+    val listOfBrand = listOfBrandByViewModel.collectAsState().value
+    val listOfDeviceType = listOfDeviceTypeByViewModel.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -47,13 +47,13 @@ fun SearchScreen(
                 fontSize = 18.sp)
 
             Spacer(modifier = Modifier.height(10.dp))
-            VerticalGrid(items = deviceTypeList) { modifier, item -> BrandCard(modifier, item) }
+            VerticalGrid(items = listOfDeviceType) { modifier, item -> BrandCard(modifier, item) }
 
             Spacer(modifier = Modifier.height(20.dp))
             Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
             Spacer(modifier = Modifier.height(10.dp))
-            VerticalGrid(items = brandList) { modifier, item -> BrandCard(modifier, item) }
+            VerticalGrid(items = listOfBrand) { modifier, item -> BrandCard(modifier, item) }
 
             Spacer(modifier = Modifier.height(20.dp))
         }

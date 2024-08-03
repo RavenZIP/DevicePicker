@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.ravenzip.devicepicker.repositories.BrandRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,14 +17,14 @@ import kotlinx.coroutines.withContext
 @HiltViewModel
 class BrandViewModel @Inject constructor(private val brandRepository: BrandRepository) :
     ViewModel() {
-    private val _brandList = MutableStateFlow(mutableListOf<String>())
+    private val _listOfBrand = MutableStateFlow(mutableStateListOf<String>())
 
-    val brandList = _brandList.asStateFlow()
+    val listOfBrand = _listOfBrand.asStateFlow()
 
     suspend fun getBrandList(): Flow<Boolean> =
         flow {
                 val brandList = brandRepository.getDeviceBrandList()
-                _brandList.value.addAll(brandList)
+                _listOfBrand.value.addAll(brandList)
                 emit(true)
             }
             .catch {

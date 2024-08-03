@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,23 +23,22 @@ import kotlinx.coroutines.flow.StateFlow
 
 fun NavGraphBuilder.homeNavigationGraph(
     padding: PaddingValues,
-    createTopAppBarState:
-        @Composable
-        (onClickToBackArrow: () -> Unit, menuItems: List<AppBarItem>) -> TopAppBarState,
     setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
     setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
-    hideBottomBar: () -> Unit,
+    bottomBarState: MutableState<Boolean>,
     deviceStateByViewModel: StateFlow<DeviceState>,
     navController: NavHostController
 ) {
     navigation(route = HomeGraph.HOME_ROOT, startDestination = HomeGraph.DEVICE_INFO) {
         composable(route = HomeGraph.DEVICE_INFO) {
             val topAppBarState =
-                createTopAppBarState({ navController.navigateUp() }, topAppBarItemList())
+                TopAppBarState.createTopAppBarState(
+                    onClickToBackArrow = { navController.navigateUp() },
+                    menuItems = topAppBarItemList())
 
             setTopAppBarState(topAppBarState)
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-            hideBottomBar()
+            bottomBarState.value = false
 
             DeviceInfoScreen(padding = padding, deviceStateByViewModel = deviceStateByViewModel)
         }

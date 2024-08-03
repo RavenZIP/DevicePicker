@@ -29,8 +29,8 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
+import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.ui.theme.errorColor
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
@@ -39,19 +39,21 @@ import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 @Composable
 fun UserProfileScreen(
     padding: PaddingValues,
-    userViewModel: UserViewModel,
+    userDataByViewModel: StateFlow<User>,
+    logout: suspend () -> Unit,
     vararg onClick: () -> Unit
 ) {
     val isLoading = remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val alertDialogIsShown = remember { mutableStateOf(false) }
-    val userData = userViewModel.user.collectAsState().value
+    val userData = userDataByViewModel.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -234,7 +236,8 @@ fun UserProfileScreen(
 
                     alertDialogIsShown.value = false
                     isLoading.value = true
-                    userViewModel.logout()
+                    logout()
+
                     var timer = 3
                     while (timer != 0) {
                         delay(1000)

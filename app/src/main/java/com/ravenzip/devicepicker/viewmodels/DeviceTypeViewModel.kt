@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.ravenzip.devicepicker.repositories.DeviceTypeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,14 +18,14 @@ import kotlinx.coroutines.withContext
 class DeviceTypeViewModel
 @Inject
 constructor(private val deviceTypeRepository: DeviceTypeRepository) : ViewModel() {
-    private val _deviceTypeList = MutableStateFlow(mutableListOf<String>())
+    private val _listOfDeviceType = MutableStateFlow(mutableStateListOf<String>())
 
-    val deviceTypeList = _deviceTypeList.asStateFlow()
+    val listOfDeviceType = _listOfDeviceType.asStateFlow()
 
     suspend fun getDeviceTypeList(): Flow<Boolean> =
         flow {
                 val deviceTypeList = deviceTypeRepository.getDeviceTypeList()
-                _deviceTypeList.value.addAll(deviceTypeList)
+                _listOfDeviceType.value.addAll(deviceTypeList)
                 emit(true)
             }
             .catch {

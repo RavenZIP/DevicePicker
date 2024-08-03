@@ -58,8 +58,17 @@ fun ScaffoldScreen(
             MainNavigationGraph(
                 navController = navController,
                 padding = it,
-                topAppBarViewModel = topAppBarViewModel,
-                userViewModel = userViewModel,
+                setTopAppBarState = { topAppBarState ->
+                    topAppBarViewModel.setTopBarState(topAppBarState)
+                },
+                setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
+                setSearchBarState = { searchBarState ->
+                    topAppBarViewModel.setSearchBarState(searchBarState)
+                },
+                userDataByViewModel = userViewModel.user,
+                getUser = { userViewModel.getUser() },
+                getUserData = { user -> userViewModel.get(user) },
+                logout = { userViewModel.logout() },
                 bottomBarState = bottomBarState)
         }
 }
