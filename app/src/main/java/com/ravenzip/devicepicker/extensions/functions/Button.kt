@@ -5,6 +5,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun ButtonDefaults.inverseColors(): ButtonColors =
@@ -24,7 +25,6 @@ fun ButtonDefaults.containerColor() =
     this.buttonColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
 
 @Composable
-fun ButtonDefaults.veryLightPrimary() =
+fun ButtonDefaults.veryLightPrimary(contentColor: Color = LocalContentColor.current) =
     this.buttonColors(
-        containerColor = MaterialTheme.colorScheme.primary.copy(0.08f),
-        contentColor = LocalContentColor.current)
+        containerColor = MaterialTheme.colorScheme.primary.copy(0.08f), contentColor = contentColor)

@@ -49,12 +49,16 @@ import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
+import com.ravenzip.devicepicker.model.Tags.Companion.createListOfChipIcons
+import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
-import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
+import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid
+import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
@@ -64,11 +68,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
     val deviceState = deviceViewModel.deviceState.collectAsState().value
     val device = deviceState.device
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
-    val title =
-        "${device.specifications.baseInfo.type} ${device.specifications.baseInfo.model}, " +
-            "${device.configurations[0].randomAccessMemory}/${device.configurations[0].internalMemory}Gb " +
-            "${device.specifications.screen.diagonal()} ${device.specifications.baseInfo.year} ${device.colors[0]}"
+    val title = device.createDeviceTitle()
     val specificationsMap = device.specifications.toMap()
+    val allTags = device.tags.createListOfChipIcons()
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -76,6 +78,16 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 ImageContainer(pagerState, device.imageUrls)
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+                BoxedChipGroup(
+                    items = allTags,
+                    buttonText = TextParameters("Подробнее о метках"),
+                    buttonIcon =
+                        IconParameters(
+                            value = ImageVector.vectorResource(id = R.drawable.i_arrow_right)))
             }
 
             item {

@@ -1,58 +1,33 @@
 package com.ravenzip.devicepicker.model
 
-import com.ravenzip.devicepicker.model.device.Tag
-import com.ravenzip.devicepicker.model.device.Tag.Companion.createBooleanTag
-import com.ravenzip.devicepicker.model.device.Tag.Companion.createDoubleWithBooleanTag
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
+import com.ravenzip.devicepicker.constants.map.tagIconMap
+import com.ravenzip.devicepicker.constants.map.tagsColorMap
+import com.ravenzip.workshop.data.IconParameters
 
 /**
  * Метки устройств
  *
- * [popular] - Популярный
+ * [computedTags] - Вычисленные метки
  *
- * [lowPrice] - Низкая цена
- *
- * [highPerformance] - Производительный
- *
- * [energyEfficient] - Энергоэффективный
- *
- * [reliable] - Надежный
- *
- * [newModel] - Новая модель
- *
- * [highQualityScreen] - Качественный экран
- *
- * [highQualityConnection] - Качественная связь
- *
- * [highQualityCamera] - Качественные камеры
- *
- * [overallRating] - Общий рейтинг
- *
- * [priceSegment] - Ценовой сегмент
+ * [manualTags] - Метки, проставленные вручную
  */
-class Tags(
-    val popular: Tag<Double, Boolean>,
-    val lowPrice: Tag<Boolean, Boolean>,
-    val highPerformance: Tag<Double, Boolean>,
-    val energyEfficient: Tag<Double, Boolean>,
-    val reliable: Tag<Boolean, Boolean>,
-    val newModel: Tag<Boolean, Boolean>,
-    val highQualityScreen: Tag<Double, Boolean>,
-    val highQualityConnection: Tag<Boolean, Boolean>,
-    val highQualityCamera: Tag<Boolean, Boolean>,
-    val overallRating: Tag<Boolean, Boolean>,
-    val priceSegment: Tag<Boolean, Boolean>
-) {
-    constructor() :
-        this(
-            popular = createDoubleWithBooleanTag(),
-            lowPrice = createBooleanTag(),
-            highPerformance = createDoubleWithBooleanTag(),
-            energyEfficient = createDoubleWithBooleanTag(),
-            reliable = createBooleanTag(),
-            newModel = createBooleanTag(),
-            highQualityScreen = createDoubleWithBooleanTag(),
-            highQualityConnection = createBooleanTag(),
-            highQualityCamera = createBooleanTag(),
-            overallRating = createBooleanTag(),
-            priceSegment = createBooleanTag())
+class Tags(val computedTags: List<TagsEnum>, val manualTags: List<TagsEnum>) {
+    constructor() : this(computedTags = listOf(), manualTags = listOf())
+
+    companion object {
+        fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
+
+        @Composable
+        fun Tags.createListOfChipIcons() =
+            this.createListOfUniqueTags().map { tag ->
+                IconParameters(
+                    value = ImageVector.vectorResource(tagIconMap[tag]!!),
+                    size = 20,
+                    color = tagsColorMap[tag])
+            }
+    }
 }
