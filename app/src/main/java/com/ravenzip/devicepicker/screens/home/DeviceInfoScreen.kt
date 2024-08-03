@@ -53,7 +53,7 @@ import com.ravenzip.devicepicker.model.Tags.Companion.createListOfChipIcons
 import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
-import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
+import com.ravenzip.devicepicker.state.DeviceState
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid
@@ -61,12 +61,12 @@ import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun DeviceInfoScreen(padding: PaddingValues, deviceViewModel: DeviceViewModel) {
-    val deviceState = deviceViewModel.deviceState.collectAsState().value
-    val device = deviceState.device
+fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<DeviceState>) {
+    val device = deviceStateByViewModel.collectAsState().value.device
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
     val title = device.createDeviceTitle()
     val specificationsMap = device.specifications.toMap()

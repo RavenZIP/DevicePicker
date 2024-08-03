@@ -27,13 +27,13 @@ data class TopAppBarState(
         @Composable
         fun createTopAppBarState(
             text: String = "",
-            backArrowOnClick: () -> Unit = {},
+            onClickToBackArrow: () -> Unit = {},
             menuItems: List<AppBarItem> = listOf()
         ): TopAppBarState {
             val backArrowIcon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_back))
             val backArrow = remember {
-                mutableStateOf(BackArrow(icon = backArrowIcon, onClick = { backArrowOnClick() }))
+                mutableStateOf(BackArrow(icon = backArrowIcon, onClick = { onClickToBackArrow() }))
             }
 
             return TopAppBarState(text = text, backArrow = backArrow.value, menuItems = menuItems)

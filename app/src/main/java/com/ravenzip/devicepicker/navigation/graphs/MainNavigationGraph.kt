@@ -105,9 +105,16 @@ fun MainNavigationGraph(
 
             homeNavigationGraph(
                 padding = padding,
-                topAppBarViewModel = topAppBarViewModel,
-                deviceViewModel = deviceViewModel,
-                bottomBarState = bottomBarState,
+                createTopAppBarState = { onClickToBackArrow, menuItems ->
+                    TopAppBarState.createTopAppBarState(
+                        onClickToBackArrow = onClickToBackArrow, menuItems = menuItems)
+                },
+                setTopAppBarState = { topAppBarState ->
+                    topAppBarViewModel.setTopBarState(topAppBarState)
+                },
+                setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
+                hideBottomBar = { bottomBarState.value = false },
+                deviceStateByViewModel = deviceViewModel.deviceState,
                 navController = navController)
 
             /// Поиск

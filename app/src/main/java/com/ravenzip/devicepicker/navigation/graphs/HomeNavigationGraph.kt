@@ -2,7 +2,6 @@ package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -15,31 +14,33 @@ import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.screens.home.DeviceInfoScreen
+import com.ravenzip.devicepicker.state.DeviceState
 import com.ravenzip.devicepicker.state.TopAppBarState
-import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
-import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import com.ravenzip.workshop.data.AppBarItem
 import com.ravenzip.workshop.data.IconParameters
+import kotlinx.coroutines.flow.StateFlow
 
 fun NavGraphBuilder.homeNavigationGraph(
     padding: PaddingValues,
-    topAppBarViewModel: TopAppBarViewModel,
-    deviceViewModel: DeviceViewModel,
-    bottomBarState: MutableState<Boolean>,
+    createTopAppBarState:
+        @Composable
+        (onClickToBackArrow: () -> Unit, menuItems: List<AppBarItem>) -> TopAppBarState,
+    setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
+    setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
+    hideBottomBar: () -> Unit,
+    deviceStateByViewModel: StateFlow<DeviceState>,
     navController: NavHostController
 ) {
     navigation(route = HomeGraph.HOME_ROOT, startDestination = HomeGraph.DEVICE_INFO) {
         composable(route = HomeGraph.DEVICE_INFO) {
             val topAppBarState =
-                TopAppBarState.createTopAppBarState(
-                    backArrowOnClick = { navController.navigateUp() },
-                    menuItems = topAppBarItemList())
+                createTopAppBarState({ navController.navigateUp() }, topAppBarItemList())
 
-            topAppBarViewModel.setTopBarState(topAppBarState)
-            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-            bottomBarState.value = false
+            setTopAppBarState(topAppBarState)
+            setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
+            hideBottomBar()
 
-            DeviceInfoScreen(padding = padding, deviceViewModel = deviceViewModel)
+            DeviceInfoScreen(padding = padding, deviceStateByViewModel = deviceStateByViewModel)
         }
     }
 }
