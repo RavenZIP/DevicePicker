@@ -56,7 +56,7 @@ import kotlinx.coroutines.flow.StateFlow
 fun HomeScreen(
     padding: PaddingValues,
     deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
 ) {
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
@@ -64,30 +64,32 @@ fun HomeScreen(
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            item { Spacer(modifier = Modifier.height(10.dp)) }
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        item { Spacer(modifier = Modifier.height(10.dp)) }
 
-            items(deviceCompactState.deviceCategoryStateList, key = { it.categoryName }) { category
-                ->
-                if (category.containerType === ContainerTypeEnum.Default) {
-                    CarouselDevices(
-                        devices = category.devices,
-                        categoryName = category.categoryName,
-                        isLoading = isLoading,
-                        coroutineScope = coroutineScope,
-                        onClickToDeviceCard = onClickToDeviceCard)
-                } else {
-                    SpecialOfferContainer(
-                        devices = category.devices,
-                        categoryName = category.categoryName,
-                        isLoading = isLoading,
-                        coroutineScope = coroutineScope,
-                        onClickToDeviceCard = onClickToDeviceCard)
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
+        items(deviceCompactState.deviceCategoryStateList, key = { it.categoryName }) { category ->
+            if (category.containerType === ContainerTypeEnum.Default) {
+                CarouselDevices(
+                    devices = category.devices,
+                    categoryName = category.categoryName,
+                    isLoading = isLoading,
+                    coroutineScope = coroutineScope,
+                    onClickToDeviceCard = onClickToDeviceCard,
+                )
+            } else {
+                SpecialOfferContainer(
+                    devices = category.devices,
+                    categoryName = category.categoryName,
+                    isLoading = isLoading,
+                    coroutineScope = coroutineScope,
+                    onClickToDeviceCard = onClickToDeviceCard,
+                )
             }
+
+            Spacer(modifier = Modifier.height(20.dp))
         }
+    }
 
     if (isLoading.value) {
         Spinner(text = TextParameters("Загрузка..."))
@@ -100,7 +102,7 @@ private fun CarouselDevices(
     categoryName: String,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -108,23 +110,28 @@ private fun CarouselDevices(
                 text = categoryName,
                 modifier = Modifier.padding(start = 15.dp, bottom = 10.dp),
                 fontSize = 20.sp,
-                fontWeight = FontWeight.W500)
+                fontWeight = FontWeight.W500,
+            )
             LazyRow(
-                modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                    items(
-                        items = devices,
-                        key = { it.uid },
-                        contentType = { DeviceCompact::class }) { device ->
-                            DeviceCard(
-                                device = device,
-                                isLoading = isLoading,
-                                coroutineScope = coroutineScope,
-                                onClickToDeviceCard = onClickToDeviceCard)
-                            Spacer(modifier = Modifier.padding(start = 15.dp))
-                        }
+                items(
+                    items = devices,
+                    key = { it.uid },
+                    contentType = { DeviceCompact::class },
+                ) { device ->
+                    DeviceCard(
+                        device = device,
+                        isLoading = isLoading,
+                        coroutineScope = coroutineScope,
+                        onClickToDeviceCard = onClickToDeviceCard,
+                    )
+                    Spacer(modifier = Modifier.padding(start = 15.dp))
                 }
+            }
         }
     }
 }
@@ -135,51 +142,61 @@ private fun SpecialOfferContainer(
     categoryName: String,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
-        colors = CardDefaults.defaultCardColors()) {
-            Column(modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)) {
-                Card(
-                    modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                    colors =
-                        CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.primary)) {
-                        Text(
-                            text = "Ключевое слово",
-                            modifier = Modifier.padding(10.dp),
-                            fontSize = 14.sp)
-                    }
+        colors = CardDefaults.defaultCardColors(),
+    ) {
+        Column(modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)) {
+            Card(
+                modifier = Modifier.padding(top = 15.dp, start = 15.dp),
+                colors =
+                    CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+            ) {
+                Text(
+                    text = "Ключевое слово",
+                    modifier = Modifier.padding(10.dp),
+                    fontSize = 14.sp,
+                )
+            }
 
-                Column(
-                    modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-                        Text(
-                            text = categoryName,
-                            modifier = Modifier.padding(start = 15.dp),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.W500)
-                        Spacer(modifier = Modifier.padding(top = 10.dp))
-                        LazyRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center) {
-                                item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                Text(
+                    text = categoryName,
+                    modifier = Modifier.padding(start = 15.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.W500,
+                )
+                Spacer(modifier = Modifier.padding(top = 10.dp))
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                ) {
+                    item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
 
-                                items(
-                                    items = devices,
-                                    key = { it.uid },
-                                    contentType = { DeviceCompact::class }) {
-                                        SpecialOfferCard(
-                                            device = it,
-                                            isLoading = isLoading,
-                                            coroutineScope = coroutineScope,
-                                            onClickToDeviceCard = onClickToDeviceCard)
-                                        Spacer(modifier = Modifier.padding(start = 15.dp))
-                                    }
-                            }
+                    items(
+                        items = devices,
+                        key = { it.uid },
+                        contentType = { DeviceCompact::class },
+                    ) {
+                        SpecialOfferCard(
+                            device = it,
+                            isLoading = isLoading,
+                            coroutineScope = coroutineScope,
+                            onClickToDeviceCard = onClickToDeviceCard,
+                        )
+                        Spacer(modifier = Modifier.padding(start = 15.dp))
                     }
+                }
             }
         }
+    }
 }
 
 @Composable
@@ -187,33 +204,36 @@ private fun DeviceCard(
     device: DeviceCompact,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
 ) {
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
                 .suspendOnClick(coroutineScope) { onClickToDeviceCard(device, isLoading) }
                 .widthIn(0.dp, 130.dp),
-        colors = CardDefaults.veryLightPrimary()) {
-            Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-                FrescoImage(
-                    imageUrl = device.imageUrl,
-                    modifier = Modifier.smallImageContainer(),
-                    imageOptions = ImageOptions(contentScale = ContentScale.Fit))
+        colors = CardDefaults.veryLightPrimary(),
+    ) {
+        Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+            FrescoImage(
+                imageUrl = device.imageUrl,
+                modifier = Modifier.smallImageContainer(),
+                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
+            )
 
-                Spacer(modifier = Modifier.padding(top = 5.dp))
+            Spacer(modifier = Modifier.padding(top = 5.dp))
 
-                Price(price = device.price)
-                SmallText(text = device.model)
+            Price(price = device.price)
+            SmallText(text = device.model)
 
-                TextWithIcon(
-                    icon = ImageVector.vectorResource(R.drawable.i_medal),
-                    iconSize = 14.dp,
-                    text = "${device.rating} (${device.reviewsCount})",
-                    spacerWidth = 5.dp,
-                    smallText = true)
-            }
+            TextWithIcon(
+                icon = ImageVector.vectorResource(R.drawable.i_medal),
+                iconSize = 14.dp,
+                text = "${device.rating} (${device.reviewsCount})",
+                spacerWidth = 5.dp,
+                smallText = true,
+            )
         }
+    }
 }
 
 @Composable
@@ -221,34 +241,38 @@ private fun SpecialOfferCard(
     device: DeviceCompact,
     isLoading: MutableState<Boolean>,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit
+    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
 ) {
     Card(
         modifier =
             Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
                 onClickToDeviceCard(device, isLoading)
             },
-        colors = CardDefaults.veryLightPrimary()) {
-            Row(
-                modifier = Modifier.padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically) {
-                    FrescoImage(
-                        imageUrl = device.imageUrl,
-                        modifier = Modifier.smallImageContainer(),
-                        imageOptions = ImageOptions(contentScale = ContentScale.Fit))
+        colors = CardDefaults.veryLightPrimary(),
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            FrescoImage(
+                imageUrl = device.imageUrl,
+                modifier = Modifier.smallImageContainer(),
+                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
+            )
 
-                    Column(modifier = Modifier.padding(start = 15.dp)) {
-                        Price(price = device.price)
-                        SmallText(text = device.type)
-                        SmallText(text = device.model)
+            Column(modifier = Modifier.padding(start = 15.dp)) {
+                Price(price = device.price)
+                SmallText(text = device.type)
+                SmallText(text = device.model)
 
-                        TextWithIcon(
-                            icon = ImageVector.vectorResource(R.drawable.i_medal),
-                            iconSize = 14.dp,
-                            text = "${device.rating} (${device.reviewsCount})",
-                            spacerWidth = 5.dp,
-                            smallText = true)
-                    }
-                }
+                TextWithIcon(
+                    icon = ImageVector.vectorResource(R.drawable.i_medal),
+                    iconSize = 14.dp,
+                    text = "${device.rating} (${device.reviewsCount})",
+                    spacerWidth = 5.dp,
+                    smallText = true,
+                )
+            }
         }
+    }
 }

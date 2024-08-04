@@ -7,10 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.extensions.functions.composable
-import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.ForgotPasswordScreen
@@ -18,20 +15,11 @@ import com.ravenzip.devicepicker.ui.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.ui.screens.auth.RegistrationScreen
 import com.ravenzip.devicepicker.ui.screens.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
-import kotlinx.coroutines.flow.Flow
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 fun NavGraphBuilder.authNavigationGraph(
     navController: NavHostController,
-    reloadUser: suspend () -> Result<Boolean>,
-    logInAnonymously: suspend () -> Result<AuthResult>,
-    createUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
-    sendEmailVerification: suspend () -> Result<Boolean>,
-    deleteAccount: suspend () -> Result<Boolean>,
-    isEmailVerified: suspend () -> Boolean,
-    addUserData: suspend (user: FirebaseUser?) -> Flow<Boolean>,
-    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
-    sendPasswordResetEmail: suspend (email: String) -> Result<Boolean>,
-    getUser: () -> FirebaseUser?,
+    userViewModel: UserViewModel,
 ) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
         composable(route = AuthGraph.WELCOME) {
@@ -39,54 +27,59 @@ fun NavGraphBuilder.authNavigationGraph(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surface,
-                isAppearanceLight = !isSystemInDarkTheme())
+                isAppearanceLight = !isSystemInDarkTheme(),
+            )
 
             WelcomeScreen(
-                reloadUser = reloadUser,
-                logInAnonymously = logInAnonymously,
+                reloadUser = { userViewModel.reloadUser() },
+                logInAnonymously = { userViewModel.logInAnonymously() },
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
-                navigateToHomeScreen = { navigateToHome(navController) })
+                navigateToHomeScreen = { navigateToHome(navController) },
+            )
         }
         composable(route = AuthGraph.REGISTRATION) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme())
+                isAppearanceLight = !isSystemInDarkTheme(),
+            )
 
             RegistrationScreen(
-                reloadUser = reloadUser,
-                createUserWithEmail = createUserWithEmail,
-                sendEmailVerification = sendEmailVerification,
-                deleteAccount = deleteAccount,
-                isEmailVerified = isEmailVerified,
-                addUserData = addUserData,
-                getUser = getUser,
-                navigateToHomeScreen = { navigateToHome(navController) })
+                userViewModel = userViewModel,
+                navigateToHomeScreen = { navigateToHome(navController) },
+            )
         }
         composable(route = AuthGraph.LOGIN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme())
+                isAppearanceLight = !isSystemInDarkTheme(),
+            )
 
             LoginScreen(
-                reloadUser = reloadUser,
-                logInUserWithEmail = logInUserWithEmail,
+                reloadUser = { userViewModel.reloadUser() },
+                logInUserWithEmail = { email, password ->
+                    userViewModel.logInUserWithEmail(email, password)
+                },
                 navigateToHomeScreen = { navigateToHome(navController) },
-                navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) })
+                navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
+            )
         }
         composable(route = AuthGraph.FORGOT_PASS) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
-                isAppearanceLight = !isSystemInDarkTheme())
+                isAppearanceLight = !isSystemInDarkTheme(),
+            )
 
             ForgotPasswordScreen(
-                reloadUser = reloadUser, sendPasswordResetEmail = sendPasswordResetEmail)
+                reloadUser = { userViewModel.reloadUser() },
+                sendPasswordResetEmail = { email -> userViewModel.sendPasswordResetEmail(email) },
+            )
         }
     }
 }

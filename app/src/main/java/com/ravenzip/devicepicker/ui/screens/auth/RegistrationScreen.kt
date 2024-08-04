@@ -23,13 +23,10 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
-import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
@@ -39,6 +36,7 @@ import com.ravenzip.devicepicker.ui.components.GetFields
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.devicepicker.ui.components.generateAuthVariants
 import com.ravenzip.devicepicker.ui.components.getSelectedVariant
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
@@ -48,19 +46,12 @@ import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(
-    reloadUser: suspend () -> Result<Boolean>,
-    createUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
-    sendEmailVerification: suspend () -> Result<Boolean>,
-    deleteAccount: suspend () -> Result<Boolean>,
-    isEmailVerified: suspend () -> Boolean,
-    addUserData: suspend (user: FirebaseUser?) -> Flow<Boolean>,
-    getUser: () -> FirebaseUser?,
-    navigateToHomeScreen: () -> Unit
+    userViewModel: UserViewModel,
+    navigateToHomeScreen: () -> Unit,
 ) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
@@ -82,38 +73,42 @@ fun RegistrationScreen(
 
     Column(
         modifier =
-            Modifier.fillMaxSize()
+            Modifier
+                .fillMaxSize()
                 .clickable(interactionSource = interactionSource, indication = null) {
                     focusManager.clearFocus()
                     keyboardController?.hide()
-                }
-                .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(40.dp))
-            ScreenTitle(text = "Регистрация")
+                }.verticalScroll(rememberScrollState()),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        ScreenTitle(text = "Регистрация")
 
-            Spacer(modifier = Modifier.height(30.dp))
-            GetFields(
-                selectedVariant = selectedRegisterVariant,
-                fields = listOf(emailOrPhone, passwordOrCode),
-                validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value))
+        Spacer(modifier = Modifier.height(30.dp))
+        GetFields(
+            selectedVariant = selectedRegisterVariant,
+            fields = listOf(emailOrPhone, passwordOrCode),
+            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value),
+        )
 
-            Spacer(modifier = Modifier.height(30.dp))
-            AuthVariants(authVariants = registerVariants, title = "Выбор варианта регистрации")
+        Spacer(modifier = Modifier.height(30.dp))
+        AuthVariants(authVariants = registerVariants, title = "Выбор варианта регистрации")
 
-            Spacer(modifier = Modifier.height(20.dp))
-            InfoCard(
-                icon =
-                    IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_info),
-                        color = MaterialTheme.colorScheme.primary,
-                        size = 20),
-                title = TextParameters(value = "Важно!", size = 20),
-                text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
-                colors = CardDefaults.defaultCardColors())
+        Spacer(modifier = Modifier.height(20.dp))
+        InfoCard(
+            icon =
+                IconParameters(
+                    value = ImageVector.vectorResource(R.drawable.i_info),
+                    color = MaterialTheme.colorScheme.primary,
+                    size = 20,
+                ),
+            title = TextParameters(value = "Важно!", size = 20),
+            text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
+            colors = CardDefaults.defaultCardColors(),
+        )
 
-            Spacer(modifier = Modifier.padding(bottom = 120.dp))
-        }
+        Spacer(modifier = Modifier.padding(bottom = 120.dp))
+    }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
@@ -133,7 +128,7 @@ fun RegistrationScreen(
                         }
                         isLoading.value = true
 
-                        val isReloadSuccess = reloadUser()
+                        val isReloadSuccess = userViewModel.reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
                             snackBarHostState.showError(isReloadSuccess.error!!)
@@ -142,7 +137,10 @@ fun RegistrationScreen(
 
                         spinnerText.value = "Регистрация..."
                         val authResult =
-                            createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
+                            userViewModel.createUserWithEmail(
+                                emailOrPhone.value,
+                                passwordOrCode.value,
+                            )
 
                         if (authResult.value == null) {
                             isLoading.value = false
@@ -151,28 +149,32 @@ fun RegistrationScreen(
                         }
 
                         spinnerText.value = "Отправка письма с подтверждением..."
-                        val messageResult = sendEmailVerification()
+                        val messageResult = userViewModel.sendEmailVerification()
                         if (messageResult.value != true) {
                             isLoading.value = false
                             snackBarHostState.showWarning(messageResult.error!!)
-                            deleteAccount() // TODO проверять падение запроса
+                            userViewModel.deleteAccount() // TODO проверять падение запроса
                             return@launch
                         }
 
                         spinnerText.value = "Ожидание подтверждения электронной почты..."
-                        val timer = checkEmailVerificationEverySecondAndGetTimer(isEmailVerified)
+                        val timer =
+                            checkEmailVerificationEverySecondAndGetTimer(
+                                isEmailVerified = { userViewModel.isEmailVerified() },
+                            )
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
                         if (timer == 0) {
                             isLoading.value = false
-                            deleteAccount()
+                            userViewModel.deleteAccount()
                             return@launch
                         }
 
-                        addUserData(getUser()).collect {}
+                        userViewModel.add(userViewModel.getUser()).collect {}
                         isLoading.value = false
                         navigateToHomeScreen()
                     }
+
                     AuthVariantsEnum.PHONE -> {}
                     AuthVariantsEnum.GOOGLE -> {}
                 }
@@ -188,17 +190,14 @@ fun RegistrationScreen(
     SnackBar(snackBarHostState = snackBarHostState)
 }
 
-private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String {
-    return when (selectedRegisterVariant()) {
+private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String =
+    when (selectedRegisterVariant()) {
         AuthVariantsEnum.EMAIL -> AuthCardEnum.REGISTER_WITH_EMAIL.value
         AuthVariantsEnum.PHONE -> AuthCardEnum.REGISTER_WITH_PHONE.value
         AuthVariantsEnum.GOOGLE -> AuthCardEnum.REGISTER_WITH_GOOGLE.value
     }
-}
 
-private suspend fun checkEmailVerificationEverySecondAndGetTimer(
-    isEmailVerified: suspend () -> Boolean,
-): Int {
+private suspend fun checkEmailVerificationEverySecondAndGetTimer(isEmailVerified: suspend () -> Boolean): Int {
     var timer = 25 // Время, за которое необходимо зарегистрироваться пользователю
     while (timer > 0) {
         if (isEmailVerified()) {

@@ -38,46 +38,29 @@ class MainActivity : ComponentActivity() {
                     viewModel<SplashScreenViewModel>(
                         factory =
                             object : ViewModelProvider.Factory {
-                                override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                                    return SplashScreenViewModel(userViewModel) as T
-                                }
-                            })
+                                override fun <T : ViewModel> create(modelClass: Class<T>): T =
+                                    SplashScreenViewModel(userViewModel) as T
+                            },
+                    )
 
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background) {
-                        installSplashScreen().setKeepOnScreenCondition {
-                            splashScreenViewModel.isLoading.value
-                        }
-                        InitializeSnackBarIcons()
-
-                        val startDestination =
-                            splashScreenViewModel.startDestination.collectAsState().value
-
-                        RootNavigationGraph(
-                            navController = rememberNavController(),
-                            startDestination = startDestination,
-                            reloadUser = { userViewModel.reloadUser() },
-                            logInAnonymously = { userViewModel.logInAnonymously() },
-                            createUserWithEmail = { email, password ->
-                                userViewModel.createUserWithEmail(email, password)
-                            },
-                            sendEmailVerification = { userViewModel.sendEmailVerification() },
-                            deleteAccount = { userViewModel.deleteAccount() },
-                            isEmailVerified = { userViewModel.isEmailVerified() },
-                            logInUserWithEmail = { email, password ->
-                                userViewModel.logInUserWithEmail(email, password)
-                            },
-                            sendPasswordResetEmail = { email ->
-                                userViewModel.sendPasswordResetEmail(email)
-                            },
-                            addUserData = { user -> userViewModel.add(user) },
-                            userDataByViewModel = userViewModel.user,
-                            getUser = { userViewModel.getUser() },
-                            getUserData = { user -> userViewModel.get(user) },
-                            logout = { userViewModel.logout() },
-                        )
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    installSplashScreen().setKeepOnScreenCondition {
+                        splashScreenViewModel.isLoading.value
                     }
+                    InitializeSnackBarIcons()
+
+                    val startDestination =
+                        splashScreenViewModel.startDestination.collectAsState().value
+
+                    RootNavigationGraph(
+                        navController = rememberNavController(),
+                        startDestination = startDestination,
+                        userViewModel = userViewModel,
+                    )
+                }
             }
         }
     }

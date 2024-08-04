@@ -23,7 +23,7 @@ class TopAppBarViewModel @Inject constructor() : ViewModel() {
         _type.value = type
     }
 
-    fun setTopBarState(topAppBarState: TopAppBarState) {
+    fun setTopAppBarState(topAppBarState: TopAppBarState) {
         _topAppBarState.value = topAppBarState
     }
 

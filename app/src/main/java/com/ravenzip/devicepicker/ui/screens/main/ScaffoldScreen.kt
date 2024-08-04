@@ -46,54 +46,52 @@ fun ScaffoldScreen(
     val topAppBarType = topAppBarViewModel.type.collectAsState().value
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
 
-    topAppBarViewModel.setTopBarState(TopAppBarState.createTopAppBarState("Главная"))
-
     Scaffold(
         topBar = {
             TopAppBar(
                 type = topAppBarType,
                 topAppBarState = topAppBarState,
-                searchBarState = searchBarState)
+                searchBarState = searchBarState,
+            )
         },
         bottomBar = {
             AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
                 BottomNavigationBar(
-                    navController = navController, buttonsList = generateMenuItems())
+                    navController = navController,
+                    buttonsList = generateMenuItems(),
+                )
             }
-        }) {
-            MainNavigationGraph(
-                navController = navController,
-                padding = it,
-                setTopAppBarState = { topAppBarState ->
-                    topAppBarViewModel.setTopBarState(topAppBarState)
-                },
-                setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
-                setSearchBarState = { searchBarState ->
-                    topAppBarViewModel.setSearchBarState(searchBarState)
-                },
-                userDataByViewModel = userDataByViewModel,
-                getUser = getUser,
-                getUserData = getUserData,
-                logout = logout,
-                bottomBarState = bottomBarState)
-        }
+        },
+    ) { padding ->
+        MainNavigationGraph(
+            navController = navController,
+            padding = padding,
+            topAppBarViewModel = topAppBarViewModel,
+            userDataByViewModel = userDataByViewModel,
+            getUser = getUser,
+            getUserData = getUserData,
+            logout = logout,
+            bottomBarState = bottomBarState,
+        )
+    }
 }
 
 @Composable
 private fun TopAppBar(
     type: TopAppBarTypeEnum,
     topAppBarState: TopAppBarState,
-    searchBarState: SearchBarState
+    searchBarState: SearchBarState,
 ) {
     when (type) {
         TopAppBarTypeEnum.TopAppBar ->
             TopAppBar(
                 title = topAppBarState.text,
                 backArrow = topAppBarState.backArrow,
-                items = topAppBarState.menuItems)
+                items = topAppBarState.menuItems,
+            )
 
         TopAppBarTypeEnum.TopAppBarWithMenu -> {
-            TopAppBarWithMenu(title = "")
+            TopAppBarWithMenu(title = topAppBarState.text)
         }
 
         TopAppBarTypeEnum.SearchBar -> {
@@ -101,7 +99,8 @@ private fun TopAppBar(
             SearchBar(
                 query = query,
                 placeholder = searchBarState.placeholder,
-                onSearch = { searchBarState.onSearch() })
+                onSearch = { searchBarState.onSearch() },
+            )
         }
     }
 }
@@ -113,7 +112,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             label = "Главная",
             route = BottomBarGraph.HOME,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
-            hasNews = false)
+            hasNews = false,
+        )
 
     val searchButton =
         BottomNavigationItem(
@@ -121,7 +121,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.SEARCH,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
-            hasNews = false)
+            hasNews = false,
+        )
 
     val favouriteButton =
         BottomNavigationItem(
@@ -129,7 +130,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.FAVOURITES,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
-            hasNews = false)
+            hasNews = false,
+        )
 
     val compareButton =
         BottomNavigationItem(
@@ -137,14 +139,16 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
             route = BottomBarGraph.COMPARE,
             icon =
                 IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
-            hasNews = false)
+            hasNews = false,
+        )
 
     val userProfileButton =
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
             icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
-            hasNews = false)
+            hasNews = false,
+        )
 
     return listOf(homeButton, searchButton, favouriteButton, compareButton, userProfileButton)
 }

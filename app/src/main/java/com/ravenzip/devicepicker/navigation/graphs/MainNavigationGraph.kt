@@ -28,6 +28,7 @@ import com.ravenzip.devicepicker.viewmodels.BrandViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
+import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,14 +42,12 @@ import kotlinx.coroutines.launch
 fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
-    setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
-    setSearchBarState: (searchBarState: SearchBarState) -> Unit,
+    topAppBarViewModel: TopAppBarViewModel,
     userDataByViewModel: StateFlow<User>,
     getUser: () -> FirebaseUser?,
     getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
     logout: suspend () -> Unit,
-    bottomBarState: MutableState<Boolean>
+    bottomBarState: MutableState<Boolean>,
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
@@ -90,80 +89,94 @@ fun MainNavigationGraph(
     NavHost(
         navController = navController,
         route = RootGraph.MAIN,
-        startDestination = BottomBarGraph.HOME) {
-            /// Домашний экран
-            composable(route = BottomBarGraph.HOME) {
-                setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
-                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-                bottomBarState.value = true
+        startDestination = BottomBarGraph.HOME,
+    ) {
+        // / Домашний экран
+        composable(route = BottomBarGraph.HOME) {
+            topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
+            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+            bottomBarState.value = true
 
-                HomeScreen(
-                    padding = padding,
-                    deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
-                    onClickToDeviceCard = { device, isLoading ->
-                        onClickToDeviceCard(
-                            device = device,
-                            deviceViewModel = deviceViewModel,
-                            imageViewModel = imageViewModel,
-                            isLoading = isLoading,
-                            navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) })
-                    })
-            }
-
-            homeNavigationGraph(
+            HomeScreen(
                 padding = padding,
-                setTopAppBarState = { topAppBarState -> setTopAppBarState(topAppBarState) },
-                setTopAppBarType = { topAppBarType -> setTopAppBarType(topAppBarType) },
-                bottomBarState = bottomBarState,
-                deviceStateByViewModel = deviceViewModel.deviceState,
-                navController = navController)
-
-            /// Поиск
-            composable(route = BottomBarGraph.SEARCH) {
-                setSearchBarState(SearchBarState.createSearchBarState())
-                setTopAppBarType(TopAppBarTypeEnum.SearchBar)
-
-                SearchScreen(
-                    padding = padding,
-                    listOfBrandByViewModel = brandViewModel.listOfBrand,
-                    listOfDeviceTypeByViewModel = deviceTypeViewModel.listOfDeviceType)
-            }
-
-            /// Избранное
-            composable(route = BottomBarGraph.FAVOURITES) {
-                setTopAppBarState(TopAppBarState.createTopAppBarState("Избранное"))
-                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-
-                FavouritesScreen(padding)
-            }
-
-            /// Сравнение
-            composable(route = BottomBarGraph.COMPARE) {
-                setTopAppBarState(TopAppBarState.createTopAppBarState("Сравнение"))
-                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-
-                CompareScreen(padding)
-            }
-
-            /// Профиль пользователя
-            composable(route = BottomBarGraph.USER_PROFILE) {
-                setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
-                setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-                bottomBarState.value = true
-
-                UserProfileScreen(
-                    padding = padding,
-                    userDataByViewModel = userDataByViewModel,
-                    logout = logout,
-                    onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) }))
-            }
-
-            userProfileNavigationGraph(
-                padding = padding,
-                setTopAppBarState = { topAppBarState -> setTopAppBarState(topAppBarState) },
-                bottomBarState = bottomBarState,
+                deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
+                onClickToDeviceCard = { device, isLoading ->
+                    onClickToDeviceCard(
+                        device = device,
+                        deviceViewModel = deviceViewModel,
+                        imageViewModel = imageViewModel,
+                        isLoading = isLoading,
+                        navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+                    )
+                },
             )
         }
+
+        homeNavigationGraph(
+            padding = padding,
+            setTopAppBarState = { topAppBarState ->
+                topAppBarViewModel.setTopAppBarState(topAppBarState)
+            },
+            setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
+            bottomBarState = bottomBarState,
+            deviceStateByViewModel = deviceViewModel.deviceState,
+            navController = navController,
+        )
+
+        // / Поиск
+        composable(route = BottomBarGraph.SEARCH) {
+            topAppBarViewModel.setSearchBarState(SearchBarState.createSearchBarState())
+            topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
+
+            SearchScreen(
+                padding = padding,
+                listOfBrandByViewModel = brandViewModel.listOfBrand,
+                listOfDeviceTypeByViewModel = deviceTypeViewModel.listOfDeviceType,
+            )
+        }
+
+        // / Избранное
+        composable(route = BottomBarGraph.FAVOURITES) {
+            topAppBarViewModel.setTopAppBarState(
+                TopAppBarState.createTopAppBarState("Избранное"),
+            )
+            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+
+            FavouritesScreen(padding)
+        }
+
+        // / Сравнение
+        composable(route = BottomBarGraph.COMPARE) {
+            topAppBarViewModel.setTopAppBarState(
+                TopAppBarState.createTopAppBarState("Сравнение"),
+            )
+            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+
+            CompareScreen(padding)
+        }
+
+        // / Профиль пользователя
+        composable(route = BottomBarGraph.USER_PROFILE) {
+            topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
+            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
+            bottomBarState.value = true
+
+            UserProfileScreen(
+                padding = padding,
+                userDataByViewModel = userDataByViewModel,
+                logout = logout,
+                onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) }),
+            )
+        }
+
+        userProfileNavigationGraph(
+            padding = padding,
+            setTopAppBarState = { topAppBarState ->
+                topAppBarViewModel.setTopAppBarState(topAppBarState)
+            },
+            bottomBarState = bottomBarState,
+        )
+    }
 }
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -172,7 +185,7 @@ private suspend fun onClickToDeviceCard(
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
     isLoading: MutableState<Boolean>,
-    navigateToDevice: () -> Unit
+    navigateToDevice: () -> Unit,
 ) {
     isLoading.value = true
     val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
