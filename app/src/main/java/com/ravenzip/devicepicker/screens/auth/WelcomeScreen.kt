@@ -29,11 +29,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.AuthResult
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
@@ -47,7 +48,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
-    userViewModel: UserViewModel,
+    reloadUser: suspend () -> Result<Boolean>,
+    logInAnonymously: suspend () -> Result<AuthResult>,
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit
@@ -115,7 +117,7 @@ fun WelcomeScreen(
                 scope.launch(Dispatchers.Main) {
                     isLoading.value = true
 
-                    val isReloadSuccess = userViewModel.reloadUser()
+                    val isReloadSuccess = reloadUser()
                     if (isReloadSuccess.value != true) {
                         isLoading.value = false
                         alertDialogIsShown.value = false
@@ -123,7 +125,7 @@ fun WelcomeScreen(
                         return@launch
                     }
 
-                    val authResult = userViewModel.logInAnonymously()
+                    val authResult = logInAnonymously()
                     isLoading.value = false
                     alertDialogIsShown.value = false
 

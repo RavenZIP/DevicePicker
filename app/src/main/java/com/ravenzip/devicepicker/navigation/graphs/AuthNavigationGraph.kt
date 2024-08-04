@@ -7,7 +7,10 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
@@ -15,11 +18,20 @@ import com.ravenzip.devicepicker.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
 import com.ravenzip.devicepicker.screens.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import kotlinx.coroutines.flow.Flow
 
 fun NavGraphBuilder.authNavigationGraph(
     navController: NavHostController,
-    userViewModel: UserViewModel
+    reloadUser: suspend () -> Result<Boolean>,
+    logInAnonymously: suspend () -> Result<AuthResult>,
+    createUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
+    sendEmailVerification: suspend () -> Result<Boolean>,
+    deleteAccount: suspend () -> Result<Boolean>,
+    isEmailVerified: suspend () -> Boolean,
+    addUserData: suspend (user: FirebaseUser?) -> Flow<Boolean>,
+    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
+    sendPasswordResetEmail: suspend (email: String) -> Result<Boolean>,
+    getUser: () -> FirebaseUser?,
 ) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
         composable(route = AuthGraph.WELCOME) {
@@ -30,7 +42,8 @@ fun NavGraphBuilder.authNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme())
 
             WelcomeScreen(
-                userViewModel = userViewModel,
+                reloadUser = reloadUser,
+                logInAnonymously = logInAnonymously,
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
                 navigateToHomeScreen = { navigateToHome(navController) })
@@ -43,7 +56,13 @@ fun NavGraphBuilder.authNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme())
 
             RegistrationScreen(
-                userViewModel = userViewModel,
+                reloadUser = reloadUser,
+                createUserWithEmail = createUserWithEmail,
+                sendEmailVerification = sendEmailVerification,
+                deleteAccount = deleteAccount,
+                isEmailVerified = isEmailVerified,
+                addUserData = addUserData,
+                getUser = getUser,
                 navigateToHomeScreen = { navigateToHome(navController) })
         }
         composable(route = AuthGraph.LOGIN) {
@@ -54,7 +73,8 @@ fun NavGraphBuilder.authNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme())
 
             LoginScreen(
-                userViewModel = userViewModel,
+                reloadUser = reloadUser,
+                logInUserWithEmail = logInUserWithEmail,
                 navigateToHomeScreen = { navigateToHome(navController) },
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) })
         }
@@ -65,7 +85,8 @@ fun NavGraphBuilder.authNavigationGraph(
                 navigationBarColor = MaterialTheme.colorScheme.surfaceContainer,
                 isAppearanceLight = !isSystemInDarkTheme())
 
-            ForgotPasswordScreen(userViewModel)
+            ForgotPasswordScreen(
+                reloadUser = reloadUser, sendPasswordResetEmail = sendPasswordResetEmail)
         }
     }
 }

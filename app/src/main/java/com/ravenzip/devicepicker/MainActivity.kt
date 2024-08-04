@@ -57,7 +57,26 @@ class MainActivity : ComponentActivity() {
                         RootNavigationGraph(
                             navController = rememberNavController(),
                             startDestination = startDestination,
-                            userViewModel = userViewModel)
+                            reloadUser = { userViewModel.reloadUser() },
+                            logInAnonymously = { userViewModel.logInAnonymously() },
+                            createUserWithEmail = { email, password ->
+                                userViewModel.createUserWithEmail(email, password)
+                            },
+                            sendEmailVerification = { userViewModel.sendEmailVerification() },
+                            deleteAccount = { userViewModel.deleteAccount() },
+                            isEmailVerified = { userViewModel.isEmailVerified() },
+                            logInUserWithEmail = { email, password ->
+                                userViewModel.logInUserWithEmail(email, password)
+                            },
+                            sendPasswordResetEmail = { email ->
+                                userViewModel.sendPasswordResetEmail(email)
+                            },
+                            addUserData = { user -> userViewModel.add(user) },
+                            userDataByViewModel = userViewModel.user,
+                            getUser = { userViewModel.getUser() },
+                            getUserData = { user -> userViewModel.get(user) },
+                            logout = { userViewModel.logout() },
+                        )
                     }
             }
         }

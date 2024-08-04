@@ -23,6 +23,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.AuthResult
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.components.AuthVariants
 import com.ravenzip.devicepicker.components.BottomContainer
@@ -33,10 +35,10 @@ import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
@@ -46,10 +48,20 @@ import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () -> Unit) {
+fun RegistrationScreen(
+    reloadUser: suspend () -> Result<Boolean>,
+    createUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
+    sendEmailVerification: suspend () -> Result<Boolean>,
+    deleteAccount: suspend () -> Result<Boolean>,
+    isEmailVerified: suspend () -> Boolean,
+    addUserData: suspend (user: FirebaseUser?) -> Flow<Boolean>,
+    getUser: () -> FirebaseUser?,
+    navigateToHomeScreen: () -> Unit
+) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
 
@@ -121,7 +133,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         }
                         isLoading.value = true
 
-                        val isReloadSuccess = userViewModel.reloadUser()
+                        val isReloadSuccess = reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
                             snackBarHostState.showError(isReloadSuccess.error!!)
@@ -130,8 +142,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
 
                         spinnerText.value = "Регистрация..."
                         val authResult =
-                            userViewModel.createUserWithEmail(
-                                emailOrPhone.value, passwordOrCode.value)
+                            createUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false
@@ -140,25 +151,25 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         }
 
                         spinnerText.value = "Отправка письма с подтверждением..."
-                        val messageResult = userViewModel.sendEmailVerification()
+                        val messageResult = sendEmailVerification()
                         if (messageResult.value != true) {
                             isLoading.value = false
                             snackBarHostState.showWarning(messageResult.error!!)
-                            userViewModel.deleteAccount() // TODO проверять падение запроса
+                            deleteAccount() // TODO проверять падение запроса
                             return@launch
                         }
 
                         spinnerText.value = "Ожидание подтверждения электронной почты..."
-                        val timer = checkEmailVerificationEverySecondAndGetTimer(userViewModel)
+                        val timer = checkEmailVerificationEverySecondAndGetTimer(isEmailVerified)
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
                         if (timer == 0) {
                             isLoading.value = false
-                            userViewModel.deleteAccount()
+                            deleteAccount()
                             return@launch
                         }
 
-                        userViewModel.add(userViewModel.getUser()).collect {}
+                        addUserData(getUser()).collect {}
                         isLoading.value = false
                         navigateToHomeScreen()
                     }
@@ -186,11 +197,11 @@ private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String
 }
 
 private suspend fun checkEmailVerificationEverySecondAndGetTimer(
-    userViewModel: UserViewModel
+    isEmailVerified: suspend () -> Boolean,
 ): Int {
     var timer = 25 // Время, за которое необходимо зарегистрироваться пользователю
     while (timer > 0) {
-        if (userViewModel.isEmailVerified()) {
+        if (isEmailVerified()) {
             timer = -1
         } else {
             timer -= 1

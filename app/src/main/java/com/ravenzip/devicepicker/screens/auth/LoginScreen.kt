@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.AuthResult
 import com.ravenzip.devicepicker.components.AuthVariants
 import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.components.GetFields
@@ -25,9 +26,9 @@ import com.ravenzip.devicepicker.components.generateAuthVariants
 import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
@@ -38,7 +39,8 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    userViewModel: UserViewModel,
+    reloadUser: suspend () -> Result<Boolean>,
+    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit
 ) {
@@ -100,7 +102,7 @@ fun LoginScreen(
                         }
                         isLoading.value = true
 
-                        val isReloadSuccess = userViewModel.reloadUser()
+                        val isReloadSuccess = reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
                             snackBarHostState.showError(isReloadSuccess.error!!)
@@ -109,8 +111,7 @@ fun LoginScreen(
 
                         spinnerText.value = "Вход в аккаунт..."
                         val authResult =
-                            userViewModel.logInUserWithEmail(
-                                emailOrPhone.value, passwordOrCode.value)
+                            logInUserWithEmail(emailOrPhone.value, passwordOrCode.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false

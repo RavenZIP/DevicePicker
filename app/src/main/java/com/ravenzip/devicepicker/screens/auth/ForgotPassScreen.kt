@@ -25,10 +25,10 @@ import com.ravenzip.devicepicker.components.BottomContainer
 import com.ravenzip.devicepicker.components.ScreenTitle
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -41,7 +41,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
-fun ForgotPasswordScreen(userViewModel: UserViewModel) {
+fun ForgotPasswordScreen(
+    reloadUser: suspend () -> Result<Boolean>,
+    sendPasswordResetEmail: suspend (email: String) -> Result<Boolean>
+) {
     val email = remember { mutableStateOf("") }
 
     val validationService = ValidationService()
@@ -102,7 +105,7 @@ fun ForgotPasswordScreen(userViewModel: UserViewModel) {
                 }
                 isLoading.value = true
 
-                val isReloadSuccess = userViewModel.reloadUser()
+                val isReloadSuccess = reloadUser()
                 if (isReloadSuccess.value != true) {
                     isLoading.value = false
                     snackBarHostState.showError(isReloadSuccess.error!!)
@@ -110,7 +113,7 @@ fun ForgotPasswordScreen(userViewModel: UserViewModel) {
                 }
 
                 spinnerText.value = "Отправка ссылки для сброса пароля..."
-                val resetResult = userViewModel.sendPasswordResetEmail(email.value)
+                val resetResult = sendPasswordResetEmail(email.value)
                 isLoading.value = false
 
                 if (resetResult.value == true) {

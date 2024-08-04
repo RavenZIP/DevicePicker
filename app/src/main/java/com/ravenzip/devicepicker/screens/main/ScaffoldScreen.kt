@@ -14,25 +14,31 @@ import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
+import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.state.SearchBarState
 import com.ravenzip.devicepicker.state.TopAppBarState
 import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.components.SearchBar
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.BottomNavigationItem
 import com.ravenzip.workshop.data.IconParameters
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
-    userViewModel: UserViewModel
+    userDataByViewModel: StateFlow<User>,
+    getUser: () -> FirebaseUser?,
+    getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
+    logout: suspend () -> Unit,
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
     val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
@@ -65,10 +71,10 @@ fun ScaffoldScreen(
                 setSearchBarState = { searchBarState ->
                     topAppBarViewModel.setSearchBarState(searchBarState)
                 },
-                userDataByViewModel = userViewModel.user,
-                getUser = { userViewModel.getUser() },
-                getUserData = { user -> userViewModel.get(user) },
-                logout = { userViewModel.logout() },
+                userDataByViewModel = userDataByViewModel,
+                getUser = getUser,
+                getUserData = getUserData,
+                logout = logout,
                 bottomBarState = bottomBarState)
         }
 }
