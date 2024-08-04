@@ -5,7 +5,7 @@ import androidx.compose.runtime.snapshots.SnapshotStateList
 import com.ravenzip.devicepicker.constants.enums.ContainerTypeEnum
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 
-data class DeviceCategoryState(
+class DeviceCategoryState(
     val devices: SnapshotStateList<DeviceCompact>,
     val containerType: ContainerTypeEnum,
     val categoryName: String
