@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.auth
+package com.ravenzip.devicepicker.ui.screens.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -21,14 +21,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.BottomContainer
-import com.ravenzip.devicepicker.components.ScreenTitle
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showSuccess
+import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField

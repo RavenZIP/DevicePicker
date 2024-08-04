@@ -13,10 +13,10 @@ import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.screens.auth.ForgotPasswordScreen
-import com.ravenzip.devicepicker.screens.auth.LoginScreen
-import com.ravenzip.devicepicker.screens.auth.RegistrationScreen
-import com.ravenzip.devicepicker.screens.auth.WelcomeScreen
+import com.ravenzip.devicepicker.ui.screens.auth.ForgotPasswordScreen
+import com.ravenzip.devicepicker.ui.screens.auth.LoginScreen
+import com.ravenzip.devicepicker.ui.screens.auth.RegistrationScreen
+import com.ravenzip.devicepicker.ui.screens.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 import kotlinx.coroutines.flow.Flow
 

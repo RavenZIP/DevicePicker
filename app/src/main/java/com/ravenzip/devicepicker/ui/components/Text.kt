@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.components
+package com.ravenzip.devicepicker.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues

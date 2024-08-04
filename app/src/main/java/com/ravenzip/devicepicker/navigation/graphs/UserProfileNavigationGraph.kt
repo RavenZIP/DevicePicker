@@ -6,8 +6,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
-import com.ravenzip.devicepicker.screens.user.AdminPanelScreen
 import com.ravenzip.devicepicker.state.TopAppBarState
+import com.ravenzip.devicepicker.ui.screens.user.AdminPanelScreen
 
 fun NavGraphBuilder.userProfileNavigationGraph(
     padding: PaddingValues,

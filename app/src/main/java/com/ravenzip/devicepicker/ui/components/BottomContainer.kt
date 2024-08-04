@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.components
+package com.ravenzip.devicepicker.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,9 +22,8 @@ fun BottomContainer(content: @Composable () -> Unit) {
                     .clip(RoundedTop)
                     .background(MaterialTheme.colorScheme.surfaceContainer),
             verticalArrangement = Arrangement.Bottom,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            content()
-        }
+            horizontalAlignment = Alignment.CenterHorizontally) {
+                content()
+            }
     }
 }

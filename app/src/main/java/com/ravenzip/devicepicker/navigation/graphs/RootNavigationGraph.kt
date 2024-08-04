@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.screens.main.ScaffoldScreen
+import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow

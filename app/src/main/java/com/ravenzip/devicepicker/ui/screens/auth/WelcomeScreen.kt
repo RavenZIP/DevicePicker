@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.auth
+package com.ravenzip.devicepicker.ui.screens.auth
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image

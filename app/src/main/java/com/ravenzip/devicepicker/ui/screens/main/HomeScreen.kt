@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.main
+package com.ravenzip.devicepicker.ui.screens.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -35,9 +35,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.Price
-import com.ravenzip.devicepicker.components.SmallText
-import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.constants.enums.ContainerTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
@@ -45,6 +42,9 @@ import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.state.DeviceCompactState
+import com.ravenzip.devicepicker.ui.components.Price
+import com.ravenzip.devicepicker.ui.components.SmallText
+import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions

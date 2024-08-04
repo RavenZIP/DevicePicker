@@ -14,9 +14,9 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
-import com.ravenzip.devicepicker.screens.home.DeviceInfoScreen
 import com.ravenzip.devicepicker.state.DeviceState
 import com.ravenzip.devicepicker.state.TopAppBarState
+import com.ravenzip.devicepicker.ui.screens.home.DeviceInfoScreen
 import com.ravenzip.workshop.data.AppBarItem
 import com.ravenzip.workshop.data.IconParameters
 import kotlinx.coroutines.flow.StateFlow

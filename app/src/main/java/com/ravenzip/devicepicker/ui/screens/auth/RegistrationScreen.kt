@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.auth
+package com.ravenzip.devicepicker.ui.screens.auth
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -26,12 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.AuthVariants
-import com.ravenzip.devicepicker.components.BottomContainer
-import com.ravenzip.devicepicker.components.GetFields
-import com.ravenzip.devicepicker.components.ScreenTitle
-import com.ravenzip.devicepicker.components.generateAuthVariants
-import com.ravenzip.devicepicker.components.getSelectedVariant
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
@@ -39,6 +33,12 @@ import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
+import com.ravenzip.devicepicker.ui.components.AuthVariants
+import com.ravenzip.devicepicker.ui.components.BottomContainer
+import com.ravenzip.devicepicker.ui.components.GetFields
+import com.ravenzip.devicepicker.ui.components.ScreenTitle
+import com.ravenzip.devicepicker.ui.components.generateAuthVariants
+import com.ravenzip.devicepicker.ui.components.getSelectedVariant
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar

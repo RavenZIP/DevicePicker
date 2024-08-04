@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.home
+package com.ravenzip.devicepicker.ui.screens.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -40,10 +40,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.components.ColoredBoxWithBorder
-import com.ravenzip.devicepicker.components.PriceRange
-import com.ravenzip.devicepicker.components.SmallText
-import com.ravenzip.devicepicker.components.TextWithIcon
 import com.ravenzip.devicepicker.constants.map.colorMap
 import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
@@ -54,6 +50,10 @@ import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.DeviceState
+import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
+import com.ravenzip.devicepicker.ui.components.PriceRange
+import com.ravenzip.devicepicker.ui.components.SmallText
+import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid

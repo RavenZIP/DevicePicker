@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.screens.main
+package com.ravenzip.devicepicker.ui.screens.main
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
