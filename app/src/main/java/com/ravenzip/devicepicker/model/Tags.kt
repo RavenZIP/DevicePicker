@@ -21,7 +21,6 @@ class Tags(val computedTags: List<TagsEnum>, val manualTags: List<TagsEnum>) {
     fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
 
     companion object {
-
         @Composable
         fun Tags.createListOfChipIcons() =
             this.createListOfUniqueTags().map { tag ->

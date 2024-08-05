@@ -23,10 +23,17 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,20 +64,23 @@ import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid
+import com.ravenzip.workshop.data.ButtonContentConfig
 import com.ravenzip.workshop.data.IconParameters
 import com.ravenzip.workshop.data.TextParameters
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.flow.StateFlow
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<DeviceState>) {
     val device = deviceStateByViewModel.collectAsState().value.device
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
-    val title = device.createDeviceTitle()
-    val specificationsMap = device.specifications.toMap()
+    val title = remember { device.createDeviceTitle() }
+    val specificationsMap = remember { device.specifications.toMap() }
     val allTags = device.tags.createListOfChipIcons()
+    val sheetState = rememberModalBottomSheetState()
+    val tagsSheetIsVisible = remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -84,10 +94,14 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
                 Spacer(modifier = Modifier.height(10.dp))
                 BoxedChipGroup(
                     items = allTags,
-                    buttonText = TextParameters("Подробнее о метках"),
-                    buttonIcon =
-                        IconParameters(
-                            value = ImageVector.vectorResource(id = R.drawable.i_arrow_right)))
+                    buttonContentConfig =
+                        ButtonContentConfig(
+                            text = TextParameters("Подробнее о метках"),
+                            icon =
+                                IconParameters(
+                                    value =
+                                        ImageVector.vectorResource(id = R.drawable.i_arrow_right)),
+                            onClick = { tagsSheetIsVisible.value = true }))
             }
 
             item {
@@ -120,6 +134,10 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
 
             item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
         }
+
+    if (tagsSheetIsVisible.value) {
+        TagsBottomSheet(tagsSheetIsVisible, sheetState)
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -312,7 +330,7 @@ private fun Specifications(category: String, specifications: Map<String, String>
 }
 
 @Composable
-fun SpecificationCategory(category: Map<String, String>) {
+private fun SpecificationCategory(category: Map<String, String>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         for (specificationEntries in category.entries) {
             Spacer(modifier = Modifier.height(5.dp))
@@ -339,4 +357,13 @@ fun SpecificationCategory(category: Map<String, String>) {
                 }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TagsBottomSheet(tagsSheetIsVisible: MutableState<Boolean>, sheetState: SheetState) {
+    ModalBottomSheet(
+        onDismissRequest = { tagsSheetIsVisible.value = false }, sheetState = sheetState) {
+            Text(text = "Тест")
+        }
 }
