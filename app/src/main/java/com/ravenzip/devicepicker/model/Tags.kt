@@ -18,16 +18,19 @@ import com.ravenzip.workshop.data.IconParameters
 class Tags(val computedTags: List<TagsEnum>, val manualTags: List<TagsEnum>) {
     constructor() : this(computedTags = listOf(), manualTags = listOf())
 
-    fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
-
     companion object {
+        fun Tags.createListOfUniqueTags() = listOf(computedTags, manualTags).flatten().distinct()
+
         @Composable
-        fun Tags.createListOfChipIcons() =
-            this.createListOfUniqueTags().map { tag ->
-                IconParameters(
-                    value = ImageVector.vectorResource(tagIconMap[tag]!!),
-                    size = 20,
-                    color = tagsColorMap[tag])
+        fun createListOfChipIcons(allTags: List<TagsEnum>) =
+            allTags.map { tag ->
+                Tag(
+                    name = tag,
+                    icon =
+                        IconParameters(
+                            value = ImageVector.vectorResource(tagIconMap[tag]!!),
+                            size = 20,
+                            color = tagsColorMap[tag]))
             }
     }
 }

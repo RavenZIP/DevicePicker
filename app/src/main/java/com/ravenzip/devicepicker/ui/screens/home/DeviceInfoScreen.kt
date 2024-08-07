@@ -47,12 +47,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.colorMap
 import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
+import com.ravenzip.devicepicker.constants.map.tagsNameMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
+import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.Tags.Companion.createListOfChipIcons
+import com.ravenzip.devicepicker.model.Tags.Companion.createListOfUniqueTags
 import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
@@ -61,6 +65,7 @@ import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
+import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid
@@ -78,7 +83,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
     val title = remember { device.createDeviceTitle() }
     val specificationsMap = remember { device.specifications.toMap() }
-    val allTags = device.tags.createListOfChipIcons()
+    val allTags = remember { device.tags.createListOfUniqueTags() }
+    val allTagsWithIcons = createListOfChipIcons(allTags = allTags)
+    val listOfTagsIcons = remember { allTagsWithIcons.map { tag -> tag.icon } }
     val sheetState = rememberModalBottomSheetState()
     val tagsSheetIsVisible = remember { mutableStateOf(false) }
 
@@ -93,7 +100,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 BoxedChipGroup(
-                    items = allTags,
+                    items = listOfTagsIcons,
                     buttonContentConfig =
                         ButtonContentConfig(
                             text = TextParameters("Подробнее о метках"),
@@ -105,7 +112,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
             }
 
             item {
-                Spacer(modifier = Modifier.padding(top = 20.dp))
+                Spacer(modifier = Modifier.height(20.dp))
                 Text(
                     text = title,
                     modifier = Modifier.fillMaxWidth(0.9f),
@@ -114,7 +121,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
             }
 
             item {
-                Spacer(modifier = Modifier.padding(top = 15.dp))
+                Spacer(modifier = Modifier.height(15.dp))
                 FeedbackContainer(
                     generateFeedbackList(
                         device.feedback.rating,
@@ -123,7 +130,7 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
             }
 
             item {
-                Spacer(modifier = Modifier.padding(top = 15.dp))
+                Spacer(modifier = Modifier.height(15.dp))
                 PriceAndConfigurations(device.price, device.configurations, device.colors)
             }
 
@@ -132,11 +139,16 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
                     category = categoryKey, specifications = specificationsMap[categoryKey]!!)
             }
 
-            item { Spacer(modifier = Modifier.padding(top = 20.dp)) }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
         }
 
     if (tagsSheetIsVisible.value) {
-        TagsBottomSheet(tagsSheetIsVisible, sheetState)
+        TagsBottomSheet(
+            tagsSheetIsVisible = tagsSheetIsVisible,
+            sheetState = sheetState,
+            allTagsWithIcons = allTagsWithIcons,
+            computedTags = device.tags.computedTags,
+            manualTags = device.tags.manualTags)
     }
 }
 
@@ -361,9 +373,32 @@ private fun SpecificationCategory(category: Map<String, String>) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TagsBottomSheet(tagsSheetIsVisible: MutableState<Boolean>, sheetState: SheetState) {
+private fun TagsBottomSheet(
+    tagsSheetIsVisible: MutableState<Boolean>,
+    sheetState: SheetState,
+    allTagsWithIcons: List<Tag>,
+    computedTags: List<TagsEnum>,
+    manualTags: List<TagsEnum>
+) {
     ModalBottomSheet(
         onDismissRequest = { tagsSheetIsVisible.value = false }, sheetState = sheetState) {
-            Text(text = "Тест")
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Column(
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    horizontalAlignment = Alignment.CenterHorizontally) {
+                        allTagsWithIcons.forEach { tag ->
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically) {
+                                    BoxedChip(icon = tag.icon, backgroundColor = Color.Transparent)
+                                    Text(
+                                        text = tagsNameMap[tag.name]!!,
+                                        letterSpacing = 0.sp,
+                                        fontWeight = FontWeight.W500)
+                                }
+                        }
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+            }
         }
 }
