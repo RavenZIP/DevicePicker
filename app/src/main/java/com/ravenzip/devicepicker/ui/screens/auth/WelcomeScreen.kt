@@ -40,8 +40,8 @@ import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.IconParameters
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -107,11 +107,11 @@ fun WelcomeScreen(
 
     if (alertDialogIsShown.value) {
         AlertDialog(
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.sign_in)),
-            title = TextParameters(value = WelcomeEnum.DIALOG_WINDOW.title, size = 22),
-            text = TextParameters(value = WelcomeEnum.DIALOG_WINDOW.text, size = 14),
-            onDismissText = TextParameters(value = "Назад", size = 14),
-            onConfirmationText = TextParameters(value = "Продолжить", size = 14),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.sign_in)),
+            title = TextConfig(value = WelcomeEnum.DIALOG_WINDOW.title, size = 22),
+            text = TextConfig(value = WelcomeEnum.DIALOG_WINDOW.text, size = 14),
+            onDismissText = TextConfig(value = "Назад", size = 14),
+            onConfirmationText = TextConfig(value = "Продолжить", size = 14),
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 scope.launch(Dispatchers.Main) {
@@ -136,7 +136,7 @@ fun WelcomeScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = "Анонимный вход..."))
+        Spinner(text = TextConfig(value = "Анонимный вход..."))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
@@ -174,19 +174,19 @@ private fun ScreenContent(
             if (isFinal) {
                 Spacer(modifier = Modifier.height(40.dp))
                 SimpleButton(
-                    text = TextParameters("Регистрация"),
+                    text = TextConfig("Регистрация"),
                 ) {
                     navigateToRegistrationScreen()
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                SimpleButton(text = TextParameters("Вход"), textAlign = TextAlign.Center) {
+                SimpleButton(text = TextConfig("Вход"), textAlign = TextAlign.Center) {
                     navigateToLoginScreen()
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
                 SimpleButton(
-                    text = TextParameters("Продолжить без регистрации"),
+                    text = TextConfig("Продолжить без регистрации"),
                     colors = ButtonDefaults.inverseColors()) {
                         continueWithoutAuthClick()
                     }

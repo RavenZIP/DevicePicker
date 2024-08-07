@@ -6,7 +6,7 @@ import androidx.compose.ui.res.vectorResource
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.tagIconMap
 import com.ravenzip.devicepicker.constants.map.tagsColorMap
-import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.IconConfig
 
 /**
  * Метки устройств
@@ -27,7 +27,7 @@ class Tags(val computedTags: List<TagsEnum>, val manualTags: List<TagsEnum>) {
                 Tag(
                     name = tag,
                     icon =
-                        IconParameters(
+                        IconConfig(
                             value = ImageVector.vectorResource(tagIconMap[tag]!!),
                             size = 20,
                             color = tagsColorMap[tag]))

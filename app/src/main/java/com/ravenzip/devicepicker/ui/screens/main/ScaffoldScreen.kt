@@ -28,7 +28,7 @@ import com.ravenzip.workshop.components.SearchBar
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.BottomNavigationItem
-import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.IconConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -111,7 +111,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Главная",
             route = BottomBarGraph.HOME,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
             hasNews = false,
         )
 
@@ -119,8 +119,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
-            icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
             hasNews = false,
         )
 
@@ -128,8 +127,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
             hasNews = false,
         )
 
@@ -137,8 +135,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
-            icon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
             hasNews = false,
         )
 
@@ -146,7 +143,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
             hasNews = false,
         )
 

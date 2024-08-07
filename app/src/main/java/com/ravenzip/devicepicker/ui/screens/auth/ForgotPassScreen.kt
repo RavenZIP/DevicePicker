@@ -35,8 +35,8 @@ import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconParameters
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -75,26 +75,25 @@ fun ForgotPasswordScreen(
                 text = email,
                 label = "Электронная почта",
                 leadingIcon =
-                    IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
+                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
                 error = emailError.value)
 
             Spacer(modifier = Modifier.height(30.dp))
             InfoCard(
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_info),
                         color = MaterialTheme.colorScheme.primary,
                         size = 20),
-                title = TextParameters(value = "Важно!", size = 20),
-                text = TextParameters(value = AuthCardEnum.FORGOT_PASS.value, size = 14),
+                title = TextConfig(value = "Важно!", size = 20),
+                text = TextConfig(value = AuthCardEnum.FORGOT_PASS.value, size = 14),
                 colors = CardDefaults.defaultCardColors())
         }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
-            text = TextParameters(value = "Продолжить", size = 16),
+            text = TextConfig(value = "Продолжить", size = 16),
         ) {
             scope.launch(Dispatchers.Main) {
                 emailError.value = validationService.checkEmail(email.value)
@@ -128,7 +127,7 @@ fun ForgotPasswordScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = spinnerText.value, size = 16))
+        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

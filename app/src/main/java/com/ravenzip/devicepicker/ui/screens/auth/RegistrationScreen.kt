@@ -42,8 +42,8 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconParameters
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -73,12 +73,12 @@ fun RegistrationScreen(
 
     Column(
         modifier =
-            Modifier
-                .fillMaxSize()
+            Modifier.fillMaxSize()
                 .clickable(interactionSource = interactionSource, indication = null) {
                     focusManager.clearFocus()
                     keyboardController?.hide()
-                }.verticalScroll(rememberScrollState()),
+                }
+                .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -97,13 +97,13 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon =
-                IconParameters(
+                IconConfig(
                     value = ImageVector.vectorResource(R.drawable.i_info),
                     color = MaterialTheme.colorScheme.primary,
                     size = 20,
                 ),
-            title = TextParameters(value = "Важно!", size = 20),
-            text = TextParameters(value = getCardText(selectedRegisterVariant), size = 14),
+            title = TextConfig(value = "Важно!", size = 20),
+            text = TextConfig(value = getCardText(selectedRegisterVariant), size = 14),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -113,7 +113,7 @@ fun RegistrationScreen(
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
-            text = TextParameters(value = "Продолжить", size = 16),
+            text = TextConfig(value = "Продолжить", size = 16),
         ) {
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
@@ -184,7 +184,7 @@ fun RegistrationScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = spinnerText.value, size = 16))
+        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
@@ -197,7 +197,9 @@ private fun getCardText(selectedRegisterVariant: () -> AuthVariantsEnum): String
         AuthVariantsEnum.GOOGLE -> AuthCardEnum.REGISTER_WITH_GOOGLE.value
     }
 
-private suspend fun checkEmailVerificationEverySecondAndGetTimer(isEmailVerified: suspend () -> Boolean): Int {
+private suspend fun checkEmailVerificationEverySecondAndGetTimer(
+    isEmailVerified: suspend () -> Boolean
+): Int {
     var timer = 25 // Время, за которое необходимо зарегистрироваться пользователю
     while (timer > 0) {
         if (isEmailVerified()) {

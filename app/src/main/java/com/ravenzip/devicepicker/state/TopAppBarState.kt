@@ -8,7 +8,7 @@ import androidx.compose.ui.res.vectorResource
 import com.ravenzip.devicepicker.R
 import com.ravenzip.workshop.data.AppBarItem
 import com.ravenzip.workshop.data.BackArrow
-import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.IconConfig
 
 data class TopAppBarState(
     val text: String,
@@ -30,8 +30,7 @@ data class TopAppBarState(
             onClickToBackArrow: () -> Unit = {},
             menuItems: List<AppBarItem> = listOf()
         ): TopAppBarState {
-            val backArrowIcon =
-                IconParameters(value = ImageVector.vectorResource(R.drawable.i_back))
+            val backArrowIcon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_back))
             val backArrow = remember {
                 mutableStateOf(BackArrow(icon = backArrowIcon, onClick = { onClickToBackArrow() }))
             }

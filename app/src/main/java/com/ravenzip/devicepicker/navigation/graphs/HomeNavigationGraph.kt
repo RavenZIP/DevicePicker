@@ -18,7 +18,7 @@ import com.ravenzip.devicepicker.state.DeviceState
 import com.ravenzip.devicepicker.state.TopAppBarState
 import com.ravenzip.devicepicker.ui.screens.home.DeviceInfoScreen
 import com.ravenzip.workshop.data.AppBarItem
-import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.IconConfig
 import kotlinx.coroutines.flow.StateFlow
 
 fun NavGraphBuilder.homeNavigationGraph(
@@ -48,9 +48,9 @@ fun NavGraphBuilder.homeNavigationGraph(
 @Composable
 private fun topAppBarItemList(): List<AppBarItem> {
     val favouriteIcon =
-        IconParameters(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20)
+        IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20)
     val compareIcon =
-        IconParameters(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20)
+        IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20)
 
     val favouriteButton = remember {
         mutableStateOf(AppBarItem(icon = favouriteIcon, onClick = {}))

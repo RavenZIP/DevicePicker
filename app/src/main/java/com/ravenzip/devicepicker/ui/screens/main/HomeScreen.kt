@@ -46,7 +46,7 @@ import com.ravenzip.devicepicker.ui.components.Price
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.TextConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.CoroutineScope
@@ -92,7 +92,7 @@ fun HomeScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters("Загрузка..."))
+        Spinner(text = TextConfig("Загрузка..."))
     }
 }
 

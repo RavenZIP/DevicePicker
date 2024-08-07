@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.database.FirebaseDatabase
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.TextConfig
 
 @Composable
 fun AdminPanelScreen(padding: PaddingValues) {
@@ -51,7 +51,7 @@ fun AdminPanelScreen(padding: PaddingValues) {
             SinglenessTextField(text = key, label = "Сгенерированный индентификатор")
             Spacer(modifier = Modifier.height(20.dp))
 
-            SimpleButton(text = TextParameters(value = "Сгенерировать", size = 16)) {
+            SimpleButton(text = TextConfig(value = "Сгенерировать", size = 16)) {
                 key.value = firebase.reference.push().key.toString()
             }
             Spacer(modifier = Modifier.height(40.dp))
@@ -62,13 +62,13 @@ fun AdminPanelScreen(padding: PaddingValues) {
                 fontSize = 18.sp)
             Spacer(modifier = Modifier.height(15.dp))
 
-            SimpleButton(text = TextParameters(value = "Добавить категорию", size = 16)) {}
+            SimpleButton(text = TextConfig(value = "Добавить категорию", size = 16)) {}
             Spacer(modifier = Modifier.height(15.dp))
 
-            SimpleButton(text = TextParameters(value = "Добавить бренд", size = 16)) {}
+            SimpleButton(text = TextConfig(value = "Добавить бренд", size = 16)) {}
             Spacer(modifier = Modifier.height(15.dp))
 
-            SimpleButton(text = TextParameters(value = "Добавить устройство", size = 16)) {}
+            SimpleButton(text = TextConfig(value = "Добавить устройство", size = 16)) {}
 
             // TODO реализовать добавление, редактирование и удаление данных
             // TODO реализовать перерасчет категорий для устройств

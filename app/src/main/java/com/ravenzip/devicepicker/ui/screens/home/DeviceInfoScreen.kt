@@ -70,8 +70,8 @@ import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.ButtonContentConfig
-import com.ravenzip.workshop.data.IconParameters
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.TextConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.flow.StateFlow
@@ -103,9 +103,9 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
                     items = listOfTagsIcons,
                     buttonContentConfig =
                         ButtonContentConfig(
-                            text = TextParameters("Подробнее о метках"),
+                            text = TextConfig("Подробнее о метках"),
                             icon =
-                                IconParameters(
+                                IconConfig(
                                     value =
                                         ImageVector.vectorResource(id = R.drawable.i_arrow_right)),
                             onClick = { tagsSheetIsVisible.value = true }))

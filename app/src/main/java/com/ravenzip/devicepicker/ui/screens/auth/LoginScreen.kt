@@ -33,7 +33,7 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -87,7 +87,7 @@ fun LoginScreen(
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
-            text = TextParameters(value = "Продолжить", size = 16),
+            text = TextConfig(value = "Продолжить", size = 16),
         ) {
             scope.launch(Dispatchers.Main) {
                 when (selectedLoginVariant()) {
@@ -130,7 +130,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(
-            text = TextParameters(value = "Забыли пароль?", size = 16),
+            text = TextConfig(value = "Забыли пароль?", size = 16),
             colors = ButtonDefaults.inverseMixColors()) {
                 navigateToForgotPassScreen()
             }
@@ -139,7 +139,7 @@ fun LoginScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = spinnerText.value, size = 16))
+        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

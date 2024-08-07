@@ -13,7 +13,7 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconParameters
+import com.ravenzip.workshop.data.IconConfig
 
 @Composable
 fun GetFields(
@@ -27,8 +27,7 @@ fun GetFields(
                 text = fields[0],
                 label = "Электронная почта",
                 leadingIcon =
-                    IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
+                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
                 error = validation[0])
 
             Spacer(modifier = Modifier.height(15.dp))
@@ -36,7 +35,7 @@ fun GetFields(
                 text = fields[1],
                 label = "Пароль",
                 leadingIcon =
-                    IconParameters(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
+                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
                 isHiddenText = true,
                 error = validation[1])
         }
@@ -45,8 +44,7 @@ fun GetFields(
                 text = fields[0],
                 label = "Телефон",
                 leadingIcon =
-                    IconParameters(
-                        value = ImageVector.vectorResource(R.drawable.i_phone), size = 20),
+                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_phone), size = 20),
                 error = validation[0])
         }
         AuthVariantsEnum.GOOGLE -> {

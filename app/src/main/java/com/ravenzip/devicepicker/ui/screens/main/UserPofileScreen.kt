@@ -35,8 +35,8 @@ import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.IconParameters
-import com.ravenzip.workshop.data.TextParameters
+import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -66,12 +66,12 @@ fun UserProfileScreen(
             if (userData.admin) {
                 RowIconButton(
                     text =
-                        TextParameters(
+                        TextConfig(
                             value = "Панель администратора",
                             color = MaterialTheme.colorScheme.onSurface,
                             size = 18),
                     icon =
-                        IconParameters(
+                        IconConfig(
                             value = ImageVector.vectorResource(R.drawable.i_rocket),
                             color = MaterialTheme.colorScheme.tertiary),
                     colors = ButtonDefaults.inverseMixColors()) {
@@ -82,12 +82,12 @@ fun UserProfileScreen(
 
             RowIconButton(
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Настройки аккаунта",
                         color = MaterialTheme.colorScheme.onSurface,
                         size = 18),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_user_settings),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -96,17 +96,17 @@ fun UserProfileScreen(
 
             CustomButton(
                 title =
-                    TextParameters(
+                    TextConfig(
                         value = "История просмотров",
                         color = MaterialTheme.colorScheme.onSurface,
                         size = 18),
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Список просмотренных вами устройств",
                         color = MaterialTheme.colorScheme.onSurface.copy(0.85f),
                         size = 14),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_history),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -115,15 +115,15 @@ fun UserProfileScreen(
 
             CustomButton(
                 title =
-                    TextParameters(
+                    TextConfig(
                         value = "Отзывы", color = MaterialTheme.colorScheme.onSurface, size = 18),
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Список оставленных вами отзывов",
                         color = MaterialTheme.colorScheme.onSurface.copy(0.85f),
                         size = 14),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_feedback),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -132,15 +132,15 @@ fun UserProfileScreen(
 
             CustomButton(
                 title =
-                    TextParameters(
+                    TextConfig(
                         value = "Акции", color = MaterialTheme.colorScheme.onSurface, size = 18),
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Посмотреть информацию об имеющихся акциях и выгодных предложениях",
                         color = MaterialTheme.colorScheme.onSurface.copy(0.85f),
                         size = 14),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_stocks),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -148,15 +148,14 @@ fun UserProfileScreen(
             Spacer(modifier = Modifier.padding(top = 15.dp))
 
             CustomButton(
-                title =
-                    TextParameters("Выйти", color = MaterialTheme.colorScheme.onSurface, size = 18),
+                title = TextConfig("Выйти", color = MaterialTheme.colorScheme.onSurface, size = 18),
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Выполнить выход из аккаунта",
                         color = MaterialTheme.colorScheme.onSurface.copy(0.85f),
                         size = 14),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.sign_in), color = errorColor),
                 colors = ButtonDefaults.containerColor()) {
                     alertDialogIsShown.value = true
@@ -170,12 +169,12 @@ fun UserProfileScreen(
 
             RowIconButton(
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Внешний вид",
                         color = MaterialTheme.colorScheme.onSurface,
                         size = 18),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_theme),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -184,17 +183,17 @@ fun UserProfileScreen(
 
             CustomButton(
                 title =
-                    TextParameters(
+                    TextConfig(
                         value = "Уведомления",
                         color = MaterialTheme.colorScheme.onSurface,
                         size = 18),
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Настроить пуш-уведомления и уведомления внутри приложения",
                         color = MaterialTheme.colorScheme.onSurface.copy(0.85f),
                         size = 14),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_notification),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -203,12 +202,12 @@ fun UserProfileScreen(
 
             RowIconButton(
                 text =
-                    TextParameters(
+                    TextConfig(
                         value = "Обновления",
                         color = MaterialTheme.colorScheme.onSurface,
                         size = 18),
                 icon =
-                    IconParameters(
+                    IconConfig(
                         value = ImageVector.vectorResource(R.drawable.i_update),
                         color = MaterialTheme.colorScheme.primary),
                 colors = ButtonDefaults.containerColor()) {}
@@ -218,13 +217,13 @@ fun UserProfileScreen(
 
     if (alertDialogIsShown.value) {
         AlertDialog(
-            icon = IconParameters(value = ImageVector.vectorResource(R.drawable.sign_in)),
-            title = TextParameters(value = "Выход из аккаунта", size = 22),
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.sign_in)),
+            title = TextConfig(value = "Выход из аккаунта", size = 22),
             text =
-                TextParameters(
+                TextConfig(
                     value = "Вы действительно хотите выполнить выход из аккаунта?", size = 14),
-            onDismissText = TextParameters(value = "Отмена", size = 14),
-            onConfirmationText = TextParameters(value = "Выйти", size = 14),
+            onDismissText = TextConfig(value = "Отмена", size = 14),
+            onConfirmationText = TextConfig(value = "Выйти", size = 14),
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 scope.launch(Dispatchers.Main) {
@@ -252,6 +251,6 @@ fun UserProfileScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextParameters(value = "Выход из аккаунта...", size = 16))
+        Spinner(text = TextConfig(value = "Выход из аккаунта...", size = 16))
     }
 }
