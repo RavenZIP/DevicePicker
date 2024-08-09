@@ -100,12 +100,12 @@ fun MainNavigationGraph(
             HomeScreen(
                 padding = padding,
                 deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
-                onClickToDeviceCard = { device, isLoading ->
+                onClickToDeviceCard = { device, changeIsLoading ->
                     onClickToDeviceCard(
                         device = device,
                         deviceViewModel = deviceViewModel,
                         imageViewModel = imageViewModel,
-                        isLoading = isLoading,
+                        changeIsLoading = changeIsLoading,
                         navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
                     )
                 },
@@ -184,10 +184,10 @@ private suspend fun onClickToDeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
     imageViewModel: ImageViewModel,
-    isLoading: MutableState<Boolean>,
+    changeIsLoading: (Boolean) -> Unit,
     navigateToDevice: () -> Unit,
 ) {
-    isLoading.value = true
+    changeIsLoading(true)
     val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
 
     if (cachedDevice == null) {
@@ -199,6 +199,6 @@ private suspend fun onClickToDeviceCard(
             .collect { deviceViewModel.setImageUrlToDevices(it) }
     }
 
-    isLoading.value = false
+    changeIsLoading(false)
     navigateToDevice()
 }

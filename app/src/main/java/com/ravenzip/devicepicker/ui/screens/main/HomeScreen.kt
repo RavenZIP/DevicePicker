@@ -20,11 +20,11 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,7 +56,8 @@ import kotlinx.coroutines.flow.StateFlow
 fun HomeScreen(
     padding: PaddingValues,
     deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
+    onClickToDeviceCard:
+        suspend (device: DeviceCompact, changeIsLoading: (Boolean) -> Unit) -> Unit,
 ) {
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
@@ -69,11 +70,11 @@ fun HomeScreen(
         item { Spacer(modifier = Modifier.height(10.dp)) }
 
         items(deviceCompactState.deviceCategoryStateList, key = { it.categoryName }) { category ->
-            if (category.containerType === ContainerTypeEnum.Default) {
+            if (category.containerType == ContainerTypeEnum.Default) {
                 CarouselDevices(
                     devices = category.devices,
                     categoryName = category.categoryName,
-                    isLoading = isLoading,
+                    changeIsLoading = { isLoading.value = it },
                     coroutineScope = coroutineScope,
                     onClickToDeviceCard = onClickToDeviceCard,
                 )
@@ -81,7 +82,7 @@ fun HomeScreen(
                 SpecialOfferContainer(
                     devices = category.devices,
                     categoryName = category.categoryName,
-                    isLoading = isLoading,
+                    changeIsLoading = { isLoading.value = it },
                     coroutineScope = coroutineScope,
                     onClickToDeviceCard = onClickToDeviceCard,
                 )
@@ -98,11 +99,12 @@ fun HomeScreen(
 
 @Composable
 private fun CarouselDevices(
-    devices: List<DeviceCompact>,
+    devices: SnapshotStateList<DeviceCompact>,
     categoryName: String,
-    isLoading: MutableState<Boolean>,
+    changeIsLoading: (Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
+    onClickToDeviceCard:
+        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -116,7 +118,7 @@ private fun CarouselDevices(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
+                item { Spacer(modifier = Modifier.width(15.dp)) }
 
                 items(
                     items = devices,
@@ -125,11 +127,11 @@ private fun CarouselDevices(
                 ) { device ->
                     DeviceCard(
                         device = device,
-                        isLoading = isLoading,
+                        changeIsLoading = changeIsLoading,
                         coroutineScope = coroutineScope,
                         onClickToDeviceCard = onClickToDeviceCard,
                     )
-                    Spacer(modifier = Modifier.padding(start = 15.dp))
+                    Spacer(modifier = Modifier.width(15.dp))
                 }
             }
         }
@@ -138,11 +140,12 @@ private fun CarouselDevices(
 
 @Composable
 private fun SpecialOfferContainer(
-    devices: List<DeviceCompact>,
+    devices: SnapshotStateList<DeviceCompact>,
     categoryName: String,
-    isLoading: MutableState<Boolean>,
+    changeIsLoading: (Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
+    onClickToDeviceCard:
+        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
@@ -173,7 +176,7 @@ private fun SpecialOfferContainer(
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W500,
                 )
-                Spacer(modifier = Modifier.padding(top = 10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
@@ -187,7 +190,7 @@ private fun SpecialOfferContainer(
                     ) {
                         SpecialOfferCard(
                             device = it,
-                            isLoading = isLoading,
+                            changeIsLoading = changeIsLoading,
                             coroutineScope = coroutineScope,
                             onClickToDeviceCard = onClickToDeviceCard,
                         )
@@ -202,14 +205,15 @@ private fun SpecialOfferContainer(
 @Composable
 private fun DeviceCard(
     device: DeviceCompact,
-    isLoading: MutableState<Boolean>,
+    changeIsLoading: (Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
+    onClickToDeviceCard:
+        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp))
-                .suspendOnClick(coroutineScope) { onClickToDeviceCard(device, isLoading) }
+                .suspendOnClick(coroutineScope) { onClickToDeviceCard(device, changeIsLoading) }
                 .widthIn(0.dp, 130.dp),
         colors = CardDefaults.veryLightPrimary(),
     ) {
@@ -239,14 +243,15 @@ private fun DeviceCard(
 @Composable
 private fun SpecialOfferCard(
     device: DeviceCompact,
-    isLoading: MutableState<Boolean>,
+    changeIsLoading: (Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend (device: DeviceCompact, isLoading: MutableState<Boolean>) -> Unit,
+    onClickToDeviceCard:
+        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier =
             Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToDeviceCard(device, isLoading)
+                onClickToDeviceCard(device, changeIsLoading)
             },
         colors = CardDefaults.veryLightPrimary(),
     ) {
@@ -260,7 +265,7 @@ private fun SpecialOfferCard(
                 imageOptions = ImageOptions(contentScale = ContentScale.Fit),
             )
 
-            Column(modifier = Modifier.padding(start = 15.dp)) {
+            Column(modifier = Modifier.width(15.dp)) {
                 Price(price = device.price)
                 SmallText(text = device.type)
                 SmallText(text = device.model)
