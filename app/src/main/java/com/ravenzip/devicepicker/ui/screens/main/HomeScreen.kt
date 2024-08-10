@@ -265,7 +265,7 @@ private fun SpecialOfferCard(
                 imageOptions = ImageOptions(contentScale = ContentScale.Fit),
             )
 
-            Column(modifier = Modifier.width(15.dp)) {
+            Column(modifier = Modifier.padding(start = 15.dp)) {
                 Price(price = device.price)
                 SmallText(text = device.type)
                 SmallText(text = device.model)
