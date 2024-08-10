@@ -165,17 +165,17 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
 
 @Composable
 private fun deviceInfoScreenTopAppBarItemList(): List<AppBarItem> {
-    val favouriteIcon =
-        IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20)
-    val compareIcon =
-        IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20)
+    val favouriteButton =
+        AppBarItem(
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
+            onClick = {})
 
-    val favouriteButton = remember {
-        mutableStateOf(AppBarItem(icon = favouriteIcon, onClick = {}))
-    }
-    val compareButton = remember { mutableStateOf(AppBarItem(icon = compareIcon, onClick = {})) }
+    val compareButton =
+        AppBarItem(
+            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
+            onClick = {})
 
-    return listOf(favouriteButton.value, compareButton.value)
+    return remember { listOf(favouriteButton, compareButton) }
 }
 
 @Composable
