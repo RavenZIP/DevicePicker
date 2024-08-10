@@ -2,7 +2,6 @@ package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,7 +24,7 @@ fun NavGraphBuilder.homeNavigationGraph(
     padding: PaddingValues,
     setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
     setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
-    bottomBarState: MutableState<Boolean>,
+    changeBottomBarState: (isVisible: Boolean) -> Unit,
     deviceStateByViewModel: StateFlow<DeviceState>,
     navController: NavHostController
 ) {
@@ -38,7 +37,7 @@ fun NavGraphBuilder.homeNavigationGraph(
 
             setTopAppBarState(topAppBarState)
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-            bottomBarState.value = false
+            changeBottomBarState(false)
 
             DeviceInfoScreen(padding = padding, deviceStateByViewModel = deviceStateByViewModel)
         }

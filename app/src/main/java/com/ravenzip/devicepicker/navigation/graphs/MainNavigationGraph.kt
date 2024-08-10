@@ -3,7 +3,6 @@ package com.ravenzip.devicepicker.navigation.graphs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -47,7 +46,7 @@ fun MainNavigationGraph(
     getUser: () -> FirebaseUser?,
     getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
     logout: suspend () -> Unit,
-    bottomBarState: MutableState<Boolean>,
+    changeBottomBarState: (isVisible: Boolean) -> Unit,
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
@@ -95,7 +94,7 @@ fun MainNavigationGraph(
         composable(route = BottomBarGraph.HOME) {
             topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
             topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-            bottomBarState.value = true
+            changeBottomBarState(true)
 
             HomeScreen(
                 padding = padding,
@@ -118,7 +117,7 @@ fun MainNavigationGraph(
                 topAppBarViewModel.setTopAppBarState(topAppBarState)
             },
             setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
-            bottomBarState = bottomBarState,
+            changeBottomBarState = changeBottomBarState,
             deviceStateByViewModel = deviceViewModel.deviceState,
             navController = navController,
         )
@@ -159,7 +158,7 @@ fun MainNavigationGraph(
         composable(route = BottomBarGraph.USER_PROFILE) {
             topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
             topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-            bottomBarState.value = true
+            changeBottomBarState(true)
 
             UserProfileScreen(
                 padding = padding,
@@ -174,7 +173,7 @@ fun MainNavigationGraph(
             setTopAppBarState = { topAppBarState ->
                 topAppBarViewModel.setTopAppBarState(topAppBarState)
             },
-            bottomBarState = bottomBarState,
+            changeBottomBarState = changeBottomBarState,
         )
     }
 }

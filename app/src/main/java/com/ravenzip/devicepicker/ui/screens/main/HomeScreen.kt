@@ -57,7 +57,7 @@ fun HomeScreen(
     padding: PaddingValues,
     deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
     onClickToDeviceCard:
-        suspend (device: DeviceCompact, changeIsLoading: (Boolean) -> Unit) -> Unit,
+        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
 ) {
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
@@ -101,10 +101,10 @@ fun HomeScreen(
 private fun CarouselDevices(
     devices: SnapshotStateList<DeviceCompact>,
     categoryName: String,
-    changeIsLoading: (Boolean) -> Unit,
+    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
     onClickToDeviceCard:
-        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
+        suspend (device: DeviceCompact, isLoadingChange: (isLoading: Boolean) -> Unit) -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
         Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
@@ -142,10 +142,10 @@ private fun CarouselDevices(
 private fun SpecialOfferContainer(
     devices: SnapshotStateList<DeviceCompact>,
     categoryName: String,
-    changeIsLoading: (Boolean) -> Unit,
+    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
     onClickToDeviceCard:
-        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
+        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
@@ -205,10 +205,10 @@ private fun SpecialOfferContainer(
 @Composable
 private fun DeviceCard(
     device: DeviceCompact,
-    changeIsLoading: (Boolean) -> Unit,
+    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
     onClickToDeviceCard:
-        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
+        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier =
@@ -243,10 +243,10 @@ private fun DeviceCard(
 @Composable
 private fun SpecialOfferCard(
     device: DeviceCompact,
-    changeIsLoading: (Boolean) -> Unit,
+    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
     onClickToDeviceCard:
-        suspend (device: DeviceCompact, isLoadingChange: (Boolean) -> Unit) -> Unit,
+        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
 ) {
     Card(
         modifier =

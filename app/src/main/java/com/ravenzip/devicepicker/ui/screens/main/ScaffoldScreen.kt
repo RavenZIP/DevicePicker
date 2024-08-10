@@ -71,7 +71,7 @@ fun ScaffoldScreen(
             getUser = getUser,
             getUserData = getUserData,
             logout = logout,
-            bottomBarState = bottomBarState,
+            changeBottomBarState = { bottomBarState.value = it },
         )
     }
 }
