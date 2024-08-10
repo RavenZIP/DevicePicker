@@ -8,7 +8,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
@@ -16,8 +15,6 @@ import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
-import com.ravenzip.devicepicker.state.SearchBarState
-import com.ravenzip.devicepicker.state.TopAppBarState
 import com.ravenzip.devicepicker.ui.screens.main.CompareScreen
 import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
@@ -27,7 +24,6 @@ import com.ravenzip.devicepicker.viewmodels.BrandViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
-import com.ravenzip.devicepicker.viewmodels.TopAppBarViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
@@ -41,12 +37,10 @@ import kotlinx.coroutines.launch
 fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    topAppBarViewModel: TopAppBarViewModel,
     userDataByViewModel: StateFlow<User>,
     getUser: () -> FirebaseUser?,
     getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
     logout: suspend () -> Unit,
-    changeBottomBarState: (isVisible: Boolean) -> Unit,
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
@@ -92,10 +86,6 @@ fun MainNavigationGraph(
     ) {
         // / Домашний экран
         composable(route = BottomBarGraph.HOME) {
-            topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
-            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-            changeBottomBarState(true)
-
             HomeScreen(
                 padding = padding,
                 deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
@@ -113,20 +103,11 @@ fun MainNavigationGraph(
 
         homeNavigationGraph(
             padding = padding,
-            setTopAppBarState = { topAppBarState ->
-                topAppBarViewModel.setTopAppBarState(topAppBarState)
-            },
-            setTopAppBarType = { topAppBarType -> topAppBarViewModel.setType(topAppBarType) },
-            changeBottomBarState = changeBottomBarState,
             deviceStateByViewModel = deviceViewModel.deviceState,
-            navController = navController,
         )
 
         // / Поиск
         composable(route = BottomBarGraph.SEARCH) {
-            topAppBarViewModel.setSearchBarState(SearchBarState.createSearchBarState())
-            topAppBarViewModel.setType(TopAppBarTypeEnum.SearchBar)
-
             SearchScreen(
                 padding = padding,
                 listOfBrandByViewModel = brandViewModel.listOfBrand,
@@ -135,31 +116,13 @@ fun MainNavigationGraph(
         }
 
         // / Избранное
-        composable(route = BottomBarGraph.FAVOURITES) {
-            topAppBarViewModel.setTopAppBarState(
-                TopAppBarState.createTopAppBarState("Избранное"),
-            )
-            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-
-            FavouritesScreen(padding)
-        }
+        composable(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
 
         // / Сравнение
-        composable(route = BottomBarGraph.COMPARE) {
-            topAppBarViewModel.setTopAppBarState(
-                TopAppBarState.createTopAppBarState("Сравнение"),
-            )
-            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-
-            CompareScreen(padding)
-        }
+        composable(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
 
         // / Профиль пользователя
         composable(route = BottomBarGraph.USER_PROFILE) {
-            topAppBarViewModel.setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
-            topAppBarViewModel.setType(TopAppBarTypeEnum.TopAppBar)
-            changeBottomBarState(true)
-
             UserProfileScreen(
                 padding = padding,
                 userDataByViewModel = userDataByViewModel,
@@ -168,13 +131,7 @@ fun MainNavigationGraph(
             )
         }
 
-        userProfileNavigationGraph(
-            padding = padding,
-            setTopAppBarState = { topAppBarState ->
-                topAppBarViewModel.setTopAppBarState(topAppBarState)
-            },
-            changeBottomBarState = changeBottomBarState,
-        )
+        userProfileNavigationGraph(padding = padding)
     }
 }
 
