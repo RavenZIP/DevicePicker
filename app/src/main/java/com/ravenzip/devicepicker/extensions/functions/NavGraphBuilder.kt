@@ -19,6 +19,5 @@ fun NavGraphBuilder.composable(
         route = route,
         enterTransition = { fadeIn(animationSpec = tween(300, easing = LinearEasing)) },
         exitTransition = { fadeOut(animationSpec = tween(300, easing = LinearEasing)) },
-        content = content
-    )
+        content = content)
 }

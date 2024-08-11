@@ -1,5 +1,10 @@
 package com.ravenzip.devicepicker.ui.screens.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +39,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,9 +71,11 @@ import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
-import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
+import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
+import com.ravenzip.workshop.components.InfoCard
+import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.ButtonContentConfig
 import com.ravenzip.workshop.data.IconConfig
@@ -380,25 +388,76 @@ private fun TagsBottomSheet(
     computedTags: List<TagsEnum>,
     manualTags: List<TagsEnum>
 ) {
+    val selectedTag = rememberSaveable { mutableStateOf<Tag?>(null) }
+
     ModalBottomSheet(
         onDismissRequest = { tagsSheetIsVisible.value = false }, sheetState = sheetState) {
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(0.95f),
-                    horizontalAlignment = Alignment.CenterHorizontally) {
-                        allTagsWithIcons.forEach { tag ->
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalAlignment = Alignment.CenterVertically) {
-                                    BoxedChip(icon = tag.icon, backgroundColor = Color.Transparent)
-                                    Text(
-                                        text = tagsNameMap[tag.name]!!,
-                                        letterSpacing = 0.sp,
-                                        fontWeight = FontWeight.W500)
+                this@ModalBottomSheet.AnimatedVisibility(
+                    visible = selectedTag.value == null,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom)) {
+                        LazyColumn(
+                            modifier = Modifier.fillMaxWidth(0.95f),
+                            horizontalAlignment = Alignment.CenterHorizontally) {
+                                item {
+                                    InfoCard(
+                                        width = 0.95f,
+                                        icon =
+                                            IconConfig(
+                                                ImageVector.vectorResource(R.drawable.i_info),
+                                                size = 22,
+                                                color = MaterialTheme.colorScheme.primary),
+                                        title = TextConfig("Описание", 18),
+                                        text =
+                                            TextConfig(
+                                                "Метки помогают в первичной оценке устройства. " +
+                                                    "Всего ${TagsEnum.entries.size} различных меток, которые могут быть " +
+                                                    "вычислены системой и/или выставлены вручную. " +
+                                                    "Вычисленные метки обновляются каждые 24 часа.",
+                                                14),
+                                        isTitleUnderIcon = false,
+                                        colors = CardDefaults.veryLightPrimary())
+                                }
+
+                                items(allTagsWithIcons) { tag ->
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    CustomButton(
+                                        width = 0.95f,
+                                        title = TextConfig(tagsNameMap[tag.name]!!),
+                                        text =
+                                            TextConfig("Нажмите, чтобы получить подробности", 14),
+                                        icon = tag.icon,
+                                        colors = ButtonDefaults.veryLightPrimary(),
+                                        onClick = { selectedTag.value = tag })
+                                }
+
+                                item { Spacer(modifier = Modifier.height(40.dp)) }
+                            }
+                    }
+
+                this@ModalBottomSheet.AnimatedVisibility(
+                    visible = selectedTag.value != null,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom)) {
+                        if (selectedTag.value != null) {
+                            Column(
+                                modifier = Modifier.fillMaxWidth(0.95f),
+                                horizontalAlignment = Alignment.CenterHorizontally) {
+                                    TagInfo(
+                                        selectedTag.value,
+                                        isComputed = computedTags.contains(selectedTag.value?.name),
+                                        isManualTag = manualTags.contains(selectedTag.value?.name))
+                                    Text("Выбран ${selectedTag.value?.name}")
+                                    SimpleButton(
+                                        text = TextConfig("Back"),
+                                        onClick = { selectedTag.value = null })
+                                    Spacer(modifier = Modifier.height(40.dp))
                                 }
                         }
-                        Spacer(modifier = Modifier.height(20.dp))
                     }
             }
         }
 }
+
+@Composable private fun TagInfo(tag: Tag?, isComputed: Boolean, isManualTag: Boolean) {}
