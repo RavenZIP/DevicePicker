@@ -71,11 +71,12 @@ import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
+import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.InfoCard
-import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.ButtonContentConfig
 import com.ravenzip.workshop.data.IconConfig
@@ -416,7 +417,7 @@ private fun TagsBottomSheet(
                                                     "вычислены системой и/или выставлены вручную. " +
                                                     "Вычисленные метки обновляются каждые 24 часа.",
                                                 14),
-                                        isTitleUnderIcon = false,
+                                        titleUnderIcon = false,
                                         colors = CardDefaults.veryLightPrimary())
                                 }
 
@@ -448,9 +449,16 @@ private fun TagsBottomSheet(
                                         selectedTag.value,
                                         isComputed = computedTags.contains(selectedTag.value?.name),
                                         isManualTag = manualTags.contains(selectedTag.value?.name))
-                                    Text("Выбран ${selectedTag.value?.name}")
-                                    SimpleButton(
-                                        text = TextConfig("Back"),
+                                    Spacer(modifier = Modifier.height(10.dp))
+                                    RowIconButton(
+                                        width = 0.95f,
+                                        text = TextConfig("Вернуться назад"),
+                                        icon =
+                                            IconConfig(
+                                                value =
+                                                    ImageVector.vectorResource(R.drawable.i_back)),
+                                        colors = ButtonDefaults.veryLightPrimary(),
+                                        contentPadding = PaddingValues(12.dp),
                                         onClick = { selectedTag.value = null })
                                     Spacer(modifier = Modifier.height(40.dp))
                                 }
@@ -460,4 +468,36 @@ private fun TagsBottomSheet(
         }
 }
 
-@Composable private fun TagInfo(tag: Tag?, isComputed: Boolean, isManualTag: Boolean) {}
+@Composable
+private fun TagInfo(tag: Tag?, isComputed: Boolean, isManualTag: Boolean) {
+    if (tag != null) {
+        Row(
+            modifier = Modifier.fillMaxWidth(0.95f),
+            verticalAlignment = Alignment.CenterVertically) {
+                BoxedChip(icon = tag.icon)
+                Spacer(modifier = Modifier.width(10.dp))
+                Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
+            }
+
+        if (isComputed) {
+            Spacer(modifier = Modifier.height(10.dp))
+            InfoCard(
+                width = 0.95f,
+                chipText = "Вычислено системой",
+                cardText =
+                    "Данное устройство считается производительным, " +
+                        "поскольку его характеристики лучше, чем у большинства других " +
+                        "устройств этого ценового сегмента.",
+                colors = CardDefaults.veryLightPrimary())
+        }
+
+        if (isManualTag) {
+            Spacer(modifier = Modifier.height(10.dp))
+            InfoCard(
+                width = 0.95f,
+                chipText = "Выставлено вручную",
+                cardText = "Текст метки",
+                colors = CardDefaults.veryLightPrimary())
+        }
+    }
+}
