@@ -10,6 +10,4 @@ val categoryNameMap =
         TagsEnum.ENERGY_EFFICIENT to "Энергоэффективные",
         TagsEnum.RELIABLE to "Надежные",
         TagsEnum.NEW_MODEL to "Новая модель",
-        TagsEnum.HIGH_QUALITY_SCREEN to "Качественный экран",
-        TagsEnum.HIGH_QUALITY_CONNECTION to "Качественная связь",
-        TagsEnum.HIGH_QUALITY_CAMERA to "Качественные камеры")
+        TagsEnum.HIGH_QUALITY_SCREEN to "Качественный экран")

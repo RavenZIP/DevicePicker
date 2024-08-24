@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -61,9 +62,9 @@ import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Tag
-import com.ravenzip.devicepicker.model.Tags.Companion.createListOfChipIcons
-import com.ravenzip.devicepicker.model.Tags.Companion.createListOfUniqueTags
 import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
+import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsIcons
+import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.DeviceState
@@ -92,72 +93,77 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
     val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
     val title = remember { device.createDeviceTitle() }
     val specificationsMap = remember { device.specifications.toMap() }
-    val allTags = remember { device.tags.createListOfUniqueTags() }
-    val allTagsWithIcons = createListOfChipIcons(allTags = allTags)
-    val listOfTagsIcons = remember { allTagsWithIcons.map { tag -> tag.icon } }
+    val listOfTagsIcons = device.createListOfTagsIcons()
     val sheetState = rememberModalBottomSheetState()
     val tagsSheetIsVisible = remember { mutableStateOf(false) }
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                ImageContainer(pagerState, device.imageUrls)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(10.dp))
-                BoxedChipGroup(
-                    items = listOfTagsIcons,
-                    buttonContentConfig =
-                        ButtonContentConfig(
-                            text = TextConfig("Подробнее о метках"),
-                            icon =
-                                IconConfig(
-                                    value =
-                                        ImageVector.vectorResource(id = R.drawable.i_arrow_right)),
-                            onClick = { tagsSheetIsVisible.value = true }))
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    text = title,
-                    modifier = Modifier.fillMaxWidth(0.9f),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold)
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(15.dp))
-                FeedbackContainer(
-                    generateFeedbackList(
-                        device.feedback.rating,
-                        device.feedback.reviewsCount,
-                        device.feedback.questionsCount))
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(15.dp))
-                PriceAndConfigurations(device.price, device.configurations, device.colors)
-            }
-
-            items(specificationsMap.keys.toList()) { categoryKey ->
-                Specifications(
-                    category = categoryKey, specifications = specificationsMap[categoryKey]!!)
-            }
-
-            item { Spacer(modifier = Modifier.height(20.dp)) }
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+            ImageContainer(pagerState, device.imageUrls)
         }
+
+        item {
+            Spacer(modifier = Modifier.height(10.dp))
+            BoxedChipGroup(
+                items = listOfTagsIcons,
+                buttonContentConfig =
+                    ButtonContentConfig(
+                        text = TextConfig("Подробнее о метках"),
+                        icon =
+                            IconConfig(
+                                value = ImageVector.vectorResource(id = R.drawable.i_arrow_right)
+                            ),
+                        onClick = { tagsSheetIsVisible.value = true },
+                    ),
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(0.9f),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(15.dp))
+            FeedbackContainer(
+                generateFeedbackList(
+                    device.feedback.rating,
+                    device.feedback.reviewsCount,
+                    device.feedback.questionsCount,
+                )
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(15.dp))
+            PriceAndConfigurations(device.price, device.configurations, device.colors)
+        }
+
+        items(specificationsMap.keys.toList()) { categoryKey ->
+            Specifications(
+                category = categoryKey,
+                specifications = specificationsMap[categoryKey]!!,
+            )
+        }
+
+        item { Spacer(modifier = Modifier.height(20.dp)) }
+    }
 
     if (tagsSheetIsVisible.value) {
         TagsBottomSheet(
             tagsSheetIsVisible = tagsSheetIsVisible,
             sheetState = sheetState,
-            allTagsWithIcons = allTagsWithIcons,
-            computedTags = device.tags.computedTags,
-            manualTags = device.tags.manualTags)
+            allTagsWithIcons = device.createListOfTagsWithIcons(),
+        )
     }
 }
 
@@ -166,23 +172,26 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
 private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
     Column(
         modifier =
-            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(10.dp)).background(Color.White)) {
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) {
-                FrescoImage(
-                    imageUrl = imageUrls[it],
-                    modifier = Modifier.bigImageContainer(),
-                    imageOptions = ImageOptions(contentScale = ContentScale.Fit))
-            }
-
-            Box(modifier = Modifier) {
-                HorizontalPagerIndicator(
-                    pagerState,
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
-                    MaterialTheme.colorScheme.primary,
-                    height = 10,
-                    width = 20)
-            }
+            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(10.dp)).background(Color.White)
+    ) {
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) {
+            FrescoImage(
+                imageUrl = imageUrls[it],
+                modifier = Modifier.bigImageContainer(),
+                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
+            )
         }
+
+        Box(modifier = Modifier) {
+            HorizontalPagerIndicator(
+                pagerState,
+                MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
+                MaterialTheme.colorScheme.primary,
+                height = 10,
+                width = 20,
+            )
+        }
+    }
 }
 
 @Composable
@@ -193,69 +202,73 @@ private fun FeedbackContainer(feedback: List<ButtonData>) {
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(horizontal = 5.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.Center) {
-            feedback.forEach { feedback ->
-                Button(
-                    modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
-                    onClick = { feedback.onClick() },
-                    shape = RoundedCornerShape(10.dp),
-                    colors = ButtonDefaults.veryLightPrimary(),
-                    contentPadding = PaddingValues(5.dp)) {
-                        Column(
-                            modifier = Modifier.padding(vertical = 0.dp, horizontal = 0.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally) {
-                                Spacer(modifier = Modifier.padding(top = 5.dp))
-                                TextWithIcon(
-                                    icon = feedback.icon,
-                                    iconSize = 16.dp,
-                                    text = feedback.value,
-                                    spacerWidth = 5.dp,
-                                    horizontalArrangement = Arrangement.Center)
+        horizontalArrangement = Arrangement.Center,
+    ) {
+        feedback.forEach { feedback ->
+            Button(
+                modifier = Modifier.fillMaxWidth().padding(start = 5.dp, end = 5.dp).weight(1f),
+                onClick = { feedback.onClick() },
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.veryLightPrimary(),
+                contentPadding = PaddingValues(5.dp),
+            ) {
+                Column(
+                    modifier = Modifier.padding(vertical = 0.dp, horizontal = 0.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+                    TextWithIcon(
+                        icon = feedback.icon,
+                        iconSize = 16.dp,
+                        text = feedback.value,
+                        spacerWidth = 5.dp,
+                        horizontalArrangement = Arrangement.Center,
+                    )
 
-                                Text(text = feedback.text, fontWeight = FontWeight.W400)
-                                Spacer(modifier = Modifier.padding(top = 5.dp))
-                            }
-                    }
+                    Text(text = feedback.text, fontWeight = FontWeight.W400)
+                    Spacer(modifier = Modifier.padding(top = 5.dp))
+                }
             }
         }
+    }
 }
 
 @Composable
 private fun PriceAndConfigurations(
     price: Int,
     configurations: List<PhoneConfiguration>,
-    colors: List<String>
+    colors: List<String>,
 ) {
     Column(
         modifier =
             Modifier.fillMaxWidth(0.9f)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(10.dp)) {
-            PriceRange(price)
+                .padding(10.dp)
+    ) {
+        PriceRange(price)
 
-            Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
-            TextWithIcon(
-                icon = ImageVector.vectorResource(R.drawable.i_configuration),
-                text = "Конфигурации")
+        TextWithIcon(
+            icon = ImageVector.vectorResource(R.drawable.i_configuration),
+            text = "Конфигурации",
+        )
 
-            Spacer(modifier = Modifier.height(15.dp))
+        Spacer(modifier = Modifier.height(15.dp))
 
-            VerticalGrid(width = 1f, items = configurations) { modifier, configuration ->
-                DeviceConfiguration(modifier, configuration)
-            }
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            TextWithIcon(icon = ImageVector.vectorResource(R.drawable.i_palette), text = "Цвета")
-
-            Spacer(modifier = Modifier.height(15.dp))
-
-            VerticalGrid(width = 1f, items = colors) { modifier, color ->
-                DeviceColor(modifier, color)
-            }
+        VerticalGrid(width = 1f, items = configurations) { modifier, configuration ->
+            DeviceConfiguration(modifier, configuration)
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        TextWithIcon(icon = ImageVector.vectorResource(R.drawable.i_palette), text = "Цвета")
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        VerticalGrid(width = 1f, items = colors) { modifier, color -> DeviceColor(modifier, color) }
+    }
 }
 
 /** Конфигурация устройства */
@@ -265,12 +278,14 @@ private fun DeviceConfiguration(modifier: Modifier, configuration: PhoneConfigur
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.veryLightPrimary()) {
-            Text(
-                modifier = Modifier.padding(10.dp).fillMaxWidth(),
-                text = text,
-                textAlign = TextAlign.Center)
-        }
+        colors = CardDefaults.veryLightPrimary(),
+    ) {
+        Text(
+            modifier = Modifier.padding(10.dp).fillMaxWidth(),
+            text = text,
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 /** Цвет устройства */
@@ -279,51 +294,57 @@ private fun DeviceColor(modifier: Modifier, color: String) {
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.veryLightPrimary()) {
-            Row(
-                modifier = Modifier.padding(10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center) {
-                    ColoredBoxWithBorder(colorMap[color]!!)
-                    Spacer(modifier = Modifier.width(5.dp))
+        colors = CardDefaults.veryLightPrimary(),
+    ) {
+        Row(
+            modifier = Modifier.padding(10.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            ColoredBoxWithBorder(colorMap[color]!!)
+            Spacer(modifier = Modifier.width(5.dp))
 
-                    Text(
-                        modifier = Modifier.weight(1f),
-                        text = color,
-                        textAlign = TextAlign.Center,
-                        softWrap = false,
-                        overflow = TextOverflow.Ellipsis)
-                    Spacer(modifier = Modifier.width(22.dp))
-                }
+            Text(
+                modifier = Modifier.weight(1f),
+                text = color,
+                textAlign = TextAlign.Center,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Spacer(modifier = Modifier.width(22.dp))
         }
+    }
 }
 
 @Composable
 private fun generateFeedbackList(
     deviceRating: Double,
     deviceReviewsCount: Int,
-    deviceQuestionsCount: Int
+    deviceQuestionsCount: Int,
 ): List<ButtonData> {
     val rating =
         ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_medal),
             value = deviceRating.toString(),
             text = "Оценка",
-            onClick = {})
+            onClick = {},
+        )
 
     val reviewsCount =
         ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_comment),
             value = deviceReviewsCount.toString(),
             text = "Отзывы",
-            onClick = {})
+            onClick = {},
+        )
 
     val questionsCount =
         ButtonData(
             icon = ImageVector.vectorResource(R.drawable.i_question),
             value = deviceQuestionsCount.toString(),
             text = "Вопросы",
-            onClick = {})
+            onClick = {},
+        )
 
     return listOf(rating, reviewsCount, questionsCount)
 }
@@ -341,13 +362,14 @@ private fun Specifications(category: String, specifications: Map<String, String>
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            TextWithIcon(icon = specificationCategoryIcon, text = category)
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        TextWithIcon(icon = specificationCategoryIcon, text = category)
 
-            Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
-            SpecificationCategory(specifications)
-        }
+        SpecificationCategory(specifications)
+    }
 }
 
 @Composable
@@ -359,23 +381,27 @@ private fun SpecificationCategory(category: Map<String, String>) {
             Card(
                 Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(10.dp),
-                colors = CardDefaults.veryLightPrimary()) {
-                    Row(
-                        modifier = Modifier.padding(10.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically) {
-                            SmallText(
-                                text = specificationEntries.key + ":",
-                                fontWeight = FontWeight.W500,
-                                modifier = Modifier.weight(1f),
-                                letterSpacing = 0.sp)
-                            SmallText(
-                                text = specificationEntries.value,
-                                modifier = Modifier.padding(start = 10.dp).weight(1f),
-                                textAlign = TextAlign.Start,
-                                letterSpacing = 0.sp)
-                        }
+                colors = CardDefaults.veryLightPrimary(),
+            ) {
+                Row(
+                    modifier = Modifier.padding(10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    SmallText(
+                        text = specificationEntries.key + ":",
+                        fontWeight = FontWeight.W500,
+                        modifier = Modifier.weight(1f),
+                        letterSpacing = 0.sp,
+                    )
+                    SmallText(
+                        text = specificationEntries.value,
+                        modifier = Modifier.padding(start = 10.dp).weight(1f),
+                        textAlign = TextAlign.Start,
+                        letterSpacing = 0.sp,
+                    )
                 }
+            }
         }
     }
 }
@@ -386,118 +412,119 @@ private fun TagsBottomSheet(
     tagsSheetIsVisible: MutableState<Boolean>,
     sheetState: SheetState,
     allTagsWithIcons: List<Tag>,
-    computedTags: List<TagsEnum>,
-    manualTags: List<TagsEnum>
 ) {
     val selectedTag = rememberSaveable { mutableStateOf<Tag?>(null) }
 
     ModalBottomSheet(
-        onDismissRequest = { tagsSheetIsVisible.value = false }, sheetState = sheetState) {
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                this@ModalBottomSheet.AnimatedVisibility(
-                    visible = selectedTag.value == null,
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom)) {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxWidth(0.95f),
-                            horizontalAlignment = Alignment.CenterHorizontally) {
-                                item {
-                                    InfoCard(
-                                        width = 0.95f,
-                                        icon =
-                                            IconConfig(
-                                                ImageVector.vectorResource(R.drawable.i_info),
-                                                size = 22,
-                                                color = MaterialTheme.colorScheme.primary),
-                                        title = TextConfig("Описание", 18),
-                                        text =
-                                            TextConfig(
-                                                "Метки помогают в первичной оценке устройства. " +
-                                                    "Всего ${TagsEnum.entries.size} различных меток, которые могут быть " +
-                                                    "вычислены системой и/или выставлены вручную. " +
-                                                    "Вычисленные метки обновляются каждые 24 часа.",
-                                                14),
-                                        titleUnderIcon = false,
-                                        colors = CardDefaults.veryLightPrimary())
-                                }
-
-                                items(allTagsWithIcons) { tag ->
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    CustomButton(
-                                        width = 0.95f,
-                                        title = TextConfig(tagsNameMap[tag.name]!!),
-                                        text =
-                                            TextConfig("Нажмите, чтобы получить подробности", 14),
-                                        icon = tag.icon,
-                                        colors = ButtonDefaults.veryLightPrimary(),
-                                        onClick = { selectedTag.value = tag })
-                                }
-
-                                item { Spacer(modifier = Modifier.height(40.dp)) }
-                            }
+        onDismissRequest = { tagsSheetIsVisible.value = false },
+        sheetState = sheetState,
+    ) {
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            this@ModalBottomSheet.AnimatedVisibility(
+                visible = selectedTag.value == null,
+                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom),
+            ) {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(0.95f),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    item {
+                        InfoCard(
+                            width = 0.95f,
+                            icon =
+                                IconConfig(
+                                    value = ImageVector.vectorResource(R.drawable.i_info),
+                                    size = 22,
+                                    color = MaterialTheme.colorScheme.primary,
+                                ),
+                            title = TextConfig(value = "Описание", size = 18),
+                            text =
+                                TextConfig(
+                                    value =
+                                        "Метки - специальные ярлыки, которые кратко описывают устройство. " +
+                                            "Они призваны помочь в первичной оценке устройства. " +
+                                            "\n\nВсего ${TagsEnum.entries.size} различных меток, " +
+                                            "которые вычисляются системой " +
+                                            "на основе имеющихся данных об устройстве. " +
+                                            "Метки обновляются каждые 24 часа.",
+                                    size = 14,
+                                ),
+                            titleUnderIcon = false,
+                            colors = CardDefaults.veryLightPrimary(),
+                        )
                     }
 
-                this@ModalBottomSheet.AnimatedVisibility(
-                    visible = selectedTag.value != null,
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom)) {
-                        if (selectedTag.value != null) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(0.95f),
-                                horizontalAlignment = Alignment.CenterHorizontally) {
-                                    TagInfo(
-                                        selectedTag.value,
-                                        isComputed = computedTags.contains(selectedTag.value?.name),
-                                        isManualTag = manualTags.contains(selectedTag.value?.name))
-                                    Spacer(modifier = Modifier.height(10.dp))
-                                    RowIconButton(
-                                        width = 0.95f,
-                                        text = TextConfig("Вернуться назад"),
-                                        icon =
-                                            IconConfig(
-                                                value =
-                                                    ImageVector.vectorResource(R.drawable.i_back)),
-                                        colors = ButtonDefaults.veryLightPrimary(),
-                                        contentPadding = PaddingValues(12.dp),
-                                        onClick = { selectedTag.value = null })
-                                    Spacer(modifier = Modifier.height(40.dp))
-                                }
-                        }
+                    items(allTagsWithIcons) { tag ->
+                        Spacer(modifier = Modifier.height(10.dp))
+                        CustomButton(
+                            width = 0.95f,
+                            title = TextConfig(tagsNameMap[tag.name]!!),
+                            text = TextConfig("Нажмите, чтобы получить подробности", 14),
+                            icon = tag.icon,
+                            colors = ButtonDefaults.veryLightPrimary(),
+                            onClick = { selectedTag.value = tag },
+                        )
                     }
+
+                    item { Spacer(modifier = Modifier.height(40.dp)) }
+                }
+            }
+
+            this@ModalBottomSheet.AnimatedVisibility(
+                visible = selectedTag.value != null,
+                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                exit = fadeOut() + shrinkVertically(shrinkTowards = Alignment.Bottom),
+            ) {
+                if (selectedTag.value != null) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth(0.95f),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        TagInfo(tag = selectedTag.value)
+                        Spacer(modifier = Modifier.height(10.dp))
+                        RowIconButton(
+                            width = 0.95f,
+                            text = TextConfig("Вернуться назад"),
+                            icon =
+                                IconConfig(value = ImageVector.vectorResource(R.drawable.i_back)),
+                            colors = ButtonDefaults.veryLightPrimary(),
+                            contentPadding = PaddingValues(12.dp),
+                            onClick = { selectedTag.value = null },
+                        )
+                        Spacer(modifier = Modifier.height(40.dp))
+                    }
+                }
             }
         }
+    }
 }
 
 @Composable
-private fun TagInfo(tag: Tag?, isComputed: Boolean, isManualTag: Boolean) {
+private fun TagInfo(tag: Tag?) {
     if (tag != null) {
         Row(
             modifier = Modifier.fillMaxWidth(0.95f),
-            verticalAlignment = Alignment.CenterVertically) {
-                BoxedChip(icon = tag.icon)
-                Spacer(modifier = Modifier.width(10.dp))
-                Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
-            }
-
-        if (isComputed) {
-            Spacer(modifier = Modifier.height(10.dp))
-            InfoCard(
-                width = 0.95f,
-                chipText = "Вычислено системой",
-                cardText =
-                    "Данное устройство считается производительным, " +
-                        "поскольку его характеристики лучше, чем у большинства других " +
-                        "устройств этого ценового сегмента.",
-                colors = CardDefaults.veryLightPrimary())
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            BoxedChip(icon = tag.icon)
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
         }
 
-        if (isManualTag) {
-            Spacer(modifier = Modifier.height(10.dp))
-            InfoCard(
-                width = 0.95f,
-                chipText = "Выставлено вручную",
-                cardText = "Текст метки",
-                colors = CardDefaults.veryLightPrimary())
-        }
+        Spacer(modifier = Modifier.height(10.dp))
+        InfoCard(
+            width = 0.95f,
+            icon =
+                IconConfig(
+                    value = ImageVector.vectorResource(id = R.drawable.i_info),
+                    size = 22,
+                    color = MaterialTheme.colorScheme.primary,
+                ),
+            title = TextConfig("Описание"),
+            text = TextConfig(value = tag.name.description, size = 14),
+            titleUnderIcon = false,
+            colors = CardDefaults.veryLightPrimary(),
+        )
     }
 }

@@ -16,19 +16,23 @@ package com.ravenzip.devicepicker.constants.enums
  * [NEW_MODEL] - Новая модель
  *
  * [HIGH_QUALITY_SCREEN] - Качественный экран
- *
- * [HIGH_QUALITY_CONNECTION] - Качественная связь
- *
- * [HIGH_QUALITY_CAMERA] - Качественные камеры
  */
-enum class TagsEnum {
-    HIGH_PERFORMANCE,
-    LOW_PRICE,
-    POPULAR,
-    ENERGY_EFFICIENT,
-    RELIABLE,
-    NEW_MODEL,
-    HIGH_QUALITY_SCREEN,
-    HIGH_QUALITY_CONNECTION,
-    HIGH_QUALITY_CAMERA
+enum class TagsEnum(val description: String) {
+    HIGH_PERFORMANCE(
+        "Данное устройство считается производительным, " +
+            "поскольку его характеристики лучше, " +
+            "чем у большинства других устройств"
+    ),
+    LOW_PRICE("На данный момент цена устройства ниже, чем предыдущая или обычная цена"),
+    POPULAR(
+        "Данное устройство считается популярным, поскольку количество просмотров, " +
+            "отзывов и вопросов за последний месяц больше среднего значения по всем устройствам"
+    ),
+    ENERGY_EFFICIENT("Данное устройство считается энергоэффективным, поскольку..."),
+    RELIABLE(
+        "Данное устройство считается надежным, " +
+            "поскольку рейтинг устройства превышает 4,5 балла"
+    ),
+    NEW_MODEL("Данная модель считается новой, поскольку ее выпуск состоялся в текущем году"),
+    HIGH_QUALITY_SCREEN("Данное устройство обладает качественным экраном, поскольку..."),
 }

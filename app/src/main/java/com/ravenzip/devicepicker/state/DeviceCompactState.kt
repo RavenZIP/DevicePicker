@@ -110,30 +110,6 @@ class DeviceCompactState(
             categoryName = categoryNameMap[TagsEnum.HIGH_QUALITY_SCREEN]!!)
     }
 
-    fun DeviceCompactState.highQualityConnectionDevices(): DeviceCategoryState {
-        val devices =
-            this.deviceCompactList
-                .filter { it.tags.contains(TagsEnum.HIGH_QUALITY_CONNECTION) }
-                .toMutableStateList()
-
-        return DeviceCategoryState(
-            devices = devices,
-            containerType = ContainerTypeEnum.Special,
-            categoryName = categoryNameMap[TagsEnum.HIGH_QUALITY_CONNECTION]!!)
-    }
-
-    fun DeviceCompactState.highQualityCameraDevices(): DeviceCategoryState {
-        val devices =
-            this.deviceCompactList
-                .filter { it.tags.contains(TagsEnum.HIGH_QUALITY_CAMERA) }
-                .toMutableStateList()
-
-        return DeviceCategoryState(
-            devices = devices,
-            containerType = ContainerTypeEnum.Special,
-            categoryName = categoryNameMap[TagsEnum.HIGH_QUALITY_CAMERA]!!)
-    }
-
     fun DeviceCompactState.userSearchHistoryDevices(): DeviceCategoryState {
         val devices =
             this.deviceCompactList
@@ -156,8 +132,6 @@ class DeviceCompactState(
                 this.energyEfficientDevices(),
                 this.highQualityScreenDevices(),
                 this.reliableDevices(),
-                this.highQualityConnectionDevices(),
-                this.highQualityCameraDevices(),
                 this.userSearchHistoryDevices())
         }
     }

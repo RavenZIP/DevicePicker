@@ -12,5 +12,4 @@ val tagIconMap =
         TagsEnum.RELIABLE to R.drawable.i_trust,
         TagsEnum.NEW_MODEL to R.drawable.i_lamp,
         TagsEnum.HIGH_QUALITY_SCREEN to R.drawable.i_devices,
-        TagsEnum.HIGH_QUALITY_CONNECTION to R.drawable.i_satellite,
-        TagsEnum.HIGH_QUALITY_CAMERA to R.drawable.i_camera)
+    )

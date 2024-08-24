@@ -3,8 +3,6 @@ package com.ravenzip.devicepicker.constants.map
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.ui.theme.energyEfficientTagColor
 import com.ravenzip.devicepicker.ui.theme.highPerformanceTagColor
-import com.ravenzip.devicepicker.ui.theme.highQualityCameraColor
-import com.ravenzip.devicepicker.ui.theme.highQualityConnectionColor
 import com.ravenzip.devicepicker.ui.theme.highQualityScreenColor
 import com.ravenzip.devicepicker.ui.theme.lowPriceTagColor
 import com.ravenzip.devicepicker.ui.theme.newModelColor
@@ -20,5 +18,4 @@ val tagsColorMap =
         TagsEnum.RELIABLE to reliableColor,
         TagsEnum.NEW_MODEL to newModelColor,
         TagsEnum.HIGH_QUALITY_SCREEN to highQualityScreenColor,
-        TagsEnum.HIGH_QUALITY_CONNECTION to highQualityConnectionColor,
-        TagsEnum.HIGH_QUALITY_CAMERA to highQualityCameraColor)
+    )
