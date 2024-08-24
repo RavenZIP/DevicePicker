@@ -23,12 +23,12 @@ import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.ui.components.AuthVariants
 import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.components.GetFields
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
-import com.ravenzip.devicepicker.ui.components.generateAuthVariants
-import com.ravenzip.devicepicker.ui.components.getSelectedVariant
+import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationFields
+import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationOptions
+import com.ravenzip.devicepicker.ui.screens.auth.common.generateAuthVariants
+import com.ravenzip.devicepicker.ui.screens.auth.common.getSelectedVariant
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
@@ -43,12 +43,16 @@ fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val emailOrPhone = remember { mutableStateOf("") }
-    val passwordOrCode = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val phone = remember { mutableStateOf("") }
+    val code = remember { mutableStateOf("") }
 
-    val validationService = ValidationService()
-    val emailOrPhoneError = remember { mutableStateOf(Error()) }
-    val passwordOrCodeError = remember { mutableStateOf(Error()) }
+    val validationService = remember { ValidationService() }
+    val emailError = remember { mutableStateOf(Error()) }
+    val passwordError = remember { mutableStateOf(Error()) }
+    val phoneError = remember { mutableStateOf(Error()) }
+    val codeError = remember { mutableStateOf(Error()) }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -77,14 +81,20 @@ fun LoginScreen(
         ScreenTitle(text = "Войти в аккаунт")
 
         Spacer(modifier = Modifier.height(30.dp))
-        GetFields(
+        LoginAndRegistrationFields(
             selectedVariant = selectedLoginVariant,
-            fields = listOf(emailOrPhone, passwordOrCode),
-            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value),
+            email = email,
+            emailError = emailError,
+            password = password,
+            passwordError = passwordError,
+            phone = phone,
+            phoneError = phoneError,
+            code = code,
+            codeError = codeError,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthVariants(authVariants = loginVariants, title = "Выбор варианта входа")
+        LoginAndRegistrationOptions(options = loginVariants, title = "Выбор варианта входа")
     }
 
     BottomContainer {
@@ -93,11 +103,10 @@ fun LoginScreen(
             scope.launch(Dispatchers.Main) {
                 when (selectedLoginVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        emailOrPhoneError.value = validationService.checkEmail(emailOrPhone.value)
-                        passwordOrCodeError.value =
-                            validationService.checkPassword(passwordOrCode.value)
+                        emailError.value = validationService.checkEmail(email.value)
+                        passwordError.value = validationService.checkPassword(password.value)
 
-                        if (emailOrPhoneError.value.value || passwordOrCodeError.value.value) {
+                        if (emailError.value.value || passwordError.value.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }
@@ -111,8 +120,7 @@ fun LoginScreen(
                         }
 
                         spinnerText.value = "Вход в аккаунт..."
-                        val authResult =
-                            logInUserWithEmail(emailOrPhone.value, passwordOrCode.value)
+                        val authResult = logInUserWithEmail(email.value, password.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false

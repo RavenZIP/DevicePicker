@@ -29,12 +29,12 @@ import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.services.showWarning
-import com.ravenzip.devicepicker.ui.components.AuthVariants
 import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.components.GetFields
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
-import com.ravenzip.devicepicker.ui.components.generateAuthVariants
-import com.ravenzip.devicepicker.ui.components.getSelectedVariant
+import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationFields
+import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationOptions
+import com.ravenzip.devicepicker.ui.screens.auth.common.generateAuthVariants
+import com.ravenzip.devicepicker.ui.screens.auth.common.getSelectedVariant
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
@@ -48,12 +48,16 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () -> Unit) {
-    val emailOrPhone = remember { mutableStateOf("") }
-    val passwordOrCode = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val phone = remember { mutableStateOf("") }
+    val code = remember { mutableStateOf("") }
 
-    val validationService = ValidationService()
-    val emailOrPhoneError = remember { mutableStateOf(Error()) }
-    val passwordOrCodeError = remember { mutableStateOf(Error()) }
+    val validationService = remember { ValidationService() }
+    val emailError = remember { mutableStateOf(Error()) }
+    val passwordError = remember { mutableStateOf(Error()) }
+    val phoneError = remember { mutableStateOf(Error()) }
+    val codeError = remember { mutableStateOf(Error()) }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -80,14 +84,23 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
         ScreenTitle(text = "Регистрация")
 
         Spacer(modifier = Modifier.height(30.dp))
-        GetFields(
+        LoginAndRegistrationFields(
             selectedVariant = selectedRegisterVariant,
-            fields = listOf(emailOrPhone, passwordOrCode),
-            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value),
+            email = email,
+            emailError = emailError,
+            password = password,
+            passwordError = passwordError,
+            phone = phone,
+            phoneError = phoneError,
+            code = code,
+            codeError = codeError,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthVariants(authVariants = registerVariants, title = "Выбор варианта регистрации")
+        LoginAndRegistrationOptions(
+            options = registerVariants,
+            title = "Выбор варианта регистрации",
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
@@ -107,11 +120,10 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
                     AuthVariantsEnum.EMAIL -> {
-                        emailOrPhoneError.value = validationService.checkEmail(emailOrPhone.value)
-                        passwordOrCodeError.value =
-                            validationService.checkPassword(passwordOrCode.value)
+                        emailError.value = validationService.checkEmail(email.value)
+                        passwordError.value = validationService.checkPassword(password.value)
 
-                        if (emailOrPhoneError.value.value || passwordOrCodeError.value.value) {
+                        if (emailError.value.value || passwordError.value.value) {
                             snackBarHostState.showError("Проверьте правильность заполнения полей")
                             return@launch
                         }
@@ -126,10 +138,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
 
                         spinnerText.value = "Регистрация..."
                         val authResult =
-                            userViewModel.createUserWithEmail(
-                                emailOrPhone.value,
-                                passwordOrCode.value,
-                            )
+                            userViewModel.createUserWithEmail(email.value, password.value)
 
                         if (authResult.value == null) {
                             isLoading.value = false
