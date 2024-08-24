@@ -17,35 +17,37 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
-import com.ravenzip.workshop.data.SelectionParameters
+import com.ravenzip.workshop.data.selection.SelectionConfig
 
 @Composable
-fun AuthVariants(authVariants: SnapshotStateList<SelectionParameters>, title: String) {
+fun AuthVariants(authVariants: SnapshotStateList<SelectionConfig>, title: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.defaultCardColors(),
-        elevation = CardDefaults.cardElevation(0.dp)) {
-            Spacer(modifier = Modifier.padding(top = 20.dp))
-            Text(
-                text = title,
-                modifier = Modifier.padding(start = 15.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.W500)
-            Spacer(modifier = Modifier.padding(top = 10.dp))
-            RadioGroup(width = 1f, list = authVariants, textSize = 16)
-        }
+        elevation = CardDefaults.cardElevation(0.dp),
+    ) {
+        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Text(
+            text = title,
+            modifier = Modifier.padding(start = 15.dp),
+            fontSize = 18.sp,
+            fontWeight = FontWeight.W500,
+        )
+        Spacer(modifier = Modifier.padding(top = 10.dp))
+        RadioGroup(width = 1f, list = authVariants, textSize = 16)
+    }
 }
 
-fun generateAuthVariants(): SnapshotStateList<SelectionParameters> {
-    val email = SelectionParameters(isSelected = true, text = AuthVariantsEnum.EMAIL.value)
-    val phone = SelectionParameters(isSelected = false, text = AuthVariantsEnum.PHONE.value)
-    val google = SelectionParameters(isSelected = false, text = AuthVariantsEnum.GOOGLE.value)
+fun generateAuthVariants(): SnapshotStateList<SelectionConfig> {
+    val email = SelectionConfig(isSelected = true, text = AuthVariantsEnum.EMAIL.value)
+    val phone = SelectionConfig(isSelected = false, text = AuthVariantsEnum.PHONE.value)
+    val google = SelectionConfig(isSelected = false, text = AuthVariantsEnum.GOOGLE.value)
 
     return mutableStateListOf(email, phone, google)
 }
 
-fun getSelectedVariant(registerVariants: SnapshotStateList<SelectionParameters>): AuthVariantsEnum {
+fun getSelectedVariant(registerVariants: SnapshotStateList<SelectionConfig>): AuthVariantsEnum {
     val selectedVariantString = registerVariants.first { value -> value.isSelected }.text
     return AuthVariantsEnum.entries.first { it.value === selectedVariantString }
 }

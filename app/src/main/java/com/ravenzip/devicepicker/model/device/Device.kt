@@ -11,7 +11,8 @@ import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
-import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconWithConfig
 
 /** Полная модель устройства */
 data class Device(
@@ -50,10 +51,9 @@ data class Device(
                 Tag(
                     name = tag,
                     icon =
-                        IconConfig(
-                            value = ImageVector.vectorResource(tagIconMap[tag]!!),
-                            size = 20,
-                            color = tagsColorMap[tag],
+                        IconWithConfig(
+                            icon = ImageVector.vectorResource(tagIconMap[tag]!!),
+                            config = IconConfig(size = 20, color = tagsColorMap[tag]),
                         ),
                 )
             }
@@ -61,10 +61,9 @@ data class Device(
         @Composable
         fun Device.createListOfTagsIcons() =
             this.tags.map { tag ->
-                IconConfig(
-                    value = ImageVector.vectorResource(tagIconMap[tag]!!),
-                    size = 20,
-                    color = tagsColorMap[tag],
+                IconWithConfig(
+                    icon = ImageVector.vectorResource(tagIconMap[tag]!!),
+                    config = IconConfig(size = 20, color = tagsColorMap[tag]),
                 )
             }
     }

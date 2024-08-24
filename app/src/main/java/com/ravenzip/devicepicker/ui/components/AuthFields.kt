@@ -13,39 +13,38 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconConfig
 
 @Composable
 fun GetFields(
     selectedVariant: () -> AuthVariantsEnum,
     fields: List<MutableState<String>>,
-    vararg validation: Error
+    vararg validation: Error,
 ) {
     when (selectedVariant()) {
         AuthVariantsEnum.EMAIL -> {
             SinglenessTextField(
                 text = fields[0],
                 label = "Электронная почта",
-                leadingIcon =
-                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
-                error = validation[0])
+                leadingIcon = ImageVector.vectorResource(R.drawable.i_email),
+                error = validation[0],
+            )
 
             Spacer(modifier = Modifier.height(15.dp))
             SinglenessTextField(
                 text = fields[1],
                 label = "Пароль",
-                leadingIcon =
-                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_key), size = 20),
+                leadingIcon = ImageVector.vectorResource(R.drawable.i_key),
                 isHiddenText = true,
-                error = validation[1])
+                error = validation[1],
+            )
         }
         AuthVariantsEnum.PHONE -> {
             SinglenessTextField(
                 text = fields[0],
                 label = "Телефон",
-                leadingIcon =
-                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_phone), size = 20),
-                error = validation[0])
+                leadingIcon = ImageVector.vectorResource(R.drawable.i_phone),
+                error = validation[0],
+            )
         }
         AuthVariantsEnum.GOOGLE -> {
             Text(text = "Хз че тут пока что")

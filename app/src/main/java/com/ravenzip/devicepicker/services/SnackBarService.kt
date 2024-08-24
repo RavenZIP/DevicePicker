@@ -8,8 +8,8 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.ui.theme.successColor
 import com.ravenzip.devicepicker.ui.theme.warningColor
-import com.ravenzip.workshop.data.IconConfig
-import com.ravenzip.workshop.data.SnackBarVisualsExtended
+import com.ravenzip.workshop.data.SnackBarVisualsConfig
+import com.ravenzip.workshop.data.icon.IconConfig
 
 private lateinit var default: ImageVector
 private lateinit var success: ImageVector
@@ -26,23 +26,36 @@ fun InitializeSnackBarIcons() {
 
 suspend fun SnackbarHostState.showMessage(message: String) {
     this.showSnackbar(
-        SnackBarVisualsExtended(message = message, icon = IconConfig(value = default)))
+        SnackBarVisualsConfig(message = message, icon = default, iconConfig = IconConfig.Default)
+    )
 }
 
 suspend fun SnackbarHostState.showSuccess(message: String) {
     this.showSnackbar(
-        SnackBarVisualsExtended(
-            message = message, icon = IconConfig(value = success, color = successColor)))
+        SnackBarVisualsConfig(
+            message = message,
+            icon = success,
+            iconConfig = IconConfig(color = successColor),
+        )
+    )
 }
 
 suspend fun SnackbarHostState.showWarning(message: String) {
     this.showSnackbar(
-        SnackBarVisualsExtended(
-            message = message, icon = IconConfig(value = warning, color = warningColor)))
+        SnackBarVisualsConfig(
+            message = message,
+            icon = warning,
+            iconConfig = IconConfig(color = warningColor),
+        )
+    )
 }
 
 suspend fun SnackbarHostState.showError(message: String) {
     this.showSnackbar(
-        SnackBarVisualsExtended(
-            message = message, icon = IconConfig(value = error, color = errorColor)))
+        SnackBarVisualsConfig(
+            message = message,
+            icon = error,
+            iconConfig = IconConfig(color = errorColor),
+        )
+    )
 }

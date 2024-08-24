@@ -79,9 +79,9 @@ import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.VerticalGrid
-import com.ravenzip.workshop.data.ButtonContentConfig
-import com.ravenzip.workshop.data.IconConfig
 import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.button.ButtonContentConfig
+import com.ravenzip.workshop.data.icon.IconConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.flow.StateFlow
@@ -112,11 +112,10 @@ fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<D
                 items = listOfTagsIcons,
                 buttonContentConfig =
                     ButtonContentConfig(
-                        text = TextConfig("Подробнее о метках"),
-                        icon =
-                            IconConfig(
-                                value = ImageVector.vectorResource(id = R.drawable.i_arrow_right)
-                            ),
+                        text = "Подробнее о метках",
+                        textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
+                        icon = ImageVector.vectorResource(id = R.drawable.i_arrow_right),
+                        iconConfig = IconConfig.Default,
                         onClick = { tagsSheetIsVisible.value = true },
                     ),
             )
@@ -432,24 +431,16 @@ private fun TagsBottomSheet(
                     item {
                         InfoCard(
                             width = 0.95f,
-                            icon =
-                                IconConfig(
-                                    value = ImageVector.vectorResource(R.drawable.i_info),
-                                    size = 22,
-                                    color = MaterialTheme.colorScheme.primary,
-                                ),
-                            title = TextConfig(value = "Описание", size = 18),
+                            icon = ImageVector.vectorResource(R.drawable.i_info),
+                            iconConfig = IconConfig.PrimaryBig,
+                            title = "Описание",
                             text =
-                                TextConfig(
-                                    value =
-                                        "Метки - специальные ярлыки, которые кратко описывают устройство. " +
-                                            "Они призваны помочь в первичной оценке устройства. " +
-                                            "\n\nВсего ${TagsEnum.entries.size} различных меток, " +
-                                            "которые вычисляются системой " +
-                                            "на основе имеющихся данных об устройстве. " +
-                                            "Метки обновляются каждые 24 часа.",
-                                    size = 14,
-                                ),
+                                "Метки - специальные ярлыки, которые кратко описывают устройство. " +
+                                    "Они призваны помочь в первичной оценке устройства. " +
+                                    "\n\nВсего ${TagsEnum.entries.size} различных меток, " +
+                                    "которые вычисляются системой " +
+                                    "на основе имеющихся данных об устройстве. " +
+                                    "Метки обновляются каждые 24 часа.",
                             titleUnderIcon = false,
                             colors = CardDefaults.veryLightPrimary(),
                         )
@@ -459,9 +450,10 @@ private fun TagsBottomSheet(
                         Spacer(modifier = Modifier.height(10.dp))
                         CustomButton(
                             width = 0.95f,
-                            title = TextConfig(tagsNameMap[tag.name]!!),
-                            text = TextConfig("Нажмите, чтобы получить подробности", 14),
-                            icon = tag.icon,
+                            title = tagsNameMap[tag.name]!!,
+                            text = "Нажмите, чтобы получить подробности",
+                            icon = tag.icon.icon,
+                            iconConfig = tag.icon.config,
                             colors = ButtonDefaults.veryLightPrimary(),
                             onClick = { selectedTag.value = tag },
                         )
@@ -485,9 +477,9 @@ private fun TagsBottomSheet(
                         Spacer(modifier = Modifier.height(10.dp))
                         RowIconButton(
                             width = 0.95f,
-                            text = TextConfig("Вернуться назад"),
-                            icon =
-                                IconConfig(value = ImageVector.vectorResource(R.drawable.i_back)),
+                            text = "Вернуться назад",
+                            textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
+                            icon = ImageVector.vectorResource(R.drawable.i_back),
                             colors = ButtonDefaults.veryLightPrimary(),
                             contentPadding = PaddingValues(12.dp),
                             onClick = { selectedTag.value = null },
@@ -507,7 +499,7 @@ private fun TagInfo(tag: Tag?) {
             modifier = Modifier.fillMaxWidth(0.95f),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            BoxedChip(icon = tag.icon)
+            BoxedChip(icon = tag.icon.icon, iconConfig = tag.icon.config)
             Spacer(modifier = Modifier.width(10.dp))
             Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
         }
@@ -515,14 +507,10 @@ private fun TagInfo(tag: Tag?) {
         Spacer(modifier = Modifier.height(10.dp))
         InfoCard(
             width = 0.95f,
-            icon =
-                IconConfig(
-                    value = ImageVector.vectorResource(id = R.drawable.i_info),
-                    size = 22,
-                    color = MaterialTheme.colorScheme.primary,
-                ),
-            title = TextConfig("Описание"),
-            text = TextConfig(value = tag.name.description, size = 14),
+            icon = ImageVector.vectorResource(id = R.drawable.i_info),
+            iconConfig = IconConfig.PrimaryBig,
+            title = "Описание",
+            text = tag.name.description,
             titleUnderIcon = false,
             colors = CardDefaults.veryLightPrimary(),
         )

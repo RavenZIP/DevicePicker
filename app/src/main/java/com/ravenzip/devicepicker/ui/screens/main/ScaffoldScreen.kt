@@ -32,9 +32,9 @@ import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.components.SearchBar
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.components.TopAppBarWithMenu
-import com.ravenzip.workshop.data.AppBarItem
-import com.ravenzip.workshop.data.BottomNavigationItem
-import com.ravenzip.workshop.data.IconConfig
+import com.ravenzip.workshop.data.appbar.AppBarItem
+import com.ravenzip.workshop.data.appbar.BottomNavigationItem
+import com.ravenzip.workshop.data.icon.IconConfig
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -59,7 +59,8 @@ fun ScaffoldScreen(
         setTopAppBarState = { state -> topAppBarViewModel.setTopAppBarState(state) },
         setSearchBarState = { state -> topAppBarViewModel.setSearchBarState(state) },
         setTopAppBarType = { type -> topAppBarViewModel.setType(type) },
-        changeBottomBarState = { bottomBarState.value = it })
+        changeBottomBarState = { bottomBarState.value = it },
+    )
 
     Scaffold(
         topBar = {
@@ -124,7 +125,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Главная",
             route = BottomBarGraph.HOME,
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_home), size = 20),
+            icon = ImageVector.vectorResource(R.drawable.i_home),
+            iconConfig = IconConfig.Small,
             hasNews = false,
         )
 
@@ -132,7 +134,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_search), size = 20),
+            icon = ImageVector.vectorResource(R.drawable.i_search),
+            iconConfig = IconConfig.Small,
             hasNews = false,
         )
 
@@ -140,7 +143,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
+            icon = ImageVector.vectorResource(R.drawable.i_heart),
+            iconConfig = IconConfig.Small,
             hasNews = false,
         )
 
@@ -148,7 +152,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
+            icon = ImageVector.vectorResource(R.drawable.i_compare),
+            iconConfig = IconConfig.Small,
             hasNews = false,
         )
 
@@ -156,7 +161,8 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_user), size = 20),
+            icon = ImageVector.vectorResource(R.drawable.i_user),
+            iconConfig = IconConfig.Small,
             hasNews = false,
         )
 
@@ -167,13 +173,17 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
 private fun deviceInfoScreenTopAppBarItemList(): List<AppBarItem> {
     val favouriteButton =
         AppBarItem(
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_heart), size = 20),
-            onClick = {})
+            icon = ImageVector.vectorResource(R.drawable.i_heart),
+            iconConfig = IconConfig.Small,
+            onClick = {},
+        )
 
     val compareButton =
         AppBarItem(
-            icon = IconConfig(value = ImageVector.vectorResource(R.drawable.i_compare), size = 20),
-            onClick = {})
+            icon = ImageVector.vectorResource(R.drawable.i_compare),
+            iconConfig = IconConfig.Small,
+            onClick = {},
+        )
 
     return remember { listOf(favouriteButton, compareButton) }
 }
@@ -185,7 +195,7 @@ private fun ChangeScaffoldItemsState(
     setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
     setSearchBarState: (searchBarState: SearchBarState) -> Unit,
     setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
-    changeBottomBarState: (isVisible: Boolean) -> Unit
+    changeBottomBarState: (isVisible: Boolean) -> Unit,
 ) {
     when (currentRoute) {
         BottomBarGraph.HOME -> {
@@ -198,7 +208,8 @@ private fun ChangeScaffoldItemsState(
             val topAppBarState =
                 TopAppBarState.createTopAppBarState(
                     onClickToBackArrow = { navController.navigateUp() },
-                    menuItems = deviceInfoScreenTopAppBarItemList())
+                    menuItems = deviceInfoScreenTopAppBarItemList(),
+                )
 
             setTopAppBarState(topAppBarState)
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
@@ -223,7 +234,7 @@ private fun ChangeScaffoldItemsState(
 
         BottomBarGraph.USER_PROFILE -> {
             setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
-            setTopAppBarType(TopAppBarTypeEnum.TopAppBarWithMenu)
+            setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
             changeBottomBarState(true)
         }
 

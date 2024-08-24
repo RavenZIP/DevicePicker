@@ -46,7 +46,6 @@ import com.ravenzip.devicepicker.ui.components.Price
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.TextConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import kotlinx.coroutines.CoroutineScope
@@ -93,7 +92,7 @@ fun HomeScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextConfig("Загрузка..."))
+        Spinner(text = "Загрузка...")
     }
 }
 
@@ -120,11 +119,8 @@ private fun CarouselDevices(
             ) {
                 item { Spacer(modifier = Modifier.width(15.dp)) }
 
-                items(
-                    items = devices,
-                    key = { it.uid },
-                    contentType = { DeviceCompact::class },
-                ) { device ->
+                items(items = devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
+                    device ->
                     DeviceCard(
                         device = device,
                         changeIsLoading = changeIsLoading,
@@ -154,22 +150,12 @@ private fun SpecialOfferContainer(
         Column(modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)) {
             Card(
                 modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                colors =
-                    CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.primary,
-                    ),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
             ) {
-                Text(
-                    text = "Ключевое слово",
-                    modifier = Modifier.padding(10.dp),
-                    fontSize = 14.sp,
-                )
+                Text(text = "Ключевое слово", modifier = Modifier.padding(10.dp), fontSize = 14.sp)
             }
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Bottom,
-            ) {
+            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
                 Text(
                     text = categoryName,
                     modifier = Modifier.padding(start = 15.dp),
@@ -255,10 +241,7 @@ private fun SpecialOfferCard(
             },
         colors = CardDefaults.veryLightPrimary(),
     ) {
-        Row(
-            modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
             FrescoImage(
                 imageUrl = device.imageUrl,
                 modifier = Modifier.smallImageContainer(),

@@ -1,10 +1,10 @@
 [versions]
 activityCompose = "1.9.1"
 agp = "8.5.2"
-composeBom = "2024.06.00"
+composeBom = "2024.08.00"
 coreSplashscreen = "1.1.0-rc01"
 firebaseAuthKtx = "23.0.0"
-firebaseBom = "33.1.2"
+firebaseBom = "33.2.0"
 firebaseConfig = "22.0.0"
 firebaseDatabaseKtx = "21.0.0"
 firebaseStorageKtx = "21.0.0"
@@ -20,7 +20,7 @@ landscapistFresco = "2.3.4"
 lifecycleRuntimeKtx = "2.8.4"
 material3 = "1.2.1"
 navigationCompose = "2.7.7"
-workshop = "1.8.0"
+workshop = "1.9.1"
 ksp = "2.0.0-1.0.21"
 
 [libraries]

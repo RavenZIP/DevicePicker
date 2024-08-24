@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.database.FirebaseDatabase
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
-import com.ravenzip.workshop.data.TextConfig
 
 @Composable
 fun AdminPanelScreen(padding: PaddingValues) {
@@ -35,44 +34,49 @@ fun AdminPanelScreen(padding: PaddingValues) {
     Column(
         modifier =
             Modifier.fillMaxSize().padding(padding).clickable(
-                interactionSource = interactionSource, indication = null) {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                },
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(20.dp))
+                interactionSource = interactionSource,
+                indication = null,
+            ) {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(20.dp))
 
-            Text(
-                text = "Генерация уникального ключа для объекта БД",
-                modifier = Modifier.fillMaxWidth(0.9f),
-                fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(15.dp))
+        Text(
+            text = "Генерация уникального ключа для объекта БД",
+            modifier = Modifier.fillMaxWidth(0.9f),
+            fontSize = 18.sp,
+        )
+        Spacer(modifier = Modifier.height(15.dp))
 
-            SinglenessTextField(text = key, label = "Сгенерированный индентификатор")
-            Spacer(modifier = Modifier.height(20.dp))
+        SinglenessTextField(text = key, label = "Сгенерированный индентификатор")
+        Spacer(modifier = Modifier.height(20.dp))
 
-            SimpleButton(text = TextConfig(value = "Сгенерировать", size = 16)) {
-                key.value = firebase.reference.push().key.toString()
-            }
-            Spacer(modifier = Modifier.height(40.dp))
-
-            Text(
-                text = "Добавление объектов в БД",
-                modifier = Modifier.fillMaxWidth(0.9f),
-                fontSize = 18.sp)
-            Spacer(modifier = Modifier.height(15.dp))
-
-            SimpleButton(text = TextConfig(value = "Добавить категорию", size = 16)) {}
-            Spacer(modifier = Modifier.height(15.dp))
-
-            SimpleButton(text = TextConfig(value = "Добавить бренд", size = 16)) {}
-            Spacer(modifier = Modifier.height(15.dp))
-
-            SimpleButton(text = TextConfig(value = "Добавить устройство", size = 16)) {}
-
-            // TODO реализовать добавление, редактирование и удаление данных
-            // TODO реализовать перерасчет категорий для устройств
-
-            Spacer(modifier = Modifier.padding(top = 20.dp))
+        SimpleButton(text = "Сгенерировать") {
+            key.value = firebase.reference.push().key.toString()
         }
+        Spacer(modifier = Modifier.height(40.dp))
+
+        Text(
+            text = "Добавление объектов в БД",
+            modifier = Modifier.fillMaxWidth(0.9f),
+            fontSize = 18.sp,
+        )
+        Spacer(modifier = Modifier.height(15.dp))
+
+        SimpleButton(text = "Добавить категорию") {}
+        Spacer(modifier = Modifier.height(15.dp))
+
+        SimpleButton(text = "Добавить бренд") {}
+        Spacer(modifier = Modifier.height(15.dp))
+
+        SimpleButton(text = "Добавить устройство") {}
+
+        // TODO реализовать добавление, редактирование и удаление данных
+        // TODO реализовать перерасчет категорий для устройств
+
+        Spacer(modifier = Modifier.padding(top = 20.dp))
+    }
 }

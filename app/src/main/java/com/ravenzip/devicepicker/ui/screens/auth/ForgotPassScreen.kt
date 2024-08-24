@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -35,15 +34,14 @@ import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconConfig
-import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.IconConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 @Composable
 fun ForgotPasswordScreen(
     reloadUser: suspend () -> Result<Boolean>,
-    sendPasswordResetEmail: suspend (email: String) -> Result<Boolean>
+    sendPasswordResetEmail: suspend (email: String) -> Result<Boolean>,
 ) {
     val email = remember { mutableStateOf("") }
 
@@ -62,39 +60,38 @@ fun ForgotPasswordScreen(
     Column(
         modifier =
             Modifier.fillMaxSize().clickable(
-                interactionSource = interactionSource, indication = null) {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                },
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(40.dp))
-            ScreenTitle(text = "Сброс и восстановление")
+                interactionSource = interactionSource,
+                indication = null,
+            ) {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        ScreenTitle(text = "Сброс и восстановление")
 
-            Spacer(modifier = Modifier.height(30.dp))
-            SinglenessTextField(
-                text = email,
-                label = "Электронная почта",
-                leadingIcon =
-                    IconConfig(value = ImageVector.vectorResource(R.drawable.i_email), size = 20),
-                error = emailError.value)
+        Spacer(modifier = Modifier.height(30.dp))
+        SinglenessTextField(
+            text = email,
+            label = "Электронная почта",
+            leadingIcon = ImageVector.vectorResource(R.drawable.i_email),
+            error = emailError.value,
+        )
 
-            Spacer(modifier = Modifier.height(30.dp))
-            InfoCard(
-                icon =
-                    IconConfig(
-                        value = ImageVector.vectorResource(R.drawable.i_info),
-                        color = MaterialTheme.colorScheme.primary,
-                        size = 20),
-                title = TextConfig(value = "Важно!", size = 20),
-                text = TextConfig(value = AuthCardEnum.FORGOT_PASS.value, size = 14),
-                colors = CardDefaults.defaultCardColors())
-        }
+        Spacer(modifier = Modifier.height(30.dp))
+        InfoCard(
+            icon = ImageVector.vectorResource(R.drawable.i_info),
+            iconConfig = IconConfig.PrimarySmall,
+            title = "Важно!",
+            text = AuthCardEnum.FORGOT_PASS.value,
+            colors = CardDefaults.defaultCardColors(),
+        )
+    }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(
-            text = TextConfig(value = "Продолжить", size = 16),
-        ) {
+        SimpleButton(text = "Продолжить") {
             scope.launch(Dispatchers.Main) {
                 emailError.value = validationService.checkEmail(email.value)
 
@@ -117,7 +114,8 @@ fun ForgotPasswordScreen(
 
                 if (resetResult.value == true) {
                     snackBarHostState.showSuccess(
-                        "Письмо со ссылкой для сброса было успешно отправлено на почту")
+                        "Письмо со ссылкой для сброса было успешно отправлено на почту"
+                    )
                 } else {
                     snackBarHostState.showError(resetResult.error!!)
                 }
@@ -127,7 +125,7 @@ fun ForgotPasswordScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
+        Spinner(text = spinnerText.value)
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

@@ -33,7 +33,6 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.TextConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -42,7 +41,7 @@ fun LoginScreen(
     reloadUser: suspend () -> Result<Boolean>,
     logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
     navigateToHomeScreen: () -> Unit,
-    navigateToForgotPassScreen: () -> Unit
+    navigateToForgotPassScreen: () -> Unit,
 ) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
@@ -66,29 +65,31 @@ fun LoginScreen(
     Column(
         modifier =
             Modifier.fillMaxSize().clickable(
-                interactionSource = interactionSource, indication = null) {
-                    focusManager.clearFocus()
-                    keyboardController?.hide()
-                },
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(40.dp))
-            ScreenTitle(text = "Войти в аккаунт")
+                interactionSource = interactionSource,
+                indication = null,
+            ) {
+                focusManager.clearFocus()
+                keyboardController?.hide()
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(40.dp))
+        ScreenTitle(text = "Войти в аккаунт")
 
-            Spacer(modifier = Modifier.height(30.dp))
-            GetFields(
-                selectedVariant = selectedLoginVariant,
-                fields = listOf(emailOrPhone, passwordOrCode),
-                validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value))
+        Spacer(modifier = Modifier.height(30.dp))
+        GetFields(
+            selectedVariant = selectedLoginVariant,
+            fields = listOf(emailOrPhone, passwordOrCode),
+            validation = arrayOf(emailOrPhoneError.value, passwordOrCodeError.value),
+        )
 
-            Spacer(modifier = Modifier.height(30.dp))
-            AuthVariants(authVariants = loginVariants, title = "Выбор варианта входа")
-        }
+        Spacer(modifier = Modifier.height(30.dp))
+        AuthVariants(authVariants = loginVariants, title = "Выбор варианта входа")
+    }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(
-            text = TextConfig(value = "Продолжить", size = 16),
-        ) {
+        SimpleButton(text = "Продолжить") {
             scope.launch(Dispatchers.Main) {
                 when (selectedLoginVariant()) {
                     AuthVariantsEnum.EMAIL -> {
@@ -129,17 +130,15 @@ fun LoginScreen(
         }
 
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(
-            text = TextConfig(value = "Забыли пароль?", size = 16),
-            colors = ButtonDefaults.inverseMixColors()) {
-                navigateToForgotPassScreen()
-            }
+        SimpleButton(text = "Забыли пароль?", colors = ButtonDefaults.inverseMixColors()) {
+            navigateToForgotPassScreen()
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
     }
 
     if (isLoading.value) {
-        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
+        Spinner(text = spinnerText.value)
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

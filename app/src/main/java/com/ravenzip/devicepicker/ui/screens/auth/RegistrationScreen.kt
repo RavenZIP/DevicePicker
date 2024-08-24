@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -42,17 +41,13 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.IconConfig
-import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.IconConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun RegistrationScreen(
-    userViewModel: UserViewModel,
-    navigateToHomeScreen: () -> Unit,
-) {
+fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () -> Unit) {
     val emailOrPhone = remember { mutableStateOf("") }
     val passwordOrCode = remember { mutableStateOf("") }
 
@@ -96,14 +91,10 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
-            icon =
-                IconConfig(
-                    value = ImageVector.vectorResource(R.drawable.i_info),
-                    color = MaterialTheme.colorScheme.primary,
-                    size = 20,
-                ),
-            title = TextConfig(value = "Важно!", size = 20),
-            text = TextConfig(value = getCardText(selectedRegisterVariant), size = 14),
+            icon = ImageVector.vectorResource(R.drawable.i_info),
+            iconConfig = IconConfig.PrimarySmall,
+            title = "Важно!",
+            text = getCardText(selectedRegisterVariant),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -112,9 +103,7 @@ fun RegistrationScreen(
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(
-            text = TextConfig(value = "Продолжить", size = 16),
-        ) {
+        SimpleButton(text = "Продолжить") {
             scope.launch(Dispatchers.Main) {
                 when (selectedRegisterVariant()) {
                     AuthVariantsEnum.EMAIL -> {
@@ -160,7 +149,7 @@ fun RegistrationScreen(
                         spinnerText.value = "Ожидание подтверждения электронной почты..."
                         val timer =
                             checkEmailVerificationEverySecondAndGetTimer(
-                                isEmailVerified = { userViewModel.isEmailVerified() },
+                                isEmailVerified = { userViewModel.isEmailVerified() }
                             )
                         // Если пользователь не успел подтвердить электронную почту,
                         // то удаляем аккаунт
@@ -184,7 +173,7 @@ fun RegistrationScreen(
     }
 
     if (isLoading.value) {
-        Spinner(text = TextConfig(value = spinnerText.value, size = 16))
+        Spinner(text = spinnerText.value)
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
