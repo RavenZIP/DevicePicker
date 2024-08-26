@@ -101,12 +101,13 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
         if (deviceIndex != -1) {
             _deviceCompactState.value.deviceCompactList[deviceIndex] =
                 _deviceCompactState.value.deviceCompactList[deviceIndex].copy(
-                    imageUrl = imageUrl.value)
+                    imageUrl = imageUrl.value
+                )
         }
     }
 
     /** Заполнить урл изображения для конкретного устройства */
-    fun setImageUrlToDevices(imageUrls: List<String>) {
+    fun setImageUrlToDevice(imageUrls: List<String>) {
         _deviceState.value.device = _deviceState.value.device.copy(imageUrls = imageUrls)
 
         val deviceIndex =
@@ -122,6 +123,7 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
 
     fun createDeviceCompactStateList() {
         _deviceCompactState.value.deviceCategoryStateList.addAll(
-            _deviceCompactState.value.deviceCompactStateToList())
+            _deviceCompactState.value.deviceCompactStateToList()
+        )
     }
 }

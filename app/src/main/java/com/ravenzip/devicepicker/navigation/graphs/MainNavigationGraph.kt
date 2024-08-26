@@ -149,7 +149,7 @@ private suspend fun onClickToDeviceCard(
             .flatMapLatest {
                 imageViewModel.getImageUrls(brand = device.brand, model = device.model)
             }
-            .collect { deviceViewModel.setImageUrlToDevices(it) }
+            .collect { deviceViewModel.setImageUrlToDevice(it) }
     }
 
     changeIsLoading(false)
