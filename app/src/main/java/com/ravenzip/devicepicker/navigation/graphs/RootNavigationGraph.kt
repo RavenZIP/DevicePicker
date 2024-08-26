@@ -32,7 +32,8 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                 destroySplashScreen = { navController.popBackStack() },
                 navigateToAuthentication = { navController.navigate(RootGraph.AUTHENTICATION) },
                 navigateToMain = { navController.navigate(RootGraph.MAIN) },
-                userViewModel = userViewModel,
+                reloadUser = { userViewModel.reloadUser() },
+                getUser = { userViewModel.getUser() },
             )
         }
 
@@ -49,7 +50,7 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
             ScaffoldScreen(
                 userDataByViewModel = userViewModel.user,
                 getUser = { userViewModel.getUser() },
-                getUserData = { user -> userViewModel.get(user) },
+                getUserData = { userViewModel.getUserData() },
                 logout = { userViewModel.logout() },
             )
         }

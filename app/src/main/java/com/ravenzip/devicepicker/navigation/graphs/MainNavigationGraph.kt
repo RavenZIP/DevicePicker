@@ -39,7 +39,7 @@ fun MainNavigationGraph(
     padding: PaddingValues,
     userDataByViewModel: StateFlow<User>,
     getUser: () -> FirebaseUser?,
-    getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
+    getUserData: suspend () -> Flow<User>,
     logout: suspend () -> Unit,
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
@@ -57,7 +57,7 @@ fun MainNavigationGraph(
         launch {
             deviceViewModel
                 .getDeviceCompactList()
-                .zip(getUserData(getUser())) { _, user ->
+                .zip(getUserData()) { _, user ->
                     deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
                     deviceViewModel.createDeviceCompactStateList()
                 }

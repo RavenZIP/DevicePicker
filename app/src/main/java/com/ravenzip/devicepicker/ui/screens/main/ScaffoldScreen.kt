@@ -43,7 +43,7 @@ fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
     userDataByViewModel: StateFlow<User>,
     getUser: () -> FirebaseUser?,
-    getUserData: suspend (user: FirebaseUser?) -> Flow<User>,
+    getUserData: suspend () -> Flow<User>,
     logout: suspend () -> Unit,
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()

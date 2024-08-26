@@ -28,10 +28,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.OperationErrorTypeEnum
 import com.ravenzip.devicepicker.constants.enums.StatusEnum
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import com.ravenzip.devicepicker.model.result.Result
 import kotlinx.coroutines.delay
 
 @Composable
@@ -39,21 +40,23 @@ fun SplashScreen(
     destroySplashScreen: () -> Unit,
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
-    userViewModel: UserViewModel,
+    reloadUser: suspend () -> Result<Boolean>,
+    getUser: () -> FirebaseUser?,
 ) {
-    val text = remember { mutableStateOf("Обновление данных о пользователе") }
+    val text = remember { mutableStateOf("Получение данных о пользователе") }
     val status = remember { mutableStateOf(StatusEnum.LOADING) }
 
     LaunchedEffect(Unit) {
-        val reloadResult = userViewModel.reloadUser()
+        val reloadResult = reloadUser()
 
         if (reloadResult.value == true) {
             status.value = StatusEnum.OK
             text.value = "Загрузка данных завершена"
-            destroySplashScreen()
-            delay(500)
 
-            if (userViewModel.getUser() !== null) {
+            delay(500)
+            destroySplashScreen()
+
+            if (getUser() !== null) {
                 navigateToMain()
             } else {
                 navigateToAuthentication()

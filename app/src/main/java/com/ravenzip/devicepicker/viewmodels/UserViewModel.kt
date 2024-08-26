@@ -224,8 +224,10 @@ constructor(
     }
 
     /** Получить данные о текущем пользователе */
-    suspend fun get(currentUser: FirebaseUser?) =
+    suspend fun getUserData() =
         flow {
+                val currentUser = authRepository.getUser()
+
                 if (currentUser != null) {
                     val user = userRepository.getUser(currentUser.uid)
                     _user.value = user
@@ -240,8 +242,10 @@ constructor(
             }
 
     /** Добавить новые данные о пользователе */
-    suspend fun add(currentUser: FirebaseUser?) =
+    suspend fun createUserData() =
         flow {
+                val currentUser = authRepository.getUser()
+
                 if (currentUser !== null) {
                     userRepository.addUser(currentUser.uid)
                     emit(true)

@@ -168,7 +168,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                             return@launch
                         }
 
-                        userViewModel.add(userViewModel.getUser()).collect {}
+                        userViewModel.createUserData().collect {}
                         isLoading.value = false
                         navigateToHomeScreen()
                     }
