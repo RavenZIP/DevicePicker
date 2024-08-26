@@ -8,7 +8,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
@@ -85,7 +85,7 @@ fun MainNavigationGraph(
         startDestination = BottomBarGraph.HOME,
     ) {
         // / Домашний экран
-        composable(route = BottomBarGraph.HOME) {
+        navigateWithFadeAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
                 padding = padding,
                 deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
@@ -104,7 +104,7 @@ fun MainNavigationGraph(
         homeNavigationGraph(padding = padding, deviceStateByViewModel = deviceViewModel.deviceState)
 
         // / Поиск
-        composable(route = BottomBarGraph.SEARCH) {
+        navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) {
             SearchScreen(
                 padding = padding,
                 listOfBrandByViewModel = brandViewModel.listOfBrand,
@@ -113,13 +113,13 @@ fun MainNavigationGraph(
         }
 
         // / Избранное
-        composable(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
+        navigateWithFadeAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
 
         // / Сравнение
-        composable(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
+        navigateWithFadeAnimation(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
 
         // / Профиль пользователя
-        composable(route = BottomBarGraph.USER_PROFILE) {
+        navigateWithFadeAnimation(route = BottomBarGraph.USER_PROFILE) {
             UserProfileScreen(
                 padding = padding,
                 userDataByViewModel = userDataByViewModel,

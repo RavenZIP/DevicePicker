@@ -6,7 +6,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideInAnimation
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
 import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
@@ -20,7 +21,7 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
         route = RootGraph.ROOT,
         startDestination = RootGraph.SPLASH_SCREEN,
     ) {
-        composable(route = RootGraph.SPLASH_SCREEN) {
+        navigateWithSlideInAnimation(route = RootGraph.SPLASH_SCREEN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -39,7 +40,7 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
 
         authNavigationGraph(navController = navController, userViewModel = userViewModel)
 
-        composable(route = RootGraph.MAIN) {
+        navigateWithFadeAnimation(route = RootGraph.MAIN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,

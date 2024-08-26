@@ -7,7 +7,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import com.ravenzip.devicepicker.extensions.functions.composable
+import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.ForgotPasswordScreen
@@ -22,7 +22,7 @@ fun NavGraphBuilder.authNavigationGraph(
     userViewModel: UserViewModel,
 ) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
-        composable(route = AuthGraph.WELCOME) {
+        navigateWithFadeAnimation(route = AuthGraph.WELCOME) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -38,7 +38,7 @@ fun NavGraphBuilder.authNavigationGraph(
                 navigateToHomeScreen = { navigateToHome(navController) },
             )
         }
-        composable(route = AuthGraph.REGISTRATION) {
+        navigateWithFadeAnimation(route = AuthGraph.REGISTRATION) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -51,7 +51,7 @@ fun NavGraphBuilder.authNavigationGraph(
                 navigateToHomeScreen = { navigateToHome(navController) },
             )
         }
-        composable(route = AuthGraph.LOGIN) {
+        navigateWithFadeAnimation(route = AuthGraph.LOGIN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -68,7 +68,7 @@ fun NavGraphBuilder.authNavigationGraph(
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
             )
         }
-        composable(route = AuthGraph.FORGOT_PASS) {
+        navigateWithFadeAnimation(route = AuthGraph.FORGOT_PASS) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
