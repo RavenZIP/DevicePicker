@@ -4,10 +4,12 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -67,15 +69,25 @@ fun SplashScreen(
         }
     }
 
-    Box(
+    Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
-        contentAlignment = Alignment.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.icon),
+            painter = painterResource(id = R.drawable.i_devicepicker),
             contentDescription = "",
-            modifier = Modifier.size(300.dp),
+            modifier = Modifier.size(150.dp),
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        )
+
+        Spacer(modifier = Modifier.height(20.dp))
+
+        Text(
+            text = "Device Picker",
+            fontSize = 25.sp,
+            fontWeight = FontWeight.W500,
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 
