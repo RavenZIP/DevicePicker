@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(
     reloadUser: suspend () -> Result<Boolean>,
-    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult>,
+    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult?>,
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
@@ -115,7 +115,7 @@ fun LoginScreen(
                         val isReloadSuccess = reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
-                            snackBarHostState.showError(isReloadSuccess.error!!)
+                            snackBarHostState.showError(isReloadSuccess.error?.message!!)
                             return@launch
                         }
 
@@ -124,7 +124,7 @@ fun LoginScreen(
 
                         if (authResult.value == null) {
                             isLoading.value = false
-                            snackBarHostState.showError(authResult.error!!)
+                            snackBarHostState.showError(authResult.error?.message!!)
                             return@launch
                         }
 

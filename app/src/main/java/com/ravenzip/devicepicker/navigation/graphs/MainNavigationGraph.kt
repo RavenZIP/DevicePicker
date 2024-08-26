@@ -101,10 +101,7 @@ fun MainNavigationGraph(
             )
         }
 
-        homeNavigationGraph(
-            padding = padding,
-            deviceStateByViewModel = deviceViewModel.deviceState,
-        )
+        homeNavigationGraph(padding = padding, deviceStateByViewModel = deviceViewModel.deviceState)
 
         // / Поиск
         composable(route = BottomBarGraph.SEARCH) {

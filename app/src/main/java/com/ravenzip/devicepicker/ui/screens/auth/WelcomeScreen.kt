@@ -122,7 +122,7 @@ fun WelcomeScreen(
                     if (isReloadSuccess.value != true) {
                         isLoading.value = false
                         alertDialogIsShown.value = false
-                        snackBarHostState.showError(isReloadSuccess.error!!)
+                        snackBarHostState.showError(isReloadSuccess.error?.message!!)
                         return@launch
                     }
 
@@ -131,7 +131,7 @@ fun WelcomeScreen(
                     alertDialogIsShown.value = false
 
                     if (authResult.value !== null) navigateToHomeScreen()
-                    else snackBarHostState.showError(authResult.error!!)
+                    else snackBarHostState.showError(authResult.error?.message!!)
                 }
             },
         )

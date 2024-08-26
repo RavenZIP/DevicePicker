@@ -132,7 +132,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         val isReloadSuccess = userViewModel.reloadUser()
                         if (isReloadSuccess.value != true) {
                             isLoading.value = false
-                            snackBarHostState.showError(isReloadSuccess.error!!)
+                            snackBarHostState.showError(isReloadSuccess.error?.message!!)
                             return@launch
                         }
 
@@ -142,7 +142,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
 
                         if (authResult.value == null) {
                             isLoading.value = false
-                            snackBarHostState.showError(authResult.error!!)
+                            snackBarHostState.showError(authResult.error?.message!!)
                             return@launch
                         }
 
@@ -150,7 +150,7 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                         val messageResult = userViewModel.sendEmailVerification()
                         if (messageResult.value != true) {
                             isLoading.value = false
-                            snackBarHostState.showWarning(messageResult.error!!)
+                            snackBarHostState.showWarning(messageResult.error?.message!!)
                             userViewModel.deleteAccount() // TODO проверять падение запроса
                             return@launch
                         }

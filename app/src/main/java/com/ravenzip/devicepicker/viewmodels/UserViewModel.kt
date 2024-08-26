@@ -2,12 +2,14 @@ package com.ravenzip.devicepicker.viewmodels
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.AuthErrorsEnum
 import com.ravenzip.devicepicker.model.User
+import com.ravenzip.devicepicker.model.result.OperationError
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.UserRepository
@@ -25,7 +27,7 @@ class UserViewModel
 @Inject
 constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()
@@ -43,10 +45,18 @@ constructor(
     suspend fun reloadUser(): Result<Boolean> {
         return try {
             authRepository.reloadUser()
-            Result(value = true, error = null)
+            Result.success(value = true)
+        } catch (e: FirebaseNetworkException) {
+            withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
+
+            Result.error(
+                error = OperationError.networkError("Не удалось обновить данные о пользователе")
+            )
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
-            Result(value = false, error = "Не удалось обновить данные о пользователе")
+            Result.error(
+                error = OperationError.default("Не удалось обновить данные о пользователе")
+            )
         }
     }
 
@@ -58,10 +68,10 @@ constructor(
     suspend fun logInAnonymously(): Result<AuthResult> {
         return try {
             val result = authRepository.logInAnonymously()
-            Result(value = result, error = null)
+            Result.success(value = result)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-            Result(value = null, error = "Произошла ошибка при выполнении запроса")
+            Result.error(error = OperationError.default("Произошла ошибка при выполнении запроса"))
         }
     }
 
@@ -70,10 +80,10 @@ constructor(
      *
      * @return [AuthResult] или null
      */
-    suspend fun createUserWithEmail(email: String, password: String): Result<AuthResult> {
+    suspend fun createUserWithEmail(email: String, password: String): Result<AuthResult?> {
         return try {
             val result = authRepository.createUserWithEmail(email, password)
-            Result(value = result, error = null)
+            Result.success(value = result)
         } catch (e: FirebaseAuthException) {
             val error = AuthErrorsEnum.getErrorMessage(e)
             withContext(Dispatchers.Main) {
@@ -81,14 +91,14 @@ constructor(
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result(value = null, error = error)
+            Result.error(error = OperationError.default(error))
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "CreateUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result(value = null, error = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
         }
     }
 
@@ -97,19 +107,22 @@ constructor(
      *
      * @return [AuthResult] или null
      */
-    suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResult> {
+    suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResult?> {
         return try {
             val result = authRepository.logInUserWithEmail(email, password)
-            Result(value = result, error = null)
+            Result.success(value = result)
         } catch (e: FirebaseTooManyRequestsException) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "LoginUserWithEmail")
                 Log.d(
                     "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value,
+                )
             }
 
-            Result(value = null, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            Result.error(
+                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            )
         } catch (e: FirebaseAuthException) {
             val error = AuthErrorsEnum.getErrorMessage(e)
             withContext(Dispatchers.Main) {
@@ -117,14 +130,14 @@ constructor(
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result(value = null, error = error)
+            Result.error(error = OperationError.default(error))
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "LoginUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result(value = null, error = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
         }
     }
 
@@ -136,23 +149,30 @@ constructor(
     suspend fun sendEmailVerification(): Result<Boolean> {
         return try {
             authRepository.sendEmailVerification()
-            Result(value = true, error = null)
+            Result.success(value = true)
         } catch (e: FirebaseTooManyRequestsException) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendEmailVerification")
                 Log.d(
                     "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value,
+                )
             }
 
-            Result(value = false, error = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            Result.error(
+                value = false,
+                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value),
+            )
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendEmailVerification")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result(value = false, error = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.error(
+                value = false,
+                error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value),
+            )
         }
     }
 
@@ -173,13 +193,13 @@ constructor(
     suspend fun sendPasswordResetEmail(email: String): Result<Boolean> {
         return try {
             authRepository.sendPasswordResetEmail(email)
-            Result(value = true, error = null)
+            Result.success(true)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendPasswordResetEmail")
                 Log.d("Exception", "${e.message}")
             }
-            Result(value = false, error = "Ошибка сброса пароля")
+            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
         }
     }
 
@@ -196,10 +216,10 @@ constructor(
     suspend fun deleteAccount(): Result<Boolean> {
         return try {
             authRepository.deleteAccount()
-            Result(value = true, error = null)
+            Result.success(true)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
-            Result(value = false, error = "Ошибка сброса пароля")
+            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
         }
     }
 

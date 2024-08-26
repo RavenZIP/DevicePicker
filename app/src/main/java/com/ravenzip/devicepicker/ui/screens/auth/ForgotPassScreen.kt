@@ -104,7 +104,7 @@ fun ForgotPasswordScreen(
                 val isReloadSuccess = reloadUser()
                 if (isReloadSuccess.value != true) {
                     isLoading.value = false
-                    snackBarHostState.showError(isReloadSuccess.error!!)
+                    snackBarHostState.showError(isReloadSuccess.error?.message!!)
                     return@launch
                 }
 
@@ -117,7 +117,7 @@ fun ForgotPasswordScreen(
                         "Письмо со ссылкой для сброса было успешно отправлено на почту"
                     )
                 } else {
-                    snackBarHostState.showError(resetResult.error!!)
+                    snackBarHostState.showError(resetResult.error?.message!!)
                 }
             }
         }

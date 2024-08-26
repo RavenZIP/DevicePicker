@@ -6,23 +6,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import com.ravenzip.devicepicker.extensions.functions.composable
 import com.ravenzip.devicepicker.navigation.models.RootGraph
+import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
 import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
-fun RootNavigationGraph(
-    navController: NavHostController,
-    startDestination: String,
-    userViewModel: UserViewModel,
-) {
+fun RootNavigationGraph(navController: NavHostController, userViewModel: UserViewModel) {
     NavHost(
         navController = navController,
         route = RootGraph.ROOT,
-        startDestination = startDestination,
+        startDestination = RootGraph.SPLASH_SCREEN,
     ) {
+        composable(route = RootGraph.SPLASH_SCREEN) {
+            SetWindowStyle(
+                view = LocalView.current,
+                statusBarColor = MaterialTheme.colorScheme.surface,
+                navigationBarColor = MaterialTheme.colorScheme.surface,
+                isAppearanceLight = !isSystemInDarkTheme(),
+            )
+
+            SplashScreen(
+                destroySplashScreen = { navController.popBackStack() },
+                navigateToAuthentication = { navController.navigate(RootGraph.AUTHENTICATION) },
+                navigateToMain = { navController.navigate(RootGraph.MAIN) },
+                userViewModel = userViewModel,
+            )
+        }
+
         authNavigationGraph(navController = navController, userViewModel = userViewModel)
 
         composable(route = RootGraph.MAIN) {
