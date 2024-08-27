@@ -27,7 +27,6 @@ import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -48,20 +47,18 @@ fun MainNavigationGraph(
     val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
 
     val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
-    val deviceCompactList = deviceCompactState.deviceCompactList
+    val deviceCompactList = deviceCompactState.allDevices
 
     LaunchedEffect(Unit) {
         // Получаем компактную модель устройств и данные о пользователе
         // Грузим сразу все устройства, т.к. в дальнейшем компактная
         // модель будет использоваться для других экранов
         launch {
-            deviceViewModel
-                .getDeviceCompactList()
-                .zip(getUserData()) { _, user ->
-                    deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
-                    deviceViewModel.createDeviceCompactStateList()
-                }
-                .collect {}
+            deviceViewModel.getDeviceCompactList()
+            getUserData().collect { user ->
+                deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
+                deviceViewModel.createCategories()
+            }
 
             // Грузим урлы изображений
             imageViewModel
@@ -132,7 +129,6 @@ fun MainNavigationGraph(
     }
 }
 
-@OptIn(ExperimentalCoroutinesApi::class)
 private suspend fun onClickToDeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
@@ -144,12 +140,10 @@ private suspend fun onClickToDeviceCard(
     val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
 
     if (cachedDevice == null) {
-        deviceViewModel
-            .getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-            .flatMapLatest {
-                imageViewModel.getImageUrls(brand = device.brand, model = device.model)
-            }
-            .collect { deviceViewModel.setImageUrlToDevice(it) }
+        deviceViewModel.getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
+        imageViewModel.getImageUrls(brand = device.brand, model = device.model).collect {
+            deviceViewModel.setImageUrlToDevice(it)
+        }
     }
 
     changeIsLoading(false)

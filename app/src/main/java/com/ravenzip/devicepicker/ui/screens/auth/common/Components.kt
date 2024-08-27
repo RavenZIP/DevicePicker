@@ -23,7 +23,7 @@ import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.data.Error
-import com.ravenzip.workshop.data.selection.SelectionConfig
+import com.ravenzip.workshop.data.selection.SelectableItemConfig
 
 @Composable
 fun LoginAndRegistrationFields(
@@ -72,7 +72,7 @@ fun LoginAndRegistrationFields(
 }
 
 @Composable
-fun LoginAndRegistrationOptions(options: SnapshotStateList<SelectionConfig>, title: String) {
+fun LoginAndRegistrationOptions(options: SnapshotStateList<SelectableItemConfig>, title: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),

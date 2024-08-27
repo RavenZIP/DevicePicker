@@ -35,16 +35,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.constants.enums.ContainerTypeEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.state.DeviceCompactState
+import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.listOfCategories
+import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.listOfCategoriesKeys
 import com.ravenzip.devicepicker.ui.components.Price
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
+import com.ravenzip.workshop.components.ChipRadioGroup
 import com.ravenzip.workshop.components.Spinner
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
@@ -61,35 +63,63 @@ fun HomeScreen(
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
+    val listOfCategoriesKeys = remember { deviceCompactState.listOfCategoriesKeys() }
+    val listOfCategories = deviceCompactState.listOfCategories()
+    val selectedCategory = remember {
+        listOfCategories.firstOrNull { category -> category.isSelected }
+    }
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+    Column(modifier = Modifier.fillMaxSize().padding(padding)) {
+        ChipRadioGroup(list = listOfCategories)
 
-        items(deviceCompactState.deviceCategoryStateList, key = { it.categoryName }) { category ->
-            if (category.containerType == ContainerTypeEnum.Default) {
-                CarouselDevices(
-                    devices = category.devices,
-                    categoryName = category.categoryName,
-                    changeIsLoading = { isLoading.value = it },
-                    coroutineScope = coroutineScope,
-                    onClickToDeviceCard = onClickToDeviceCard,
-                )
-            } else {
-                SpecialOfferContainer(
-                    devices = category.devices,
-                    categoryName = category.categoryName,
-                    changeIsLoading = { isLoading.value = it },
-                    coroutineScope = coroutineScope,
-                    onClickToDeviceCard = onClickToDeviceCard,
-                )
-            }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            //            items(listOfCategoriesKeys){ category ->
+            //                if (category.value == selectedCategory.text){
+            //                    DeviceCard(
+            //                        devices = category,
+            //                        changeIsLoading = { isLoading.value = it },
+            //                        coroutineScope = coroutineScope,
+            //                        onClickToDeviceCard = onClickToDeviceCard,
+            //                    )
+            //                }
+            //            }
 
-            Spacer(modifier = Modifier.height(20.dp))
         }
     }
+
+    //    LazyColumn(
+    //        modifier = Modifier.fillMaxSize().padding(padding),
+    //        horizontalAlignment = Alignment.CenterHorizontally,
+    //    ) {
+    //        item { Spacer(modifier = Modifier.height(10.dp)) }
+    //
+    //        items(deviceCompactState.categories.keys.toList(), key = { it }) { category ->
+    //            val devices = deviceCompactState.categories[category]
+    //
+    //            if (deviceCompactState.isCategoryWithDefaultContainer(category)) {
+    //                CarouselDevices(
+    //                    devices = devices!!,
+    //                    categoryName = category.value,
+    //                    changeIsLoading = { isLoading.value = it },
+    //                    coroutineScope = coroutineScope,
+    //                    onClickToDeviceCard = onClickToDeviceCard,
+    //                )
+    //            } else {
+    //                SpecialOfferContainer(
+    //                    devices = devices!!,
+    //                    categoryName = category.value,
+    //                    changeIsLoading = { isLoading.value = it },
+    //                    coroutineScope = coroutineScope,
+    //                    onClickToDeviceCard = onClickToDeviceCard,
+    //                )
+    //            }
+    //
+    //            Spacer(modifier = Modifier.height(20.dp))
+    //        }
+    //    }
 
     if (isLoading.value) {
         Spinner(text = "Загрузка...")
