@@ -21,8 +21,8 @@ fun Modifier.smallImageContainer(
     shape: Dp = 10.dp,
     color: Color = Color.White,
     padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
-    width: Dp = 80.dp,
-    height: Dp = 80.dp
+    width: Dp = 140.dp,
+    height: Dp = 140.dp,
 ) =
     this then
         (this.clip(RoundedCornerShape(shape))

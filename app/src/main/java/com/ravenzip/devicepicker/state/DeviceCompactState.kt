@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.state
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -35,20 +36,22 @@ class DeviceCompactState(
         )
 
     companion object {
-        fun DeviceCompactState.listOfCategoriesKeys() = categories.keys.toList()
-
         @Composable
-        fun DeviceCompactState.listOfCategories() =
-            this.categories.keys
-                .mapIndexed { index, category ->
-                    SelectableChipConfig(
-                        isSelected = index == 0,
-                        text = category.value,
-                        textConfig = TextConfig.SmallMedium,
-                        icon = ImageVector.vectorResource(id = tagIconMap[category]!!),
-                        iconConfig = IconConfig.Small,
-                    )
-                }
-                .toMutableStateList()
+        fun DeviceCompactState.listOfCategories(): SnapshotStateList<SelectableChipConfig> {
+            val listOfCategories =
+                this.categories.keys
+                    .mapIndexed { index, category ->
+                        SelectableChipConfig(
+                            isSelected = index == 0,
+                            text = category.value,
+                            textConfig = TextConfig.SmallMedium,
+                            icon = ImageVector.vectorResource(id = tagIconMap[category]!!),
+                            iconConfig = IconConfig.Small,
+                        )
+                    }
+                    .toMutableStateList()
+
+            return remember(categories.keys.count()) { listOfCategories }
+        }
     }
 }

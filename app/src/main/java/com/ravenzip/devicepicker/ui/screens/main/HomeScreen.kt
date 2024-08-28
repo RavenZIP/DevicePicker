@@ -7,42 +7,36 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.state.DeviceCompactState
 import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.listOfCategories
-import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.listOfCategoriesKeys
 import com.ravenzip.devicepicker.ui.components.Price
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
@@ -63,158 +57,37 @@ fun HomeScreen(
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
-    val listOfCategoriesKeys = remember { deviceCompactState.listOfCategoriesKeys() }
     val listOfCategories = deviceCompactState.listOfCategories()
-    val selectedCategory = remember {
-        listOfCategories.firstOrNull { category -> category.isSelected }
-    }
 
     Column(modifier = Modifier.fillMaxSize().padding(padding)) {
         ChipRadioGroup(list = listOfCategories)
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
-            horizontalAlignment = Alignment.CenterHorizontally,
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            //            items(listOfCategoriesKeys){ category ->
-            //                if (category.value == selectedCategory.text){
-            //                    DeviceCard(
-            //                        devices = category,
-            //                        changeIsLoading = { isLoading.value = it },
-            //                        coroutineScope = coroutineScope,
-            //                        onClickToDeviceCard = onClickToDeviceCard,
-            //                    )
-            //                }
-            //            }
+            val selectedCategoryName =
+                listOfCategories.firstOrNull { category -> category.isSelected }?.text
+            val selectedCategory =
+                TagsEnum.entries.firstOrNull { tag -> tag.value == selectedCategoryName }
+            val devices = deviceCompactState.categories[selectedCategory] ?: mutableStateListOf()
 
+            items(devices) { device ->
+                DeviceCard(
+                    device = device,
+                    changeIsLoading = { isLoading.value = it },
+                    coroutineScope = coroutineScope,
+                    onClickToDeviceCard = onClickToDeviceCard,
+                )
+            }
         }
     }
-
-    //    LazyColumn(
-    //        modifier = Modifier.fillMaxSize().padding(padding),
-    //        horizontalAlignment = Alignment.CenterHorizontally,
-    //    ) {
-    //        item { Spacer(modifier = Modifier.height(10.dp)) }
-    //
-    //        items(deviceCompactState.categories.keys.toList(), key = { it }) { category ->
-    //            val devices = deviceCompactState.categories[category]
-    //
-    //            if (deviceCompactState.isCategoryWithDefaultContainer(category)) {
-    //                CarouselDevices(
-    //                    devices = devices!!,
-    //                    categoryName = category.value,
-    //                    changeIsLoading = { isLoading.value = it },
-    //                    coroutineScope = coroutineScope,
-    //                    onClickToDeviceCard = onClickToDeviceCard,
-    //                )
-    //            } else {
-    //                SpecialOfferContainer(
-    //                    devices = devices!!,
-    //                    categoryName = category.value,
-    //                    changeIsLoading = { isLoading.value = it },
-    //                    coroutineScope = coroutineScope,
-    //                    onClickToDeviceCard = onClickToDeviceCard,
-    //                )
-    //            }
-    //
-    //            Spacer(modifier = Modifier.height(20.dp))
-    //        }
-    //    }
 
     if (isLoading.value) {
         Spinner(text = "Загрузка...")
-    }
-}
-
-@Composable
-private fun CarouselDevices(
-    devices: SnapshotStateList<DeviceCompact>,
-    categoryName: String,
-    changeIsLoading: (isLoading: Boolean) -> Unit,
-    coroutineScope: CoroutineScope,
-    onClickToDeviceCard:
-        suspend (device: DeviceCompact, isLoadingChange: (isLoading: Boolean) -> Unit) -> Unit,
-) {
-    Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.defaultCardColors()) {
-        Column(modifier = Modifier.padding(top = 15.dp, bottom = 15.dp)) {
-            Text(
-                text = categoryName,
-                modifier = Modifier.padding(start = 15.dp, bottom = 10.dp),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.W500,
-            )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-            ) {
-                item { Spacer(modifier = Modifier.width(15.dp)) }
-
-                items(items = devices, key = { it.uid }, contentType = { DeviceCompact::class }) {
-                    device ->
-                    DeviceCard(
-                        device = device,
-                        changeIsLoading = changeIsLoading,
-                        coroutineScope = coroutineScope,
-                        onClickToDeviceCard = onClickToDeviceCard,
-                    )
-                    Spacer(modifier = Modifier.width(15.dp))
-                }
-            }
-        }
-    }
-}
-
-@Composable
-private fun SpecialOfferContainer(
-    devices: SnapshotStateList<DeviceCompact>,
-    categoryName: String,
-    changeIsLoading: (isLoading: Boolean) -> Unit,
-    coroutineScope: CoroutineScope,
-    onClickToDeviceCard:
-        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
-) {
-    Card(
-        modifier = Modifier.fillMaxWidth(0.9f).height(500.dp),
-        colors = CardDefaults.defaultCardColors(),
-    ) {
-        Column(modifier = Modifier.fillMaxSize().padding(bottom = 15.dp)) {
-            Card(
-                modifier = Modifier.padding(top = 15.dp, start = 15.dp),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary),
-            ) {
-                Text(text = "Ключевое слово", modifier = Modifier.padding(10.dp), fontSize = 14.sp)
-            }
-
-            Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Bottom) {
-                Text(
-                    text = categoryName,
-                    modifier = Modifier.padding(start = 15.dp),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.W500,
-                )
-                Spacer(modifier = Modifier.height(10.dp))
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ) {
-                    item { Spacer(modifier = Modifier.padding(start = 15.dp)) }
-
-                    items(
-                        items = devices,
-                        key = { it.uid },
-                        contentType = { DeviceCompact::class },
-                    ) {
-                        SpecialOfferCard(
-                            device = it,
-                            changeIsLoading = changeIsLoading,
-                            coroutineScope = coroutineScope,
-                            onClickToDeviceCard = onClickToDeviceCard,
-                        )
-                        Spacer(modifier = Modifier.padding(start = 15.dp))
-                    }
-                }
-            }
-        }
     }
 }
 
@@ -228,9 +101,9 @@ private fun DeviceCard(
 ) {
     Card(
         modifier =
-            Modifier.clip(RoundedCornerShape(12.dp))
-                .suspendOnClick(coroutineScope) { onClickToDeviceCard(device, changeIsLoading) }
-                .widthIn(0.dp, 130.dp),
+            Modifier.clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
+                onClickToDeviceCard(device, changeIsLoading)
+            },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
