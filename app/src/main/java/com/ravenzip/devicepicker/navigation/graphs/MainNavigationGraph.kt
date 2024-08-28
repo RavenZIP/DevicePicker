@@ -55,10 +55,8 @@ fun MainNavigationGraph(
         // модель будет использоваться для других экранов
         launch {
             deviceViewModel.getDeviceCompactList()
-            getUserData().collect { user ->
-                deviceViewModel.setUserSearchHistoryUidList(user.searchHistory)
-                deviceViewModel.createCategories()
-            }
+            deviceViewModel.createCategories()
+            getUserData().collect {}
 
             // Грузим урлы изображений
             imageViewModel

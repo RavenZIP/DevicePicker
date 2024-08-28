@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -59,13 +60,19 @@ fun HomeScreen(
     val coroutineScope = rememberCoroutineScope()
     val listOfCategories = deviceCompactState.listOfCategories()
 
-    Column(modifier = Modifier.fillMaxSize().padding(padding)) {
-        ChipRadioGroup(list = listOfCategories)
+    Column(
+        modifier = Modifier.fillMaxSize().padding(padding),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        ChipRadioGroup(
+            list = listOfCategories,
+            containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
+        )
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
-            modifier = Modifier.fillMaxSize(),
-            contentPadding = PaddingValues(horizontal = 10.dp, vertical = 20.dp),
+            modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(),
+            contentPadding = PaddingValues(vertical = 20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
