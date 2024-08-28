@@ -3,7 +3,6 @@ package com.ravenzip.devicepicker.navigation.graphs
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -23,14 +22,10 @@ import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.viewmodels.BrandViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
-import com.ravenzip.devicepicker.viewmodels.ImageViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun MainNavigationGraph(
     navController: NavHostController,
@@ -40,32 +35,20 @@ fun MainNavigationGraph(
     getUserData: suspend () -> Unit,
     logout: suspend () -> Unit,
 ) {
-    val imageViewModel = hiltViewModel<ImageViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
     val brandViewModel = hiltViewModel<BrandViewModel>()
     val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
 
-    val deviceCompactState = deviceViewModel.deviceCompactState.collectAsState().value
-    val deviceCompactList = deviceCompactState.allDevices
-
     LaunchedEffect(Unit) {
-        // Получаем компактную модель устройств и данные о пользователе
+        // Получаем компактную модель устройств вместе с изображениями
         // Грузим сразу все устройства, т.к. в дальнейшем компактная
         // модель будет использоваться для других экранов
-        launch {
-            deviceViewModel.getDeviceCompactList()
-            deviceViewModel.createCategories()
+        launch { deviceViewModel.getDeviceCompactList() }
 
-            // Грузим урлы изображений
-            imageViewModel
-                .getImageUrls(deviceCompactList)
-                .flatMapMerge(concurrency = 3) { it }
-                .collect { deviceViewModel.setImageUrlToDevices(it) }
-        }
-
+        // Данные пользователя
         launch { getUserData() }
 
-        // Грузим данные о брендах и типах устройств
+        // Данные о брендах и типах устройств
         launch {
             brandViewModel
                 .getBrandList()
@@ -88,7 +71,6 @@ fun MainNavigationGraph(
                     onClickToDeviceCard(
                         device = device,
                         deviceViewModel = deviceViewModel,
-                        imageViewModel = imageViewModel,
                         changeIsLoading = changeIsLoading,
                         navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
                     )
@@ -130,7 +112,6 @@ fun MainNavigationGraph(
 private suspend fun onClickToDeviceCard(
     device: DeviceCompact,
     deviceViewModel: DeviceViewModel,
-    imageViewModel: ImageViewModel,
     changeIsLoading: (Boolean) -> Unit,
     navigateToDevice: () -> Unit,
 ) {
@@ -138,10 +119,11 @@ private suspend fun onClickToDeviceCard(
     val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
 
     if (cachedDevice == null) {
-        deviceViewModel.getDeviceByBrandAndUid(brand = device.brand, uid = device.uid)
-        imageViewModel.getImageUrls(brand = device.brand, model = device.model).collect {
-            deviceViewModel.setImageUrlToDevice(it)
-        }
+        deviceViewModel.getDeviceByBrandAndUid(
+            uid = device.uid,
+            brand = device.brand,
+            model = device.model,
+        )
     }
 
     changeIsLoading(false)
