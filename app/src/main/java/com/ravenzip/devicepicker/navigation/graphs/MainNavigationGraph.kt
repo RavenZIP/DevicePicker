@@ -9,7 +9,6 @@ import androidx.navigation.compose.NavHost
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.model.User
-import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
@@ -67,14 +66,11 @@ fun MainNavigationGraph(
             HomeScreen(
                 padding = padding,
                 deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
-                onClickToDeviceCard = { device, changeIsLoading ->
-                    onClickToDeviceCard(
-                        device = device,
-                        deviceViewModel = deviceViewModel,
-                        changeIsLoading = changeIsLoading,
-                        navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
-                    )
+                getCachedDevice = { uid -> deviceViewModel.getCachedDevice(uid) },
+                getDeviceByBrandAndUid = { uid, brand, model ->
+                    deviceViewModel.getDeviceByBrandAndUid(uid, brand, model)
                 },
+                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
             )
         }
 
@@ -107,25 +103,4 @@ fun MainNavigationGraph(
 
         userProfileNavigationGraph(padding = padding)
     }
-}
-
-private suspend fun onClickToDeviceCard(
-    device: DeviceCompact,
-    deviceViewModel: DeviceViewModel,
-    changeIsLoading: (Boolean) -> Unit,
-    navigateToDevice: () -> Unit,
-) {
-    changeIsLoading(true)
-    val cachedDevice = deviceViewModel.getCachedDevice(device.uid)
-
-    if (cachedDevice == null) {
-        deviceViewModel.getDeviceByBrandAndUid(
-            uid = device.uid,
-            brand = device.brand,
-            model = device.model,
-        )
-    }
-
-    changeIsLoading(false)
-    navigateToDevice()
 }

@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -35,6 +34,7 @@ import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
 import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
+import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.state.DeviceCompactState
 import com.ravenzip.devicepicker.state.DeviceCompactState.Companion.listOfCategories
@@ -52,8 +52,9 @@ import kotlinx.coroutines.flow.StateFlow
 fun HomeScreen(
     padding: PaddingValues,
     deviceCompactStateByViewModel: StateFlow<DeviceCompactState>,
-    onClickToDeviceCard:
-        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
+    getCachedDevice: suspend (uid: String) -> Device?,
+    getDeviceByBrandAndUid: suspend (uid: String, brand: String, model: String) -> Unit,
+    navigateToDevice: () -> Unit,
 ) {
     val deviceCompactState = deviceCompactStateByViewModel.collectAsState().value
     val isLoading = remember { mutableStateOf(false) }
@@ -85,9 +86,16 @@ fun HomeScreen(
             items(devices) { device ->
                 DeviceCard(
                     device = device,
-                    changeIsLoading = { isLoading.value = it },
                     coroutineScope = coroutineScope,
-                    onClickToDeviceCard = onClickToDeviceCard,
+                    onClickToDeviceCard = {
+                        onClickToDeviceCard(
+                            device = device,
+                            changeIsLoading = { isLoading.value = it },
+                            getCachedDevice = getCachedDevice,
+                            getDeviceByBrandAndUid = getDeviceByBrandAndUid,
+                            navigateToDevice = navigateToDevice,
+                        )
+                    },
                 )
             }
         }
@@ -101,15 +109,13 @@ fun HomeScreen(
 @Composable
 private fun DeviceCard(
     device: DeviceCompact,
-    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard:
-        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
+    onClickToDeviceCard: suspend () -> Unit,
 ) {
     Card(
         modifier =
             Modifier.clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToDeviceCard(device, changeIsLoading)
+                onClickToDeviceCard()
             },
         colors = CardDefaults.veryLightPrimary(),
     ) {
@@ -139,15 +145,13 @@ private fun DeviceCard(
 @Composable
 private fun SpecialOfferCard(
     device: DeviceCompact,
-    changeIsLoading: (isLoading: Boolean) -> Unit,
     coroutineScope: CoroutineScope,
-    onClickToDeviceCard:
-        suspend (device: DeviceCompact, changeIsLoading: (isLoading: Boolean) -> Unit) -> Unit,
+    onClickToDeviceCard: () -> Unit,
 ) {
     Card(
         modifier =
             Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToDeviceCard(device, changeIsLoading)
+                onClickToDeviceCard()
             },
         colors = CardDefaults.veryLightPrimary(),
     ) {
@@ -173,4 +177,22 @@ private fun SpecialOfferCard(
             }
         }
     }
+}
+
+private suspend fun onClickToDeviceCard(
+    device: DeviceCompact,
+    getCachedDevice: suspend (uid: String) -> Device?,
+    getDeviceByBrandAndUid: suspend (uid: String, brand: String, model: String) -> Unit,
+    changeIsLoading: (Boolean) -> Unit,
+    navigateToDevice: () -> Unit,
+) {
+    changeIsLoading(true)
+    val cachedDevice = getCachedDevice(device.uid)
+
+    if (cachedDevice == null) {
+        getDeviceByBrandAndUid(device.uid, device.brand, device.model)
+    }
+
+    changeIsLoading(false)
+    navigateToDevice()
 }
