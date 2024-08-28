@@ -35,15 +35,14 @@ import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.appbar.AppBarItem
 import com.ravenzip.workshop.data.appbar.BottomNavigationItem
 import com.ravenzip.workshop.data.icon.IconConfig
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
     userDataByViewModel: StateFlow<User>,
-    getUser: () -> FirebaseUser?,
-    getUserData: suspend () -> Flow<User>,
+    firebaseUser: FirebaseUser?,
+    getUserData: suspend () -> Unit,
     logout: suspend () -> Unit,
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
@@ -83,7 +82,7 @@ fun ScaffoldScreen(
             navController = navController,
             padding = padding,
             userDataByViewModel = userDataByViewModel,
-            getUser = getUser,
+            firebaseUser = firebaseUser,
             getUserData = getUserData,
             logout = logout,
         )

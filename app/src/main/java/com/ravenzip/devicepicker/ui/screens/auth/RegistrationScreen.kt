@@ -168,7 +168,8 @@ fun RegistrationScreen(userViewModel: UserViewModel, navigateToHomeScreen: () ->
                             return@launch
                         }
 
-                        userViewModel.createUserData().collect {}
+                        // TODO добавить обработку в случае ошибки при создании пользователя
+                        userViewModel.createUserData()
                         isLoading.value = false
                         navigateToHomeScreen()
                     }

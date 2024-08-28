@@ -1,26 +1,17 @@
 package com.ravenzip.devicepicker.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.google.firebase.FirebaseNetworkException
-import com.google.firebase.FirebaseTooManyRequestsException
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.constants.enums.AuthErrorsEnum
 import com.ravenzip.devicepicker.model.User
-import com.ravenzip.devicepicker.model.result.OperationError
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.update
 
 @HiltViewModel
 class UserViewModel
@@ -33,31 +24,16 @@ constructor(
     val user = _user.asStateFlow()
 
     /**
-     * Получить текущего пользователя
+     * Текущий пользователь firebase
      *
      * @return [FirebaseUser] или null
      */
-    fun getUser(): FirebaseUser? {
-        return authRepository.getUser()
-    }
+    val firebaseUser: FirebaseUser?
+        get() = authRepository.firebaseUser
 
     /** Обновить данные о пользователе */
     suspend fun reloadUser(): Result<Boolean> {
-        return try {
-            authRepository.reloadUser()
-            Result.success(value = true)
-        } catch (e: FirebaseNetworkException) {
-            withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
-
-            Result.error(
-                error = OperationError.networkError("Не удалось обновить данные о пользователе")
-            )
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
-            Result.error(
-                error = OperationError.default("Не удалось обновить данные о пользователе")
-            )
-        }
+        return authRepository.reloadUser()
     }
 
     /**
@@ -65,14 +41,8 @@ constructor(
      *
      * @return [AuthResult] или null
      */
-    suspend fun logInAnonymously(): Result<AuthResult> {
-        return try {
-            val result = authRepository.logInAnonymously()
-            Result.success(value = result)
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-            Result.error(error = OperationError.default("Произошла ошибка при выполнении запроса"))
-        }
+    suspend fun logInAnonymously(): Result<AuthResult?> {
+        return authRepository.logInAnonymously()
     }
 
     /**
@@ -81,25 +51,7 @@ constructor(
      * @return [AuthResult] или null
      */
     suspend fun createUserWithEmail(email: String, password: String): Result<AuthResult?> {
-        return try {
-            val result = authRepository.createUserWithEmail(email, password)
-            Result.success(value = result)
-        } catch (e: FirebaseAuthException) {
-            val error = AuthErrorsEnum.getErrorMessage(e)
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "CreateUserWithEmail")
-                Log.d("FirebaseAuthException", error)
-            }
-
-            Result.error(error = OperationError.default(error))
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "CreateUserWithEmail")
-                Log.d("Exception", "${e.message}")
-            }
-
-            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
-        }
+        return authRepository.createUserWithEmail(email, password)
     }
 
     /**
@@ -108,37 +60,7 @@ constructor(
      * @return [AuthResult] или null
      */
     suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResult?> {
-        return try {
-            val result = authRepository.logInUserWithEmail(email, password)
-            Result.success(value = result)
-        } catch (e: FirebaseTooManyRequestsException) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d(
-                    "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value,
-                )
-            }
-
-            Result.error(
-                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
-            )
-        } catch (e: FirebaseAuthException) {
-            val error = AuthErrorsEnum.getErrorMessage(e)
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d("FirebaseAuthException", error)
-            }
-
-            Result.error(error = OperationError.default(error))
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d("Exception", "${e.message}")
-            }
-
-            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
-        }
+        return authRepository.logInUserWithEmail(email, password)
     }
 
     /**
@@ -147,33 +69,7 @@ constructor(
      * @return true - если на почту была отправлена ссылка на подтверждение
      */
     suspend fun sendEmailVerification(): Result<Boolean> {
-        return try {
-            authRepository.sendEmailVerification()
-            Result.success(value = true)
-        } catch (e: FirebaseTooManyRequestsException) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "SendEmailVerification")
-                Log.d(
-                    "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value,
-                )
-            }
-
-            Result.error(
-                value = false,
-                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value),
-            )
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "SendEmailVerification")
-                Log.d("Exception", "${e.message}")
-            }
-
-            Result.error(
-                value = false,
-                error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value),
-            )
-        }
+        return authRepository.sendEmailVerification()
     }
 
     /**
@@ -191,16 +87,7 @@ constructor(
      * @return true - ссылка отправлена
      */
     suspend fun sendPasswordResetEmail(email: String): Result<Boolean> {
-        return try {
-            authRepository.sendPasswordResetEmail(email)
-            Result.success(true)
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "SendPasswordResetEmail")
-                Log.d("Exception", "${e.message}")
-            }
-            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
-        }
+        return authRepository.sendPasswordResetEmail(email)
     }
 
     /** Выполнить выход из аккаунта */
@@ -214,47 +101,16 @@ constructor(
      * @return true - если аккаунт был удален
      */
     suspend fun deleteAccount(): Result<Boolean> {
-        return try {
-            authRepository.deleteAccount()
-            Result.success(true)
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
-            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
-        }
+        return authRepository.deleteAccount()
     }
 
     /** Получить данные о текущем пользователе */
-    suspend fun getUserData() =
-        flow {
-                val currentUser = authRepository.getUser()
-
-                if (currentUser != null) {
-                    val user = userRepository.getUser(currentUser.uid)
-                    _user.value = user
-                    emit(user)
-                } else {
-                    throw Exception("currentUser is null")
-                }
-            }
-            .catch {
-                withContext(Dispatchers.Main) { Log.e("UserService: Get", "${it.message}") }
-                emit(User())
-            }
+    suspend fun getUserData() {
+        userRepository.getUserData(firebaseUser?.uid).collect { _user.update { it } }
+    }
 
     /** Добавить новые данные о пользователе */
-    suspend fun createUserData() =
-        flow {
-                val currentUser = authRepository.getUser()
-
-                if (currentUser !== null) {
-                    userRepository.addUser(currentUser.uid)
-                    emit(true)
-                } else {
-                    throw Exception("currentUser is null")
-                }
-            }
-            .catch {
-                withContext(Dispatchers.Main) { Log.e("UserService: Add", "${it.message}") }
-                emit(false)
-            }
+    suspend fun createUserData(): Boolean {
+        return userRepository.createUserData(firebaseUser?.uid)
+    }
 }

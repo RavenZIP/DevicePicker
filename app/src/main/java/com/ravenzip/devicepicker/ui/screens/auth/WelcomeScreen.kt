@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun WelcomeScreen(
     reloadUser: suspend () -> Result<Boolean>,
-    logInAnonymously: suspend () -> Result<AuthResult>,
+    logInAnonymously: suspend () -> Result<AuthResult?>,
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,

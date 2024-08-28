@@ -34,7 +34,7 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                 navigateToAuthentication = { navController.navigate(RootGraph.AUTHENTICATION) },
                 navigateToMain = { navController.navigate(RootGraph.MAIN) },
                 reloadUser = { userViewModel.reloadUser() },
-                getUser = { userViewModel.getUser() },
+                firebaseUser = userViewModel.firebaseUser,
             )
         }
 
@@ -50,7 +50,7 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
 
             ScaffoldScreen(
                 userDataByViewModel = userViewModel.user,
-                getUser = { userViewModel.getUser() },
+                firebaseUser = userViewModel.firebaseUser,
                 getUserData = { userViewModel.getUserData() },
                 logout = { userViewModel.logout() },
             )

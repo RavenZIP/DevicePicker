@@ -25,7 +25,6 @@ import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.ImageViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.zip
@@ -37,8 +36,8 @@ fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
     userDataByViewModel: StateFlow<User>,
-    getUser: () -> FirebaseUser?,
-    getUserData: suspend () -> Flow<User>,
+    firebaseUser: FirebaseUser?,
+    getUserData: suspend () -> Unit,
     logout: suspend () -> Unit,
 ) {
     val imageViewModel = hiltViewModel<ImageViewModel>()
@@ -56,7 +55,6 @@ fun MainNavigationGraph(
         launch {
             deviceViewModel.getDeviceCompactList()
             deviceViewModel.createCategories()
-            getUserData().collect {}
 
             // Грузим урлы изображений
             imageViewModel
@@ -64,6 +62,8 @@ fun MainNavigationGraph(
                 .flatMapMerge(concurrency = 3) { it }
                 .collect { deviceViewModel.setImageUrlToDevices(it) }
         }
+
+        launch { getUserData() }
 
         // Грузим данные о брендах и типах устройств
         launch {

@@ -41,7 +41,7 @@ fun SplashScreen(
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
     reloadUser: suspend () -> Result<Boolean>,
-    getUser: () -> FirebaseUser?,
+    firebaseUser: FirebaseUser?,
 ) {
     val text = remember { mutableStateOf("Получение данных о пользователе") }
     val status = remember { mutableStateOf(StatusEnum.LOADING) }
@@ -56,7 +56,7 @@ fun SplashScreen(
             delay(500)
             destroySplashScreen()
 
-            if (getUser() !== null) {
+            if (firebaseUser !== null) {
                 navigateToMain()
             } else {
                 navigateToAuthentication()
