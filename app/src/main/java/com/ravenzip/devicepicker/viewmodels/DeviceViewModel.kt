@@ -54,10 +54,6 @@ class DeviceViewModel @Inject constructor(private val deviceRepository: DeviceRe
         }
     }
 
-    fun setUserSearchHistoryUidList(userSearchHistory: List<String>) {
-        deviceCompactState.value.userSearchHistoryUidList.addAll(userSearchHistory)
-    }
-
     /** Заполнить урл изображения для конкретного устройства */
     fun setImageUrlToDevices(imageUrl: ImageUrlResult<String>) {
         val deviceIndex =
