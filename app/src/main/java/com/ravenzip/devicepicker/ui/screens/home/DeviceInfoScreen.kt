@@ -441,7 +441,6 @@ private fun TagsBottomSheet(
                                     "которые вычисляются системой " +
                                     "на основе имеющихся данных об устройстве. " +
                                     "Метки обновляются каждые 24 часа.",
-                            titleUnderIcon = false,
                             colors = CardDefaults.veryLightPrimary(),
                         )
                     }
@@ -511,7 +510,6 @@ private fun TagInfo(tag: Tag?) {
             iconConfig = IconConfig.PrimaryBig,
             title = "Описание",
             text = tag.name.description,
-            titleUnderIcon = false,
             colors = CardDefaults.veryLightPrimary(),
         )
     }
