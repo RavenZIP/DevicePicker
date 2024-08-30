@@ -36,7 +36,10 @@ fun NavGraphBuilder.authNavigationGraph(
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
                 navigateToHomeScreen = {
-                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.MAIN,
+                    )
                 },
             )
         }
@@ -51,7 +54,10 @@ fun NavGraphBuilder.authNavigationGraph(
             RegistrationScreen(
                 userViewModel = userViewModel,
                 navigateToHomeScreen = {
-                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.MAIN,
+                    )
                 },
             )
         }
@@ -69,7 +75,10 @@ fun NavGraphBuilder.authNavigationGraph(
                     userViewModel.logInUserWithEmail(email, password)
                 },
                 navigateToHomeScreen = {
-                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.MAIN,
+                    )
                 },
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
             )

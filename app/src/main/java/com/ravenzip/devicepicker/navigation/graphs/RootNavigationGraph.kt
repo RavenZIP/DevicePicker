@@ -36,9 +36,17 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
 
             SplashScreen(
                 navigateToAuthentication = {
-                    navController.navigateWithoutPreviousRoute(RootGraph.AUTHENTICATION)
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.AUTHENTICATION,
+                    )
                 },
-                navigateToMain = { navController.navigateWithoutPreviousRoute(RootGraph.MAIN) },
+                navigateToMain = {
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.MAIN,
+                    )
+                },
                 firebaseUser = userViewModel.firebaseUser,
                 splashScreenViewModel = splashScreenViewModel,
             )
