@@ -30,12 +30,14 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +56,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
+import com.ravenzip.devicepicker.constants.enums.StatusEnum
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.colorMap
 import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
@@ -62,6 +65,7 @@ import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Tag
+import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsIcons
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
@@ -78,6 +82,7 @@ import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.RowIconButton
+import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.button.ButtonContentConfig
@@ -88,81 +93,126 @@ import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceInfoScreen(padding: PaddingValues, deviceStateByViewModel: StateFlow<DeviceState>) {
-    val device = deviceStateByViewModel.collectAsState().value.device
-    val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
-    val title = remember { device.createDeviceTitle() }
-    val specificationsMap = remember { device.specifications.toMap() }
-    val listOfTagsIcons = device.createListOfTagsIcons()
-    val sheetState = rememberModalBottomSheetState()
-    val tagsSheetIsVisible = remember { mutableStateOf(false) }
+fun DeviceInfoScreen(
+    padding: PaddingValues,
+    userDataByViewModel: StateFlow<User>,
+    updateDeviceHistory: suspend (List<String>) -> Boolean,
+    deviceStateByViewModel: StateFlow<DeviceState>,
+) {
+    val deviceState = deviceStateByViewModel.collectAsState().value.device
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            ImageContainer(pagerState, device.imageUrls)
+    when (deviceState.status) {
+        StatusEnum.LOADING -> {
+            Spinner(text = "Загрузка...")
         }
 
-        item {
-            Spacer(modifier = Modifier.height(10.dp))
-            BoxedChipGroup(
-                items = listOfTagsIcons,
-                buttonContentConfig =
-                    ButtonContentConfig(
-                        text = "Подробнее о метках",
-                        textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
-                        icon = ImageVector.vectorResource(id = R.drawable.i_arrow_right),
-                        iconConfig = IconConfig.Default,
-                        onClick = { tagsSheetIsVisible.value = true },
-                    ),
-            )
-        }
+        StatusEnum.OK -> {
+            val device = deviceStateByViewModel.collectAsState().value.device.value!!
+            val userData = userDataByViewModel.collectAsState().value
+            val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
+            val title = remember { device.createDeviceTitle() }
+            val specificationsMap = remember { device.specifications.toMap() }
+            val listOfTagsIcons = device.createListOfTagsIcons()
+            val sheetState = rememberModalBottomSheetState()
+            val tagsSheetIsVisible = remember { mutableStateOf(false) }
 
-        item {
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(
-                text = title,
-                modifier = Modifier.fillMaxWidth(0.9f),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-            )
-        }
+            LaunchedEffect(key1 = Unit) {
+                if (!userData.deviceHistory.contains(device.uid)) {
+                    updateDeviceHistory(userData.deviceHistory + device.uid)
+                }
+            }
 
-        item {
-            Spacer(modifier = Modifier.height(15.dp))
-            FeedbackContainer(
-                generateFeedbackList(
-                    device.feedback.rating,
-                    device.feedback.reviewsCount,
-                    device.feedback.questionsCount,
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().padding(padding),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    ImageContainer(pagerState, device.imageUrls)
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    BoxedChipGroup(
+                        items = listOfTagsIcons,
+                        buttonContentConfig =
+                            ButtonContentConfig(
+                                text = "Подробнее о метках",
+                                textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
+                                icon = ImageVector.vectorResource(id = R.drawable.i_arrow_right),
+                                iconConfig = IconConfig.Default,
+                                onClick = { tagsSheetIsVisible.value = true },
+                            ),
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        text = title,
+                        modifier = Modifier.fillMaxWidth(0.9f),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(15.dp))
+                    FeedbackContainer(
+                        generateFeedbackList(
+                            device.feedback.rating,
+                            device.feedback.reviewsCount,
+                            device.feedback.questionsCount,
+                        )
+                    )
+                }
+
+                item {
+                    Spacer(modifier = Modifier.height(15.dp))
+                    PriceAndConfigurations(device.price, device.configurations, device.colors)
+                }
+
+                items(specificationsMap.keys.toList()) { categoryKey ->
+                    Specifications(
+                        category = categoryKey,
+                        specifications = specificationsMap[categoryKey]!!,
+                    )
+                }
+
+                item { Spacer(modifier = Modifier.height(20.dp)) }
+            }
+
+            if (tagsSheetIsVisible.value) {
+                TagsBottomSheet(
+                    tagsSheetIsVisible = tagsSheetIsVisible,
+                    sheetState = sheetState,
+                    allTagsWithIcons = device.createListOfTagsWithIcons(),
                 )
-            )
+            }
         }
 
-        item {
-            Spacer(modifier = Modifier.height(15.dp))
-            PriceAndConfigurations(device.price, device.configurations, device.colors)
+        StatusEnum.ERROR -> {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+            ) {
+                Icon(
+                    imageVector = ImageVector.vectorResource(R.drawable.i_error),
+                    contentDescription = "",
+                    modifier = Modifier.size(30.dp),
+                    tint = MaterialTheme.colorScheme.primary,
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Text(text = "При загрузке данных произошла ошибка")
+            }
         }
 
-        items(specificationsMap.keys.toList()) { categoryKey ->
-            Specifications(
-                category = categoryKey,
-                specifications = specificationsMap[categoryKey]!!,
-            )
+        else -> {
+            // DO nothing
         }
-
-        item { Spacer(modifier = Modifier.height(20.dp)) }
-    }
-
-    if (tagsSheetIsVisible.value) {
-        TagsBottomSheet(
-            tagsSheetIsVisible = tagsSheetIsVisible,
-            sheetState = sheetState,
-            allTagsWithIcons = device.createListOfTagsWithIcons(),
-        )
     }
 }
 

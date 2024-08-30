@@ -126,6 +126,10 @@ fun SplashScreen(
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }
+
+                else -> {
+                    // Do nothing
+                }
             }
 
             Spacer(modifier = Modifier.width(10.dp))

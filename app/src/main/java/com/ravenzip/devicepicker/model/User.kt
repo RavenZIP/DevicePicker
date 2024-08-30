@@ -4,6 +4,12 @@ package com.ravenzip.devicepicker.model
 // но с большой долей вероятности изменится к моменту полноценной реализации
 // Firebase срезает наименования, которые начинаются с is и get
 // Поэтому вместо isAdmin просто admin
-data class User(val admin: Boolean, val searchHistory: List<String>, val reviews: List<String>) {
-    constructor() : this(admin = false, searchHistory = listOf(), reviews = listOf())
+data class User(
+    val admin: Boolean,
+    val deviceHistory: List<String>,
+    val reviews: List<String>,
+    val favourites: List<String>,
+) {
+    constructor() :
+        this(admin = false, deviceHistory = listOf(), reviews = listOf(), favourites = listOf())
 }

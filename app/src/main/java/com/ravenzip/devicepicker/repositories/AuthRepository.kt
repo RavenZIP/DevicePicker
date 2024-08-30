@@ -8,7 +8,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.AuthErrorsEnum
-import com.ravenzip.devicepicker.model.result.OperationError
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.sources.AuthSources
 import javax.inject.Inject
@@ -31,14 +30,10 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             Result.success(value = true)
         } catch (e: FirebaseNetworkException) {
             withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
-            Result.error(
-                error = OperationError.networkError("Не удалось обновить данные о пользователе")
-            )
+            Result.networkError(errorMessage = "Не удалось обновить данные о пользователе")
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
-            Result.error(
-                error = OperationError.default("Не удалось обновить данные о пользователе")
-            )
+            Result.error(errorMessage = "Не удалось обновить данные о пользователе")
         }
     }
 
@@ -48,7 +43,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             Result.success(value = result)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
-            Result.error(error = OperationError.default("Произошла ошибка при выполнении запроса"))
+            Result.error(errorMessage = "Произошла ошибка при выполнении запроса")
         }
     }
 
@@ -63,14 +58,14 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result.error(error = OperationError.default(error))
+            Result.error(errorMessage = error)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "CreateUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
+            Result.error(errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
@@ -87,9 +82,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 )
             }
 
-            Result.error(
-                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
-            )
+            Result.error(errorMessage = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         } catch (e: FirebaseAuthException) {
             val error = AuthErrorsEnum.getErrorMessage(e)
             withContext(Dispatchers.Main) {
@@ -97,14 +90,14 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result.error(error = OperationError.default(error))
+            Result.error(errorMessage = error)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "LoginUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value))
+            Result.error(errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
@@ -121,20 +114,14 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 )
             }
 
-            Result.error(
-                value = false,
-                error = OperationError.default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value),
-            )
+            Result.error(value = false, errorMessage = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendEmailVerification")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(
-                value = false,
-                error = OperationError.default(AuthErrorsEnum.ERROR_DEFAULT.value),
-            )
+            Result.error(value = false, errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
@@ -152,7 +139,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 Log.d("Method", "SendPasswordResetEmail")
                 Log.d("Exception", "${e.message}")
             }
-            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
+            Result.error(value = false, errorMessage = "Ошибка сброса пароля")
         }
     }
 
@@ -168,7 +155,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             Result.success(true)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
-            Result.error(value = false, error = OperationError.default("Ошибка сброса пароля"))
+            Result.error(value = false, errorMessage = "Ошибка сброса пароля")
         }
     }
 }

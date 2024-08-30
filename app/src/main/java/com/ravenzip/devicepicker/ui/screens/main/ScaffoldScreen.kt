@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.StateFlow
 fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
     userDataByViewModel: StateFlow<User>,
+    updateDeviceHistory: suspend (List<String>) -> Boolean,
     firebaseUser: FirebaseUser?,
     getUserData: suspend () -> Unit,
     logout: suspend () -> Unit,
@@ -82,6 +83,7 @@ fun ScaffoldScreen(
             navController = navController,
             padding = padding,
             userDataByViewModel = userDataByViewModel,
+            updateDeviceHistory = updateDeviceHistory,
             firebaseUser = firebaseUser,
             getUserData = getUserData,
             logout = logout,

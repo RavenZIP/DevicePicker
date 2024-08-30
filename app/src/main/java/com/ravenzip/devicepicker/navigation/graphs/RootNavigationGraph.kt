@@ -50,6 +50,9 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
 
             ScaffoldScreen(
                 userDataByViewModel = userViewModel.user,
+                updateDeviceHistory = { deviceHistory ->
+                    userViewModel.updateDeviceHistory(deviceHistory)
+                },
                 firebaseUser = userViewModel.firebaseUser,
                 getUserData = { userViewModel.getUserData() },
                 logout = { userViewModel.logout() },

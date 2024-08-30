@@ -113,4 +113,11 @@ constructor(
     suspend fun createUserData(): Boolean {
         return userRepository.createUserData(firebaseUser?.uid)
     }
+
+    suspend fun updateDeviceHistory(deviceHistory: List<String>): Boolean {
+        val response = userRepository.updateDeviceHistory(firebaseUser?.uid, deviceHistory)
+        _user.update { _user.value.copy(deviceHistory = deviceHistory) }
+
+        return response
+    }
 }

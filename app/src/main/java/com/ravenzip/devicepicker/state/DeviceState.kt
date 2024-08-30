@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.state
 
 import com.ravenzip.devicepicker.model.device.Device
+import com.ravenzip.devicepicker.model.result.Result
 
 /**
  * Состояние данных об устройстве (полная модель)
@@ -9,6 +10,6 @@ import com.ravenzip.devicepicker.model.device.Device
  *
  * [deviceList] - Кэш устройств на время работы с приложением
  */
-class DeviceState(var device: Device, val deviceList: MutableList<Device>) {
-    constructor() : this(device = Device(), deviceList = mutableListOf())
+data class DeviceState(val device: Result<Device?>, val deviceList: MutableList<Device>) {
+    constructor() : this(device = Result.default(), deviceList = mutableListOf())
 }

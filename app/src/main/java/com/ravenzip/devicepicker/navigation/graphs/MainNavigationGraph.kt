@@ -30,6 +30,7 @@ fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
     userDataByViewModel: StateFlow<User>,
+    updateDeviceHistory: suspend (List<String>) -> Boolean,
     firebaseUser: FirebaseUser?,
     getUserData: suspend () -> Unit,
     logout: suspend () -> Unit,
@@ -66,15 +67,17 @@ fun MainNavigationGraph(
             HomeScreen(
                 padding = padding,
                 deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
-                getCachedDevice = { uid -> deviceViewModel.getCachedDevice(uid) },
-                getDeviceByBrandAndUid = { uid, brand, model ->
-                    deviceViewModel.getDeviceByBrandAndUid(uid, brand, model)
-                },
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+                getDevice = { uid, brand, model -> deviceViewModel.getDevice(uid, brand, model) },
             )
         }
 
-        homeNavigationGraph(padding = padding, deviceStateByViewModel = deviceViewModel.deviceState)
+        homeNavigationGraph(
+            padding = padding,
+            userDataByViewModel = userDataByViewModel,
+            updateDeviceHistory = updateDeviceHistory,
+            deviceStateByViewModel = deviceViewModel.deviceState,
+        )
 
         // / Поиск
         navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) {

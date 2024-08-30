@@ -7,13 +7,16 @@ import javax.inject.Singleton
 
 @Singleton
 class UserSources @Inject constructor() {
-    private val userRef = FirebaseDatabase.getInstance().getReference("Users")
+    private val usersReference = FirebaseDatabase.getInstance().getReference("Users")
 
-    fun userSource(): DatabaseReference {
-        return userRef
+    val root
+        get(): DatabaseReference = usersReference
+
+    fun currentUser(userUid: String): DatabaseReference {
+        return usersReference.child(userUid)
     }
 
-    fun userSourceByUid(userUid: String): DatabaseReference {
-        return userRef.child(userUid)
+    fun deviceHistory(userUid: String): DatabaseReference {
+        return usersReference.child(userUid).child("deviceHistory")
     }
 }

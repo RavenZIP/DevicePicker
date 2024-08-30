@@ -17,7 +17,7 @@ class UserRepository @Inject constructor(private val userSources: UserSources) {
     suspend fun getUserData(userUid: String?) =
         flow {
                 if (userUid != null) {
-                    val response = userSources.userSourceByUid(userUid).get().await()
+                    val response = userSources.currentUser(userUid).get().await()
                     val convertedResponse = response.getValue<User>()
                     emit(convertedResponse ?: User())
                 } else {
@@ -32,13 +32,27 @@ class UserRepository @Inject constructor(private val userSources: UserSources) {
     suspend fun createUserData(userUid: String?): Boolean {
         return try {
             if (userUid != null) {
-                userSources.userSourceByUid(userUid).setValue(User()).await()
+                userSources.currentUser(userUid).setValue(User()).await()
                 true
             } else {
                 throw Exception("user is null")
             }
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.e("createUserData", "${e.message}") }
+            false
+        }
+    }
+
+    suspend fun updateDeviceHistory(userUid: String?, deviceHistory: List<String>): Boolean {
+        return try {
+            if (userUid != null) {
+                userSources.deviceHistory(userUid).setValue(deviceHistory).await()
+                true
+            } else {
+                throw Exception("user is null")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) { Log.e("updateDeviceHistory", "${e.message}") }
             false
         }
     }

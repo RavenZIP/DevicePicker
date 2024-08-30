@@ -4,4 +4,5 @@ enum class StatusEnum {
     OK,
     ERROR,
     LOADING,
+    UNKNOWN,
 }

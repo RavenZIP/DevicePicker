@@ -1,5 +1,6 @@
 package com.ravenzip.devicepicker.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,16 +29,9 @@ import kotlinx.coroutines.CoroutineScope
 
 /** Карточка устройства, с вертикальным расположением данных */
 @Composable
-fun ColumnDeviceCard(
-    device: DeviceCompact,
-    coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend () -> Unit,
-) {
+fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
     Card(
-        modifier =
-            Modifier.clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToDeviceCard()
-            },
+        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { onClick() },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {

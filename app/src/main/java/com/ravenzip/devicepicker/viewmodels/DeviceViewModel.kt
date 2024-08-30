@@ -3,10 +3,11 @@ package com.ravenzip.devicepicker.viewmodels
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
-import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.DeviceRepository
 import com.ravenzip.devicepicker.repositories.ImageRepository
 import com.ravenzip.devicepicker.state.DeviceCompactState
@@ -16,10 +17,13 @@ import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class DeviceViewModel
@@ -46,33 +50,59 @@ constructor(
                 _deviceCompactState.value.allDevices.addAll(devices)
                 createCategories()
             }
-            .flatMapLatest { imageRepository.getImageUrls(_deviceCompactState.value.allDevices) }
+            .flatMapLatest { devices -> imageRepository.getImageUrls(devices) }
             .flatMapMerge(concurrency = 3) { it }
             .collect { imageUrl -> setImageUrlToDevices(imageUrl) }
     }
 
-    /** Получить закешированное устройство */
-    fun getCachedDevice(uid: String): Device? {
-        val cachedDevice = _deviceState.value.deviceList.find { device -> device.uid == uid }
-        if (cachedDevice !== null) {
-            _deviceState.value.device = cachedDevice
-        }
-
-        return cachedDevice
-    }
-
     /** Получение устройства по бренду и уникальному идентификатору */
-    suspend fun getDeviceByBrandAndUid(uid: String, brand: String, model: String) {
+    private suspend fun getDeviceByBrandAndUid(uid: String, brand: String, model: String) {
         deviceRepository
             .getDeviceByBrandAndUid(brand, uid)
             .zip(imageRepository.getImageUrls(brand, model)) { device, imageUrls ->
                 if (device != null) {
                     val deviceWithImageUrls = device.copy(imageUrls = imageUrls)
-                    deviceState.value.device = deviceWithImageUrls
-                    deviceState.value.deviceList.add(deviceWithImageUrls)
+                    val updatedDeviceList = _deviceState.value.deviceList + deviceWithImageUrls
+
+                    _deviceState.update {
+                        DeviceState(
+                            device = Result.success(deviceWithImageUrls),
+                            deviceList = updatedDeviceList.toMutableList(),
+                        )
+                    }
+                } else {
+                    val errorMessage = "При выполении запроса произошла ошибка"
+                    _deviceState.update {
+                        _deviceState.value.copy(device = Result.error(errorMessage = errorMessage))
+                    }
                 }
             }
             .collect {}
+    }
+
+    /**
+     * Получение полной информации об устройстве
+     *
+     * Сначала идет попытка получения закешированного устройства. Если его нет, то выполняется
+     * запрос
+     *
+     * @param uid уникальный идентификатор устройства
+     * @param brand бренд устройства
+     * @param model модель устройства
+     */
+    fun getDevice(uid: String, brand: String, model: String) {
+        viewModelScope.launch {
+            _deviceState.update { _deviceState.value.copy(device = Result.loading()) }
+            val cachedDevice = _deviceState.value.deviceList.find { device -> device.uid == uid }
+
+            if (cachedDevice == null) {
+                getDeviceByBrandAndUid(uid, brand, model)
+            } else {
+                _deviceState.update {
+                    _deviceState.value.copy(device = Result.success(cachedDevice))
+                }
+            }
+        }
     }
 
     /** Заполнить урл изображения для конкретного устройства */
