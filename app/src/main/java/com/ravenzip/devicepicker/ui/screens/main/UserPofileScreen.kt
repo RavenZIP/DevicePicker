@@ -37,8 +37,9 @@ import kotlinx.coroutines.flow.StateFlow
 fun UserProfileScreen(
     padding: PaddingValues,
     userDataByViewModel: StateFlow<User>,
-    onClickLogout: () -> Unit,
-    onClickAdminPanel: () -> Unit,
+    onClickToAdminPanel: () -> Unit,
+    onClickToDeviceHistory: () -> Unit,
+    onClickToLogout: () -> Unit,
 ) {
     val alertDialogIsShown = remember { mutableStateOf(false) }
     val userData = userDataByViewModel.collectAsState().value
@@ -60,7 +61,7 @@ fun UserProfileScreen(
                 iconConfig = IconConfig(color = MaterialTheme.colorScheme.tertiary),
                 colors = ButtonDefaults.inverseMixColors(),
             ) {
-                onClickAdminPanel()
+                onClickToAdminPanel()
             }
             Spacer(modifier = Modifier.padding(top = 15.dp))
         }
@@ -83,7 +84,9 @@ fun UserProfileScreen(
             icon = ImageVector.vectorResource(R.drawable.i_history),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            onClickToDeviceHistory()
+        }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
 
@@ -172,7 +175,7 @@ fun UserProfileScreen(
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 alertDialogIsShown.value = false
-                onClickLogout()
+                onClickToLogout()
             },
         )
     }

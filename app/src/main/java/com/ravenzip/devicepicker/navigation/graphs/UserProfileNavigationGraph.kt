@@ -6,6 +6,7 @@ import androidx.navigation.navigation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.ui.screens.user.AdminPanelScreen
+import com.ravenzip.devicepicker.ui.screens.user.DeviceHistoryScreen
 
 fun NavGraphBuilder.userProfileNavigationGraph(padding: PaddingValues) {
     navigation(
@@ -14,6 +15,10 @@ fun NavGraphBuilder.userProfileNavigationGraph(padding: PaddingValues) {
     ) {
         navigateWithFadeAnimation(route = UserProfileGraph.ADMIN_PANEL) {
             AdminPanelScreen(padding = padding)
+        }
+
+        navigateWithFadeAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
+            DeviceHistoryScreen(padding = padding)
         }
     }
 }

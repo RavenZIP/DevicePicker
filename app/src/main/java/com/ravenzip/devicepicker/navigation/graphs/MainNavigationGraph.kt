@@ -99,8 +99,11 @@ fun MainNavigationGraph(
             UserProfileScreen(
                 padding = padding,
                 userDataByViewModel = userDataByViewModel,
-                onClickLogout = onClickLogout,
-                onClickAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
+                onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
+                onClickToDeviceHistory = {
+                    navController.navigate(UserProfileGraph.DEVICE_HISTORY)
+                },
+                onClickToLogout = onClickLogout,
             )
         }
 

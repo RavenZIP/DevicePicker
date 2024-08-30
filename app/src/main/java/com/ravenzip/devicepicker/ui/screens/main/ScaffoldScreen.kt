@@ -244,6 +244,11 @@ private fun ChangeScaffoldItemsState(
             changeBottomBarState(false)
         }
 
+        UserProfileGraph.DEVICE_HISTORY -> {
+            setTopAppBarState(TopAppBarState.createTopAppBarState("История просмотров"))
+            changeBottomBarState(false)
+        }
+
         else -> {
             // do nothing
         }
