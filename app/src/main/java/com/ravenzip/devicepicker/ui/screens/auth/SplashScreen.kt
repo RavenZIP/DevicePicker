@@ -18,9 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -30,46 +28,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.constants.enums.OperationErrorTypeEnum
 import com.ravenzip.devicepicker.constants.enums.StatusEnum
-import com.ravenzip.devicepicker.model.result.Result
-import kotlinx.coroutines.delay
+import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
 
 @Composable
 fun SplashScreen(
-    destroySplashScreen: () -> Unit,
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
-    reloadUser: suspend () -> Result<Boolean>,
     firebaseUser: FirebaseUser?,
+    splashScreenViewModel: SplashScreenViewModel,
 ) {
-    val text = remember { mutableStateOf("Получение данных о пользователе") }
-    val status = remember { mutableStateOf(StatusEnum.LOADING) }
+    val splashScreenState = splashScreenViewModel.splashScreenState.collectAsState().value
 
-    LaunchedEffect(Unit) {
-        val reloadResult = reloadUser()
-
-        if (reloadResult.value == true) {
-            status.value = StatusEnum.OK
-            text.value = "Загрузка данных завершена"
-
-            delay(500)
-            destroySplashScreen()
-
-            if (firebaseUser !== null) {
-                navigateToMain()
-            } else {
-                navigateToAuthentication()
-            }
-        } else {
-            status.value = StatusEnum.ERROR
-
-            if (reloadResult.error?.type == OperationErrorTypeEnum.NETWORK_ERROR) {
-                text.value = "Ошибка сети. Попробуйте позднее"
-            } else {
-                text.value = "Произошла неизвестная ошибка"
-            }
-        }
+    if (splashScreenState.status == StatusEnum.OK) {
+        if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
     }
 
     Column(
@@ -100,7 +72,7 @@ fun SplashScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            when (status.value) {
+            when (splashScreenState.status) {
                 StatusEnum.LOADING -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -134,7 +106,7 @@ fun SplashScreen(
 
             Spacer(modifier = Modifier.width(10.dp))
             Text(
-                text = text.value,
+                text = splashScreenState.value!!.text,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.W500,
                 letterSpacing = 0.sp,

@@ -3,11 +3,11 @@ package com.ravenzip.devicepicker.navigation.graphs
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.LocalView
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.ForgotPasswordScreen
@@ -35,7 +35,9 @@ fun NavGraphBuilder.authNavigationGraph(
                 logInAnonymously = { userViewModel.logInAnonymously() },
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
-                navigateToHomeScreen = { navigateToHome(navController) },
+                navigateToHomeScreen = {
+                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                },
             )
         }
         navigateWithFadeAnimation(route = AuthGraph.REGISTRATION) {
@@ -48,7 +50,9 @@ fun NavGraphBuilder.authNavigationGraph(
 
             RegistrationScreen(
                 userViewModel = userViewModel,
-                navigateToHomeScreen = { navigateToHome(navController) },
+                navigateToHomeScreen = {
+                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                },
             )
         }
         navigateWithFadeAnimation(route = AuthGraph.LOGIN) {
@@ -64,7 +68,9 @@ fun NavGraphBuilder.authNavigationGraph(
                 logInUserWithEmail = { email, password ->
                     userViewModel.logInUserWithEmail(email, password)
                 },
-                navigateToHomeScreen = { navigateToHome(navController) },
+                navigateToHomeScreen = {
+                    navController.navigateWithoutPreviousRoute(RootGraph.MAIN)
+                },
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
             )
         }
@@ -81,12 +87,5 @@ fun NavGraphBuilder.authNavigationGraph(
                 sendPasswordResetEmail = { email -> userViewModel.sendPasswordResetEmail(email) },
             )
         }
-    }
-}
-
-private fun navigateToHome(navController: NavHostController) {
-    // Для того, чтобы перейти на главный экран и при этом невозможно было вернуться назад
-    navController.navigate(RootGraph.MAIN) {
-        popUpTo(navController.graph.findStartDestination().id) { inclusive = true }
     }
 }

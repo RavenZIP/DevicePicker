@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +42,7 @@ fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
                 imageOptions = ImageOptions(contentScale = ContentScale.Fit),
             )
 
-            Spacer(modifier = Modifier.padding(top = 5.dp))
+            Spacer(modifier = Modifier.height(5.dp))
 
             Price(price = device.price)
             SmallText(text = device.model)

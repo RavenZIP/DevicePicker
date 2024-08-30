@@ -8,6 +8,8 @@ class Result<T>(val value: T?, val status: StatusEnum, val error: OperationError
 
         fun <T> loading() = Result<T>(null, StatusEnum.LOADING, null)
 
+        fun <T> loading(value: T) = Result(value, StatusEnum.LOADING, null)
+
         fun <T> success(value: T) = Result(value, StatusEnum.OK, null)
 
         fun <T> error(errorMessage: String) =

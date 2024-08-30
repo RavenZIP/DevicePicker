@@ -4,14 +4,17 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideInAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
 import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
+import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
@@ -29,12 +32,15 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                 isAppearanceLight = !isSystemInDarkTheme(),
             )
 
+            val splashScreenViewModel = hiltViewModel<SplashScreenViewModel>()
+
             SplashScreen(
-                destroySplashScreen = { navController.popBackStack() },
-                navigateToAuthentication = { navController.navigate(RootGraph.AUTHENTICATION) },
-                navigateToMain = { navController.navigate(RootGraph.MAIN) },
-                reloadUser = { userViewModel.reloadUser() },
+                navigateToAuthentication = {
+                    navController.navigateWithoutPreviousRoute(RootGraph.AUTHENTICATION)
+                },
+                navigateToMain = { navController.navigateWithoutPreviousRoute(RootGraph.MAIN) },
                 firebaseUser = userViewModel.firebaseUser,
+                splashScreenViewModel = splashScreenViewModel,
             )
         }
 
