@@ -143,9 +143,8 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
         }
     }
 
-    suspend fun logout() {
+    fun logout() {
         firebaseAuth.signOut()
-        reloadUser()
     }
 
     suspend fun deleteAccount(): Result<Boolean> {

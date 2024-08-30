@@ -33,7 +33,7 @@ fun MainNavigationGraph(
     updateDeviceHistory: suspend (List<String>) -> Boolean,
     firebaseUser: FirebaseUser?,
     getUserData: suspend () -> Unit,
-    logout: suspend () -> Unit,
+    onClickLogout: () -> Unit,
 ) {
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
     val brandViewModel = hiltViewModel<BrandViewModel>()
@@ -62,7 +62,7 @@ fun MainNavigationGraph(
         route = RootGraph.MAIN,
         startDestination = BottomBarGraph.HOME,
     ) {
-        // / Домашний экран
+        // Домашний экран
         navigateWithFadeAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
                 padding = padding,
@@ -79,7 +79,7 @@ fun MainNavigationGraph(
             deviceStateByViewModel = deviceViewModel.deviceState,
         )
 
-        // / Поиск
+        // Поиск
         navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) {
             SearchScreen(
                 padding = padding,
@@ -88,19 +88,19 @@ fun MainNavigationGraph(
             )
         }
 
-        // / Избранное
+        // Избранное
         navigateWithFadeAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
 
-        // / Сравнение
+        // Сравнение
         navigateWithFadeAnimation(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
 
-        // / Профиль пользователя
+        // Профиль пользователя
         navigateWithFadeAnimation(route = BottomBarGraph.USER_PROFILE) {
             UserProfileScreen(
                 padding = padding,
                 userDataByViewModel = userDataByViewModel,
-                logout = logout,
-                onClick = arrayOf({ navController.navigate(UserProfileGraph.ADMIN_PANEL) }),
+                onClickLogout = onClickLogout,
+                onClickAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
             )
         }
 

@@ -69,7 +69,13 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                 },
                 firebaseUser = userViewModel.firebaseUser,
                 getUserData = { userViewModel.getUserData() },
-                logout = { userViewModel.logout() },
+                onClickLogout = {
+                    userViewModel.logout()
+                    navController.navigateWithoutPreviousRoute(
+                        startDestination = RootGraph.ROOT,
+                        targetDestination = RootGraph.SPLASH_SCREEN,
+                    )
+                },
             )
         }
     }

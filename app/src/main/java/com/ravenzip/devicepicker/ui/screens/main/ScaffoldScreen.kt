@@ -44,7 +44,7 @@ fun ScaffoldScreen(
     updateDeviceHistory: suspend (List<String>) -> Boolean,
     firebaseUser: FirebaseUser?,
     getUserData: suspend () -> Unit,
-    logout: suspend () -> Unit,
+    onClickLogout: () -> Unit,
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
     val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
@@ -86,7 +86,7 @@ fun ScaffoldScreen(
             updateDeviceHistory = updateDeviceHistory,
             firebaseUser = firebaseUser,
             getUserData = getUserData,
-            logout = logout,
+            onClickLogout = onClickLogout,
         )
     }
 }

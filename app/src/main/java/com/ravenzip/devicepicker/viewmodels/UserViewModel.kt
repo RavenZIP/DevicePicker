@@ -91,7 +91,7 @@ constructor(
     }
 
     /** Выполнить выход из аккаунта */
-    suspend fun logout() {
+    fun logout() {
         authRepository.logout()
     }
 
