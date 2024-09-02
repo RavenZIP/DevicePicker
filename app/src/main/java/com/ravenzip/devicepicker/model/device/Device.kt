@@ -1,8 +1,6 @@
 package com.ravenzip.devicepicker.model.device
 
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.tagIconMap
 import com.ravenzip.devicepicker.constants.map.tagsColorMap
@@ -11,6 +9,7 @@ import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconWithConfig
 
@@ -52,7 +51,7 @@ data class Device(
                     name = tag,
                     icon =
                         IconWithConfig(
-                            icon = ImageVector.vectorResource(tagIconMap[tag]!!),
+                            icon = Icon.ResourceIcon(tagIconMap[tag]!!),
                             config = IconConfig(size = 20, color = tagsColorMap[tag]),
                         ),
                 )
@@ -62,7 +61,7 @@ data class Device(
         fun Device.createListOfTagsIcons() =
             this.tags.map { tag ->
                 IconWithConfig(
-                    icon = ImageVector.vectorResource(tagIconMap[tag]!!),
+                    icon = Icon.ResourceIcon(tagIconMap[tag]!!),
                     config = IconConfig(size = 20, color = tagsColorMap[tag]),
                 )
             }

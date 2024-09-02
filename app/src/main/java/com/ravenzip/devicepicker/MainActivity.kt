@@ -10,7 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
-import com.ravenzip.devicepicker.services.InitializeSnackBarIcons
 import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,7 +29,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                     installSplashScreen()
-                    InitializeSnackBarIcons()
 
                     RootNavigationGraph(navController = rememberNavController())
                 }

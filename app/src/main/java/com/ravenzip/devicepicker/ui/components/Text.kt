@@ -35,7 +35,8 @@ fun ScreenTitle(text: String) {
         modifier = Modifier.fillMaxWidth(0.9f),
         fontSize = 25.sp,
         fontWeight = FontWeight.Medium,
-        letterSpacing = 0.sp)
+        letterSpacing = 0.sp,
+    )
 }
 
 @Composable
@@ -43,14 +44,15 @@ fun CustomText(
     text: String,
     modifier: Modifier = Modifier,
     size: Int = 14,
-    fontWeight: FontWeight = FontWeight.W400
+    fontWeight: FontWeight = FontWeight.W400,
 ) {
     Text(
         text = text,
         modifier = modifier,
         fontSize = size.sp,
         fontWeight = fontWeight,
-        textAlign = TextAlign.Start)
+        textAlign = TextAlign.Start,
+    )
 }
 
 @Composable
@@ -59,7 +61,7 @@ fun SmallText(
     modifier: Modifier = Modifier,
     fontWeight: FontWeight = FontWeight.W400,
     textAlign: TextAlign? = null,
-    letterSpacing: TextUnit = TextUnit.Unspecified
+    letterSpacing: TextUnit = TextUnit.Unspecified,
 ) {
     Text(
         text = text,
@@ -67,14 +69,15 @@ fun SmallText(
         fontSize = 14.sp,
         fontWeight = fontWeight,
         textAlign = textAlign,
-        letterSpacing = letterSpacing)
+        letterSpacing = letterSpacing,
+    )
 }
 
 @Composable
 fun DefaultText(
     text: String,
     modifier: Modifier = Modifier,
-    fontWeight: FontWeight = FontWeight.W400
+    fontWeight: FontWeight = FontWeight.W400,
 ) {
     Text(text = text, modifier = modifier, fontWeight = fontWeight)
 }
@@ -93,18 +96,20 @@ fun PriceRange(price: Int) {
     Button(
         onClick = { /*TODO*/ },
         shape = RoundedCornerShape(10.dp),
-        contentPadding = PaddingValues(10.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(text = formattedPrice, fontSize = 22.sp, fontWeight = FontWeight.Bold)
+        contentPadding = PaddingValues(10.dp),
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(text = formattedPrice, fontSize = 22.sp, fontWeight = FontWeight.Bold)
 
-                Spacer(modifier = Modifier.width(5.dp))
+            Spacer(modifier = Modifier.width(5.dp))
 
-                Icon(
-                    modifier = Modifier.size(22.dp),
-                    imageVector = ImageVector.vectorResource(R.drawable.i_right),
-                    contentDescription = null)
-            }
+            Icon(
+                modifier = Modifier.size(22.dp),
+                imageVector = ImageVector.vectorResource(R.drawable.i_right),
+                contentDescription = null,
+            )
         }
+    }
 }
 
 @Composable
@@ -121,23 +126,24 @@ fun TextWithIcon(
     fontWeight: FontWeight = FontWeight.W400,
     spacerWidth: Dp = 10.dp,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.Start,
-    smallText: Boolean = false
+    smallText: Boolean = false,
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = horizontalArrangement) {
-            Icon(
-                modifier = Modifier.size(iconSize),
-                imageVector = icon,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary)
+        horizontalArrangement = horizontalArrangement,
+    ) {
+        Icon(
+            modifier = Modifier.size(iconSize),
+            imageVector = icon,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
 
-            Spacer(modifier = Modifier.width(spacerWidth))
+        Spacer(modifier = Modifier.width(spacerWidth))
 
-            if (smallText) SmallText(text = text, fontWeight = fontWeight)
-            else DefaultText(text = text)
-        }
+        if (smallText) SmallText(text = text, fontWeight = fontWeight) else DefaultText(text = text)
+    }
 }
 
 @Composable

@@ -17,8 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
@@ -30,6 +28,7 @@ import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import kotlinx.coroutines.flow.StateFlow
 
@@ -57,7 +56,7 @@ fun UserProfileScreen(
             RowIconButton(
                 text = "Панель администратора",
                 textConfig = TextConfig.onSurfaceH2,
-                icon = ImageVector.vectorResource(R.drawable.i_rocket),
+                icon = Icon.ResourceIcon(R.drawable.i_rocket),
                 iconConfig = IconConfig(color = MaterialTheme.colorScheme.tertiary),
                 colors = ButtonDefaults.inverseMixColors(),
             ) {
@@ -69,7 +68,7 @@ fun UserProfileScreen(
         RowIconButton(
             text = "Настройки аккаунта",
             textConfig = TextConfig.onSurfaceH2,
-            icon = ImageVector.vectorResource(R.drawable.i_user_settings),
+            icon = Icon.ResourceIcon(R.drawable.i_user_settings),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -81,7 +80,7 @@ fun UserProfileScreen(
             titleConfig = TextConfig.onSurfaceH2,
             text = "Список просмотренных вами устройств",
             textConfig = TextConfig.onSurface85Small,
-            icon = ImageVector.vectorResource(R.drawable.i_history),
+            icon = Icon.ResourceIcon(R.drawable.i_history),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {
@@ -95,7 +94,7 @@ fun UserProfileScreen(
             titleConfig = TextConfig.onSurfaceH2,
             text = "Список оставленных вами отзывов",
             textConfig = TextConfig.onSurface85Small,
-            icon = ImageVector.vectorResource(R.drawable.i_feedback),
+            icon = Icon.ResourceIcon(R.drawable.i_feedback),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -107,7 +106,7 @@ fun UserProfileScreen(
             titleConfig = TextConfig.onSurfaceH2,
             text = "Посмотреть информацию об имеющихся акциях и выгодных предложениях",
             textConfig = TextConfig.onSurface85Small,
-            icon = ImageVector.vectorResource(R.drawable.i_stocks),
+            icon = Icon.ResourceIcon(R.drawable.i_stocks),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -119,7 +118,7 @@ fun UserProfileScreen(
             titleConfig = TextConfig.onSurfaceH2,
             text = "Выполнить выход из аккаунта",
             textConfig = TextConfig.onSurface85Small,
-            icon = ImageVector.vectorResource(R.drawable.sign_in),
+            icon = Icon.ResourceIcon(R.drawable.sign_in),
             iconConfig = IconConfig(color = errorColor),
             colors = ButtonDefaults.containerColor(),
         ) {
@@ -135,7 +134,7 @@ fun UserProfileScreen(
         RowIconButton(
             text = "Внешний вид",
             textConfig = TextConfig.onSurfaceH2,
-            icon = ImageVector.vectorResource(R.drawable.i_theme),
+            icon = Icon.ResourceIcon(R.drawable.i_theme),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -147,7 +146,7 @@ fun UserProfileScreen(
             titleConfig = TextConfig.onSurfaceH2,
             text = "Настроить пуш-уведомления и уведомления внутри приложения",
             textConfig = TextConfig.onSurface85Small,
-            icon = ImageVector.vectorResource(R.drawable.i_notification),
+            icon = Icon.ResourceIcon(R.drawable.i_notification),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -157,7 +156,7 @@ fun UserProfileScreen(
         RowIconButton(
             text = "Обновления",
             textConfig = TextConfig.onSurfaceH2,
-            icon = ImageVector.vectorResource(R.drawable.i_update),
+            icon = Icon.ResourceIcon(R.drawable.i_update),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
@@ -167,7 +166,7 @@ fun UserProfileScreen(
 
     if (alertDialogIsShown.value) {
         AlertDialog(
-            icon = ImageVector.vectorResource(R.drawable.sign_in),
+            icon = Icon.ResourceIcon(R.drawable.sign_in),
             title = "Выход из аккаунта",
             text = "Вы действительно хотите выполнить выход из аккаунта?",
             onDismissText = "Отмена",

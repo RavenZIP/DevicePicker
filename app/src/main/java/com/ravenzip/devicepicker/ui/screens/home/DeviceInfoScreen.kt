@@ -86,6 +86,7 @@ import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.button.ButtonContentConfig
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
@@ -139,7 +140,7 @@ fun DeviceInfoScreen(
                             ButtonContentConfig(
                                 text = "Подробнее о метках",
                                 textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
-                                icon = ImageVector.vectorResource(id = R.drawable.i_arrow_right),
+                                icon = Icon.ResourceIcon(id = R.drawable.i_arrow_right),
                                 iconConfig = IconConfig.Default,
                                 onClick = { tagsSheetIsVisible.value = true },
                             ),
@@ -481,7 +482,7 @@ private fun TagsBottomSheet(
                     item {
                         InfoCard(
                             width = 0.95f,
-                            icon = ImageVector.vectorResource(R.drawable.i_info),
+                            icon = Icon.ResourceIcon(R.drawable.i_info),
                             iconConfig = IconConfig.PrimaryBig,
                             title = "Описание",
                             text =
@@ -528,7 +529,7 @@ private fun TagsBottomSheet(
                             width = 0.95f,
                             text = "Вернуться назад",
                             textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
-                            icon = ImageVector.vectorResource(R.drawable.i_back),
+                            icon = Icon.ResourceIcon(R.drawable.i_back),
                             colors = ButtonDefaults.veryLightPrimary(),
                             contentPadding = PaddingValues(12.dp),
                             onClick = { selectedTag.value = null },
@@ -556,7 +557,7 @@ private fun TagInfo(tag: Tag?) {
         Spacer(modifier = Modifier.height(10.dp))
         InfoCard(
             width = 0.95f,
-            icon = ImageVector.vectorResource(id = R.drawable.i_info),
+            icon = Icon.ResourceIcon(id = R.drawable.i_info),
             iconConfig = IconConfig.PrimaryBig,
             title = "Описание",
             text = tag.name.description,

@@ -10,8 +10,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -32,6 +30,7 @@ import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.appbar.AppBarItem
 import com.ravenzip.workshop.data.appbar.BottomNavigationItem
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
@@ -115,7 +114,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Главная",
             route = BottomBarGraph.HOME,
-            icon = ImageVector.vectorResource(R.drawable.i_home),
+            icon = Icon.ResourceIcon(R.drawable.i_home),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -124,7 +123,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
-            icon = ImageVector.vectorResource(R.drawable.i_search),
+            icon = Icon.ResourceIcon(R.drawable.i_search),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -133,7 +132,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon = ImageVector.vectorResource(R.drawable.i_heart),
+            icon = Icon.ResourceIcon(R.drawable.i_heart),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -142,7 +141,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
-            icon = ImageVector.vectorResource(R.drawable.i_compare),
+            icon = Icon.ResourceIcon(R.drawable.i_compare),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -151,7 +150,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
-            icon = ImageVector.vectorResource(R.drawable.i_user),
+            icon = Icon.ResourceIcon(R.drawable.i_user),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -163,14 +162,14 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
 private fun deviceInfoScreenTopAppBarItemList(): List<AppBarItem> {
     val favouriteButton =
         AppBarItem(
-            icon = ImageVector.vectorResource(R.drawable.i_heart),
+            icon = Icon.ResourceIcon(R.drawable.i_heart),
             iconConfig = IconConfig.Small,
             onClick = {},
         )
 
     val compareButton =
         AppBarItem(
-            icon = ImageVector.vectorResource(R.drawable.i_compare),
+            icon = Icon.ResourceIcon(R.drawable.i_compare),
             iconConfig = IconConfig.Small,
             onClick = {},
         )

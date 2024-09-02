@@ -5,13 +5,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.tagIconMap
 import com.ravenzip.devicepicker.constants.map.tagsColorMap
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.selection.SelectableChipConfig
 
@@ -38,7 +37,7 @@ data class DeviceCompactState(
                             isSelected = index == 0,
                             text = category.value,
                             textConfig = TextConfig.SmallMedium,
-                            icon = ImageVector.vectorResource(id = tagIconMap[category]!!),
+                            icon = Icon.ResourceIcon(id = tagIconMap[category]!!),
                             iconConfig = IconConfig(size = 20, color = tagsColorMap[category]),
                         )
                     }

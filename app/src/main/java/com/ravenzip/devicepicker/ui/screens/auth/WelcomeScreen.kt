@@ -19,9 +19,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -36,6 +34,7 @@ import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.icon.Icon
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -102,7 +101,7 @@ fun WelcomeScreen(
 
     if (alertDialogIsShownState) {
         AlertDialog(
-            icon = ImageVector.vectorResource(R.drawable.sign_in),
+            icon = Icon.ResourceIcon(R.drawable.sign_in),
             title = WelcomeEnum.DIALOG_WINDOW.title,
             text = WelcomeEnum.DIALOG_WINDOW.text,
             onDismissText = "Назад",

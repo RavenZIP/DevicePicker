@@ -13,10 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
@@ -30,6 +28,7 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
@@ -65,13 +64,13 @@ fun ForgotPasswordScreen(
         SinglenessTextField(
             text = email,
             label = "Электронная почта",
-            leadingIcon = ImageVector.vectorResource(R.drawable.i_email),
+            leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
             error = emailErrorsState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
         InfoCard(
-            icon = ImageVector.vectorResource(R.drawable.i_info),
+            icon = Icon.ResourceIcon(R.drawable.i_info),
             iconConfig = IconConfig.PrimarySmall,
             title = "Важно!",
             text = AuthCardEnum.FORGOT_PASS.value,
