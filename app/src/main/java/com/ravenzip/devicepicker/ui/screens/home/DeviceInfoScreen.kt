@@ -139,7 +139,7 @@ fun DeviceInfoScreen(
                         buttonContentConfig =
                             ButtonContentConfig(
                                 text = "Подробнее о метках",
-                                textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
+                                textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
                                 icon = Icon.ResourceIcon(id = R.drawable.i_arrow_right),
                                 iconConfig = IconConfig.Default,
                                 onClick = { tagsSheetIsVisible.value = true },
@@ -528,7 +528,7 @@ private fun TagsBottomSheet(
                         RowIconButton(
                             width = 0.95f,
                             text = "Вернуться назад",
-                            textConfig = TextConfig(size = 16, weight = FontWeight.Medium),
+                            textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
                             icon = Icon.ResourceIcon(R.drawable.i_back),
                             colors = ButtonDefaults.veryLightPrimary(),
                             contentPadding = PaddingValues(12.dp),
