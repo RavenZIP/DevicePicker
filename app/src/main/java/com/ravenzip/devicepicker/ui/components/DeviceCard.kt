@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -21,12 +20,10 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.smallImageContainer
-import com.ravenzip.devicepicker.extensions.functions.suspendOnClick
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import kotlinx.coroutines.CoroutineScope
 
 /** Карточка устройства, с вертикальным расположением данных */
 @Composable
@@ -60,22 +57,16 @@ fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
 
 /** Карточка устройства, с горизонтальным расположением данных */
 @Composable
-fun RowDeviceCard(
-    device: DeviceCompact,
-    coroutineScope: CoroutineScope,
-    onClickToDeviceCard: suspend () -> Unit,
-) {
+fun RowDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
     Card(
         modifier =
-            Modifier.width(300.dp).clip(RoundedCornerShape(12.dp)).suspendOnClick(coroutineScope) {
-                onClickToDeviceCard()
-            },
+            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(12.dp)).clickable { onClick() },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Row(modifier = Modifier.padding(10.dp), verticalAlignment = Alignment.CenterVertically) {
             FrescoImage(
                 imageUrl = device.imageUrl,
-                modifier = Modifier.smallImageContainer(),
+                modifier = Modifier.smallImageContainer(width = 120.dp, height = 120.dp),
                 imageOptions = ImageOptions(contentScale = ContentScale.Fit),
             )
 

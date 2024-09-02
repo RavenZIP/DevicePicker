@@ -15,12 +15,8 @@ import com.ravenzip.devicepicker.ui.screens.auth.LoginScreen
 import com.ravenzip.devicepicker.ui.screens.auth.RegistrationScreen
 import com.ravenzip.devicepicker.ui.screens.auth.WelcomeScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
-fun NavGraphBuilder.authNavigationGraph(
-    navController: NavHostController,
-    userViewModel: UserViewModel,
-) {
+fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {
         navigateWithFadeAnimation(route = AuthGraph.WELCOME) {
             SetWindowStyle(
@@ -31,8 +27,6 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             WelcomeScreen(
-                reloadUser = { userViewModel.reloadUser() },
-                logInAnonymously = { userViewModel.logInAnonymously() },
                 navigateToRegistrationScreen = { navController.navigate(AuthGraph.REGISTRATION) },
                 navigateToLoginScreen = { navController.navigate(AuthGraph.LOGIN) },
                 navigateToHomeScreen = {
@@ -52,13 +46,12 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             RegistrationScreen(
-                userViewModel = userViewModel,
                 navigateToHomeScreen = {
                     navController.navigateWithoutPreviousRoute(
                         startDestination = RootGraph.ROOT,
                         targetDestination = RootGraph.MAIN,
                     )
-                },
+                }
             )
         }
         navigateWithFadeAnimation(route = AuthGraph.LOGIN) {
@@ -70,10 +63,6 @@ fun NavGraphBuilder.authNavigationGraph(
             )
 
             LoginScreen(
-                reloadUser = { userViewModel.reloadUser() },
-                logInUserWithEmail = { email, password ->
-                    userViewModel.logInUserWithEmail(email, password)
-                },
                 navigateToHomeScreen = {
                     navController.navigateWithoutPreviousRoute(
                         startDestination = RootGraph.ROOT,
@@ -91,10 +80,7 @@ fun NavGraphBuilder.authNavigationGraph(
                 isAppearanceLight = !isSystemInDarkTheme(),
             )
 
-            ForgotPasswordScreen(
-                reloadUser = { userViewModel.reloadUser() },
-                sendPasswordResetEmail = { email -> userViewModel.sendPasswordResetEmail(email) },
-            )
+            ForgotPasswordScreen()
         }
     }
 }

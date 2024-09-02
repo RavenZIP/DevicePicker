@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.viewmodels
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
@@ -41,13 +42,19 @@ constructor(
     val deviceCompactState = _deviceCompactState.asStateFlow()
     val deviceState = _deviceState.asStateFlow()
 
+    init {
+        viewModelScope.launch { getDeviceCompactList() }
+    }
+
     /** Получение списка устройств и их изображений (компактная модель) */
     @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun getDeviceCompactList() {
         deviceRepository
             .getDeviceCompactList()
             .onEach { devices ->
-                _deviceCompactState.value.allDevices.addAll(devices)
+                _deviceCompactState.update {
+                    _deviceCompactState.value.copy(allDevices = devices.toMutableStateList())
+                }
                 createCategories()
             }
             .flatMapLatest { devices -> imageRepository.getImageUrls(devices) }
@@ -140,5 +147,11 @@ constructor(
         }
 
         _deviceCompactState.value.categories.putAll(categories)
+    }
+
+    fun createDeviceHistoryList(userDeviceHistoryUidList: List<String>): List<DeviceCompact> {
+        return _deviceCompactState.value.allDevices.filter { device ->
+            device.uid in userDeviceHistoryUidList
+        }
     }
 }

@@ -16,7 +16,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,52 +23,51 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
+import com.ravenzip.devicepicker.viewmodels.SearchScreenViewModel
 import com.ravenzip.workshop.components.VerticalGrid
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun SearchScreen(
+    searchScreenViewModel: SearchScreenViewModel = hiltViewModel<SearchScreenViewModel>(),
     padding: PaddingValues,
-    listOfBrandByViewModel: StateFlow<SnapshotStateList<String>>,
-    listOfDeviceTypeByViewModel: StateFlow<SnapshotStateList<String>>
 ) {
-    val listOfBrand = listOfBrandByViewModel.collectAsState().value
-    val listOfDeviceType = listOfDeviceTypeByViewModel.collectAsState().value
+    val brandList = searchScreenViewModel.brandList.collectAsState().value
+    val deviceTypeList = searchScreenViewModel.deviceTypeList.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier.height(10.dp))
-            Text(
-                text = "Категории устройств",
-                modifier = Modifier.fillMaxSize(0.9f),
-                fontSize = 18.sp)
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(10.dp))
+        Text(text = "Категории устройств", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
-            Spacer(modifier = Modifier.height(10.dp))
-            VerticalGrid(items = listOfDeviceType) { modifier, item -> BrandCard(modifier, item) }
+        Spacer(modifier = Modifier.height(10.dp))
+        VerticalGrid(items = deviceTypeList) { modifier, item -> BrandCard(modifier, item) }
 
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
+        Spacer(modifier = Modifier.height(20.dp))
+        Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
-            Spacer(modifier = Modifier.height(10.dp))
-            VerticalGrid(items = listOfBrand) { modifier, item -> BrandCard(modifier, item) }
+        Spacer(modifier = Modifier.height(10.dp))
+        VerticalGrid(items = brandList) { modifier, item -> BrandCard(modifier, item) }
 
-            Spacer(modifier = Modifier.height(20.dp))
-        }
+        Spacer(modifier = Modifier.height(20.dp))
+    }
 }
 
 @Composable
 private fun BrandCard(modifier: Modifier, brandName: String) {
     Card(
         modifier = modifier.clip(RoundedCornerShape(12.dp)).clickable {},
-        colors = CardDefaults.veryLightPrimary()) {
-            Text(
-                text = brandName,
-                modifier = Modifier.padding(20.dp).fillMaxWidth(),
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.W500,
-                letterSpacing = 1.sp,
-            )
-        }
+        colors = CardDefaults.veryLightPrimary(),
+    ) {
+        Text(
+            text = brandName,
+            modifier = Modifier.padding(20.dp).fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.W500,
+            letterSpacing = 1.sp,
+        )
+    }
 }

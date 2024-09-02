@@ -1,12 +1,12 @@
-package com.ravenzip.devicepicker.viewmodels
+package com.ravenzip.devicepicker.viewmodels.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.OperationErrorTypeEnum
 import com.ravenzip.devicepicker.constants.enums.StatusEnum
-import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
-import com.ravenzip.devicepicker.state.SplashScreenState
+import com.ravenzip.devicepicker.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -18,45 +18,33 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class SplashScreenViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
-    private val _splashScreenState = MutableStateFlow(Result.default<SplashScreenState>())
+    private val _splashScreenState =
+        MutableStateFlow<UiState<String>>(UiState.Loading("Получение данных о пользователе"))
 
     val splashScreenState = _splashScreenState.asStateFlow()
 
+    /**
+     * Текущий пользователь firebase
+     *
+     * @return [FirebaseUser] или null
+     */
+    val firebaseUser: FirebaseUser?
+        get() = authRepository.firebaseUser
+
     init {
         viewModelScope.launch {
-            _splashScreenState.update {
-                Result.loading(
-                    SplashScreenState(
-                        isAuthorized = false,
-                        text = "Получение данных о пользователе",
-                    )
-                )
-            }
-
             val reloadResult = authRepository.reloadUser()
             delay(500)
 
             if (reloadResult.status == StatusEnum.OK) {
-                _splashScreenState.update {
-                    Result.success(
-                        SplashScreenState(isAuthorized = true, text = "Загрузка данных завершена")
-                    )
-                }
+                _splashScreenState.update { UiState.Success("Загрузка данных завершена") }
             } else {
                 val splashScreenText =
                     if (reloadResult.error!!.type == OperationErrorTypeEnum.NETWORK_ERROR)
                         "Ошибка сети. Попробуйте позднее"
                     else "Произошла неизвестная ошибка"
 
-                val splashScreenState =
-                    SplashScreenState(isAuthorized = false, text = splashScreenText)
-
-                _splashScreenState.update {
-                    Result.networkError(
-                        value = splashScreenState,
-                        errorMessage = reloadResult.error.message,
-                    )
-                }
+                _splashScreenState.update { UiState.Error(splashScreenText) }
             }
         }
     }

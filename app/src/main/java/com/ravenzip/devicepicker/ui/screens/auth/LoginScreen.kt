@@ -7,64 +7,48 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
-import com.google.firebase.auth.AuthResult
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
-import com.ravenzip.devicepicker.model.result.Result
-import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
-import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationFields
-import com.ravenzip.devicepicker.ui.screens.auth.common.LoginAndRegistrationOptions
-import com.ravenzip.devicepicker.ui.screens.auth.common.generateAuthVariants
-import com.ravenzip.devicepicker.ui.screens.auth.common.getSelectedVariant
+import com.ravenzip.devicepicker.ui.screens.auth.common.AuthFields
+import com.ravenzip.devicepicker.ui.screens.auth.common.AuthOptions
+import com.ravenzip.devicepicker.viewmodels.auth.LoginScreenViewModel
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.Error
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
-    reloadUser: suspend () -> Result<Boolean>,
-    logInUserWithEmail: suspend (email: String, password: String) -> Result<AuthResult?>,
+    loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>(),
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
+    val authOptionsState = loginScreenViewModel.authOptions.collectAsState().value
+    val selectedOptionState = loginScreenViewModel.selectedOption.collectAsState().value
+    val fieldErrorsState = loginScreenViewModel.fieldErrors.collectAsState().value
+    val isLoadingState = loginScreenViewModel.isLoading.collectAsState().value
+
+    val snackBarHostState = remember { loginScreenViewModel.snackBarHostState }
+
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val phone = remember { mutableStateOf("") }
     val code = remember { mutableStateOf("") }
 
-    val validationService = remember { ValidationService() }
-    val emailError = remember { mutableStateOf(Error()) }
-    val passwordError = remember { mutableStateOf(Error()) }
-    val phoneError = remember { mutableStateOf(Error()) }
-    val codeError = remember { mutableStateOf(Error()) }
-
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-
-    val loginVariants = remember { generateAuthVariants() }
-    val selectedLoginVariant = remember { { getSelectedVariant(loginVariants) } }
-
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
-    val isLoading = remember { mutableStateOf(false) }
-    val spinnerText = remember { mutableStateOf("Вход в аккаунт...") }
 
     Column(
         modifier =
@@ -81,59 +65,36 @@ fun LoginScreen(
         ScreenTitle(text = "Войти в аккаунт")
 
         Spacer(modifier = Modifier.height(30.dp))
-        LoginAndRegistrationFields(
-            selectedVariant = selectedLoginVariant,
+        AuthFields(
+            selectedOption = selectedOptionState,
             email = email,
-            emailError = emailError,
             password = password,
-            passwordError = passwordError,
             phone = phone,
-            phoneError = phoneError,
             code = code,
-            codeError = codeError,
+            fieldErrors = fieldErrorsState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        LoginAndRegistrationOptions(options = loginVariants, title = "Выбор варианта входа")
+        AuthOptions(
+            options = authOptionsState,
+            title = "Выбор варианта входа",
+            onClick = { item -> loginScreenViewModel.selectOption(item) },
+        )
     }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            scope.launch(Dispatchers.Main) {
-                when (selectedLoginVariant()) {
-                    AuthVariantsEnum.EMAIL -> {
-                        emailError.value = validationService.checkEmail(email.value)
-                        passwordError.value = validationService.checkPassword(password.value)
-
-                        if (emailError.value.value || passwordError.value.value) {
-                            snackBarHostState.showError("Проверьте правильность заполнения полей")
-                            return@launch
-                        }
-                        isLoading.value = true
-
-                        val isReloadSuccess = reloadUser()
-                        if (isReloadSuccess.value != true) {
-                            isLoading.value = false
-                            snackBarHostState.showError(isReloadSuccess.error?.message!!)
-                            return@launch
-                        }
-
-                        spinnerText.value = "Вход в аккаунт..."
-                        val authResult = logInUserWithEmail(email.value, password.value)
-
-                        if (authResult.value == null) {
-                            isLoading.value = false
-                            snackBarHostState.showError(authResult.error?.message!!)
-                            return@launch
-                        }
-
-                        isLoading.value = false
-                        navigateToHomeScreen()
-                    }
-                    AuthVariantsEnum.PHONE -> {}
-                    AuthVariantsEnum.GOOGLE -> {}
+            when (selectedOptionState) {
+                AuthVariantsEnum.EMAIL -> {
+                    loginScreenViewModel.logInWithEmailAndPassword(
+                        email = email.value,
+                        password = password.value,
+                        navigateToHomeScreen = navigateToHomeScreen,
+                    )
                 }
+                AuthVariantsEnum.PHONE -> {}
+                AuthVariantsEnum.GOOGLE -> {}
             }
         }
 
@@ -145,8 +106,8 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(20.dp))
     }
 
-    if (isLoading.value) {
-        Spinner(text = spinnerText.value)
+    if (isLoadingState) {
+        Spinner(text = "Вход в аккаунт...")
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

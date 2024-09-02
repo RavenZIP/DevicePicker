@@ -26,21 +26,22 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.FirebaseUser
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.constants.enums.StatusEnum
-import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
+import com.ravenzip.devicepicker.state.UiState
+import com.ravenzip.devicepicker.viewmodels.auth.SplashScreenViewModel
 
 @Composable
 fun SplashScreen(
+    splashScreenViewModel: SplashScreenViewModel = hiltViewModel<SplashScreenViewModel>(),
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
-    firebaseUser: FirebaseUser?,
-    splashScreenViewModel: SplashScreenViewModel,
 ) {
-    val splashScreenState = splashScreenViewModel.splashScreenState.collectAsState().value
+    val state = splashScreenViewModel.splashScreenState.collectAsState().value
 
-    if (splashScreenState.status == StatusEnum.OK) {
+    // TODO переделать на навигацию из viewModel
+    if (state is UiState.Success) {
+        val firebaseUser = splashScreenViewModel.firebaseUser
         if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
     }
 
@@ -72,45 +73,54 @@ fun SplashScreen(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            when (splashScreenState.status) {
-                StatusEnum.LOADING -> {
+            when (state) {
+                is UiState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp,
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = state.message,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.W500,
+                        letterSpacing = 0.sp,
+                    )
                 }
 
-                StatusEnum.OK -> {
+                is UiState.Success -> {
                     Icon(
                         painter = painterResource(R.drawable.i_success),
                         contentDescription = "",
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary,
                     )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = state.data,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.W500,
+                        letterSpacing = 0.sp,
+                    )
                 }
 
-                StatusEnum.ERROR -> {
+                is UiState.Error -> {
                     Icon(
                         painter = painterResource(R.drawable.i_error),
                         contentDescription = "",
                         modifier = Modifier.size(20.dp),
                         tint = MaterialTheme.colorScheme.primary,
                     )
-                }
-
-                else -> {
-                    // Do nothing
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = state.message,
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.W500,
+                        letterSpacing = 0.sp,
+                    )
                 }
             }
-
-            Spacer(modifier = Modifier.width(10.dp))
-            Text(
-                text = splashScreenState.value!!.text,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.W500,
-                letterSpacing = 0.sp,
-            )
         }
     }
 }

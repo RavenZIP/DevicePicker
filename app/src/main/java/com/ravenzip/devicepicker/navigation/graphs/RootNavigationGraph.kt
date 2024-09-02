@@ -4,7 +4,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalView
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
@@ -14,11 +13,9 @@ import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
 import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
-import com.ravenzip.devicepicker.viewmodels.SplashScreenViewModel
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
-fun RootNavigationGraph(navController: NavHostController, userViewModel: UserViewModel) {
+fun RootNavigationGraph(navController: NavHostController) {
     NavHost(
         navController = navController,
         route = RootGraph.ROOT,
@@ -31,8 +28,6 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                 navigationBarColor = MaterialTheme.colorScheme.surface,
                 isAppearanceLight = !isSystemInDarkTheme(),
             )
-
-            val splashScreenViewModel = hiltViewModel<SplashScreenViewModel>()
 
             SplashScreen(
                 navigateToAuthentication = {
@@ -47,12 +42,10 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
                         targetDestination = RootGraph.MAIN,
                     )
                 },
-                firebaseUser = userViewModel.firebaseUser,
-                splashScreenViewModel = splashScreenViewModel,
             )
         }
 
-        authNavigationGraph(navController = navController, userViewModel = userViewModel)
+        authNavigationGraph(navController = navController)
 
         navigateWithFadeAnimation(route = RootGraph.MAIN) {
             SetWindowStyle(
@@ -63,19 +56,12 @@ fun RootNavigationGraph(navController: NavHostController, userViewModel: UserVie
             )
 
             ScaffoldScreen(
-                userDataByViewModel = userViewModel.user,
-                updateDeviceHistory = { deviceHistory ->
-                    userViewModel.updateDeviceHistory(deviceHistory)
-                },
-                firebaseUser = userViewModel.firebaseUser,
-                getUserData = { userViewModel.getUserData() },
-                onClickLogout = {
-                    userViewModel.logout()
+                navigateToSplashScreen = {
                     navController.navigateWithoutPreviousRoute(
                         startDestination = RootGraph.ROOT,
                         targetDestination = RootGraph.SPLASH_SCREEN,
                     )
-                },
+                }
             )
         }
     }

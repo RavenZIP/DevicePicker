@@ -2,13 +2,10 @@ package com.ravenzip.devicepicker.navigation.graphs
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
-import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
@@ -18,44 +15,17 @@ import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
 import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.viewmodels.BrandViewModel
-import com.ravenzip.devicepicker.viewmodels.DeviceTypeViewModel
 import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.zip
-import kotlinx.coroutines.launch
+import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
 fun MainNavigationGraph(
     navController: NavHostController,
     padding: PaddingValues,
-    userDataByViewModel: StateFlow<User>,
-    updateDeviceHistory: suspend (List<String>) -> Boolean,
-    firebaseUser: FirebaseUser?,
-    getUserData: suspend () -> Unit,
-    onClickLogout: () -> Unit,
+    navigateToSplashScreen: () -> Unit,
 ) {
+    val userViewModel = hiltViewModel<UserViewModel>()
     val deviceViewModel = hiltViewModel<DeviceViewModel>()
-    val brandViewModel = hiltViewModel<BrandViewModel>()
-    val deviceTypeViewModel = hiltViewModel<DeviceTypeViewModel>()
-
-    LaunchedEffect(Unit) {
-        // Получаем компактную модель устройств вместе с изображениями
-        // Грузим сразу все устройства, т.к. в дальнейшем компактная
-        // модель будет использоваться для других экранов
-        launch { deviceViewModel.getDeviceCompactList() }
-
-        // Данные пользователя
-        launch { getUserData() }
-
-        // Данные о брендах и типах устройств
-        launch {
-            brandViewModel
-                .getBrandList()
-                .zip(deviceTypeViewModel.getDeviceTypeList()) { _, _ -> }
-                .collect {}
-        }
-    }
 
     NavHost(
         navController = navController,
@@ -74,19 +44,15 @@ fun MainNavigationGraph(
 
         homeNavigationGraph(
             padding = padding,
-            userDataByViewModel = userDataByViewModel,
-            updateDeviceHistory = updateDeviceHistory,
+            userDataByViewModel = userViewModel.user,
+            updateDeviceHistory = { deviceHistory ->
+                userViewModel.updateDeviceHistory(deviceHistory)
+            },
             deviceStateByViewModel = deviceViewModel.deviceState,
         )
 
         // Поиск
-        navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) {
-            SearchScreen(
-                padding = padding,
-                listOfBrandByViewModel = brandViewModel.listOfBrand,
-                listOfDeviceTypeByViewModel = deviceTypeViewModel.listOfDeviceType,
-            )
-        }
+        navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) { SearchScreen(padding = padding) }
 
         // Избранное
         navigateWithFadeAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
@@ -98,15 +64,26 @@ fun MainNavigationGraph(
         navigateWithFadeAnimation(route = BottomBarGraph.USER_PROFILE) {
             UserProfileScreen(
                 padding = padding,
-                userDataByViewModel = userDataByViewModel,
+                userDataByViewModel = userViewModel.user,
                 onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
                 onClickToDeviceHistory = {
                     navController.navigate(UserProfileGraph.DEVICE_HISTORY)
                 },
-                onClickToLogout = onClickLogout,
+                onClickToLogout = {
+                    userViewModel.logout()
+                    navigateToSplashScreen()
+                },
             )
         }
 
-        userProfileNavigationGraph(padding = padding)
+        userProfileNavigationGraph(
+            padding = padding,
+            createDeviceHistoryList = { userDeviceHistoryUidList ->
+                deviceViewModel.createDeviceHistoryList(userDeviceHistoryUidList)
+            },
+            userDataByViewModel = userViewModel.user,
+            navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+            getDevice = { uid, brand, model -> deviceViewModel.getDevice(uid, brand, model) },
+        )
     }
 }

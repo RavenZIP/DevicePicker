@@ -3,8 +3,9 @@ package com.ravenzip.devicepicker.services
 import android.util.Patterns.EMAIL_ADDRESS
 import android.util.Patterns.PHONE
 import com.ravenzip.workshop.data.Error
+import javax.inject.Inject
 
-class ValidationService {
+class ValidationService @Inject constructor() {
     fun checkEmail(value: String): Error {
         if (value.isEmpty()) {
             return Error(true, "Поле пустое!")

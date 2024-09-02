@@ -29,10 +29,10 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             firebaseUser?.reload()?.await()
             Result.success(value = true)
         } catch (e: FirebaseNetworkException) {
-            withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
+            withContext(Dispatchers.Main) { Log.d("reloadUser", "${e.message}") }
             Result.networkError(errorMessage = "Не удалось обновить данные о пользователе")
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) { Log.d("ReloadResult", "${e.message}") }
+            withContext(Dispatchers.Main) { Log.d("reloadUser", "${e.message}") }
             Result.error(errorMessage = "Не удалось обновить данные о пользователе")
         }
     }
@@ -42,7 +42,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             val result = firebaseAuth.signInAnonymously().await()
             Result.success(value = result)
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) { Log.d("AuthResult", "${e.message}") }
+            withContext(Dispatchers.Main) { Log.d("logInAnonymously", "${e.message}") }
             Result.error(errorMessage = "Произошла ошибка при выполнении запроса")
         }
     }

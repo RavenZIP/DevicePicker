@@ -22,7 +22,7 @@ import com.ravenzip.workshop.data.selection.SelectableChipConfig
  *
  * [categories] - Все устройства, отсортированные по категориям
  */
-class DeviceCompactState(
+data class DeviceCompactState(
     val allDevices: SnapshotStateList<DeviceCompact>,
     val categories: LinkedHashMap<TagsEnum, SnapshotStateList<DeviceCompact>>,
 ) {

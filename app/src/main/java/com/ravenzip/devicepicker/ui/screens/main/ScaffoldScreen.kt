@@ -17,10 +17,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.TopAppBarTypeEnum
-import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
@@ -35,16 +33,11 @@ import com.ravenzip.workshop.components.TopAppBarWithMenu
 import com.ravenzip.workshop.data.appbar.AppBarItem
 import com.ravenzip.workshop.data.appbar.BottomNavigationItem
 import com.ravenzip.workshop.data.icon.IconConfig
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun ScaffoldScreen(
     navController: NavHostController = rememberNavController(),
-    userDataByViewModel: StateFlow<User>,
-    updateDeviceHistory: suspend (List<String>) -> Boolean,
-    firebaseUser: FirebaseUser?,
-    getUserData: suspend () -> Unit,
-    onClickLogout: () -> Unit,
+    navigateToSplashScreen: () -> Unit,
 ) {
     val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
     val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
@@ -82,11 +75,7 @@ fun ScaffoldScreen(
         MainNavigationGraph(
             navController = navController,
             padding = padding,
-            userDataByViewModel = userDataByViewModel,
-            updateDeviceHistory = updateDeviceHistory,
-            firebaseUser = firebaseUser,
-            getUserData = getUserData,
-            onClickLogout = onClickLogout,
+            navigateToSplashScreen = navigateToSplashScreen,
         )
     }
 }

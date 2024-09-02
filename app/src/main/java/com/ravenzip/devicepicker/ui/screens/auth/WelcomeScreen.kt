@@ -13,15 +13,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
@@ -29,72 +26,69 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.auth.AuthResult
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
-import com.ravenzip.devicepicker.model.result.Result
-import com.ravenzip.devicepicker.services.showError
+import com.ravenzip.devicepicker.viewmodels.auth.WelcomeScreenViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
-    reloadUser: suspend () -> Result<Boolean>,
-    logInAnonymously: suspend () -> Result<AuthResult?>,
+    welcomeScreenViewModel: WelcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>(),
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
+    val alertDialogIsShownState = welcomeScreenViewModel.alertDialogIsShown.collectAsState().value
+    val isLoadingState = welcomeScreenViewModel.isLoading.collectAsState().value
+
+    val snackBarHostState = remember { welcomeScreenViewModel.snackBarHostState }
     val pagerState = rememberPagerState(pageCount = { 4 })
-    val alertDialogIsShown = remember { mutableStateOf(false) }
-    val isLoading = remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
-    val snackBarHostState = remember { SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) {
-            when (it) {
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { content ->
+            when (content) {
                 0 -> {
                     ScreenContent(
-                        image = painterResource(id = R.drawable.devices),
+                        imageId = R.drawable.devices,
                         title = WelcomeEnum.MORE_INFORMATION.title,
                         text = WelcomeEnum.MORE_INFORMATION.text,
                     )
                 }
                 1 -> {
                     ScreenContent(
-                        image = painterResource(id = R.drawable.search),
+                        imageId = R.drawable.search,
                         title = WelcomeEnum.ADVANCED_SEARCH.title,
                         text = WelcomeEnum.ADVANCED_SEARCH.text,
                     )
                 }
                 2 -> {
                     ScreenContent(
-                        image = painterResource(id = R.drawable.time),
+                        imageId = R.drawable.time,
                         title = WelcomeEnum.OPTIONAL_REGISTRATION.title,
                         text = WelcomeEnum.OPTIONAL_REGISTRATION.text,
                     )
                 }
                 3 -> {
                     ScreenContent(
-                        image = painterResource(id = R.drawable.devicepicker),
+                        imageId = R.drawable.devicepicker,
                         title = WelcomeEnum.DEVICE_PICKER.title,
                         text = WelcomeEnum.DEVICE_PICKER.text,
                         isFinal = true,
                         navigateToRegistrationScreen = navigateToRegistrationScreen,
                         navigateToLoginScreen = navigateToLoginScreen,
-                        continueWithoutAuthClick = { alertDialogIsShown.value = true },
+                        continueWithoutAuthClick = { welcomeScreenViewModel.showDialog() },
                     )
                 }
             }
         }
+
         Box(modifier = Modifier.align(Alignment.BottomCenter)) {
             HorizontalPagerIndicator(
                 pagerState,
@@ -106,38 +100,19 @@ fun WelcomeScreen(
         }
     }
 
-    if (alertDialogIsShown.value) {
+    if (alertDialogIsShownState) {
         AlertDialog(
             icon = ImageVector.vectorResource(R.drawable.sign_in),
             title = WelcomeEnum.DIALOG_WINDOW.title,
             text = WelcomeEnum.DIALOG_WINDOW.text,
             onDismissText = "Назад",
             onConfirmationText = "Продолжить",
-            onDismiss = { alertDialogIsShown.value = false },
-            onConfirmation = {
-                scope.launch(Dispatchers.Main) {
-                    isLoading.value = true
-
-                    val isReloadSuccess = reloadUser()
-                    if (isReloadSuccess.value != true) {
-                        isLoading.value = false
-                        alertDialogIsShown.value = false
-                        snackBarHostState.showError(isReloadSuccess.error?.message!!)
-                        return@launch
-                    }
-
-                    val authResult = logInAnonymously()
-                    isLoading.value = false
-                    alertDialogIsShown.value = false
-
-                    if (authResult.value !== null) navigateToHomeScreen()
-                    else snackBarHostState.showError(authResult.error?.message!!)
-                }
-            },
+            onDismiss = { welcomeScreenViewModel.hideDialog() },
+            onConfirmation = { welcomeScreenViewModel.onDialogConfirmation(navigateToHomeScreen) },
         )
     }
 
-    if (isLoading.value) {
+    if (isLoadingState) {
         Spinner(text = "Анонимный вход...")
     }
 
@@ -146,7 +121,7 @@ fun WelcomeScreen(
 
 @Composable
 private fun ScreenContent(
-    image: Painter,
+    imageId: Int,
     title: String,
     text: String,
     isFinal: Boolean = false,
@@ -159,7 +134,7 @@ private fun ScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Image(painter = image, contentDescription = "")
+        Image(painter = painterResource(imageId), contentDescription = "")
         Spacer(modifier = Modifier.height(80.dp))
 
         Column(
