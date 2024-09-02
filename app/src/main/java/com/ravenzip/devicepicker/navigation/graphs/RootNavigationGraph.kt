@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideInAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
@@ -21,7 +21,7 @@ fun RootNavigationGraph(navController: NavHostController) {
         route = RootGraph.ROOT,
         startDestination = RootGraph.SPLASH_SCREEN,
     ) {
-        navigateWithSlideInAnimation(route = RootGraph.SPLASH_SCREEN) {
+        navigateWithSlideAnimation(route = RootGraph.SPLASH_SCREEN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,

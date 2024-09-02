@@ -27,7 +27,7 @@ fun NavGraphBuilder.navigateWithFadeAnimation(
 }
 
 /** Добавление навигации с fadeIn + slideIn и fadeOut + slideOut анимацией */
-fun NavGraphBuilder.navigateWithSlideInAnimation(
+fun NavGraphBuilder.navigateWithSlideAnimation(
     route: String,
     content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit,
 ) {
