@@ -6,22 +6,31 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
+import com.ravenzip.devicepicker.constants.map.tagIconMap
+import com.ravenzip.devicepicker.constants.map.tagsColorMap
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.DeviceRepository
 import com.ravenzip.devicepicker.repositories.ImageRepository
-import com.ravenzip.devicepicker.state.DeviceCompactState
 import com.ravenzip.devicepicker.state.DeviceState
+import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.Icon
+import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.selection.SelectableChipConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -33,30 +42,86 @@ constructor(
     private val deviceRepository: DeviceRepository,
     private val imageRepository: ImageRepository,
 ) : ViewModel() {
-    /** Состояние данных об устройстве (компактная модель) */
-    private val _deviceCompactState = MutableStateFlow(DeviceCompactState())
+    /** Все устройства (компактная модель) */
+    private val _allDevices = MutableStateFlow(mutableStateListOf<DeviceCompact>())
+
+    /** Категории устройств */
+    private val _categories = MutableStateFlow(mutableStateListOf<SelectableChipConfig>())
+
+    /** Все устройства, сгруппированные по категориям */
+    private val _categorizedDevices =
+        _allDevices.map { devices ->
+            // Расставляем ключи в том порядке, в котором они заданы в энуме
+            val categorizedDevices = linkedMapOf<TagsEnum, SnapshotStateList<DeviceCompact>>()
+            TagsEnum.entries.forEach { tag -> categorizedDevices[tag] = mutableStateListOf() }
+
+            devices.forEach { device ->
+                device.tags.forEach { tag -> categorizedDevices[tag]!!.add(device) }
+            }
+
+            return@map categorizedDevices
+        }
 
     /** Состояние данных об устройстве (полная модель) */
     private val _deviceState = MutableStateFlow(DeviceState())
 
-    val deviceCompactState = _deviceCompactState.asStateFlow()
     val deviceState = _deviceState.asStateFlow()
+    val categories = _categories.asStateFlow()
+
+    val selectedCategory =
+        _categories
+            .combine(_categorizedDevices) { categories, categorizedDevices ->
+                val selectedCategoryName =
+                    categories.firstOrNull { category -> category.isSelected }?.text
+                val selectedCategory =
+                    TagsEnum.entries.firstOrNull { tag -> tag.value == selectedCategoryName }
+
+                val devices = categorizedDevices[selectedCategory] ?: mutableStateListOf()
+
+                return@combine devices
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = mutableStateListOf(),
+            )
+
+    fun selectCategory(item: SelectableChipConfig) {
+        val updatedCategories = _categories.value.toMutableList()
+        updatedCategories.replaceAll { it.copy(isSelected = it.text == item.text) }
+
+        _categories.update { updatedCategories.toMutableStateList() }
+    }
 
     init {
         viewModelScope.launch { getDeviceCompactList() }
+
+        viewModelScope.launch {
+            _categorizedDevices.collect { categorizedDevices ->
+                val categories =
+                    categorizedDevices.keys
+                        .mapIndexed { index, category ->
+                            SelectableChipConfig(
+                                isSelected = index == 0,
+                                text = category.value,
+                                textConfig = TextConfig.SmallMedium,
+                                icon = Icon.ResourceIcon(id = tagIconMap[category]!!),
+                                iconConfig = IconConfig(size = 20, color = tagsColorMap[category]),
+                            )
+                        }
+                        .toMutableStateList()
+
+                _categories.update { categories }
+            }
+        }
     }
 
     /** Получение списка устройств и их изображений (компактная модель) */
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun getDeviceCompactList() {
+    private suspend fun getDeviceCompactList() {
         deviceRepository
             .getDeviceCompactList()
-            .onEach { devices ->
-                _deviceCompactState.update {
-                    _deviceCompactState.value.copy(allDevices = devices.toMutableStateList())
-                }
-                createCategories()
-            }
+            .onEach { devices -> _allDevices.update { devices.toMutableStateList() } }
             .flatMapLatest { devices -> imageRepository.getImageUrls(devices) }
             .flatMapMerge(concurrency = 3) { it }
             .collect { imageUrl -> setImageUrlToDevices(imageUrl) }
@@ -115,43 +180,18 @@ constructor(
     /** Заполнить урл изображения для конкретного устройства */
     private fun setImageUrlToDevices(imageUrl: ImageUrlResult<String>) {
         val deviceIndex =
-            _deviceCompactState.value.allDevices.indexOfFirst { device ->
-                device.uid == imageUrl.deviceUid
-            }
+            _allDevices.value.indexOfFirst { device -> device.uid == imageUrl.deviceUid }
 
         if (deviceIndex != -1) {
-            _deviceCompactState.value.allDevices[deviceIndex] =
-                _deviceCompactState.value.allDevices[deviceIndex].copy(imageUrl = imageUrl.value)
+            val updatedAllDevices = _allDevices.value.toMutableList()
+            updatedAllDevices[deviceIndex] =
+                updatedAllDevices[deviceIndex].copy(imageUrl = imageUrl.value)
+
+            _allDevices.update { updatedAllDevices.toMutableStateList() }
         }
-
-        _deviceCompactState.value.categories.forEach { (key, value) ->
-            value.forEachIndexed { index, device ->
-                if (device.uid == imageUrl.deviceUid) {
-                    _deviceCompactState.value.categories[key]!![index] =
-                        _deviceCompactState.value.categories[key]!![index].copy(
-                            imageUrl = imageUrl.value
-                        )
-                }
-            }
-        }
-    }
-
-    /** Создание категорий устройств в соответствии с тегами */
-    private fun createCategories() {
-        // Расставляем ключи в том порядке, в котором они заданы в энуме
-        val categories = linkedMapOf<TagsEnum, SnapshotStateList<DeviceCompact>>()
-        TagsEnum.entries.forEach { tag -> categories[tag] = mutableStateListOf() }
-
-        _deviceCompactState.value.allDevices.forEach { device ->
-            device.tags.forEach { tag -> categories[tag]!!.add(device) }
-        }
-
-        _deviceCompactState.value.categories.putAll(categories)
     }
 
     fun createDeviceHistoryList(userDeviceHistoryUidList: List<String>): List<DeviceCompact> {
-        return _deviceCompactState.value.allDevices.filter { device ->
-            device.uid in userDeviceHistoryUidList
-        }
+        return _allDevices.value.filter { device -> device.uid in userDeviceHistoryUidList }
     }
 }

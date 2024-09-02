@@ -36,7 +36,9 @@ fun MainNavigationGraph(
         navigateWithFadeAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
                 padding = padding,
-                deviceCompactStateByViewModel = deviceViewModel.deviceCompactState,
+                categoriesStateByViewModel = deviceViewModel.categories,
+                selectedCategoryByViewModel = deviceViewModel.selectedCategory,
+                selectCategory = { item -> deviceViewModel.selectCategory(item) },
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
                 getDevice = { uid, brand, model -> deviceViewModel.getDevice(uid, brand, model) },
             )
