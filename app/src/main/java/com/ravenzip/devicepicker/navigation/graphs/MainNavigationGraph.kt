@@ -15,7 +15,6 @@ import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
 import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.viewmodels.DeviceViewModel
 import com.ravenzip.devicepicker.viewmodels.UserViewModel
 
 @Composable
@@ -25,7 +24,6 @@ fun MainNavigationGraph(
     navigateToSplashScreen: () -> Unit,
 ) {
     val userViewModel = hiltViewModel<UserViewModel>()
-    val deviceViewModel = hiltViewModel<DeviceViewModel>()
 
     NavHost(
         navController = navController,
@@ -36,11 +34,7 @@ fun MainNavigationGraph(
         navigateWithFadeAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
                 padding = padding,
-                categoriesStateByViewModel = deviceViewModel.categories,
-                selectedCategoryByViewModel = deviceViewModel.selectedCategory,
-                selectCategory = { item -> deviceViewModel.selectCategory(item) },
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
-                getDevice = { uid, brand, model -> deviceViewModel.getDevice(uid, brand, model) },
             )
         }
 
@@ -50,7 +44,6 @@ fun MainNavigationGraph(
             updateDeviceHistory = { deviceHistory ->
                 userViewModel.updateDeviceHistory(deviceHistory)
             },
-            deviceStateByViewModel = deviceViewModel.deviceState,
         )
 
         // Поиск
@@ -80,12 +73,7 @@ fun MainNavigationGraph(
 
         userProfileNavigationGraph(
             padding = padding,
-            createDeviceHistoryList = { userDeviceHistoryUidList ->
-                deviceViewModel.createDeviceHistoryList(userDeviceHistoryUidList)
-            },
-            userDataByViewModel = userViewModel.user,
             navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
-            getDevice = { uid, brand, model -> deviceViewModel.getDevice(uid, brand, model) },
         )
     }
 }

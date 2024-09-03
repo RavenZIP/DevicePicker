@@ -18,6 +18,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,11 +40,17 @@ fun SplashScreen(
 ) {
     val state = splashScreenViewModel.splashScreenState.collectAsState().value
 
-    // TODO переделать на навигацию из viewModel
-    if (state is UiState.Success) {
-        val firebaseUser = splashScreenViewModel.firebaseUser
-        if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
+    LaunchedEffect(state) {
+        if (state is UiState.Success) {
+            val firebaseUser = splashScreenViewModel.firebaseUser
+            if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
+        }
     }
+    // TODO переделать на навигацию из viewModel
+    //    if (state is UiState.Success) {
+    //        val firebaseUser = splashScreenViewModel.firebaseUser
+    //        if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
+    //    }
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),

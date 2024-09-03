@@ -35,10 +35,10 @@ import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
 fun ScaffoldScreen(
+    topAppBarViewModel: TopAppBarViewModel = hiltViewModel(),
     navController: NavHostController = rememberNavController(),
     navigateToSplashScreen: () -> Unit,
 ) {
-    val topAppBarViewModel = hiltViewModel<TopAppBarViewModel>()
     val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
     val searchBarState = topAppBarViewModel.searchBarState.collectAsState().value
     val topAppBarType = topAppBarViewModel.type.collectAsState().value
@@ -108,7 +108,6 @@ private fun TopAppBar(
     }
 }
 
-@Composable
 private fun generateMenuItems(): List<BottomNavigationItem> {
     val homeButton =
         BottomNavigationItem(

@@ -3,6 +3,7 @@ package com.ravenzip.devicepicker.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
+import com.ravenzip.devicepicker.SharedRepository
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
@@ -20,6 +21,7 @@ class UserViewModel
 constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
+    private val sharedRepository: SharedRepository,
 ) : ViewModel() {
     private val _user = MutableStateFlow(User())
     val user = _user.asStateFlow()

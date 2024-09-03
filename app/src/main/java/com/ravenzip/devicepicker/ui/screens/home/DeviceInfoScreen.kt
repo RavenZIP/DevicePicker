@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.StatusEnum
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
@@ -71,11 +72,11 @@ import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsI
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
-import com.ravenzip.devicepicker.state.DeviceState
 import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
+import com.ravenzip.devicepicker.viewmodels.DeviceInfoViewModel
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.CustomButton
@@ -95,12 +96,12 @@ import kotlinx.coroutines.flow.StateFlow
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoScreen(
+    deviceInfoViewModel: DeviceInfoViewModel = hiltViewModel<DeviceInfoViewModel>(),
     padding: PaddingValues,
     userDataByViewModel: StateFlow<User>,
     updateDeviceHistory: suspend (List<String>) -> Boolean,
-    deviceStateByViewModel: StateFlow<DeviceState>,
 ) {
-    val deviceState = deviceStateByViewModel.collectAsState().value.device
+    val deviceState = deviceInfoViewModel.device.collectAsState().value
 
     when (deviceState.status) {
         StatusEnum.LOADING -> {
@@ -108,7 +109,7 @@ fun DeviceInfoScreen(
         }
 
         StatusEnum.OK -> {
-            val device = deviceStateByViewModel.collectAsState().value.device.value!!
+            val device = deviceState.value!!
             val userData = userDataByViewModel.collectAsState().value
             val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
             val title = remember { device.createDeviceTitle() }

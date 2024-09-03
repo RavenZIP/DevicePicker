@@ -12,27 +12,22 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.ColumnDeviceCard
+import com.ravenzip.devicepicker.viewmodels.HomeScreenViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
-import com.ravenzip.workshop.data.selection.SelectableChipConfig
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun HomeScreen(
+    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
     padding: PaddingValues,
-    categoriesStateByViewModel: StateFlow<SnapshotStateList<SelectableChipConfig>>,
-    selectedCategoryByViewModel: StateFlow<SnapshotStateList<DeviceCompact>>,
-    selectCategory: (SelectableChipConfig) -> Unit,
-    getDevice: (uid: String, brand: String, model: String) -> Unit,
     navigateToDevice: () -> Unit,
 ) {
-    val categoriesState = categoriesStateByViewModel.collectAsState().value
-    val selectedCategoryState = selectedCategoryByViewModel.collectAsState().value
+    val categoriesState = homeScreenViewModel.categories.collectAsState().value
+    val selectedCategoryState = homeScreenViewModel.selectedCategory.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -41,7 +36,7 @@ fun HomeScreen(
         ChipRadioGroup(
             list = categoriesState,
             containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
-            onClick = selectCategory,
+            onClick = { item -> homeScreenViewModel.selectCategory(item) },
         )
 
         LazyVerticalGrid(
@@ -55,7 +50,7 @@ fun HomeScreen(
                 ColumnDeviceCard(
                     device = device,
                     onClick = {
-                        getDevice(device.uid, device.brand, device.model)
+                        /// homeScreenViewModel.getDevice(device.uid, device.brand, device.model)
                         navigateToDevice()
                     },
                 )
