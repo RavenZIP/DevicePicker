@@ -22,26 +22,25 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
-import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.ui.theme.errorColor
+import com.ravenzip.devicepicker.viewmodels.UserProfileViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun UserProfileScreen(
-    padding: PaddingValues,
-    userDataByViewModel: StateFlow<User>,
+    userProfileViewModel: UserProfileViewModel,
     onClickToAdminPanel: () -> Unit,
     onClickToDeviceHistory: () -> Unit,
-    onClickToLogout: () -> Unit,
+    navigateToSplashScreen: () -> Unit,
+    padding: PaddingValues,
 ) {
     val alertDialogIsShown = remember { mutableStateOf(false) }
-    val userData = userDataByViewModel.collectAsState().value
+    val userData = userProfileViewModel.userData.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -174,7 +173,7 @@ fun UserProfileScreen(
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 alertDialogIsShown.value = false
-                onClickToLogout()
+                navigateToSplashScreen()
             },
         )
     }

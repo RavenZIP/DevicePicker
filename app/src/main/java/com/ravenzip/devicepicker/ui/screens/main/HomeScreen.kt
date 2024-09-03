@@ -50,7 +50,11 @@ fun HomeScreen(
                 ColumnDeviceCard(
                     device = device,
                     onClick = {
-                        /// homeScreenViewModel.getDevice(device.uid, device.brand, device.model)
+                        homeScreenViewModel.setDeviceQueryParams(
+                            device.uid,
+                            device.brand,
+                            device.model,
+                        )
                         navigateToDevice()
                     },
                 )

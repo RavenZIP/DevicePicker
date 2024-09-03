@@ -15,7 +15,7 @@ import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
 import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.viewmodels.UserViewModel
+import com.ravenzip.devicepicker.viewmodels.UserProfileViewModel
 
 @Composable
 fun MainNavigationGraph(
@@ -23,7 +23,7 @@ fun MainNavigationGraph(
     padding: PaddingValues,
     navigateToSplashScreen: () -> Unit,
 ) {
-    val userViewModel = hiltViewModel<UserViewModel>()
+    val userProfileViewModel = hiltViewModel<UserProfileViewModel>()
 
     NavHost(
         navController = navController,
@@ -38,13 +38,7 @@ fun MainNavigationGraph(
             )
         }
 
-        homeNavigationGraph(
-            padding = padding,
-            userDataByViewModel = userViewModel.user,
-            updateDeviceHistory = { deviceHistory ->
-                userViewModel.updateDeviceHistory(deviceHistory)
-            },
-        )
+        homeNavigationGraph(padding = padding)
 
         // Поиск
         navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) { SearchScreen(padding = padding) }
@@ -58,16 +52,13 @@ fun MainNavigationGraph(
         // Профиль пользователя
         navigateWithFadeAnimation(route = BottomBarGraph.USER_PROFILE) {
             UserProfileScreen(
-                padding = padding,
-                userDataByViewModel = userViewModel.user,
+                userProfileViewModel = userProfileViewModel,
                 onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
                 onClickToDeviceHistory = {
                     navController.navigate(UserProfileGraph.DEVICE_HISTORY)
                 },
-                onClickToLogout = {
-                    userViewModel.logout()
-                    navigateToSplashScreen()
-                },
+                navigateToSplashScreen = navigateToSplashScreen,
+                padding = padding,
             )
         }
 

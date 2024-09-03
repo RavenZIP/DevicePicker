@@ -1,16 +1,15 @@
 package com.ravenzip.devicepicker.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.SharedRepository
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.tagIconMap
 import com.ravenzip.devicepicker.constants.map.tagsColorMap
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import com.ravenzip.devicepicker.repositories.SharedRepository
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
@@ -70,7 +69,6 @@ class HomeScreenViewModel @Inject constructor(private val sharedRepository: Shar
             )
 
     init {
-        Log.d("HomeScreenViewModel", "init")
         viewModelScope.launch { sharedRepository.getDeviceCompactList() }
 
         viewModelScope.launch {
@@ -98,5 +96,9 @@ class HomeScreenViewModel @Inject constructor(private val sharedRepository: Shar
         updatedCategories.replaceAll { it.copy(isSelected = it.text == item.text) }
 
         _categories.update { updatedCategories.toMutableStateList() }
+    }
+
+    fun setDeviceQueryParams(uid: String, brand: String, model: String) {
+        sharedRepository.setDeviceQueryParams(uid, brand, model)
     }
 }

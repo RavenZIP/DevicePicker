@@ -37,7 +37,6 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -66,7 +65,6 @@ import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Tag
-import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsIcons
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
@@ -91,15 +89,12 @@ import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoScreen(
     deviceInfoViewModel: DeviceInfoViewModel = hiltViewModel<DeviceInfoViewModel>(),
     padding: PaddingValues,
-    userDataByViewModel: StateFlow<User>,
-    updateDeviceHistory: suspend (List<String>) -> Boolean,
 ) {
     val deviceState = deviceInfoViewModel.device.collectAsState().value
 
@@ -110,19 +105,12 @@ fun DeviceInfoScreen(
 
         StatusEnum.OK -> {
             val device = deviceState.value!!
-            val userData = userDataByViewModel.collectAsState().value
             val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
             val title = remember { device.createDeviceTitle() }
             val specificationsMap = remember { device.specifications.toMap() }
             val listOfTagsIcons = device.createListOfTagsIcons()
             val sheetState = rememberModalBottomSheetState()
             val tagsSheetIsVisible = remember { mutableStateOf(false) }
-
-            LaunchedEffect(key1 = Unit) {
-                if (!userData.deviceHistory.contains(device.uid)) {
-                    updateDeviceHistory(userData.deviceHistory + device.uid)
-                }
-            }
 
             LazyColumn(
                 modifier = Modifier.fillMaxSize().padding(padding),
