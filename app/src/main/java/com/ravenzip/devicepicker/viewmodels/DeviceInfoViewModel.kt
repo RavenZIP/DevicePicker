@@ -11,7 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -31,18 +31,20 @@ constructor(
 
     init {
         viewModelScope.launch {
-            sharedRepository.deviceQueryParams.collect { params ->
-                _device.update { Result.loading() }
-                val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
+            sharedRepository.deviceQueryParams
+                .filter { params -> params != null }
+                .collect { params ->
+                    _device.update { Result.loading() }
+                    val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
 
-                if (cachedDevice == null) {
-                    getDeviceByBrandAndUid(params.uid, params.brand, params.model)
-                } else {
-                    _device.update { Result.success(cachedDevice) }
+                    if (cachedDevice == null) {
+                        getDeviceByBrandAndUid(params.uid, params.brand, params.model)
+                    } else {
+                        _device.update { Result.success(cachedDevice) }
+                    }
+
+                    sharedRepository.tryToUpdateDeviceHistory(params.uid)
                 }
-
-                sharedRepository.tryToUpdateDeviceHistory(params.uid)
-            }
         }
     }
 
@@ -62,5 +64,10 @@ constructor(
                 }
             }
             .collect {}
+    }
+
+    fun clearDeviceData() {
+        sharedRepository.clearDeviceQueryParams()
+        _device.update { Result.default() }
     }
 }

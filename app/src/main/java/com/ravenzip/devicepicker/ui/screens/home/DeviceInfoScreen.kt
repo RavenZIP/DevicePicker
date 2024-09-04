@@ -37,6 +37,7 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -204,6 +205,8 @@ fun DeviceInfoScreen(
             // DO nothing
         }
     }
+
+    DisposableEffect(Unit) { onDispose { deviceInfoViewModel.clearDeviceData() } }
 }
 
 @OptIn(ExperimentalFoundationApi::class)

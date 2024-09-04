@@ -102,4 +102,8 @@ constructor(
             _userData.update { _userData.value.copy(deviceHistory = updatedDeviceHistory) }
         }
     }
+
+    fun clearDeviceQueryParams() {
+        _deviceQueryParams.update { null }
+    }
 }
