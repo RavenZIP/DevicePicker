@@ -5,10 +5,9 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideIn
-import androidx.compose.animation.slideOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.IntOffset
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -35,11 +34,11 @@ fun NavGraphBuilder.navigateWithSlideAnimation(
         route = route,
         enterTransition = {
             fadeIn(animationSpec = tween(300, easing = LinearEasing)) +
-                slideIn(initialOffset = { IntOffset(100, 0) })
+                slideInHorizontally(animationSpec = tween(300, easing = LinearEasing)) { it / 2 }
         },
         exitTransition = {
             fadeOut(animationSpec = tween(300, easing = LinearEasing)) +
-                slideOut { IntOffset(-100, 0) }
+                slideOutHorizontally(animationSpec = tween(300, easing = LinearEasing))
         },
         content = content,
     )
