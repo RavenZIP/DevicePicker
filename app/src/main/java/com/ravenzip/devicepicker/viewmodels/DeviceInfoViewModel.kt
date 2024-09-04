@@ -3,10 +3,10 @@ package com.ravenzip.devicepicker.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.model.device.Device
-import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.DeviceRepository
 import com.ravenzip.devicepicker.repositories.ImageRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
+import com.ravenzip.devicepicker.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ constructor(
     private val sharedRepository: SharedRepository,
 ) : ViewModel() {
     /** Текущее выбранное устройство */
-    private val _device = MutableStateFlow<Result<Device?>>(Result.default())
+    private val _device = MutableStateFlow<UiState<Device>>(UiState.Loading("Загрузка..."))
 
     val device = _device.asStateFlow()
 
@@ -34,13 +34,12 @@ constructor(
             sharedRepository.deviceQueryParams
                 .filter { params -> params != null }
                 .collect { params ->
-                    _device.update { Result.loading() }
                     val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
 
                     if (cachedDevice == null) {
                         getDeviceByBrandAndUid(params.uid, params.brand, params.model)
                     } else {
-                        _device.update { Result.success(cachedDevice) }
+                        _device.update { UiState.Success(cachedDevice) }
                     }
 
                     sharedRepository.tryToUpdateDeviceHistory(params.uid)
@@ -56,11 +55,11 @@ constructor(
                 if (device != null) {
                     val deviceWithImageUrls = device.copy(imageUrls = imageUrls)
 
-                    _device.update { Result.success(deviceWithImageUrls) }
+                    _device.update { UiState.Success(deviceWithImageUrls) }
                     sharedRepository.updateCachedDevices(deviceWithImageUrls)
                 } else {
                     val errorMessage = "При выполении запроса произошла ошибка"
-                    _device.update { Result.error(errorMessage = errorMessage) }
+                    _device.update { UiState.Error(errorMessage) }
                 }
             }
             .collect {}
@@ -68,6 +67,5 @@ constructor(
 
     fun clearDeviceData() {
         sharedRepository.clearDeviceQueryParams()
-        _device.update { Result.default() }
     }
 }

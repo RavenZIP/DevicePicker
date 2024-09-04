@@ -57,7 +57,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.constants.enums.StatusEnum
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.colorMap
 import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
@@ -71,6 +70,7 @@ import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsI
 import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
+import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
@@ -99,13 +99,13 @@ fun DeviceInfoScreen(
 ) {
     val deviceState = deviceInfoViewModel.device.collectAsState().value
 
-    when (deviceState.status) {
-        StatusEnum.LOADING -> {
+    when (deviceState) {
+        is UiState.Loading -> {
             Spinner(text = "Загрузка...")
         }
 
-        StatusEnum.OK -> {
-            val device = deviceState.value!!
+        is UiState.Success -> {
+            val device = deviceState.data
             val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
             val title = remember { device.createDeviceTitle() }
             val specificationsMap = remember { device.specifications.toMap() }
@@ -182,7 +182,7 @@ fun DeviceInfoScreen(
             }
         }
 
-        StatusEnum.ERROR -> {
+        is UiState.Error -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -199,10 +199,6 @@ fun DeviceInfoScreen(
 
                 Text(text = "При загрузке данных произошла ошибка")
             }
-        }
-
-        else -> {
-            // DO nothing
         }
     }
 
