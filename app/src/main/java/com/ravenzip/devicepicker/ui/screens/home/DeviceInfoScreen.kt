@@ -99,105 +99,108 @@ fun DeviceInfoScreen(
 ) {
     val deviceState = deviceInfoViewModel.device.collectAsState().value
 
-    when (deviceState) {
-        is UiState.Loading -> {
-            Spinner(text = "Загрузка...")
-        }
+    Box(modifier = Modifier.fillMaxSize()) {
+        when (deviceState) {
+            is UiState.Loading -> {
+                Spinner(text = "Загрузка...")
+            }
 
-        is UiState.Success -> {
-            val device = deviceState.data
-            val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
-            val title = remember { device.createDeviceTitle() }
-            val specificationsMap = remember { device.specifications.toMap() }
-            val listOfTagsIcons = device.createListOfTagsIcons()
-            val sheetState = rememberModalBottomSheetState()
-            val tagsSheetIsVisible = remember { mutableStateOf(false) }
+            is UiState.Success -> {
+                val device = deviceState.data
+                val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
+                val title = remember { device.createDeviceTitle() }
+                val specificationsMap = remember { device.specifications.toMap() }
+                val listOfTagsIcons = device.createListOfTagsIcons()
+                val sheetState = rememberModalBottomSheetState()
+                val tagsSheetIsVisible = remember { mutableStateOf(false) }
 
-            LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                item {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    ImageContainer(pagerState, device.imageUrls)
-                }
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(padding),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        ImageContainer(pagerState, device.imageUrls)
+                    }
 
-                item {
-                    Spacer(modifier = Modifier.height(10.dp))
-                    BoxedChipGroup(
-                        items = listOfTagsIcons,
-                        buttonContentConfig =
-                            ButtonContentConfig(
-                                text = "Подробнее о метках",
-                                textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
-                                icon = Icon.ResourceIcon(id = R.drawable.i_arrow_right),
-                                iconConfig = IconConfig.Default,
-                                onClick = { tagsSheetIsVisible.value = true },
-                            ),
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(20.dp))
-                    Text(
-                        text = title,
-                        modifier = Modifier.fillMaxWidth(0.9f),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(15.dp))
-                    FeedbackContainer(
-                        generateFeedbackList(
-                            device.feedback.rating,
-                            device.feedback.reviewsCount,
-                            device.feedback.questionsCount,
+                    item {
+                        Spacer(modifier = Modifier.height(10.dp))
+                        BoxedChipGroup(
+                            items = listOfTagsIcons,
+                            buttonContentConfig =
+                                ButtonContentConfig(
+                                    text = "Подробнее о метках",
+                                    textConfig =
+                                        TextConfig(size = 16.sp, weight = FontWeight.Medium),
+                                    icon = Icon.ResourceIcon(id = R.drawable.i_arrow_right),
+                                    iconConfig = IconConfig.Default,
+                                    onClick = { tagsSheetIsVisible.value = true },
+                                ),
                         )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(20.dp))
+                        Text(
+                            text = title,
+                            modifier = Modifier.fillMaxWidth(0.9f),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold,
+                        )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(15.dp))
+                        FeedbackContainer(
+                            generateFeedbackList(
+                                device.feedback.rating,
+                                device.feedback.reviewsCount,
+                                device.feedback.questionsCount,
+                            )
+                        )
+                    }
+
+                    item {
+                        Spacer(modifier = Modifier.height(15.dp))
+                        PriceAndConfigurations(device.price, device.configurations, device.colors)
+                    }
+
+                    items(specificationsMap.keys.toList()) { categoryKey ->
+                        Specifications(
+                            category = categoryKey,
+                            specifications = specificationsMap[categoryKey]!!,
+                        )
+                    }
+
+                    item { Spacer(modifier = Modifier.height(20.dp)) }
+                }
+
+                if (tagsSheetIsVisible.value) {
+                    TagsBottomSheet(
+                        tagsSheetIsVisible = tagsSheetIsVisible,
+                        sheetState = sheetState,
+                        allTagsWithIcons = device.createListOfTagsWithIcons(),
                     )
                 }
+            }
 
-                item {
-                    Spacer(modifier = Modifier.height(15.dp))
-                    PriceAndConfigurations(device.price, device.configurations, device.colors)
-                }
-
-                items(specificationsMap.keys.toList()) { categoryKey ->
-                    Specifications(
-                        category = categoryKey,
-                        specifications = specificationsMap[categoryKey]!!,
+            is UiState.Error -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Icon(
+                        imageVector = ImageVector.vectorResource(R.drawable.i_error),
+                        contentDescription = "",
+                        modifier = Modifier.size(30.dp),
+                        tint = MaterialTheme.colorScheme.primary,
                     )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Text(text = "При загрузке данных произошла ошибка")
                 }
-
-                item { Spacer(modifier = Modifier.height(20.dp)) }
-            }
-
-            if (tagsSheetIsVisible.value) {
-                TagsBottomSheet(
-                    tagsSheetIsVisible = tagsSheetIsVisible,
-                    sheetState = sheetState,
-                    allTagsWithIcons = device.createListOfTagsWithIcons(),
-                )
-            }
-        }
-
-        is UiState.Error -> {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
-            ) {
-                Icon(
-                    imageVector = ImageVector.vectorResource(R.drawable.i_error),
-                    contentDescription = "",
-                    modifier = Modifier.size(30.dp),
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(text = "При загрузке данных произошла ошибка")
             }
         }
     }
