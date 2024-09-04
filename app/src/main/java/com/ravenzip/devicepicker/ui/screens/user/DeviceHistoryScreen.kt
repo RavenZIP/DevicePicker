@@ -2,7 +2,7 @@ package com.ravenzip.devicepicker.ui.screens.user
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -24,7 +24,7 @@ fun DeviceHistoryScreen(
     val deviceHistoryState = deviceHistoryViewModel.deviceHistory.collectAsState().value
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().padding(padding).padding(top = 10.dp),
+        modifier = Modifier.fillMaxSize().padding(padding).padding(top = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
