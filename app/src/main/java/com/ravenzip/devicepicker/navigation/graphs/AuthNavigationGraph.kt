@@ -7,6 +7,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
@@ -37,7 +38,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 },
             )
         }
-        navigateWithFadeAnimation(route = AuthGraph.REGISTRATION) {
+        navigateWithSlideAnimation(route = AuthGraph.REGISTRATION) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -54,7 +55,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 }
             )
         }
-        navigateWithFadeAnimation(route = AuthGraph.LOGIN) {
+        navigateWithSlideAnimation(route = AuthGraph.LOGIN) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
@@ -72,7 +73,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
             )
         }
-        navigateWithFadeAnimation(route = AuthGraph.FORGOT_PASS) {
+        navigateWithSlideAnimation(route = AuthGraph.FORGOT_PASS) {
             SetWindowStyle(
                 view = LocalView.current,
                 statusBarColor = MaterialTheme.colorScheme.surface,
