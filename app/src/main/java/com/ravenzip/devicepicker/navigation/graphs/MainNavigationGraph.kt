@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
@@ -31,7 +31,7 @@ fun MainNavigationGraph(
         startDestination = BottomBarGraph.HOME,
     ) {
         // Домашний экран
-        navigateWithFadeAnimation(route = BottomBarGraph.HOME) {
+        navigateWithSlideAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
                 padding = padding,
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
@@ -41,16 +41,18 @@ fun MainNavigationGraph(
         homeNavigationGraph(padding = padding)
 
         // Поиск
-        navigateWithFadeAnimation(route = BottomBarGraph.SEARCH) { SearchScreen(padding = padding) }
+        navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
+            SearchScreen(padding = padding)
+        }
 
         // Избранное
-        navigateWithFadeAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
+        navigateWithSlideAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
 
         // Сравнение
-        navigateWithFadeAnimation(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
+        navigateWithSlideAnimation(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
 
         // Профиль пользователя
-        navigateWithFadeAnimation(route = BottomBarGraph.USER_PROFILE) {
+        navigateWithSlideAnimation(route = BottomBarGraph.USER_PROFILE) {
             UserProfileScreen(
                 userProfileViewModel = userProfileViewModel,
                 onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
