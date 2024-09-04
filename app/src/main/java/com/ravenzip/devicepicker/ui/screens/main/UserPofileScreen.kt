@@ -173,6 +173,7 @@ fun UserProfileScreen(
             onDismiss = { alertDialogIsShown.value = false },
             onConfirmation = {
                 alertDialogIsShown.value = false
+                userProfileViewModel.logout()
                 navigateToSplashScreen()
             },
         )
