@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
-class DeviceHistoryViewModel @Inject constructor(sharedRepository: SharedRepository) : ViewModel() {
+class DeviceHistoryViewModel @Inject constructor(private val sharedRepository: SharedRepository) :
+    ViewModel() {
     val deviceHistory =
         sharedRepository.allDevices
             .combine(sharedRepository.userData) { allDevices, userData ->
@@ -21,4 +22,8 @@ class DeviceHistoryViewModel @Inject constructor(sharedRepository: SharedReposit
                 started = SharingStarted.Eagerly,
                 initialValue = listOf(),
             )
+
+    fun setDeviceQueryParams(uid: String, brand: String, model: String) {
+        sharedRepository.setDeviceQueryParams(uid, brand, model)
+    }
 }

@@ -1,5 +1,6 @@
 package com.ravenzip.devicepicker.ui.screens.user
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.RowDeviceCard
 import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
@@ -22,12 +24,13 @@ fun DeviceHistoryScreen(
     val deviceHistoryState = deviceHistoryViewModel.deviceHistory.collectAsState().value
 
     LazyColumn(
-        modifier = Modifier.fillMaxWidth().padding(padding),
+        modifier = Modifier.fillMaxWidth().padding(padding).padding(top = 10.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         items(deviceHistoryState) { device ->
             RowDeviceCard(device = device) {
-                //// getDevice(device.uid, device.brand, device.model)
+                deviceHistoryViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
                 navigateToDevice()
             }
         }
