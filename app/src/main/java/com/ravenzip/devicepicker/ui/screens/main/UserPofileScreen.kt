@@ -13,8 +13,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -39,7 +37,7 @@ fun UserProfileScreen(
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
-    val alertDialogIsShown = remember { mutableStateOf(false) }
+    val alertDialogIsShown = userProfileViewModel.alertDialogIsShown.collectAsState().value
     val userData = userProfileViewModel.userData.collectAsState().value
 
     Column(
@@ -121,7 +119,7 @@ fun UserProfileScreen(
             iconConfig = IconConfig(color = errorColor),
             colors = ButtonDefaults.containerColor(),
         ) {
-            alertDialogIsShown.value = true
+            userProfileViewModel.showDialog()
         }
 
         Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -163,19 +161,15 @@ fun UserProfileScreen(
         Spacer(modifier = Modifier.padding(top = 20.dp))
     }
 
-    if (alertDialogIsShown.value) {
+    if (alertDialogIsShown) {
         AlertDialog(
             icon = Icon.ResourceIcon(R.drawable.sign_in),
             title = "Выход из аккаунта",
             text = "Вы действительно хотите выполнить выход из аккаунта?",
             onDismissText = "Отмена",
             onConfirmationText = "Выйти",
-            onDismiss = { alertDialogIsShown.value = false },
-            onConfirmation = {
-                alertDialogIsShown.value = false
-                userProfileViewModel.logout()
-                navigateToSplashScreen()
-            },
+            onDismiss = { userProfileViewModel.hideDialog() },
+            onConfirmation = { userProfileViewModel.onDialogConfirmation(navigateToSplashScreen) },
         )
     }
 }
