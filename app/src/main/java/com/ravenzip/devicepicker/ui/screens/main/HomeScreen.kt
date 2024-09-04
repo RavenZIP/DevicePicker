@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.ColumnDeviceCard
-import com.ravenzip.devicepicker.viewmodels.HomeScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
 
 @Composable

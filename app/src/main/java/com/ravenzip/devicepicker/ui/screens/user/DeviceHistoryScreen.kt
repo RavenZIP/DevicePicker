@@ -11,7 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.RowDeviceCard
-import com.ravenzip.devicepicker.viewmodels.DeviceHistoryViewModel
+import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
 
 @Composable
 fun DeviceHistoryScreen(

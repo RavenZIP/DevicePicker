@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.viewmodels
+package com.ravenzip.devicepicker.viewmodels.main
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList

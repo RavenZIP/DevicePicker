@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.viewmodels.SearchScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.workshop.components.VerticalGrid
 
 @Composable

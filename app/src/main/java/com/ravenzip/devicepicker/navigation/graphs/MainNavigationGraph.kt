@@ -15,7 +15,7 @@ import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
 import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.viewmodels.UserProfileViewModel
+import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 
 @Composable
 fun MainNavigationGraph(

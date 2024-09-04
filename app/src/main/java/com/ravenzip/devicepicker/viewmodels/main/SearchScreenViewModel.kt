@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.viewmodels
+package com.ravenzip.devicepicker.viewmodels.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

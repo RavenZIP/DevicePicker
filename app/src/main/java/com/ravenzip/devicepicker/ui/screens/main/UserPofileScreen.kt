@@ -23,7 +23,7 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
 import com.ravenzip.devicepicker.ui.theme.errorColor
-import com.ravenzip.devicepicker.viewmodels.UserProfileViewModel
+import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.RowIconButton
