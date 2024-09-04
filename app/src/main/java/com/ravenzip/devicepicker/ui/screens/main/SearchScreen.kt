@@ -23,16 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.workshop.components.VerticalGrid
 
 @Composable
-fun SearchScreen(
-    searchScreenViewModel: SearchScreenViewModel = hiltViewModel<SearchScreenViewModel>(),
-    padding: PaddingValues,
-) {
+fun SearchScreen(searchScreenViewModel: SearchScreenViewModel, padding: PaddingValues) {
     val brandList = searchScreenViewModel.brandList.collectAsState().value
     val deviceTypeList = searchScreenViewModel.deviceTypeList.collectAsState().value
 

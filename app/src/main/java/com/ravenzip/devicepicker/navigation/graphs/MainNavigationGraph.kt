@@ -15,6 +15,8 @@ import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
 import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
 import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
+import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 
 @Composable
@@ -23,6 +25,8 @@ fun MainNavigationGraph(
     padding: PaddingValues,
     navigateToSplashScreen: () -> Unit,
 ) {
+    val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
+    val searchScreenViewModel = hiltViewModel<SearchScreenViewModel>()
     val userProfileViewModel = hiltViewModel<UserProfileViewModel>()
 
     NavHost(
@@ -33,6 +37,7 @@ fun MainNavigationGraph(
         // Домашний экран
         navigateWithSlideAnimation(route = BottomBarGraph.HOME) {
             HomeScreen(
+                homeScreenViewModel = homeScreenViewModel,
                 padding = padding,
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
             )
@@ -42,7 +47,7 @@ fun MainNavigationGraph(
 
         // Поиск
         navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
-            SearchScreen(padding = padding)
+            SearchScreen(searchScreenViewModel = searchScreenViewModel, padding = padding)
         }
 
         // Избранное

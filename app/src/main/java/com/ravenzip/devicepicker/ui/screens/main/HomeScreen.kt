@@ -15,14 +15,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.ColumnDeviceCard
 import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
 
 @Composable
 fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel = hiltViewModel(),
+    homeScreenViewModel: HomeScreenViewModel,
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
