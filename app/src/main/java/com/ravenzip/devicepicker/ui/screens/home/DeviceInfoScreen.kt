@@ -474,7 +474,6 @@ private fun TagsBottomSheet(
                         InfoCard(
                             width = 0.95f,
                             icon = Icon.ResourceIcon(R.drawable.i_info),
-                            iconConfig = IconConfig.PrimaryBig,
                             title = "Описание",
                             text =
                                 "Метки - специальные ярлыки, которые кратко описывают устройство. " +
@@ -549,7 +548,6 @@ private fun TagInfo(tag: Tag?) {
         InfoCard(
             width = 0.95f,
             icon = Icon.ResourceIcon(id = R.drawable.i_info),
-            iconConfig = IconConfig.PrimaryBig,
             title = "Описание",
             text = tag.name.description,
             colors = CardDefaults.veryLightPrimary(),

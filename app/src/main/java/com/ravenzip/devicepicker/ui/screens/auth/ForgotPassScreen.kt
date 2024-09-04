@@ -29,7 +29,6 @@ import com.ravenzip.workshop.components.SinglenessTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.Icon
-import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
 fun ForgotPasswordScreen(
@@ -71,7 +70,6 @@ fun ForgotPasswordScreen(
         Spacer(modifier = Modifier.height(30.dp))
         InfoCard(
             icon = Icon.ResourceIcon(R.drawable.i_info),
-            iconConfig = IconConfig.PrimarySmall,
             title = "Важно!",
             text = AuthCardEnum.FORGOT_PASS.value,
             colors = CardDefaults.defaultCardColors(),

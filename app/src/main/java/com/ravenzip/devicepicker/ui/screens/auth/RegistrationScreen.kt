@@ -33,7 +33,6 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.Icon
-import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
 fun RegistrationScreen(
@@ -91,7 +90,6 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = Icon.ResourceIcon(R.drawable.i_info),
-            iconConfig = IconConfig.PrimarySmall,
             title = "Важно!",
             text = registrationScreenViewModel.getSelectedOptionDescription(selectedOptionState),
             colors = CardDefaults.defaultCardColors(),
