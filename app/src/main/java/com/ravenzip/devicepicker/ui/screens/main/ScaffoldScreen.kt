@@ -42,8 +42,10 @@ fun ScaffoldScreen(
     val topAppBarState = topAppBarViewModel.topAppBarState.collectAsState().value
     val searchBarState = topAppBarViewModel.searchBarState.collectAsState().value
     val topAppBarType = topAppBarViewModel.type.collectAsState().value
+    val navBackStackEntry = navController.currentBackStackEntryAsState().value
+
     val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val menuItems = rememberSaveable { generateMenuItems() }
 
     ChangeScaffoldItemsState(
         navController = navController,
@@ -64,10 +66,7 @@ fun ScaffoldScreen(
         },
         bottomBar = {
             AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
-                BottomNavigationBar(
-                    navController = navController,
-                    buttonsList = generateMenuItems(),
-                )
+                BottomNavigationBar(navController = navController, buttonsList = menuItems)
             }
         },
     ) { padding ->
@@ -157,8 +156,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
     return listOf(homeButton, searchButton, favouriteButton, compareButton, userProfileButton)
 }
 
-@Composable
-private fun deviceInfoScreenTopAppBarItemList(): List<AppBarItem> {
+private fun generateDeviceInfoTopAppBarItems(): List<AppBarItem> {
     val favouriteButton =
         AppBarItem(
             icon = Icon.ResourceIcon(R.drawable.i_heart),
@@ -173,7 +171,7 @@ private fun deviceInfoScreenTopAppBarItemList(): List<AppBarItem> {
             onClick = {},
         )
 
-    return remember { listOf(favouriteButton, compareButton) }
+    return listOf(favouriteButton, compareButton)
 }
 
 @Composable
@@ -193,15 +191,15 @@ private fun ChangeScaffoldItemsState(
         }
 
         HomeGraph.DEVICE_INFO -> {
+            val topAppBarItems = remember { generateDeviceInfoTopAppBarItems() }
             val topAppBarState =
                 TopAppBarState.createTopAppBarState(
                     onClickToBackArrow = { navController.navigateUp() },
-                    menuItems = deviceInfoScreenTopAppBarItemList(),
+                    menuItems = topAppBarItems,
                 )
 
             setTopAppBarState(topAppBarState)
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-
             changeBottomBarState(false)
         }
 
