@@ -96,10 +96,12 @@ constructor(
     suspend fun tryToUpdateDeviceHistory(deviceUid: String) {
         if (deviceUid !in _userData.value.deviceHistory) {
             val updatedDeviceHistory = _userData.value.deviceHistory + deviceUid
+            val updateResult =
+                userRepository.updateDeviceHistory(firebaseUser?.uid, updatedDeviceHistory)
 
-            // TODO пока что не обрабатываем результат запроса
-            userRepository.updateDeviceHistory(firebaseUser?.uid, updatedDeviceHistory)
-            _userData.update { _userData.value.copy(deviceHistory = updatedDeviceHistory) }
+            if (updateResult) {
+                _userData.update { _userData.value.copy(deviceHistory = updatedDeviceHistory) }
+            }
         }
     }
 
