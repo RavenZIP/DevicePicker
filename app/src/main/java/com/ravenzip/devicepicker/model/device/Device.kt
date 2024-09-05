@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.model.device
 
-import androidx.compose.runtime.Composable
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.tagIconMap
 import com.ravenzip.devicepicker.constants.map.tagsColorMap
@@ -44,8 +43,7 @@ data class Device(
                 "${this.configurations[0].randomAccessMemory}/${this.configurations[0].internalMemory}Gb " +
                 "${this.specifications.screen.diagonal()} ${this.specifications.baseInfo.year} ${this.colors[0]}"
 
-        @Composable
-        fun Device.createListOfTagsWithIcons() =
+        fun Device.createTags() =
             this.tags.map { tag ->
                 Tag(
                     name = tag,
@@ -57,8 +55,7 @@ data class Device(
                 )
             }
 
-        @Composable
-        fun Device.createListOfTagsIcons() =
+        fun Device.createShortTags() =
             this.tags.map { tag ->
                 IconWithConfig(
                     icon = Icon.ResourceIcon(tagIconMap[tag]!!),

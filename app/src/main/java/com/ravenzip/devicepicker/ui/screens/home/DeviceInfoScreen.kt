@@ -41,7 +41,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,11 +63,8 @@ import com.ravenzip.devicepicker.constants.map.tagsNameMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
+import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.Tag
-import com.ravenzip.devicepicker.model.device.Device.Companion.createDeviceTitle
-import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsIcons
-import com.ravenzip.devicepicker.model.device.Device.Companion.createListOfTagsWithIcons
-import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Companion.toMap
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
@@ -107,12 +103,17 @@ fun DeviceInfoScreen(
 
             is UiState.Success -> {
                 val device = deviceState.data
+
+                val title = deviceInfoViewModel.title.collectAsState().value
+                val specifications = deviceInfoViewModel.specifications.collectAsState().value
+                val shortTags = deviceInfoViewModel.shortTags.collectAsState().value
+                val tags = deviceInfoViewModel.tags.collectAsState().value
+
+                val specificationsKeyList = rememberSaveable { specifications.keys.toList() }
                 val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
-                val title = remember { device.createDeviceTitle() }
-                val specificationsMap = remember { device.specifications.toMap() }
-                val listOfTagsIcons = device.createListOfTagsIcons()
                 val sheetState = rememberModalBottomSheetState()
-                val tagsSheetIsVisible = remember { mutableStateOf(false) }
+                val tagsSheetIsVisible = rememberSaveable { mutableStateOf(false) }
+                val feedback = rememberSaveable { generateFeedbackList(device.feedback) }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize().padding(padding),
@@ -126,7 +127,7 @@ fun DeviceInfoScreen(
                     item {
                         Spacer(modifier = Modifier.height(10.dp))
                         BoxedChipGroup(
-                            items = listOfTagsIcons,
+                            items = shortTags,
                             buttonContentConfig =
                                 ButtonContentConfig(
                                     text = "Подробнее о метках",
@@ -151,13 +152,7 @@ fun DeviceInfoScreen(
 
                     item {
                         Spacer(modifier = Modifier.height(15.dp))
-                        FeedbackContainer(
-                            generateFeedbackList(
-                                device.feedback.rating,
-                                device.feedback.reviewsCount,
-                                device.feedback.questionsCount,
-                            )
-                        )
+                        FeedbackContainer(feedback)
                     }
 
                     item {
@@ -165,10 +160,10 @@ fun DeviceInfoScreen(
                         PriceAndConfigurations(device.price, device.configurations, device.colors)
                     }
 
-                    items(specificationsMap.keys.toList()) { categoryKey ->
+                    items(specificationsKeyList) { categoryKey ->
                         Specifications(
                             category = categoryKey,
-                            specifications = specificationsMap[categoryKey]!!,
+                            specifications = specifications[categoryKey]!!,
                         )
                     }
 
@@ -179,7 +174,7 @@ fun DeviceInfoScreen(
                     TagsBottomSheet(
                         tagsSheetIsVisible = tagsSheetIsVisible,
                         sheetState = sheetState,
-                        allTagsWithIcons = device.createListOfTagsWithIcons(),
+                        tags = tags,
                     )
                 }
             }
@@ -259,7 +254,7 @@ private fun FeedbackContainer(feedback: List<ButtonData>) {
                 ) {
                     Spacer(modifier = Modifier.padding(top = 5.dp))
                     TextWithIcon(
-                        icon = feedback.icon,
+                        icon = ImageVector.vectorResource(feedback.iconId),
                         iconSize = 16.dp,
                         text = feedback.value,
                         spacerWidth = 5.dp,
@@ -315,7 +310,10 @@ private fun PriceAndConfigurations(
 /** Конфигурация устройства */
 @Composable
 private fun DeviceConfiguration(modifier: Modifier, configuration: PhoneConfiguration) {
-    val text = "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
+    val text = rememberSaveable {
+        "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
+    }
+
     Card(
         modifier = modifier,
         shape = RoundedCornerShape(10.dp),
@@ -343,6 +341,7 @@ private fun DeviceColor(modifier: Modifier, color: String) {
             horizontalArrangement = Arrangement.Center,
         ) {
             ColoredBoxWithBorder(colorMap[color]!!)
+
             Spacer(modifier = Modifier.width(5.dp))
 
             Text(
@@ -352,37 +351,33 @@ private fun DeviceColor(modifier: Modifier, color: String) {
                 softWrap = false,
                 overflow = TextOverflow.Ellipsis,
             )
+
             Spacer(modifier = Modifier.width(22.dp))
         }
     }
 }
 
-@Composable
-private fun generateFeedbackList(
-    deviceRating: Double,
-    deviceReviewsCount: Int,
-    deviceQuestionsCount: Int,
-): List<ButtonData> {
+private fun generateFeedbackList(feedback: Feedback): List<ButtonData> {
     val rating =
         ButtonData(
-            icon = ImageVector.vectorResource(R.drawable.i_medal),
-            value = deviceRating.toString(),
+            iconId = R.drawable.i_medal,
+            value = feedback.rating.toString(),
             text = "Оценка",
             onClick = {},
         )
 
     val reviewsCount =
         ButtonData(
-            icon = ImageVector.vectorResource(R.drawable.i_comment),
-            value = deviceReviewsCount.toString(),
+            iconId = R.drawable.i_comment,
+            value = feedback.reviewsCount.toString(),
             text = "Отзывы",
             onClick = {},
         )
 
     val questionsCount =
         ButtonData(
-            icon = ImageVector.vectorResource(R.drawable.i_question),
-            value = deviceQuestionsCount.toString(),
+            iconId = R.drawable.i_question,
+            value = feedback.questionsCount.toString(),
             text = "Вопросы",
             onClick = {},
         )
@@ -417,6 +412,9 @@ private fun Specifications(category: String, specifications: Map<String, String>
 private fun SpecificationCategory(category: Map<String, String>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         for (specificationEntries in category.entries) {
+            val specificationsName =
+                rememberSaveable(specificationEntries.key) { specificationEntries.key + ":" }
+
             Spacer(modifier = Modifier.height(5.dp))
 
             Card(
@@ -430,11 +428,12 @@ private fun SpecificationCategory(category: Map<String, String>) {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     SmallText(
-                        text = specificationEntries.key + ":",
+                        text = specificationsName,
                         fontWeight = FontWeight.W500,
                         modifier = Modifier.weight(1f),
                         letterSpacing = 0.sp,
                     )
+
                     SmallText(
                         text = specificationEntries.value,
                         modifier = Modifier.padding(start = 10.dp).weight(1f),
@@ -452,7 +451,7 @@ private fun SpecificationCategory(category: Map<String, String>) {
 private fun TagsBottomSheet(
     tagsSheetIsVisible: MutableState<Boolean>,
     sheetState: SheetState,
-    allTagsWithIcons: List<Tag>,
+    tags: List<Tag>,
 ) {
     val selectedTag = rememberSaveable { mutableStateOf<Tag?>(null) }
 
@@ -486,7 +485,7 @@ private fun TagsBottomSheet(
                         )
                     }
 
-                    items(allTagsWithIcons) { tag ->
+                    items(tags) { tag ->
                         Spacer(modifier = Modifier.height(10.dp))
                         CustomButton(
                             width = 0.95f,
@@ -545,6 +544,7 @@ private fun TagInfo(tag: Tag?) {
         }
 
         Spacer(modifier = Modifier.height(10.dp))
+
         InfoCard(
             width = 0.95f,
             icon = Icon.ResourceIcon(id = R.drawable.i_info),
