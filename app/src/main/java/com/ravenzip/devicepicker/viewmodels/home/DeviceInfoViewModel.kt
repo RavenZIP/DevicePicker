@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.viewmodels
+package com.ravenzip.devicepicker.viewmodels.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -42,7 +42,9 @@ constructor(
                         _device.update { UiState.Success(cachedDevice) }
                     }
 
-                    sharedRepository.tryToUpdateDeviceHistory(params.uid)
+                    if (_device.value is UiState.Success) {
+                        sharedRepository.tryToUpdateDeviceHistory(params.uid)
+                    }
                 }
         }
     }

@@ -75,7 +75,7 @@ import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
-import com.ravenzip.devicepicker.viewmodels.DeviceInfoViewModel
+import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
 import com.ravenzip.workshop.components.CustomButton
