@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.main
+package com.ravenzip.devicepicker.ui.screens.main.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,30 +12,36 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.ui.components.ColumnDeviceCard
-import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
+import com.ravenzip.workshop.data.selection.SelectableChipConfig
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun HomeScreen(
-    homeScreenViewModel: HomeScreenViewModel,
+fun HomeScreenContent(
+    categoriesState: StateFlow<SnapshotStateList<SelectableChipConfig>>,
+    selectedCategoryState: StateFlow<SnapshotStateList<DeviceCompact>>,
     padding: PaddingValues,
+    selectCategory: (SelectableChipConfig) -> Unit,
+    setDeviceQueryParams: (String, String, String) -> Unit,
     navigateToDevice: () -> Unit,
 ) {
-    val categoriesState = homeScreenViewModel.categories.collectAsState().value
-    val selectedCategoryState = homeScreenViewModel.selectedCategory.collectAsState().value
+    val categories = categoriesState.collectAsState().value
+    val selectedCategory = selectedCategoryState.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            list = categoriesState,
+            list = categories,
             containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
-            onClick = { item -> homeScreenViewModel.selectCategory(item) },
+            onClick = { item -> selectCategory(item) },
         )
 
         LazyVerticalGrid(
@@ -45,15 +51,11 @@ fun HomeScreen(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            items(selectedCategoryState) { device ->
+            items(selectedCategory) { device ->
                 ColumnDeviceCard(
                     device = device,
                     onClick = {
-                        homeScreenViewModel.setDeviceQueryParams(
-                            device.uid,
-                            device.brand,
-                            device.model,
-                        )
+                        setDeviceQueryParams(device.uid, device.brand, device.model)
                         navigateToDevice()
                     },
                 )

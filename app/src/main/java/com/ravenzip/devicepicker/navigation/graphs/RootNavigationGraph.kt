@@ -11,7 +11,7 @@ import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.auth.SplashScreen
-import com.ravenzip.devicepicker.ui.screens.main.ScaffoldScreen
+import com.ravenzip.devicepicker.ui.screens.main.MainScaffold
 import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 
 @Composable
@@ -55,7 +55,7 @@ fun RootNavigationGraph(navController: NavHostController) {
                 isAppearanceLight = !isSystemInDarkTheme(),
             )
 
-            ScaffoldScreen(
+            MainScaffold(
                 navigateToSplashScreen = {
                     navController.navigateWithoutPreviousRoute(
                         startDestination = RootGraph.ROOT,

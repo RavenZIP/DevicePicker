@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.user
+package com.ravenzip.devicepicker.ui.screens.main.user.admin
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -24,7 +24,7 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
 
 @Composable
-fun AdminPanelScreen(padding: PaddingValues) {
+fun AdminScreenContent(padding: PaddingValues) {
     val key = remember { mutableStateOf("") }
     val firebase = FirebaseDatabase.getInstance()
     val interactionSource = remember { MutableInteractionSource() }

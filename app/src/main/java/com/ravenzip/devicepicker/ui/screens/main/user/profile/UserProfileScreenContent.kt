@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.main
+package com.ravenzip.devicepicker.ui.screens.main.user.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,7 +30,7 @@ import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
-fun UserProfileScreen(
+fun UserProfileScreenContent(
     userProfileViewModel: UserProfileViewModel,
     onClickToAdminPanel: () -> Unit,
     onClickToDeviceHistory: () -> Unit,

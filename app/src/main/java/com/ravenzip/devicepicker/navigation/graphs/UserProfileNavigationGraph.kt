@@ -10,10 +10,10 @@ import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
-import com.ravenzip.devicepicker.ui.screens.home.DeviceInfoScreen
-import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
-import com.ravenzip.devicepicker.ui.screens.user.AdminPanelScreen
-import com.ravenzip.devicepicker.ui.screens.user.DeviceHistoryScreen
+import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.admin.AdminScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.history.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.profile.UserProfileScaffold
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 
 @Composable
@@ -29,7 +29,7 @@ fun UserProfileNavigationGraph(
         startDestination = UserProfileGraph.USER_PROFILE_ROOT,
     ) {
         navigateWithSlideAnimation(UserProfileGraph.USER_PROFILE_ROOT) {
-            UserProfileScreen(
+            UserProfileScaffold(
                 userProfileViewModel = userProfileViewModel,
                 onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
                 onClickToDeviceHistory = {
@@ -41,18 +41,18 @@ fun UserProfileNavigationGraph(
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.ADMIN_PANEL) {
-            AdminPanelScreen(padding = padding)
+            AdminScreenScaffold(padding = padding)
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
-            DeviceHistoryScreen(
+            DeviceInfoScreenScaffold(
                 padding = padding,
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
             )
         }
 
         navigateWithFadeAnimation(route = HomeGraph.DEVICE_INFO) {
-            DeviceInfoScreen(padding = padding)
+            DeviceInfoScaffold(padding = padding, navigateBack = { navController.popBackStack() })
         }
     }
 }

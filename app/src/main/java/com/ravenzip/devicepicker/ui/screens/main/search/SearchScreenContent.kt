@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.main
+package com.ravenzip.devicepicker.ui.screens.main.search
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -24,13 +24,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.workshop.components.VerticalGrid
+import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun SearchScreen(searchScreenViewModel: SearchScreenViewModel, padding: PaddingValues) {
-    val brandList = searchScreenViewModel.brandList.collectAsState().value
-    val deviceTypeList = searchScreenViewModel.deviceTypeList.collectAsState().value
+fun SearchScreenContent(
+    brandsState: StateFlow<List<String>>,
+    deviceTypesState: StateFlow<List<String>>,
+    padding: PaddingValues,
+) {
+    val brands = brandsState.collectAsState().value
+    val deviceTypes = deviceTypesState.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -40,13 +44,13 @@ fun SearchScreen(searchScreenViewModel: SearchScreenViewModel, padding: PaddingV
         Text(text = "Категории устройств", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
         Spacer(modifier = Modifier.height(10.dp))
-        VerticalGrid(items = deviceTypeList) { modifier, item -> BrandCard(modifier, item) }
+        VerticalGrid(items = deviceTypes) { modifier, item -> BrandCard(modifier, item) }
 
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp)
 
         Spacer(modifier = Modifier.height(10.dp))
-        VerticalGrid(items = brandList) { modifier, item -> BrandCard(modifier, item) }
+        VerticalGrid(items = brands) { modifier, item -> BrandCard(modifier, item) }
 
         Spacer(modifier = Modifier.height(20.dp))
     }

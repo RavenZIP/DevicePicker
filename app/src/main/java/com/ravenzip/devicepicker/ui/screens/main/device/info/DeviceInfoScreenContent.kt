@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.home
+package com.ravenzip.devicepicker.ui.screens.main.device.info
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
@@ -37,7 +37,6 @@ import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +53,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.colorMap
@@ -87,22 +85,19 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
-@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun DeviceInfoScreen(
-    deviceInfoViewModel: DeviceInfoViewModel = hiltViewModel<DeviceInfoViewModel>(),
-    padding: PaddingValues,
-) {
-    val deviceState = deviceInfoViewModel.device.collectAsState().value
+fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: PaddingValues) {
+    val uiState = deviceInfoViewModel.device.collectAsState().value
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        when (deviceState) {
+    Box(modifier = Modifier.fillMaxSize().padding(padding)) {
+        when (uiState) {
             is UiState.Loading -> {
                 Spinner(text = "Загрузка...")
             }
 
             is UiState.Success -> {
-                val device = deviceState.data
+                val device = uiState.data
 
                 val title = deviceInfoViewModel.title.collectAsState().value
                 val specifications = deviceInfoViewModel.specifications.collectAsState().value
@@ -116,7 +111,7 @@ fun DeviceInfoScreen(
                 val feedback = rememberSaveable { generateFeedbackList(device.feedback) }
 
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize().padding(padding),
+                    modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     item {
@@ -199,8 +194,6 @@ fun DeviceInfoScreen(
             }
         }
     }
-
-    DisposableEffect(Unit) { onDispose { deviceInfoViewModel.clearDeviceData() } }
 }
 
 @OptIn(ExperimentalFoundationApi::class)

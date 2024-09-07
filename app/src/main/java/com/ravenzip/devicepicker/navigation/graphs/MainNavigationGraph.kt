@@ -8,9 +8,9 @@ import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.ui.screens.main.CompareScreen
-import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
-import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
+import com.ravenzip.devicepicker.ui.screens.main.compare.CompareScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.favourites.FavouritesScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.search.SearchScreenScaffold
 import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
@@ -37,14 +37,18 @@ fun MainNavigationGraph(
 
         // Поиск
         navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
-            SearchScreen(searchScreenViewModel = searchScreenViewModel, padding = padding)
+            SearchScreenScaffold(searchScreenViewModel = searchScreenViewModel, padding = padding)
         }
 
         // Избранное
-        navigateWithSlideAnimation(route = BottomBarGraph.FAVOURITES) { FavouritesScreen(padding) }
+        navigateWithSlideAnimation(route = BottomBarGraph.FAVOURITES) {
+            FavouritesScreenScaffold(padding)
+        }
 
         // Сравнение
-        navigateWithSlideAnimation(route = BottomBarGraph.COMPARE) { CompareScreen(padding) }
+        navigateWithSlideAnimation(route = BottomBarGraph.COMPARE) {
+            CompareScreenScaffold(padding)
+        }
 
         // Профиль пользователя
         navigateWithSlideAnimation(route = BottomBarGraph.USER_PROFILE) {

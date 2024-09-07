@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.ui.screens.user
+package com.ravenzip.devicepicker.ui.screens.main.user.history
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,13 +11,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.ui.components.RowDeviceCard
 import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
 
 @Composable
-fun DeviceHistoryScreen(
-    deviceHistoryViewModel: DeviceHistoryViewModel = hiltViewModel<DeviceHistoryViewModel>(),
+fun DeviceHistoryScreenContent(
+    deviceHistoryViewModel: DeviceHistoryViewModel,
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
