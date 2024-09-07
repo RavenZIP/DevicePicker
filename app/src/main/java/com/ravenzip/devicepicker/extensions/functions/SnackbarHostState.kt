@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.services
+package com.ravenzip.devicepicker.extensions.functions
 
 import androidx.compose.material3.SnackbarHostState
 import com.ravenzip.devicepicker.R

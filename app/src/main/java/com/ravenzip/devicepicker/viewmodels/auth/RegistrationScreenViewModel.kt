@@ -6,12 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.extensions.functions.showError
+import com.ravenzip.devicepicker.extensions.functions.showWarning
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.UserRepository
 import com.ravenzip.devicepicker.services.AuthService
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.services.showWarning
 import com.ravenzip.devicepicker.state.AuthErrorState
 import com.ravenzip.workshop.data.selection.SelectableItemConfig
 import dagger.hilt.android.lifecycle.HiltViewModel

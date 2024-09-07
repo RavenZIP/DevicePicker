@@ -3,10 +3,10 @@ package com.ravenzip.devicepicker.viewmodels.auth
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ravenzip.devicepicker.extensions.functions.showError
+import com.ravenzip.devicepicker.extensions.functions.showSuccess
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.showError
-import com.ravenzip.devicepicker.services.showSuccess
 import com.ravenzip.workshop.data.Error
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

@@ -4,10 +4,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.services.AuthService
 import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.services.showError
 import com.ravenzip.devicepicker.state.AuthErrorState
 import com.ravenzip.workshop.data.selection.SelectableItemConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
