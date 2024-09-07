@@ -7,14 +7,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
-import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.ui.screens.main.CompareScreen
 import com.ravenzip.devicepicker.ui.screens.main.FavouritesScreen
-import com.ravenzip.devicepicker.ui.screens.main.HomeScreen
 import com.ravenzip.devicepicker.ui.screens.main.SearchScreen
-import com.ravenzip.devicepicker.ui.screens.main.UserProfileScreen
 import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
@@ -36,14 +32,8 @@ fun MainNavigationGraph(
     ) {
         // Домашний экран
         navigateWithSlideAnimation(route = BottomBarGraph.HOME) {
-            HomeScreen(
-                homeScreenViewModel = homeScreenViewModel,
-                padding = padding,
-                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
-            )
+            HomeNavigationGraph(homeScreenViewModel = homeScreenViewModel, padding = padding)
         }
-
-        homeNavigationGraph(padding = padding)
 
         // Поиск
         navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
@@ -58,20 +48,11 @@ fun MainNavigationGraph(
 
         // Профиль пользователя
         navigateWithSlideAnimation(route = BottomBarGraph.USER_PROFILE) {
-            UserProfileScreen(
+            UserProfileNavigationGraph(
                 userProfileViewModel = userProfileViewModel,
-                onClickToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
-                onClickToDeviceHistory = {
-                    navController.navigate(UserProfileGraph.DEVICE_HISTORY)
-                },
                 navigateToSplashScreen = navigateToSplashScreen,
                 padding = padding,
             )
         }
-
-        userProfileNavigationGraph(
-            padding = padding,
-            navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
-        )
     }
 }

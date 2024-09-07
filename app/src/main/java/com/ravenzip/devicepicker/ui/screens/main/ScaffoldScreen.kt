@@ -1,8 +1,5 @@
 package com.ravenzip.devicepicker.ui.screens.main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -44,7 +41,6 @@ fun ScaffoldScreen(
     val topAppBarType = topAppBarViewModel.type.collectAsState().value
     val navBackStackEntry = navController.currentBackStackEntryAsState().value
 
-    val bottomBarState = rememberSaveable { (mutableStateOf(true)) }
     val menuItems = rememberSaveable { generateMenuItems() }
 
     ChangeScaffoldItemsState(
@@ -53,7 +49,6 @@ fun ScaffoldScreen(
         setTopAppBarState = { state -> topAppBarViewModel.setTopAppBarState(state) },
         setSearchBarState = { state -> topAppBarViewModel.setSearchBarState(state) },
         setTopAppBarType = { type -> topAppBarViewModel.setType(type) },
-        changeBottomBarState = { bottomBarState.value = it },
     )
 
     Scaffold(
@@ -64,11 +59,7 @@ fun ScaffoldScreen(
                 searchBarState = searchBarState,
             )
         },
-        bottomBar = {
-            AnimatedVisibility(visible = bottomBarState.value, enter = fadeIn(), exit = fadeOut()) {
-                BottomNavigationBar(navController = navController, buttonsList = menuItems)
-            }
-        },
+        bottomBar = { BottomNavigationBar(navController = navController, buttonsList = menuItems) },
     ) { padding ->
         MainNavigationGraph(
             navController = navController,
@@ -181,13 +172,11 @@ private fun ChangeScaffoldItemsState(
     setTopAppBarState: (topAppBarState: TopAppBarState) -> Unit,
     setSearchBarState: (searchBarState: SearchBarState) -> Unit,
     setTopAppBarType: (topAppBarType: TopAppBarTypeEnum) -> Unit,
-    changeBottomBarState: (isVisible: Boolean) -> Unit,
 ) {
     when (currentRoute) {
         BottomBarGraph.HOME -> {
             setTopAppBarState(TopAppBarState.createTopAppBarState("Главная"))
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-            changeBottomBarState(true)
         }
 
         HomeGraph.DEVICE_INFO -> {
@@ -200,7 +189,6 @@ private fun ChangeScaffoldItemsState(
 
             setTopAppBarState(topAppBarState)
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-            changeBottomBarState(false)
         }
 
         BottomBarGraph.SEARCH -> {
@@ -221,17 +209,14 @@ private fun ChangeScaffoldItemsState(
         BottomBarGraph.USER_PROFILE -> {
             setTopAppBarState(TopAppBarState.createTopAppBarState("Профиль"))
             setTopAppBarType(TopAppBarTypeEnum.TopAppBar)
-            changeBottomBarState(true)
         }
 
         UserProfileGraph.ADMIN_PANEL -> {
             setTopAppBarState(TopAppBarState.createTopAppBarState("Панель администратора"))
-            changeBottomBarState(false)
         }
 
         UserProfileGraph.DEVICE_HISTORY -> {
             setTopAppBarState(TopAppBarState.createTopAppBarState("История просмотров"))
-            changeBottomBarState(false)
         }
 
         else -> {
