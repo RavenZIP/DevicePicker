@@ -5,7 +5,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -86,7 +85,7 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: PaddingValues) {
     val uiState = deviceInfoViewModel.device.collectAsState().value
@@ -197,7 +196,6 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
     Column(
