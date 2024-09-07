@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
@@ -22,22 +22,18 @@ fun DeviceInfoScaffold(
     navigateBack: () -> Unit,
     padding: PaddingValues,
 ) {
-    val topAppBarItems = rememberSaveable { generateDeviceInfoTopAppBarItems() }
+    val topAppBarItems = remember { generateDeviceInfoTopAppBarItems() }
+    val backArrow = remember {
+        BackArrow(
+            icon = Icon.ResourceIcon(R.drawable.i_back),
+            iconConfig = IconConfig.Default,
+            onClick = navigateBack,
+        )
+    }
 
     Scaffold(
         modifier = Modifier.padding(padding),
-        topBar = {
-            TopAppBar(
-                title = "",
-                backArrow =
-                    BackArrow(
-                        icon = Icon.ResourceIcon(R.drawable.i_back),
-                        iconConfig = IconConfig.Default,
-                        onClick = navigateBack,
-                    ),
-                items = topAppBarItems,
-            )
-        },
+        topBar = { TopAppBar(title = "", backArrow = backArrow, items = topAppBarItems) },
     ) { innerPadding ->
         DeviceInfoContent(deviceInfoViewModel = deviceInfoViewModel, padding = innerPadding)
     }

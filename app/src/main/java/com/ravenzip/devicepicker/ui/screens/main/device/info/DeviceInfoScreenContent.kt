@@ -40,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -104,11 +105,11 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
                 val shortTags = deviceInfoViewModel.shortTags.collectAsState().value
                 val tags = deviceInfoViewModel.tags.collectAsState().value
 
-                val specificationsKeyList = rememberSaveable { specifications.keys.toList() }
+                val specificationsKeyList = remember { specifications.keys.toList() }
                 val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
                 val sheetState = rememberModalBottomSheetState()
                 val tagsSheetIsVisible = rememberSaveable { mutableStateOf(false) }
-                val feedback = rememberSaveable { generateFeedbackList(device.feedback) }
+                val feedback = remember { generateFeedbackList(device.feedback) }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),

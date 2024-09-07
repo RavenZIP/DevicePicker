@@ -2,7 +2,7 @@ package com.ravenzip.devicepicker.ui.screens.main
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.R
@@ -18,7 +18,7 @@ fun MainScaffold(
     navController: NavHostController = rememberNavController(),
     navigateToSplashScreen: () -> Unit,
 ) {
-    val menuItems = rememberSaveable { generateMenuItems() }
+    val menuItems = remember { generateMenuItems() }
 
     Scaffold(
         bottomBar = { BottomNavigationBar(navController = navController, buttonsList = menuItems) }
