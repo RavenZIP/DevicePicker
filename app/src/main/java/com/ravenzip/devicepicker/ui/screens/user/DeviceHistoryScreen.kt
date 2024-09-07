@@ -24,7 +24,8 @@ fun DeviceHistoryScreen(
     val deviceHistoryState = deviceHistoryViewModel.deviceHistory.collectAsState().value
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding).padding(top = 10.dp),
+        modifier = Modifier.fillMaxSize().padding(padding),
+        contentPadding = PaddingValues(vertical = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
