@@ -56,4 +56,18 @@ class UserRepository @Inject constructor(private val userSources: UserSources) {
             false
         }
     }
+
+    suspend fun updateFavourites(userUid: String?, favourites: List<String>): Boolean {
+        return try {
+            if (userUid != null) {
+                userSources.favourites(userUid).setValue(favourites).await()
+                true
+            } else {
+                throw Exception("user is null")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) { Log.e("updateFavourites", "${e.message}") }
+            false
+        }
+    }
 }

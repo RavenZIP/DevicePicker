@@ -39,7 +39,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -61,7 +60,6 @@ import com.ravenzip.devicepicker.constants.map.tagsNameMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
-import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.UiState
@@ -103,12 +101,13 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
                 val specifications = deviceInfoViewModel.specifications.collectAsState().value
                 val shortTags = deviceInfoViewModel.shortTags.collectAsState().value
                 val tags = deviceInfoViewModel.tags.collectAsState().value
+                val feedbacks = deviceInfoViewModel.feedbacks.collectAsState().value
+                val specificationsKeys =
+                    deviceInfoViewModel.specificationsKeys.collectAsState().value
 
-                val specificationsKeyList = remember { specifications.keys.toList() }
                 val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
                 val sheetState = rememberModalBottomSheetState()
                 val tagsSheetIsVisible = rememberSaveable { mutableStateOf(false) }
-                val feedback = remember { generateFeedbackList(device.feedback) }
 
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
@@ -147,7 +146,7 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
 
                     item {
                         Spacer(modifier = Modifier.height(15.dp))
-                        FeedbackContainer(feedback)
+                        FeedbackContainer(feedbacks)
                     }
 
                     item {
@@ -155,7 +154,7 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
                         PriceAndConfigurations(device.price, device.configurations, device.colors)
                     }
 
-                    items(specificationsKeyList) { categoryKey ->
+                    items(specificationsKeys) { categoryKey ->
                         Specifications(
                             category = categoryKey,
                             specifications = specifications[categoryKey]!!,
@@ -202,9 +201,9 @@ private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
         modifier =
             Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(10.dp)).background(Color.White)
     ) {
-        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) {
+        HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth()) { page ->
             FrescoImage(
-                imageUrl = imageUrls[it],
+                imageUrl = imageUrls[page],
                 modifier = Modifier.bigImageContainer(),
                 imageOptions = ImageOptions(contentScale = ContentScale.Fit),
             )
@@ -347,34 +346,6 @@ private fun DeviceColor(modifier: Modifier, color: String) {
             Spacer(modifier = Modifier.width(22.dp))
         }
     }
-}
-
-private fun generateFeedbackList(feedback: Feedback): List<ButtonData> {
-    val rating =
-        ButtonData(
-            iconId = R.drawable.i_medal,
-            value = feedback.rating.toString(),
-            text = "Оценка",
-            onClick = {},
-        )
-
-    val reviewsCount =
-        ButtonData(
-            iconId = R.drawable.i_comment,
-            value = feedback.reviewsCount.toString(),
-            text = "Отзывы",
-            onClick = {},
-        )
-
-    val questionsCount =
-        ButtonData(
-            iconId = R.drawable.i_question,
-            value = feedback.questionsCount.toString(),
-            text = "Вопросы",
-            onClick = {},
-        )
-
-    return listOf(rating, reviewsCount, questionsCount)
 }
 
 /** Характеристики */

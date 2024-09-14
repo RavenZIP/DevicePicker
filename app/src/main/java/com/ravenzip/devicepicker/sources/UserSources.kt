@@ -19,4 +19,8 @@ class UserSources @Inject constructor() {
     fun deviceHistory(userUid: String): DatabaseReference {
         return usersReference.child(userUid).child("deviceHistory")
     }
+
+    fun favourites(userUid: String): DatabaseReference {
+        return usersReference.child(userUid).child("favourites")
+    }
 }

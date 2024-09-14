@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flatMapMerge
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 
@@ -103,6 +104,27 @@ constructor(
                 _userData.update { _userData.value.copy(deviceHistory = updatedDeviceHistory) }
             }
         }
+    }
+
+    suspend fun tryToUpdateFavourites(deviceUid: String) {
+        val updatedFavourites =
+            if (isFavouriteDevice(deviceUid)) {
+                _userData.value.favourites - deviceUid
+            } else {
+                _userData.value.favourites + deviceUid
+            }
+
+        val updateResult = userRepository.updateFavourites(firebaseUser?.uid, updatedFavourites)
+
+        if (updateResult) {
+            _userData.update { _userData.value.copy(favourites = updatedFavourites) }
+        }
+    }
+
+    val favourites = _userData.map { userData -> userData.favourites }
+
+    private fun isFavouriteDevice(deviceUid: String): Boolean {
+        return deviceUid in _userData.value.favourites
     }
 
     fun clearDeviceQueryParams() {
