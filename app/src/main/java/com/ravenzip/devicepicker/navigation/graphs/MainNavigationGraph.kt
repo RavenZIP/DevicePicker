@@ -9,7 +9,6 @@ import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.main.compare.CompareScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.favourites.FavouritesScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.search.SearchScreenScaffold
 import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
 import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
@@ -42,7 +41,7 @@ fun MainNavigationGraph(
 
         // Избранное
         navigateWithSlideAnimation(route = BottomBarGraph.FAVOURITES) {
-            FavouritesScreenScaffold(padding)
+            FavouritesNavigationGraph(padding = padding)
         }
 
         // Сравнение

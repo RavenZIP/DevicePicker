@@ -58,14 +58,14 @@ constructor(
     val title =
         _deviceStateIsSuccess
             .map { deviceData -> deviceData.data.createDeviceTitle() }
-            .stateIn(scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = "")
+            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
 
     val specifications =
         _deviceStateIsSuccess
             .map { deviceData -> deviceData.data.specifications.toMap() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = mapOf(),
             )
 
@@ -74,7 +74,7 @@ constructor(
             .map { specifications -> specifications.keys.toList() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = listOf(),
             )
 
@@ -83,7 +83,7 @@ constructor(
             .map { deviceData -> deviceData.data.createShortTags() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = listOf(),
             )
 
@@ -92,7 +92,7 @@ constructor(
             .map { deviceData -> deviceData.data.createTags() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = listOf(),
             )
 
@@ -101,7 +101,7 @@ constructor(
             .map { deviceData -> generateFeedbackList(deviceData.data.feedback) }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = listOf(),
             )
 
@@ -117,7 +117,7 @@ constructor(
             .map { isFavourite -> generateTopAppBarItems(isFavourite) }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.Lazily,
                 initialValue = listOf(),
             )
 
@@ -141,6 +141,7 @@ constructor(
         }
 
         viewModelScope.launch {
+            // drop(1) чтоб не отображать снэкбар при заходе на экран
             _isFavourite.drop(1).collect { isFavourite ->
                 if (isFavourite) {
                     snackBarHostState.showMessage("Устройство добавлено в избранное")
