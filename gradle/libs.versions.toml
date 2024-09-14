@@ -1,10 +1,10 @@
 [versions]
 activityCompose = "1.9.2"
 agp = "8.6.0"
-composeBom = "2024.09.00"
+composeBom = "2024.09.01"
 coreSplashscreen = "1.1.0-rc01"
 firebaseAuthKtx = "23.0.0"
-firebaseBom = "33.2.0"
+firebaseBom = "33.3.0"
 firebaseConfig = "22.0.0"
 firebaseDatabaseKtx = "21.0.0"
 firebaseStorageKtx = "21.0.0"
