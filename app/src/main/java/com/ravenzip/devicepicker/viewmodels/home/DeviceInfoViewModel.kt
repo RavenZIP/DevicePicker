@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
@@ -125,6 +126,7 @@ constructor(
         viewModelScope.launch {
             sharedRepository.deviceQueryParams
                 .filter { params -> params != null }
+                .take(1)
                 .collect { params ->
                     val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
 
