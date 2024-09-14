@@ -42,6 +42,9 @@ constructor(
     val deviceQueryParams = _deviceQueryParams.asStateFlow()
     val userData = _userData.asStateFlow()
 
+    val deviceHistory = _userData.map { userData -> userData.deviceHistory }
+    val favourites = _userData.map { userData -> userData.favourites }
+
     /**
      * Текущий пользователь firebase
      *
@@ -120,8 +123,6 @@ constructor(
             _userData.update { _userData.value.copy(favourites = updatedFavourites) }
         }
     }
-
-    val favourites = _userData.map { userData -> userData.favourites }
 
     private fun isFavouriteDevice(deviceUid: String): Boolean {
         return deviceUid in _userData.value.favourites

@@ -14,8 +14,8 @@ class DeviceHistoryViewModel @Inject constructor(private val sharedRepository: S
     ViewModel() {
     val deviceHistory =
         sharedRepository.allDevices
-            .combine(sharedRepository.userData) { allDevices, userData ->
-                allDevices.filter { it.uid in userData.deviceHistory }
+            .combine(sharedRepository.deviceHistory) { allDevices, deviceHistory ->
+                allDevices.filter { it.uid in deviceHistory }
             }
             .stateIn(
                 scope = viewModelScope,
