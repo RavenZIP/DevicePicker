@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 fun Modifier.smallImageContainer(
     shape: Dp = 10.dp,
     color: Color = Color.White,
-    padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
+    padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 10.dp),
     width: Dp = 140.dp,
     height: Dp = 140.dp,
 ) =
@@ -28,8 +28,7 @@ fun Modifier.smallImageContainer(
         (this.clip(RoundedCornerShape(shape))
             .background(color)
             .padding(padding)
-            .width(width)
-            .height(height))
+            .size(width, height))
 
 /** Контейнер для большого изображения */
 fun Modifier.bigImageContainer(
