@@ -85,6 +85,9 @@ dependencies {
     // Ленивый контейнер для изображений
     implementation(libs.landscapist.fresco)
 
+    // Рейтинг
+    implementation(libs.compose.ratingbar)
+
     // Тесты
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
