@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.model.device.compact
 
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
+import com.ravenzip.devicepicker.model.device.price.FirebasePrice.Companion.convertToPrice
 
 data class FirebaseDeviceCompact(val info: FirebaseDeviceCompactInfo, val tags: List<TagsEnum>) {
     constructor() : this(info = FirebaseDeviceCompactInfo(), tags = listOf())
@@ -10,11 +11,13 @@ data class FirebaseDeviceCompact(val info: FirebaseDeviceCompactInfo, val tags: 
             uid = this.info.uid,
             type = this.info.type,
             model = this.info.model,
-            price = this.info.price,
+            diagonal = this.info.diagonal,
+            price = this.info.price.convertToPrice(),
             rating = this.info.rating,
             reviewsCount = this.info.reviewsCount,
             brand = this.info.model.split(' ')[0],
             tags = this.tags,
-            imageUrl = imageUrl)
+            imageUrl = imageUrl,
+        )
     }
 }

@@ -64,7 +64,6 @@ import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
-import com.ravenzip.devicepicker.ui.components.PriceRange
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
@@ -151,7 +150,11 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
 
                     item {
                         Spacer(modifier = Modifier.height(15.dp))
-                        PriceAndConfigurations(device.price, device.configurations, device.colors)
+                        PriceAndConfigurations(
+                            device.price.currentFormatted,
+                            device.configurations,
+                            device.colors,
+                        )
                     }
 
                     items(specificationsKeys) { categoryKey ->
@@ -262,7 +265,7 @@ private fun FeedbackContainer(feedback: List<ButtonData>) {
 
 @Composable
 private fun PriceAndConfigurations(
-    price: Int,
+    formattedPrice: String,
     configurations: List<PhoneConfiguration>,
     colors: List<String>,
 ) {
@@ -273,7 +276,17 @@ private fun PriceAndConfigurations(
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp)
     ) {
-        PriceRange(price)
+        RowIconButton(
+            width = null,
+            text = formattedPrice,
+            textConfig = TextConfig.H1,
+            icon = Icon.ResourceIcon(R.drawable.i_info),
+            iconConfig = IconConfig.Big,
+            iconPositionIsLeft = false,
+            contentPadding = PaddingValues(10.dp),
+        ) {
+            /*TODO*/
+        }
 
         Spacer(modifier = Modifier.height(15.dp))
 

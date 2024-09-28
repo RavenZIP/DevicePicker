@@ -4,6 +4,8 @@ import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
+import com.ravenzip.devicepicker.model.device.price.FirebasePrice
+import com.ravenzip.devicepicker.model.device.price.FirebasePrice.Companion.convertToPrice
 
 data class FirebaseDevice(
     val uid: String,
@@ -12,8 +14,7 @@ data class FirebaseDevice(
     val colors: List<String>,
     val configurations: List<PhoneConfiguration>,
     val feedback: Feedback,
-    val price: Int,
-    val oldPrice: Int,
+    val price: FirebasePrice,
 ) {
     constructor() :
         this(
@@ -23,8 +24,7 @@ data class FirebaseDevice(
             colors = listOf(),
             configurations = listOf(),
             feedback = Feedback(),
-            price = 0,
-            oldPrice = 0,
+            price = FirebasePrice(),
         )
 
     fun convertToDevice(imageUrls: List<String> = listOf()): Device {
@@ -35,8 +35,7 @@ data class FirebaseDevice(
             tags = this.tags,
             configurations = this.configurations,
             feedback = this.feedback,
-            price = this.price,
-            oldPrice = this.oldPrice,
+            price = this.price.convertToPrice(),
             imageUrls = imageUrls,
         )
     }

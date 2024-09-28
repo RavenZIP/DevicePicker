@@ -1,15 +1,19 @@
 package com.ravenzip.devicepicker.model.device.compact
 
-import com.ravenzip.devicepicker.model.device.price.FirebasePrice
+import com.ravenzip.devicepicker.model.device.price.Price
+import com.ravenzip.workshop.data.icon.IconWithConfig
 
-class FirebaseDeviceCompactInfo(
+data class DeviceCompactExtended(
     override val uid: String,
     override val type: String,
     override val model: String,
     override val diagonal: Double,
-    override val price: FirebasePrice,
+    override val price: Price,
     override val rating: Double,
     override val reviewsCount: Int,
+    val brand: String,
+    val tags: List<IconWithConfig>,
+    val imageUrl: String,
 ) : IDeviceCompact {
     constructor() :
         this(
@@ -17,8 +21,11 @@ class FirebaseDeviceCompactInfo(
             type = "",
             model = "",
             diagonal = 0.0,
-            price = FirebasePrice(),
+            price = Price(),
             rating = 0.0,
             reviewsCount = 0,
+            brand = "",
+            tags = listOf(),
+            imageUrl = "",
         )
 }

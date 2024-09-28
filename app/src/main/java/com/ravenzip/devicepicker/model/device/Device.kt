@@ -7,6 +7,7 @@ import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
+import com.ravenzip.devicepicker.model.device.price.Price
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
 import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
@@ -21,8 +22,7 @@ data class Device(
     val configurations: List<PhoneConfiguration>,
     val imageUrls: List<String>,
     val feedback: Feedback,
-    val price: Int,
-    val oldPrice: Int,
+    val price: Price,
 ) {
     constructor() :
         this(
@@ -33,8 +33,7 @@ data class Device(
             configurations = listOf(),
             imageUrls = listOf(),
             feedback = Feedback(),
-            price = 0,
-            oldPrice = 0,
+            price = Price(),
         )
 
     companion object {
