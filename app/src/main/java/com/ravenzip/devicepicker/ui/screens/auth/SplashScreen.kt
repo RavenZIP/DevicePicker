@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -30,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.state.UiState
+import com.ravenzip.devicepicker.ui.components.CenterRow
 import com.ravenzip.devicepicker.viewmodels.auth.SplashScreenViewModel
 
 @Composable
@@ -71,11 +71,7 @@ fun SplashScreen(
     }
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
-        Row(
-            modifier = Modifier.fillMaxWidth(0.9f).padding(bottom = 15.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
+        CenterRow(modifier = Modifier.fillMaxWidth(0.9f).padding(bottom = 15.dp)) {
             when (state) {
                 is UiState.Loading -> {
                     CircularProgressIndicator(

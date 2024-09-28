@@ -86,7 +86,7 @@ fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-            Row(verticalAlignment = Alignment.Top) {
+            VerticalCenterRow {
                 FrescoImage(
                     imageUrl = device.imageUrl,
                     modifier = Modifier.smallImageContainer(width = 100.dp, height = 150.dp),
@@ -105,7 +105,7 @@ fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        VerticalCenterRow {
                             Card(
                                 shape = RoundedCornerShape(10.dp),
                                 colors = CardDefaults.veryLightPrimary(),
@@ -184,7 +184,7 @@ fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            VerticalCenterRow {
                 IconButton(icon = Icon.ResourceIcon(R.drawable.i_compare)) {}
 
                 Spacer(modifier = Modifier.width(10.dp))
@@ -207,7 +207,7 @@ fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
 }
 
 @Composable
-fun DeviceInfoContainer(content: @Composable () -> Unit) {
+private fun DeviceInfoContainer(content: @Composable () -> Unit) {
     Column(
         modifier =
             Modifier.padding(start = 10.dp)

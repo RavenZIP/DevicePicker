@@ -63,9 +63,12 @@ import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Tag
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.state.UiState
+import com.ravenzip.devicepicker.ui.components.CenterRow
 import com.ravenzip.devicepicker.ui.components.ColoredBoxWithBorder
+import com.ravenzip.devicepicker.ui.components.HorizontalCenterRow
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
+import com.ravenzip.devicepicker.ui.components.VerticalCenterRow
 import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
@@ -226,13 +229,12 @@ private fun ImageContainer(pagerState: PagerState, imageUrls: List<String>) {
 
 @Composable
 private fun FeedbackContainer(feedback: List<ButtonData>) {
-    Row(
+    HorizontalCenterRow(
         modifier =
             Modifier.fillMaxWidth(0.9f)
                 .clip(RoundedCornerShape(10.dp))
                 .background(MaterialTheme.colorScheme.surfaceContainer)
-                .padding(horizontal = 5.dp, vertical = 10.dp),
-        horizontalArrangement = Arrangement.Center,
+                .padding(horizontal = 5.dp, vertical = 10.dp)
     ) {
         feedback.forEach { feedback ->
             Button(
@@ -339,11 +341,7 @@ private fun DeviceColor(modifier: Modifier, color: String) {
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.veryLightPrimary(),
     ) {
-        Row(
-            modifier = Modifier.padding(10.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
+        CenterRow(modifier = Modifier.padding(10.dp)) {
             ColoredBoxWithBorder(colorMap[color]!!)
 
             Spacer(modifier = Modifier.width(5.dp))
@@ -510,10 +508,7 @@ private fun TagsBottomSheet(
 @Composable
 private fun TagInfo(tag: Tag?) {
     if (tag != null) {
-        Row(
-            modifier = Modifier.fillMaxWidth(0.95f),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
+        VerticalCenterRow(modifier = Modifier.fillMaxWidth(0.95f)) {
             BoxedChip(icon = tag.icon.icon, iconConfig = tag.icon.config)
             Spacer(modifier = Modifier.width(10.dp))
             Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
