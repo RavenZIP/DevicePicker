@@ -9,10 +9,12 @@ import androidx.compose.runtime.Composable
 fun CardDefaults.defaultCardColors() =
     this.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer,
-        contentColor = LocalContentColor.current)
+        contentColor = LocalContentColor.current,
+    )
 
 @Composable
-fun CardDefaults.veryLightPrimary(alpha: Float = 0.08f) =
+fun CardDefaults.veryLightPrimary(alpha: Float = 0.05f) =
     this.cardColors(
         containerColor = MaterialTheme.colorScheme.primary.copy(alpha),
-        contentColor = LocalContentColor.current)
+        contentColor = LocalContentColor.current,
+    )
