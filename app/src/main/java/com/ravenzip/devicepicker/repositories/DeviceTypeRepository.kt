@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class DeviceTypeRepository @Inject constructor(private val deviceTypeSources: DeviceTypeSources) {
-    suspend fun getDeviceTypeList() =
+    fun getDeviceTypeList() =
         flow {
                 val response = deviceTypeSources.deviceTypeSource().get().await().children
                 val deviceTypeList = response.convertToClass<String>()

@@ -9,7 +9,14 @@ data class User(
     val deviceHistory: List<String>,
     val reviews: List<String>,
     val favourites: List<String>,
+    val compares: List<String>,
 ) {
     constructor() :
-        this(admin = false, deviceHistory = listOf(), reviews = listOf(), favourites = listOf())
+        this(
+            admin = false,
+            deviceHistory = listOf(),
+            reviews = listOf(),
+            favourites = listOf(),
+            compares = listOf(),
+        )
 }

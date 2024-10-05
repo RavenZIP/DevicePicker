@@ -21,13 +21,17 @@ import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.take
@@ -35,6 +39,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class DeviceInfoViewModel
 @Inject
@@ -113,6 +118,17 @@ constructor(
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
+    private val _isCompare =
+        _deviceStateIsSuccess
+            .combine(sharedRepository.compares) { device, compares -> device.data.uid in compares }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val isFavourite = _isFavourite.filter { isFavourite -> isFavourite }
+    private val isNotFavourite = _isFavourite.filter { isFavourite -> !isFavourite }
+
+    private val isCompare = _isCompare.filter { isCompare -> isCompare }
+    private val isNotCompare = _isCompare.filter { isCompare -> !isCompare }
+
     val topAppBarButtons =
         _isFavourite
             .map { isFavourite -> generateTopAppBarItems(isFavourite) }
@@ -127,50 +143,46 @@ constructor(
             sharedRepository.deviceQueryParams
                 .filter { params -> params != null }
                 .take(1)
-                .collect { params ->
+                .flatMapLatest { params ->
                     val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
 
-                    if (cachedDevice == null) {
+                    return@flatMapLatest if (cachedDevice == null) {
                         getDeviceByBrandAndUid(params.uid, params.brand, params.model)
                     } else {
-                        _device.update { UiState.Success(cachedDevice) }
-                    }
-
-                    if (_device.value is UiState.Success) {
-                        sharedRepository.tryToUpdateDeviceHistory(params.uid)
+                        flow { UiState.Success(cachedDevice) }
                     }
                 }
+                .collect { deviceState -> _device.update { deviceState } }
         }
 
         viewModelScope.launch {
-            // drop(1) чтоб не отображать снэкбар при заходе на экран
-            _isFavourite.drop(1).collect { isFavourite ->
-                if (isFavourite) {
-                    snackBarHostState.showMessage("Устройство добавлено в избранное")
-                } else {
-                    snackBarHostState.showMessage("Устройство удалено из избранного")
-                }
-            }
+            // drop(2) чтоб не отображать снэкбар при заходе на экран
+            merge(
+                    isFavourite.map { "Устройство добавлено в избранное" },
+                    isNotFavourite.map { "Устройство удалено из избранного" },
+                    isCompare.map { "Устройство добавлено в список сравнения" },
+                    isNotCompare.map { "Устройство удалено из списка сравнения" },
+                )
+                .drop(2)
+                .collect { message -> snackBarHostState.showMessage(message) }
         }
     }
 
     /** Получение устройства по бренду и уникальному идентификатору */
-    private suspend fun getDeviceByBrandAndUid(uid: String, brand: String, model: String) {
-        deviceRepository
-            .getDeviceByBrandAndUid(brand, uid)
-            .zip(imageRepository.getImageUrls(brand, model)) { device, imageUrls ->
-                if (device != null) {
-                    val deviceWithImageUrls = device.copy(imageUrls = imageUrls)
+    private fun getDeviceByBrandAndUid(uid: String, brand: String, model: String) =
+        deviceRepository.getDeviceByBrandAndUid(brand, uid).zip(
+            imageRepository.getImageUrls(brand, model)
+        ) { device, imageUrls ->
+            if (device != null) {
+                val deviceWithImageUrls = device.copy(imageUrls = imageUrls)
 
-                    _device.update { UiState.Success(deviceWithImageUrls) }
-                    sharedRepository.updateCachedDevices(deviceWithImageUrls)
-                } else {
-                    val errorMessage = "При выполении запроса произошла ошибка"
-                    _device.update { UiState.Error(errorMessage) }
-                }
+                sharedRepository.updateCachedDevices(deviceWithImageUrls)
+                return@zip UiState.Success(deviceWithImageUrls)
+            } else {
+                val errorMessage = "При выполении запроса произошла ошибка"
+                return@zip UiState.Error(errorMessage)
             }
-            .collect {}
-    }
+        }
 
     fun clearDeviceData() {
         sharedRepository.clearDeviceQueryParams()

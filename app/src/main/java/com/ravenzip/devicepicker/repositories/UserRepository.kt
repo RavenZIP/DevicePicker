@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class UserRepository @Inject constructor(private val userSources: UserSources) {
-    suspend fun getUserData(userUid: String?) =
+    fun getUserData(userUid: String?) =
         flow {
                 if (userUid != null) {
                     val response = userSources.currentUser(userUid).get().await()

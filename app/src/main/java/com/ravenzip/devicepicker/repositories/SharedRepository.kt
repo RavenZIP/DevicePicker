@@ -44,6 +44,7 @@ constructor(
 
     val deviceHistory = _userData.map { userData -> userData.deviceHistory }
     val favourites = _userData.map { userData -> userData.favourites }
+    val compares = _userData.map { userData -> userData.compares }
 
     /**
      * Текущий пользователь firebase

@@ -13,7 +13,7 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class BrandRepository @Inject constructor(private val brandSources: BrandSources) {
-    suspend fun getBrandList() =
+    fun getBrandList() =
         flow {
                 val response = brandSources.brandSource().get().await().children
                 val brandList = response.convertToClass<String>()

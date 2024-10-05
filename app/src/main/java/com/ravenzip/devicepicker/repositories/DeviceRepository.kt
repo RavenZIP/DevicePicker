@@ -19,7 +19,7 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class DeviceRepository @Inject constructor(private val deviceSources: DeviceSources) {
-    suspend fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Device?> =
+    fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Device?> =
         flow {
                 val response = deviceSources.deviceSourceByPath(brand, uid).get().await()
                 val firebaseDevice = response.getValue<FirebaseDevice>()
@@ -33,7 +33,7 @@ class DeviceRepository @Inject constructor(private val deviceSources: DeviceSour
                 emit(null)
             }
 
-    suspend fun getDeviceCompactList(): Flow<List<DeviceCompact>> =
+    fun getDeviceCompactList(): Flow<List<DeviceCompact>> =
         flow {
                 val response = deviceSources.deviceCompactSource().get().await().children
                 val listOfFirebaseDeviceCompact = response.convertToClass<FirebaseDeviceCompact>()

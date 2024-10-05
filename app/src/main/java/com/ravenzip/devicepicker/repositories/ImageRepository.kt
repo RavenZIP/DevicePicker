@@ -37,7 +37,7 @@ class ImageRepository @Inject constructor(private val imageSources: ImageSources
     }
 
     /** Получить урл основного изображения конкретного устройства */
-    private suspend fun getImageUrl(
+    private fun getImageUrl(
         deviceUid: String,
         brand: String,
         model: String,
@@ -52,16 +52,14 @@ class ImageRepository @Inject constructor(private val imageSources: ImageSources
             }
 
     /** Получение основного урла изображения для списка устройств */
-    suspend fun getImageUrls(
-        deviceCompactList: List<DeviceCompact>
-    ): Flow<Flow<ImageUrlResult<String>>> {
+    fun getImageUrls(deviceCompactList: List<DeviceCompact>): Flow<Flow<ImageUrlResult<String>>> {
         return deviceCompactList
             .map { device -> getImageUrl(device.uid, device.brand, device.model) }
             .asFlow()
     }
 
     /** Получение нескольких урлов изображений для конкретного устройства */
-    suspend fun getImageUrls(brand: String, model: String): Flow<List<String>> =
+    fun getImageUrls(brand: String, model: String): Flow<List<String>> =
         flow {
                 val imageUrls = getImageListByFolder(brand, model)
                 emit(imageUrls)
