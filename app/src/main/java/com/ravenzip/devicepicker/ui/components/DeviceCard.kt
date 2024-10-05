@@ -79,10 +79,16 @@ fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
 
 /** Карточка устройства, с горизонтальным расположением данных */
 @Composable
-fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
+fun RowDeviceCard(
+    device: DeviceCompactExtended,
+    isFavourite: Boolean = false,
+    onFavouriteClick: () -> Unit,
+    onCompareClick: () -> Unit,
+    onCardClick: () -> Unit,
+) {
     Card(
         modifier =
-            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(12.dp)).clickable { onClick() },
+            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(12.dp)).clickable { onCardClick() },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -185,11 +191,18 @@ fun RowDeviceCard(device: DeviceCompactExtended, onClick: () -> Unit) {
             Spacer(modifier = Modifier.height(10.dp))
 
             VerticalCenterRow {
-                IconButton(icon = Icon.ResourceIcon(R.drawable.i_compare)) {}
+                IconButton(icon = Icon.ResourceIcon(R.drawable.i_compare)) { onCompareClick() }
 
                 Spacer(modifier = Modifier.width(10.dp))
 
-                IconButton(icon = Icon.ResourceIcon(R.drawable.i_heart)) {}
+                IconButton(
+                    icon =
+                        Icon.ResourceIcon(
+                            if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
+                        )
+                ) {
+                    onFavouriteClick()
+                }
 
                 Spacer(modifier = Modifier.weight(1f))
 

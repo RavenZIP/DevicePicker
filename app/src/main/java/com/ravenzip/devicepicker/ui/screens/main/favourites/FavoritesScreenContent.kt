@@ -29,14 +29,20 @@ fun FavouritesScreenContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         items(favourites) { device ->
-            RowDeviceCard(device = device) {
-                favouritesScreenViewModel.setDeviceQueryParams(
-                    device.uid,
-                    device.brand,
-                    device.model,
-                )
-                navigateToDevice()
-            }
+            RowDeviceCard(
+                device = device,
+                isFavourite = true,
+                onFavouriteClick = { favouritesScreenViewModel.tryToUpdateFavourites(device.uid) },
+                onCompareClick = { favouritesScreenViewModel.tryToUpdateCompares(device.uid) },
+                onCardClick = {
+                    favouritesScreenViewModel.setDeviceQueryParams(
+                        device.uid,
+                        device.brand,
+                        device.model,
+                    )
+                    navigateToDevice()
+                },
+            )
         }
     }
 }

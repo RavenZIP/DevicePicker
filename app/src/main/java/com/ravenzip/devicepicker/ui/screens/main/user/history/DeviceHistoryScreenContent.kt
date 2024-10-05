@@ -29,10 +29,19 @@ fun DeviceHistoryScreenContent(
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
         items(deviceHistoryState) { device ->
-            RowDeviceCard(device = device) {
-                deviceHistoryViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
-                navigateToDevice()
-            }
+            RowDeviceCard(
+                device = device,
+                onFavouriteClick = { deviceHistoryViewModel.tryToUpdateFavourites(device.uid) },
+                onCompareClick = { deviceHistoryViewModel.tryToUpdateCompares(device.uid) },
+                onCardClick = {
+                    deviceHistoryViewModel.setDeviceQueryParams(
+                        device.uid,
+                        device.brand,
+                        device.model,
+                    )
+                    navigateToDevice()
+                },
+            )
         }
     }
 }

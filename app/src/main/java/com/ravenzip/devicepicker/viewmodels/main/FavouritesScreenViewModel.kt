@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class FavouritesScreenViewModel
@@ -29,5 +30,14 @@ constructor(private val sharedRepository: SharedRepository) : ViewModel() {
 
     fun setDeviceQueryParams(uid: String, brand: String, model: String) {
         sharedRepository.setDeviceQueryParams(uid, brand, model)
+    }
+
+    fun tryToUpdateFavourites(deviceUid: String) {
+        viewModelScope.launch { sharedRepository.tryToUpdateFavourites(deviceUid) }
+    }
+
+    fun tryToUpdateCompares(deviceUid: String) {
+        // TODO
+        /// viewModelScope.launch { sharedRepository.tryToUpdateCompares(deviceUid) }
     }
 }
