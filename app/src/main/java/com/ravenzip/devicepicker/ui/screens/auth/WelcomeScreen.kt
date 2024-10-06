@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.ui.screens.auth
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,9 +12,10 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,9 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
+import com.ravenzip.devicepicker.extensions.functions.showError
+import com.ravenzip.devicepicker.state.State
 import com.ravenzip.devicepicker.viewmodels.auth.WelcomeScreenViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
@@ -36,7 +39,6 @@ import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.Icon
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WelcomeScreen(
     welcomeScreenViewModel: WelcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>(),
@@ -44,10 +46,9 @@ fun WelcomeScreen(
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
-    val alertDialogIsShownState = welcomeScreenViewModel.alertDialogIsShown.collectAsState().value
-    val isLoadingState = welcomeScreenViewModel.isLoading.collectAsState().value
+    val state = welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(State.Nothing).value
 
-    val snackBarHostState = remember { welcomeScreenViewModel.snackBarHostState }
+    val snackBarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { 4 })
 
     Box(modifier = Modifier.fillMaxSize()) {
@@ -82,7 +83,9 @@ fun WelcomeScreen(
                         isFinal = true,
                         navigateToRegistrationScreen = navigateToRegistrationScreen,
                         navigateToLoginScreen = navigateToLoginScreen,
-                        continueWithoutAuthClick = { welcomeScreenViewModel.showDialog() },
+                        continueWithoutAuthClick = {
+                            welcomeScreenViewModel.alertDialog.showDialog()
+                        },
                     )
                 }
             }
@@ -99,20 +102,34 @@ fun WelcomeScreen(
         }
     }
 
-    if (alertDialogIsShownState) {
-        AlertDialog(
-            icon = Icon.ResourceIcon(R.drawable.sign_in),
-            title = WelcomeEnum.DIALOG_WINDOW.title,
-            text = WelcomeEnum.DIALOG_WINDOW.text,
-            onDismissText = "Назад",
-            onConfirmationText = "Продолжить",
-            onDismiss = { welcomeScreenViewModel.hideDialog() },
-            onConfirmation = { welcomeScreenViewModel.onDialogConfirmation(navigateToHomeScreen) },
-        )
-    }
+    when (state) {
+        State.Loading -> {
+            Spinner(text = "Анонимный вход...")
+        }
 
-    if (isLoadingState) {
-        Spinner(text = "Анонимный вход...")
+        State.Dialog -> {
+            AlertDialog(
+                icon = Icon.ResourceIcon(R.drawable.sign_in),
+                title = WelcomeEnum.DIALOG_WINDOW.title,
+                text = WelcomeEnum.DIALOG_WINDOW.text,
+                onDismissText = "Назад",
+                onConfirmationText = "Продолжить",
+                onDismiss = { welcomeScreenViewModel.alertDialog.hideDialog() },
+                onConfirmation = { welcomeScreenViewModel.alertDialog.onDialogConfirmation() },
+            )
+        }
+
+        is State.Error -> {
+            LaunchedEffect(Unit) { snackBarHostState.showError(state.message) }
+        }
+
+        State.Success -> {
+            LaunchedEffect(Unit) { navigateToHomeScreen() }
+        }
+
+        else -> {
+            // do nothing
+        }
     }
 
     SnackBar(snackBarHostState = snackBarHostState)

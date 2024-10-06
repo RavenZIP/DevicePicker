@@ -1,50 +1,46 @@
 package com.ravenzip.devicepicker.viewmodels.auth
 
-import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.repositories.AuthRepository
+import com.ravenzip.devicepicker.state.State
+import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.shareIn
+import kotlinx.coroutines.flow.zip
 
 @HiltViewModel
 class WelcomeScreenViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
-    private val _isLoading = MutableStateFlow(false)
-    private val _alertDialogIsShown = MutableStateFlow(false)
+    val alertDialog = AlertDialog()
 
-    val isLoading = _isLoading.asStateFlow()
-    val alertDialogIsShown = _alertDialogIsShown.asStateFlow()
-    val snackBarHostState = SnackbarHostState()
-
-    fun showDialog() {
-        _alertDialogIsShown.update { true }
-    }
-
-    fun hideDialog() {
-        _alertDialogIsShown.update { false }
-    }
-
-    fun onDialogConfirmation(navigateToHomeScreen: () -> Unit) {
-        viewModelScope.launch {
-            _isLoading.update { true }
-
-            val reloadResult = authRepository.reloadUser()
-            val logInResult = authRepository.logInAnonymously()
-
-            _isLoading.update { false }
-            hideDialog()
-
-            if (logInResult.value == null || reloadResult.value == false) {
-                snackBarHostState.showError(logInResult.error!!.message)
-            } else {
-                navigateToHomeScreen()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private val logInAnonymouslyComplete =
+        alertDialog.isConfirmed.flatMapLatest {
+            return@flatMapLatest flowOf(authRepository.reloadUser()).zip(
+                flowOf(authRepository.logInAnonymously())
+            ) { reloadResult, logInResult ->
+                return@zip if (logInResult.value == null || reloadResult.value == false) {
+                    State.Error(logInResult.error!!.message)
+                } else {
+                    State.Success
+                }
             }
         }
-    }
+
+    val uiState =
+        merge(
+                alertDialog.isShown.map { State.Dialog },
+                alertDialog.isConfirmed.map { State.Loading },
+                alertDialog.isHidden.map { State.Nothing },
+                logInAnonymouslyComplete,
+            )
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 0)
 }
