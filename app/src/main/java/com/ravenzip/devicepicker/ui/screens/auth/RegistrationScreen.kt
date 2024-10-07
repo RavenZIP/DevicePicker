@@ -27,7 +27,7 @@ import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.devicepicker.ui.screens.auth.common.AuthFields
 import com.ravenzip.devicepicker.ui.screens.auth.common.AuthOptions
-import com.ravenzip.devicepicker.viewmodels.auth.RegistrationScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.auth.RegistrationViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
@@ -36,17 +36,16 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @Composable
 fun RegistrationScreen(
-    registrationScreenViewModel: RegistrationScreenViewModel =
-        hiltViewModel<RegistrationScreenViewModel>(),
+    registrationViewModel: RegistrationViewModel = hiltViewModel<RegistrationViewModel>(),
     navigateToHomeScreen: () -> Unit,
 ) {
-    val authOptionsState = registrationScreenViewModel.authOptions.collectAsState().value
-    val selectedOptionState = registrationScreenViewModel.selectedOption.collectAsState().value
-    val fieldErrorsState = registrationScreenViewModel.fieldErrors.collectAsState().value
-    val isLoadingState = registrationScreenViewModel.isLoading.collectAsState().value
-    val spinnerTextState = registrationScreenViewModel.spinnerText.collectAsState().value
+    val authOptionsState = registrationViewModel.authOptions.collectAsState().value
+    val selectedOptionState = registrationViewModel.selectedOption.collectAsState().value
+    val fieldErrorsState = registrationViewModel.fieldErrors.collectAsState().value
+    val isLoadingState = registrationViewModel.isLoading.collectAsState().value
+    val spinnerTextState = registrationViewModel.spinnerText.collectAsState().value
 
-    val snackBarHostState = remember { registrationScreenViewModel.snackBarHostState }
+    val snackBarHostState = remember { registrationViewModel.snackBarHostState }
 
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -84,14 +83,14 @@ fun RegistrationScreen(
         AuthOptions(
             options = authOptionsState,
             title = "Выбор варианта регистрации",
-            onClick = { item -> registrationScreenViewModel.selectOption(item) },
+            onClick = { item -> registrationViewModel.selectOption(item) },
         )
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = Icon.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
-            text = registrationScreenViewModel.getSelectedOptionDescription(selectedOptionState),
+            text = registrationViewModel.getSelectedOptionDescription(selectedOptionState),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -103,7 +102,7 @@ fun RegistrationScreen(
         SimpleButton(text = "Продолжить") {
             when (selectedOptionState) {
                 AuthVariantsEnum.EMAIL -> {
-                    registrationScreenViewModel.registrationWithEmailAndPassword(
+                    registrationViewModel.registrationWithEmailAndPassword(
                         email = email.value,
                         password = password.value,
                         navigateToHomeScreen = navigateToHomeScreen,

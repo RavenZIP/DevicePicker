@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SplashScreenViewModel @Inject constructor(private val authRepository: AuthRepository) :
+class SplashViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
     private val _splashScreenState =
         MutableStateFlow<UiState<String>>(UiState.Loading("Получение данных о пользователе"))

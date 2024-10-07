@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class RegistrationScreenViewModel
+class RegistrationViewModel
 @Inject
 constructor(
     private val authRepository: AuthRepository,

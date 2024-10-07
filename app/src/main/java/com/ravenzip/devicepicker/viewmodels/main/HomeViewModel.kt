@@ -26,7 +26,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val sharedRepository: SharedRepository) :
+class HomeViewModel @Inject constructor(private val sharedRepository: SharedRepository) :
     ViewModel() {
     /** Все устройства (компактная модель) */
     private val _allDevices = sharedRepository.allDevices

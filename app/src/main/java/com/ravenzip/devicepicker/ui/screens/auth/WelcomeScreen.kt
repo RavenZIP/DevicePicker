@@ -31,7 +31,7 @@ import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.state.UiState
-import com.ravenzip.devicepicker.viewmodels.auth.WelcomeScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.auth.WelcomeViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
@@ -41,13 +41,12 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @Composable
 fun WelcomeScreen(
-    welcomeScreenViewModel: WelcomeScreenViewModel = hiltViewModel<WelcomeScreenViewModel>(),
+    welcomeViewModel: WelcomeViewModel = hiltViewModel<WelcomeViewModel>(),
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
-    val uiState =
-        welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(UiState.Default()).value
+    val uiState = welcomeViewModel.uiState.collectAsStateWithLifecycle(UiState.Default()).value
 
     val snackBarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { 4 })
@@ -84,9 +83,7 @@ fun WelcomeScreen(
                         isFinal = true,
                         navigateToRegistrationScreen = navigateToRegistrationScreen,
                         navigateToLoginScreen = navigateToLoginScreen,
-                        continueWithoutAuthClick = {
-                            welcomeScreenViewModel.alertDialog.showDialog()
-                        },
+                        continueWithoutAuthClick = { welcomeViewModel.alertDialog.showDialog() },
                     )
                 }
             }
@@ -115,8 +112,8 @@ fun WelcomeScreen(
                 text = WelcomeEnum.DIALOG_WINDOW.text,
                 onDismissText = "Назад",
                 onConfirmationText = "Продолжить",
-                onDismiss = { welcomeScreenViewModel.alertDialog.hideDialog() },
-                onConfirmation = { welcomeScreenViewModel.alertDialog.onDialogConfirmation() },
+                onDismiss = { welcomeViewModel.alertDialog.hideDialog() },
+                onConfirmation = { welcomeViewModel.alertDialog.onDialogConfirmation() },
             )
         }
 

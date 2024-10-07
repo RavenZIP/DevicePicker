@@ -5,12 +5,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
 import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
 fun HomeScreenScaffold(
-    homeScreenViewModel: HomeScreenViewModel,
+    homeViewModel: HomeViewModel,
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
@@ -19,11 +19,11 @@ fun HomeScreenScaffold(
         topBar = { TopAppBar(title = "Главная", backArrow = null, items = listOf()) },
     ) { innerPadding ->
         HomeScreenContent(
-            categoriesState = homeScreenViewModel.categories,
-            selectedCategoryState = homeScreenViewModel.selectedCategory,
+            categoriesState = homeViewModel.categories,
+            selectedCategoryState = homeViewModel.selectedCategory,
             padding = innerPadding,
-            selectCategory = homeScreenViewModel::selectCategory,
-            setDeviceQueryParams = homeScreenViewModel::setDeviceQueryParams,
+            selectCategory = homeViewModel::selectCategory,
+            setDeviceQueryParams = homeViewModel::setDeviceQueryParams,
             navigateToDevice = navigateToDevice,
         )
     }

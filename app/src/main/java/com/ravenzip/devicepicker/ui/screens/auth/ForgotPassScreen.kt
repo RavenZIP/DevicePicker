@@ -22,7 +22,7 @@ import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
-import com.ravenzip.devicepicker.viewmodels.auth.ForgotPasswordScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.auth.ForgotPasswordViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessTextField
@@ -32,12 +32,11 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @Composable
 fun ForgotPasswordScreen(
-    forgotPasswordScreenViewModel: ForgotPasswordScreenViewModel =
-        hiltViewModel<ForgotPasswordScreenViewModel>()
+    forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel<ForgotPasswordViewModel>()
 ) {
-    val isLoadingState = forgotPasswordScreenViewModel.isLoading.collectAsState().value
-    val emailErrorsState = forgotPasswordScreenViewModel.emailErrors.collectAsState().value
-    val snackBarHostState = remember { forgotPasswordScreenViewModel.snackBarHostState }
+    val isLoadingState = forgotPasswordViewModel.isLoading.collectAsState().value
+    val emailErrorsState = forgotPasswordViewModel.emailErrors.collectAsState().value
+    val snackBarHostState = remember { forgotPasswordViewModel.snackBarHostState }
 
     val email = remember { mutableStateOf("") }
 
@@ -79,7 +78,7 @@ fun ForgotPasswordScreen(
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            forgotPasswordScreenViewModel.resetPassword(email = email.value)
+            forgotPasswordViewModel.resetPassword(email = email.value)
         }
 
         Spacer(modifier = Modifier.height(20.dp))

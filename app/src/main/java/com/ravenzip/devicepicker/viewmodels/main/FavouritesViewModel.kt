@@ -13,9 +13,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class FavouritesScreenViewModel
-@Inject
-constructor(private val sharedRepository: SharedRepository) : ViewModel() {
+class FavouritesViewModel @Inject constructor(private val sharedRepository: SharedRepository) :
+    ViewModel() {
     val favourites =
         sharedRepository.allDevices
             .combine(sharedRepository.favourites) { allDevices, favourites ->

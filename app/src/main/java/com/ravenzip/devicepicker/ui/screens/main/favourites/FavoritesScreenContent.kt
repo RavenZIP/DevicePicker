@@ -12,15 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.ui.components.RowDeviceCard
-import com.ravenzip.devicepicker.viewmodels.main.FavouritesScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.FavouritesViewModel
 
 @Composable
 fun FavouritesScreenContent(
-    favouritesScreenViewModel: FavouritesScreenViewModel,
+    favouritesViewModel: FavouritesViewModel,
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
-    val favourites = favouritesScreenViewModel.favourites.collectAsState().value
+    val favourites = favouritesViewModel.favourites.collectAsState().value
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -32,14 +32,10 @@ fun FavouritesScreenContent(
             RowDeviceCard(
                 device = device,
                 isFavourite = true,
-                onFavouriteClick = { favouritesScreenViewModel.tryToUpdateFavourites(device.uid) },
-                onCompareClick = { favouritesScreenViewModel.tryToUpdateCompares(device.uid) },
+                onFavouriteClick = { favouritesViewModel.tryToUpdateFavourites(device.uid) },
+                onCompareClick = { favouritesViewModel.tryToUpdateCompares(device.uid) },
                 onCardClick = {
-                    favouritesScreenViewModel.setDeviceQueryParams(
-                        device.uid,
-                        device.brand,
-                        device.model,
-                    )
+                    favouritesViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
                     navigateToDevice()
                 },
             )

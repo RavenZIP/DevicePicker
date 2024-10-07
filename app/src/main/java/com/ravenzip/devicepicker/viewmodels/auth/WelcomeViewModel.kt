@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.zip
 
 @HiltViewModel
-class WelcomeScreenViewModel @Inject constructor(private val authRepository: AuthRepository) :
+class WelcomeViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
     val alertDialog = AlertDialog()
 

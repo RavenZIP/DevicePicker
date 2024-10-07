@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class ForgotPasswordScreenViewModel
+class ForgotPasswordViewModel
 @Inject
 constructor(
     private val authRepository: AuthRepository,

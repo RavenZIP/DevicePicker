@@ -7,11 +7,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.SearchViewModel
 import com.ravenzip.workshop.components.SearchBar
 
 @Composable
-fun SearchScreenScaffold(searchScreenViewModel: SearchScreenViewModel, padding: PaddingValues) {
+fun SearchScreenScaffold(searchViewModel: SearchViewModel, padding: PaddingValues) {
     val query = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
@@ -19,8 +19,8 @@ fun SearchScreenScaffold(searchScreenViewModel: SearchScreenViewModel, padding: 
         topBar = { SearchBar(query = query, placeholder = "Введите текст...", onSearch = {}) },
     ) { innerPadding ->
         SearchScreenContent(
-            brandsState = searchScreenViewModel.brandList,
-            deviceTypesState = searchScreenViewModel.deviceTypeList,
+            brandsState = searchViewModel.brandList,
+            deviceTypesState = searchViewModel.deviceTypeList,
             innerPadding,
         )
     }

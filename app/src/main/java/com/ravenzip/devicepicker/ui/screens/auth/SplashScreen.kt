@@ -30,15 +30,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.CenterRow
-import com.ravenzip.devicepicker.viewmodels.auth.SplashScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.auth.SplashViewModel
 
 @Composable
 fun SplashScreen(
-    splashScreenViewModel: SplashScreenViewModel = hiltViewModel<SplashScreenViewModel>(),
+    splashViewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
 ) {
-    val uiState = splashScreenViewModel.splashScreenState.collectAsState().value
+    val uiState = splashViewModel.splashScreenState.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
@@ -121,7 +121,7 @@ fun SplashScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is UiState.Success) {
-            if (splashScreenViewModel.firebaseUser !== null) navigateToMain()
+            if (splashViewModel.firebaseUser !== null) navigateToMain()
             else navigateToAuthentication()
         }
     }

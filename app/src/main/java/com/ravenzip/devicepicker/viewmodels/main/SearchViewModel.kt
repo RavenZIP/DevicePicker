@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class SearchScreenViewModel
+class SearchViewModel
 @Inject
 constructor(
     private val brandRepository: BrandRepository,

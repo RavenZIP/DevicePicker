@@ -10,8 +10,8 @@ import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
 import com.ravenzip.devicepicker.ui.screens.main.compare.CompareScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.search.SearchScreenScaffold
-import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
-import com.ravenzip.devicepicker.viewmodels.main.SearchScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
+import com.ravenzip.devicepicker.viewmodels.main.SearchViewModel
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 
 @Composable
@@ -20,8 +20,8 @@ fun MainNavigationGraph(
     padding: PaddingValues,
     navigateToSplashScreen: () -> Unit,
 ) {
-    val homeScreenViewModel = hiltViewModel<HomeScreenViewModel>()
-    val searchScreenViewModel = hiltViewModel<SearchScreenViewModel>()
+    val homeViewModel = hiltViewModel<HomeViewModel>()
+    val searchViewModel = hiltViewModel<SearchViewModel>()
     val userProfileViewModel = hiltViewModel<UserProfileViewModel>()
 
     NavHost(
@@ -31,12 +31,12 @@ fun MainNavigationGraph(
     ) {
         // Домашний экран
         navigateWithSlideAnimation(route = BottomBarGraph.HOME) {
-            HomeNavigationGraph(homeScreenViewModel = homeScreenViewModel, padding = padding)
+            HomeNavigationGraph(homeViewModel = homeViewModel, padding = padding)
         }
 
         // Поиск
         navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
-            SearchScreenScaffold(searchScreenViewModel = searchScreenViewModel, padding = padding)
+            SearchScreenScaffold(searchViewModel = searchViewModel, padding = padding)
         }
 
         // Избранное

@@ -6,19 +6,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ravenzip.devicepicker.viewmodels.main.FavouritesScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.FavouritesViewModel
 import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
 fun FavouritesScreenScaffold(
-    favouritesScreenViewModel: FavouritesScreenViewModel = hiltViewModel(),
+    favouritesViewModel: FavouritesViewModel = hiltViewModel(),
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar(title = "Избранное") }) {
         innerPadding ->
         FavouritesScreenContent(
-            favouritesScreenViewModel = favouritesScreenViewModel,
+            favouritesViewModel = favouritesViewModel,
             padding = innerPadding,
             navigateToDevice = navigateToDevice,
         )

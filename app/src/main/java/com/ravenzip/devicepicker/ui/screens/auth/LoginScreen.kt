@@ -23,23 +23,23 @@ import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.devicepicker.ui.screens.auth.common.AuthFields
 import com.ravenzip.devicepicker.ui.screens.auth.common.AuthOptions
-import com.ravenzip.devicepicker.viewmodels.auth.LoginScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.auth.LoginViewModel
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 
 @Composable
 fun LoginScreen(
-    loginScreenViewModel: LoginScreenViewModel = hiltViewModel<LoginScreenViewModel>(),
+    loginViewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val authOptionsState = loginScreenViewModel.authOptions.collectAsState().value
-    val selectedOptionState = loginScreenViewModel.selectedOption.collectAsState().value
-    val fieldErrorsState = loginScreenViewModel.fieldErrors.collectAsState().value
-    val isLoadingState = loginScreenViewModel.isLoading.collectAsState().value
+    val authOptionsState = loginViewModel.authOptions.collectAsState().value
+    val selectedOptionState = loginViewModel.selectedOption.collectAsState().value
+    val fieldErrorsState = loginViewModel.fieldErrors.collectAsState().value
+    val isLoadingState = loginViewModel.isLoading.collectAsState().value
 
-    val snackBarHostState = remember { loginScreenViewModel.snackBarHostState }
+    val snackBarHostState = remember { loginViewModel.snackBarHostState }
 
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -78,7 +78,7 @@ fun LoginScreen(
         AuthOptions(
             options = authOptionsState,
             title = "Выбор варианта входа",
-            onClick = { item -> loginScreenViewModel.selectOption(item) },
+            onClick = { item -> loginViewModel.selectOption(item) },
         )
     }
 
@@ -87,7 +87,7 @@ fun LoginScreen(
         SimpleButton(text = "Продолжить") {
             when (selectedOptionState) {
                 AuthVariantsEnum.EMAIL -> {
-                    loginScreenViewModel.logInWithEmailAndPassword(
+                    loginViewModel.logInWithEmailAndPassword(
                         email = email.value,
                         password = password.value,
                         navigateToHomeScreen = navigateToHomeScreen,

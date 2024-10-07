@@ -11,12 +11,12 @@ import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScaffold
 import com.ravenzip.devicepicker.ui.screens.main.home.HomeScreenScaffold
-import com.ravenzip.devicepicker.viewmodels.main.HomeScreenViewModel
+import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
 
 @Composable
 fun HomeNavigationGraph(
     navController: NavHostController = rememberNavController(),
-    homeScreenViewModel: HomeScreenViewModel,
+    homeViewModel: HomeViewModel,
     padding: PaddingValues,
 ) {
     NavHost(
@@ -26,7 +26,7 @@ fun HomeNavigationGraph(
     ) {
         navigateWithSlideAnimation(route = HomeGraph.HOME_ROOT) {
             HomeScreenScaffold(
-                homeScreenViewModel = homeScreenViewModel,
+                homeViewModel = homeViewModel,
                 padding = padding,
                 navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
             )
