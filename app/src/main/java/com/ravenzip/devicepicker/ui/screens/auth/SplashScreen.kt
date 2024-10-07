@@ -38,15 +38,7 @@ fun SplashScreen(
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
 ) {
-    val state = splashScreenViewModel.splashScreenState.collectAsState().value
-
-    // TODO переделать на навигацию из viewModel
-    LaunchedEffect(state) {
-        if (state is UiState.Success) {
-            val firebaseUser = splashScreenViewModel.firebaseUser
-            if (firebaseUser !== null) navigateToMain() else navigateToAuthentication()
-        }
-    }
+    val uiState = splashScreenViewModel.splashScreenState.collectAsState().value
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
@@ -72,7 +64,7 @@ fun SplashScreen(
 
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter) {
         CenterRow(modifier = Modifier.fillMaxWidth(0.9f).padding(bottom = 15.dp)) {
-            when (state) {
+            when (uiState) {
                 is UiState.Loading -> {
                     CircularProgressIndicator(
                         modifier = Modifier.size(20.dp),
@@ -81,7 +73,7 @@ fun SplashScreen(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = state.message,
+                        text = uiState.message,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.W500,
                         letterSpacing = 0.sp,
@@ -97,7 +89,7 @@ fun SplashScreen(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = state.data,
+                        text = uiState.data,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.W500,
                         letterSpacing = 0.sp,
@@ -113,13 +105,24 @@ fun SplashScreen(
                     )
                     Spacer(modifier = Modifier.width(10.dp))
                     Text(
-                        text = state.message,
+                        text = uiState.message,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.W500,
                         letterSpacing = 0.sp,
                     )
                 }
+
+                else -> {
+                    // do nothing
+                }
             }
+        }
+    }
+
+    LaunchedEffect(uiState) {
+        if (uiState is UiState.Success) {
+            if (splashScreenViewModel.firebaseUser !== null) navigateToMain()
+            else navigateToAuthentication()
         }
     }
 }

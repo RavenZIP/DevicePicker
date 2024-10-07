@@ -4,11 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
+import com.ravenzip.devicepicker.state.UiState
+import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -18,26 +22,19 @@ constructor(
     private val authRepository: AuthRepository,
     private val sharedRepository: SharedRepository,
 ) : ViewModel() {
-    private val _alertDialogIsShown = MutableStateFlow(false)
-
-    val alertDialogIsShown = _alertDialogIsShown.asStateFlow()
+    val alertDialog = AlertDialog()
     val userData = sharedRepository.userData
 
     init {
         viewModelScope.launch { sharedRepository.getUserData() }
     }
 
-    fun showDialog() {
-        _alertDialogIsShown.update { true }
-    }
+    val logOutState =
+        alertDialog.isConfirmed
+            .onEach { authRepository.logout() }
+            .map { UiState.Dialog.Confirmed() }
 
-    fun hideDialog() {
-        _alertDialogIsShown.update { false }
-    }
-
-    fun onDialogConfirmation(navigateToSplashScreen: () -> Unit) {
-        hideDialog()
-        authRepository.logout()
-        navigateToSplashScreen()
-    }
+    val uiState =
+        merge(alertDialog.isShown.map { UiState.Dialog.Opened() }, logOutState)
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 0)
 }

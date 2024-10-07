@@ -3,7 +3,7 @@ package com.ravenzip.devicepicker.viewmodels.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.repositories.AuthRepository
-import com.ravenzip.devicepicker.state.State
+import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,25 +22,25 @@ class WelcomeScreenViewModel @Inject constructor(private val authRepository: Aut
     val alertDialog = AlertDialog()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private val logInAnonymouslyComplete =
+    private val logInAnonymouslyState =
         alertDialog.isConfirmed.flatMapLatest {
             return@flatMapLatest flowOf(authRepository.reloadUser()).zip(
                 flowOf(authRepository.logInAnonymously())
             ) { reloadResult, logInResult ->
                 return@zip if (logInResult.value == null || reloadResult.value == false) {
-                    State.Error(logInResult.error!!.message)
+                    UiState.Error(logInResult.error!!.message)
                 } else {
-                    State.Success
+                    UiState.Dialog.Confirmed()
                 }
             }
         }
 
     val uiState =
         merge(
-                alertDialog.isShown.map { State.Dialog },
-                alertDialog.isConfirmed.map { State.Loading },
-                alertDialog.isHidden.map { State.Nothing },
-                logInAnonymouslyComplete,
+                alertDialog.isShown.map { UiState.Dialog.Opened() },
+                alertDialog.isConfirmed.map { UiState.Loading("") },
+                alertDialog.isHidden.map { UiState.Nothing() },
+                logInAnonymouslyState,
             )
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 0)
 }

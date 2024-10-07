@@ -30,7 +30,7 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.showError
-import com.ravenzip.devicepicker.state.State
+import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.viewmodels.auth.WelcomeScreenViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
@@ -46,7 +46,8 @@ fun WelcomeScreen(
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
-    val state = welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(State.Nothing).value
+    val uiState =
+        welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(UiState.Nothing()).value
 
     val snackBarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { 4 })
@@ -102,12 +103,12 @@ fun WelcomeScreen(
         }
     }
 
-    when (state) {
-        State.Loading -> {
+    when (uiState) {
+        is UiState.Loading -> {
             Spinner(text = "Анонимный вход...")
         }
 
-        State.Dialog -> {
+        is UiState.Dialog.Opened -> {
             AlertDialog(
                 icon = Icon.ResourceIcon(R.drawable.sign_in),
                 title = WelcomeEnum.DIALOG_WINDOW.title,
@@ -119,16 +120,24 @@ fun WelcomeScreen(
             )
         }
 
-        is State.Error -> {
-            LaunchedEffect(Unit) { snackBarHostState.showError(state.message) }
-        }
-
-        State.Success -> {
-            LaunchedEffect(Unit) { navigateToHomeScreen() }
-        }
-
         else -> {
             // do nothing
+        }
+    }
+
+    LaunchedEffect(uiState) {
+        when (uiState) {
+            is UiState.Error -> {
+                snackBarHostState.showError(uiState.message)
+            }
+
+            is UiState.Dialog.Confirmed -> {
+                navigateToHomeScreen()
+            }
+
+            else -> {
+                // do nothing
+            }
         }
     }
 
