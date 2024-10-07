@@ -39,7 +39,7 @@ class WelcomeScreenViewModel @Inject constructor(private val authRepository: Aut
         merge(
                 alertDialog.isShown.map { UiState.Dialog.Opened() },
                 alertDialog.isConfirmed.map { UiState.Loading("") },
-                alertDialog.isHidden.map { UiState.Nothing() },
+                alertDialog.isHidden.map { UiState.Default() },
                 logInAnonymouslyState,
             )
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 0)

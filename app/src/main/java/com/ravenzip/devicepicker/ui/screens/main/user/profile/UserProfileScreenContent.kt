@@ -40,7 +40,7 @@ fun UserProfileScreenContent(
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
-    val uiState = userProfileViewModel.uiState.collectAsStateWithLifecycle(UiState.Nothing()).value
+    val uiState = userProfileViewModel.uiState.collectAsStateWithLifecycle(UiState.Default()).value
     val userData = userProfileViewModel.userData.collectAsState().value
 
     Column(

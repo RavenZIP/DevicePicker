@@ -47,7 +47,7 @@ fun WelcomeScreen(
     navigateToHomeScreen: () -> Unit,
 ) {
     val uiState =
-        welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(UiState.Nothing()).value
+        welcomeScreenViewModel.uiState.collectAsStateWithLifecycle(UiState.Default()).value
 
     val snackBarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { 4 })
