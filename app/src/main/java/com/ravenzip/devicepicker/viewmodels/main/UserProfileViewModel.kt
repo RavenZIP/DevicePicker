@@ -35,6 +35,10 @@ constructor(
             .map { UiState.Dialog.Confirmed() }
 
     val uiState =
-        merge(alertDialog.isShown.map { UiState.Dialog.Opened() }, logOutState)
+        merge(
+                alertDialog.isShown.map { UiState.Dialog.Opened() },
+                alertDialog.isHidden.map { UiState.Default() },
+                logOutState,
+            )
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 0)
 }
