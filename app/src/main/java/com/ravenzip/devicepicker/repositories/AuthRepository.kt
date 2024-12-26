@@ -13,6 +13,8 @@ import com.ravenzip.devicepicker.sources.AuthSources
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
@@ -24,6 +26,22 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     val firebaseUser: FirebaseUser?
         get() = authSources.firebaseUser
 
+    fun reloadUserFlow() =
+        flow {
+                firebaseUser?.reload()?.await()
+                emit(Result.success())
+            }
+            .catch { e ->
+                withContext(Dispatchers.Main) { Log.e("reloadUser", "${e.message}") }
+
+                if (e is FirebaseNetworkException) {
+                    emit(Result.networkError("Не удалось обновить данные о пользователе"))
+                } else {
+                    emit(Result.error("Не удалось обновить данные о пользователе"))
+                }
+            }
+
+    @Deprecated("Перейти на использование reloadUserFlow")
     suspend fun reloadUser(): Result<Boolean> {
         return try {
             firebaseUser?.reload()?.await()

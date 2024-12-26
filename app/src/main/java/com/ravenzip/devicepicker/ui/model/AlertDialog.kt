@@ -3,26 +3,25 @@ package com.ravenzip.devicepicker.ui.model
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 class AlertDialog {
-    private val _state = MutableStateFlow(AlertDialogAction.HIDDEN)
-
+    private val _state = MutableStateFlow<DialogState>(DialogState.Dismissed())
     val state = _state.asStateFlow()
 
-    val isShown = state.filter { state -> state == AlertDialogAction.OPENED }
-    val isHidden = state.filter { state -> state == AlertDialogAction.HIDDEN }
-    val isConfirmed = state.filter { state -> state == AlertDialogAction.CONFIRMED }
+    val isShowed = _state.map { currentState -> currentState is DialogState.Showed }
+    val isConfirmed = _state.filter { currentState -> currentState is DialogState.Confirmed }
 
-    fun showDialog() {
-        _state.update { AlertDialogAction.OPENED }
+    fun show() {
+        _state.update { DialogState.Showed() }
     }
 
-    fun hideDialog() {
-        _state.update { AlertDialogAction.HIDDEN }
+    fun dismiss() {
+        _state.update { DialogState.Dismissed() }
     }
 
-    fun onDialogConfirmation() {
-        _state.update { AlertDialogAction.CONFIRMED }
+    fun confirm() {
+        _state.update { DialogState.Confirmed() }
     }
 }

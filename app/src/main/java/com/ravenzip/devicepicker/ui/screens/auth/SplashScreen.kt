@@ -18,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
@@ -27,6 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.CenterRow
@@ -38,7 +38,7 @@ fun SplashScreen(
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
 ) {
-    val uiState = splashViewModel.splashScreenState.collectAsState().value
+    val uiState = splashViewModel.uiState.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),

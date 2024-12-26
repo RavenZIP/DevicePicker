@@ -12,8 +12,6 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -22,8 +20,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
-import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.theme.errorColor
+import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
 import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
@@ -40,8 +38,10 @@ fun UserProfileScreenContent(
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
-    val uiState = userProfileViewModel.uiState.collectAsStateWithLifecycle(UiState.Default()).value
-    val userData = userProfileViewModel.userData.collectAsState().value
+    val dialogWindowIsShowed =
+        userProfileViewModel.alertDialog.isShowed.collectAsStateWithLifecycle(false).value
+
+    val userData = userProfileViewModel.userData.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -122,7 +122,7 @@ fun UserProfileScreenContent(
             iconConfig = IconConfig(color = errorColor),
             colors = ButtonDefaults.containerColor(),
         ) {
-            userProfileViewModel.alertDialog.showDialog()
+            userProfileViewModel.alertDialog.show()
         }
 
         Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -164,27 +164,17 @@ fun UserProfileScreenContent(
         Spacer(modifier = Modifier.padding(top = 20.dp))
     }
 
-    when (uiState) {
-        is UiState.Dialog.Opened -> {
-            AlertDialog(
-                icon = Icon.ResourceIcon(R.drawable.sign_in),
-                title = "Выход из аккаунта",
-                text = "Вы действительно хотите выполнить выход из аккаунта?",
-                onDismissText = "Отмена",
-                onConfirmationText = "Выйти",
-                onDismiss = { userProfileViewModel.alertDialog.hideDialog() },
-                onConfirmation = { userProfileViewModel.alertDialog.onDialogConfirmation() },
-            )
-        }
+    UiEventEffect(userProfileViewModel.uiEffect) { event -> navigateToSplashScreen() }
 
-        else -> {
-            // do nothing
-        }
-    }
-
-    LaunchedEffect(uiState) {
-        if (uiState is UiState.Dialog.Confirmed) {
-            navigateToSplashScreen()
-        }
+    if (dialogWindowIsShowed) {
+        AlertDialog(
+            icon = Icon.ResourceIcon(R.drawable.sign_in),
+            title = "Выход из аккаунта",
+            text = "Вы действительно хотите выполнить выход из аккаунта?",
+            onDismissText = "Отмена",
+            onConfirmationText = "Выйти",
+            onDismiss = { userProfileViewModel.alertDialog.dismiss() },
+            onConfirmation = { userProfileViewModel.alertDialog.confirm() },
+        )
     }
 }

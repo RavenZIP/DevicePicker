@@ -12,6 +12,8 @@ class Result<T>(val value: T?, val status: StatusEnum, val error: OperationError
 
         fun <T> success(value: T) = Result(value, StatusEnum.OK, null)
 
+        fun success() = Result(true, StatusEnum.OK, null)
+
         fun <T> error(errorMessage: String) =
             Result<T>(null, StatusEnum.ERROR, OperationError.default(errorMessage))
 

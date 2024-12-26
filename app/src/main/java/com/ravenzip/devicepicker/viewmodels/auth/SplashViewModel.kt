@@ -10,18 +10,13 @@ import com.ravenzip.devicepicker.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class SplashViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
-    private val _splashScreenState =
-        MutableStateFlow<UiState<String>>(UiState.Loading("Получение данных о пользователе"))
-
-    val splashScreenState = _splashScreenState.asStateFlow()
 
     /**
      * Текущий пользователь firebase
@@ -31,21 +26,26 @@ class SplashViewModel @Inject constructor(private val authRepository: AuthReposi
     val firebaseUser: FirebaseUser?
         get() = authRepository.firebaseUser
 
-    init {
-        viewModelScope.launch {
-            val reloadResult = authRepository.reloadUser()
-            delay(500)
+    val uiState =
+        authRepository
+            .reloadUserFlow()
+            .map { reloadResult ->
+                delay(500)
 
-            if (reloadResult.status == StatusEnum.OK) {
-                _splashScreenState.update { UiState.Success("Загрузка данных завершена") }
-            } else {
-                val splashScreenText =
-                    if (reloadResult.error!!.type == OperationErrorTypeEnum.NETWORK_ERROR)
-                        "Ошибка сети. Попробуйте позднее"
-                    else "Произошла неизвестная ошибка"
+                if (reloadResult.status == StatusEnum.OK) {
+                    UiState.Success("Загрузка данных завершена")
+                } else {
+                    val errorMessage =
+                        if (reloadResult.error!!.type == OperationErrorTypeEnum.NETWORK_ERROR)
+                            "Ошибка сети. Попробуйте позднее"
+                        else "Произошла неизвестная ошибка"
 
-                _splashScreenState.update { UiState.Error(splashScreenText) }
+                    UiState.Error(errorMessage)
+                }
             }
-        }
-    }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = UiState.Loading("Получение данных о пользователе"),
+            )
 }
