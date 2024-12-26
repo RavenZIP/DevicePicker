@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.database.FirebaseDatabase
 import com.ravenzip.workshop.components.SimpleButton
-import com.ravenzip.workshop.components.SinglenessTextField
+import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 
 @Composable
 fun AdminScreenContent(padding: PaddingValues) {
@@ -51,7 +51,7 @@ fun AdminScreenContent(padding: PaddingValues) {
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        SinglenessTextField(text = key, label = "Сгенерированный индентификатор")
+        SinglenessOutlinedTextField(text = key, label = "Сгенерированный индентификатор")
         Spacer(modifier = Modifier.height(20.dp))
 
         SimpleButton(text = "Сгенерировать") {

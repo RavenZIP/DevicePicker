@@ -20,7 +20,7 @@ import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.devicepicker.state.AuthErrorState
 import com.ravenzip.workshop.components.RadioGroup
-import com.ravenzip.workshop.components.SinglenessTextField
+import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.selection.SelectableItemConfig
 
@@ -35,7 +35,7 @@ fun AuthFields(
 ) {
     when (selectedOption) {
         AuthVariantsEnum.EMAIL -> {
-            SinglenessTextField(
+            SinglenessOutlinedTextField(
                 text = email,
                 label = "Электронная почта",
                 leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
@@ -43,7 +43,7 @@ fun AuthFields(
             )
 
             Spacer(modifier = Modifier.height(15.dp))
-            SinglenessTextField(
+            SinglenessOutlinedTextField(
                 text = password,
                 label = "Пароль",
                 leadingIcon = Icon.ResourceIcon(R.drawable.i_key),
@@ -52,7 +52,7 @@ fun AuthFields(
             )
         }
         AuthVariantsEnum.PHONE -> {
-            SinglenessTextField(
+            SinglenessOutlinedTextField(
                 text = phone,
                 label = "Телефон",
                 leadingIcon = Icon.ResourceIcon(R.drawable.i_phone),

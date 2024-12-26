@@ -25,7 +25,7 @@ import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.devicepicker.viewmodels.auth.ForgotPasswordViewModel
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.SimpleButton
-import com.ravenzip.workshop.components.SinglenessTextField
+import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.Icon
@@ -59,7 +59,7 @@ fun ForgotPasswordScreen(
         ScreenTitle(text = "Сброс и восстановление")
 
         Spacer(modifier = Modifier.height(30.dp))
-        SinglenessTextField(
+        SinglenessOutlinedTextField(
             text = email,
             label = "Электронная почта",
             leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
