@@ -54,6 +54,7 @@ fun HomeScreenContent(
                         )
                 },
             comparableKey = { it },
+            containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         )
 
         LazyVerticalGrid(
