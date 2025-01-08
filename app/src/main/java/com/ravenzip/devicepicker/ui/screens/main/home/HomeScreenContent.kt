@@ -10,38 +10,50 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ravenzip.devicepicker.constants.enums.TagsEnum
+import com.ravenzip.devicepicker.constants.map.tagIconMap
+import com.ravenzip.devicepicker.constants.map.tagsColorMap
 import com.ravenzip.devicepicker.ui.components.ColumnDeviceCard
+import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
-import com.ravenzip.workshop.data.selection.SelectableChipConfig
-import kotlinx.coroutines.flow.StateFlow
+import com.ravenzip.workshop.data.ChipViewOptions
+import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.Icon
+import com.ravenzip.workshop.data.icon.IconConfig
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    categoriesState: StateFlow<SnapshotStateList<SelectableChipConfig>>,
-    selectedCategoryState: StateFlow<SnapshotStateList<DeviceCompact>>,
+    homeViewModel: HomeViewModel,
     padding: PaddingValues,
-    selectCategory: (SelectableChipConfig) -> Unit,
-    setDeviceQueryParams: (String, String, String) -> Unit,
     navigateToDevice: () -> Unit,
 ) {
-    val categories = categoriesState.collectAsState().value
-    val selectedCategory = selectedCategoryState.collectAsState().value
+    val devices = homeViewModel.devicesInSelectedCategory.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            list = categories,
-            containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
-            onClick = { item -> selectCategory(item) },
+            state = homeViewModel.selectedCategory,
+            source = TagsEnum.entries,
+            viewOptions =
+                TagsEnum.entries.associate { item ->
+                    item to
+                        ChipViewOptions(
+                            text = item.value,
+                            textConfig = TextConfig.SmallMedium,
+                            icon = Icon.ResourceIcon(id = tagIconMap[item]!!),
+                            iconConfig = IconConfig(size = 20, color = tagsColorMap[item]),
+                        )
+                },
+            comparableKey = { it },
         )
 
         LazyVerticalGrid(
@@ -51,11 +63,11 @@ fun HomeScreenContent(
             verticalArrangement = Arrangement.spacedBy(10.dp),
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            items(selectedCategory) { device ->
+            items(devices) { device ->
                 ColumnDeviceCard(
                     device = device,
                     onClick = {
-                        setDeviceQueryParams(device.uid, device.brand, device.model)
+                        homeViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
                         navigateToDevice()
                     },
                 )

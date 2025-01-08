@@ -14,16 +14,11 @@ fun HomeScreenScaffold(
     padding: PaddingValues,
     navigateToDevice: () -> Unit,
 ) {
-    Scaffold(
-        modifier = Modifier.padding(padding),
-        topBar = { TopAppBar(title = "Главная", backArrow = null, items = listOf()) },
-    ) { innerPadding ->
+    Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar(title = "Главная") }) {
+        innerPadding ->
         HomeScreenContent(
-            categoriesState = homeViewModel.categories,
-            selectedCategoryState = homeViewModel.selectedCategory,
+            homeViewModel = homeViewModel,
             padding = innerPadding,
-            selectCategory = homeViewModel::selectCategory,
-            setDeviceQueryParams = homeViewModel::setDeviceQueryParams,
             navigateToDevice = navigateToDevice,
         )
     }
