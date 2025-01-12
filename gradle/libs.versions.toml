@@ -1,6 +1,6 @@
 [versions]
 activityCompose = "1.9.3"
-agp = "8.7.3"
+agp = "8.8.0"
 composeBom = "2024.12.01"
 composeRatingbar = "2.1.1"
 coreSplashscreen = "1.1.0-rc01"
