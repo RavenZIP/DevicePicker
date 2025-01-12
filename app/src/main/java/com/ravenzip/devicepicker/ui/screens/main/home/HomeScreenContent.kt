@@ -32,7 +32,7 @@ import com.ravenzip.workshop.data.icon.IconConfig
 fun HomeScreenContent(
     homeViewModel: HomeViewModel,
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     val devices = homeViewModel.devicesInSelectedCategory.collectAsStateWithLifecycle().value
 
@@ -65,13 +65,7 @@ fun HomeScreenContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(devices) { device ->
-                ColumnDeviceCard(
-                    device = device,
-                    onClick = {
-                        homeViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
-                        navigateToDevice()
-                    },
-                )
+                ColumnDeviceCard(device = device, onClick = { navigateToDevice(device.uid) })
             }
         }
     }

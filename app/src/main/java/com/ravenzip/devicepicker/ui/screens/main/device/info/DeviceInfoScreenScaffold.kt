@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -42,6 +41,4 @@ fun DeviceInfoScaffold(
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
-
-    DisposableEffect(Unit) { onDispose { deviceInfoViewModel.clearDeviceData() } }
 }

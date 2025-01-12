@@ -28,11 +28,13 @@ fun HomeNavigationGraph(
             HomeScreenScaffold(
                 homeViewModel = homeViewModel,
                 padding = padding,
-                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+                navigateToDevice = { uid ->
+                    navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}")
+                },
             )
         }
 
-        navigateWithFadeAnimation(route = HomeGraph.DEVICE_INFO) {
+        navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScaffold(padding = padding, navigateBack = { navController.popBackStack() })
         }
     }

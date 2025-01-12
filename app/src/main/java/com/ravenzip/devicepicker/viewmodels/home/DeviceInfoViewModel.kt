@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.viewmodels.home
 
 import androidx.compose.material3.SnackbarHostState
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.R
@@ -22,20 +23,17 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.zip
 import kotlinx.coroutines.launch
 
@@ -47,18 +45,77 @@ constructor(
     private val deviceRepository: DeviceRepository,
     private val imageRepository: ImageRepository,
     private val sharedRepository: SharedRepository,
+    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
-    /** Текущее выбранное устройство */
-    private val _device = MutableStateFlow<UiState<Device>>(UiState.Loading("Загрузка..."))
+    private val _updateFavourites = MutableSharedFlow<Unit>()
+
+    private val _findCachedDeviceComplete =
+        savedStateHandle.getStateFlow("uid", "").map { uid ->
+            sharedRepository.getCachedDevice(uid)
+        }
+
+    private val _findCachedDeviceSuccess = _findCachedDeviceComplete.filterNotNull()
+
+    private val _findCachedDeviceError =
+        _findCachedDeviceComplete.filter { device -> device == null }
+
+    private val _loadDeviceComplete =
+        _findCachedDeviceError.flatMapLatest {
+            val uid = savedStateHandle["uid"] ?: ""
+            return@flatMapLatest deviceRepository.getDeviceByUid(uid)
+        }
+
+    private val _loadDeviceSuccess =
+        _loadDeviceComplete
+            .filterNotNull()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _loadDeviceError = _loadDeviceComplete.filter { device -> device == null }
+
+    private val _loadDeviceImagesComplete =
+        _loadDeviceSuccess
+            .flatMapLatest { device ->
+                imageRepository.getImageUrls(
+                    device.specifications.baseInfo.model.split(' ')[0],
+                    device.specifications.baseInfo.model,
+                )
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _loadDeviceImagesSuccess =
+        _loadDeviceImagesComplete.filter { imageUrls -> imageUrls.isNotEmpty() }
+
+    private val _loadDeviceImagesError =
+        _loadDeviceImagesComplete.filter { imageUrls -> imageUrls.isEmpty() }
+
+    private val _deviceWithImageUrls =
+        _loadDeviceSuccess
+            .zip(_loadDeviceImagesSuccess) { device, imageUrls ->
+                device.copy(imageUrls = imageUrls)
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    val device =
+        merge(
+                merge(_deviceWithImageUrls, _findCachedDeviceSuccess).map { device ->
+                    UiState.Success(device)
+                },
+                merge(_loadDeviceError, _loadDeviceImagesError).map {
+                    UiState.Error("При выполении запроса произошла ошибка")
+                },
+            )
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = UiState.Loading("Загрузка..."),
+            )
 
     /** Устройство успешно получено */
     private val _deviceStateIsSuccess =
-        _device
-            .filter { deviceState -> deviceState is UiState.Success }
-            .map { deviceState -> deviceState as UiState.Success<Device> }
+        device
+            .filterIsInstance<UiState.Success<Device>>()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    val device = _device.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
     val title =
@@ -113,21 +170,34 @@ constructor(
 
     private val _isFavourite =
         _deviceStateIsSuccess
-            .combine(sharedRepository.favourites) { device, favourites ->
-                device.data.uid in favourites
+            .flatMapLatest { deviceState ->
+                sharedRepository.favourites.map { favourites -> deviceState.data.uid in favourites }
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val _isCompare =
-        _deviceStateIsSuccess
-            .combine(sharedRepository.compares) { device, compares -> device.data.uid in compares }
+    //    private val _isCompare =
+    //        _deviceStateIsSuccess
+    //            .combine(sharedRepository.compares) { device, compares -> device.data.uid in
+    // compares }
+    //            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _updateFavouritesComplete =
+        _updateFavourites.flatMapLatest {
+            _deviceStateIsSuccess.flatMapLatest { deviceState ->
+                flowOf(sharedRepository.tryToUpdateFavourites(deviceState.data.uid))
+            }
+        }
+
+    private val _isFavouriteHasBeenChanged =
+        _updateFavouritesComplete
+            .flatMapLatest { _isFavourite }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val isFavourite = _isFavourite.filter { isFavourite -> isFavourite }
-    private val isNotFavourite = _isFavourite.filter { isFavourite -> !isFavourite }
+    private val _deviceAddedToFavourites =
+        _isFavouriteHasBeenChanged.filter { isFavourite -> isFavourite }
 
-    private val isCompare = _isCompare.filter { isCompare -> isCompare }
-    private val isNotCompare = _isCompare.filter { isCompare -> !isCompare }
+    private val _deviceDeletedFromFavourites =
+        _isFavouriteHasBeenChanged.filter { isFavourite -> !isFavourite }
 
     val topAppBarButtons =
         _isFavourite
@@ -140,61 +210,15 @@ constructor(
 
     init {
         viewModelScope.launch {
-            sharedRepository.deviceQueryParams
-                .filter { params -> params != null }
-                .take(1)
-                .flatMapLatest { params ->
-                    val cachedDevice = sharedRepository.getCachedDevice(params!!.uid)
-
-                    return@flatMapLatest if (cachedDevice == null) {
-                        getDeviceByBrandAndUid(params.uid, params.brand, params.model)
-                    } else {
-                        flow { UiState.Success(cachedDevice) }
-                    }
-                }
-                .collect { deviceState -> _device.update { deviceState } }
+            _deviceWithImageUrls.collect { device -> sharedRepository.updateCachedDevices(device) }
         }
 
         viewModelScope.launch {
-            // drop(2) чтоб не отображать снэкбар при заходе на экран
             merge(
-                    isFavourite.map { "Устройство добавлено в избранное" },
-                    isNotFavourite.map { "Устройство удалено из избранного" },
-                    isCompare.map { "Устройство добавлено в список сравнения" },
-                    isNotCompare.map { "Устройство удалено из списка сравнения" },
+                    _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
+                    _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
                 )
-                .drop(2)
                 .collect { message -> snackBarHostState.showMessage(message) }
-        }
-    }
-
-    /** Получение устройства по бренду и уникальному идентификатору */
-    private fun getDeviceByBrandAndUid(uid: String, brand: String, model: String) =
-        deviceRepository.getDeviceByBrandAndUid(brand, uid).zip(
-            imageRepository.getImageUrls(brand, model)
-        ) { device, imageUrls ->
-            if (device != null) {
-                val deviceWithImageUrls = device.copy(imageUrls = imageUrls)
-
-                sharedRepository.updateCachedDevices(deviceWithImageUrls)
-                return@zip UiState.Success(deviceWithImageUrls)
-            } else {
-                val errorMessage = "При выполении запроса произошла ошибка"
-                return@zip UiState.Error(errorMessage)
-            }
-        }
-
-    fun clearDeviceData() {
-        sharedRepository.clearDeviceQueryParams()
-    }
-
-    private fun tryToUpdateFavourites() {
-        viewModelScope.launch {
-            // Убеждаем компилятор в том, что UiState.Success,
-            // т.к. сами кнопки появляются лишь тогда, когда состояние Success
-            sharedRepository.tryToUpdateFavourites(
-                (_device.value as UiState.Success<Device>).data.uid
-            )
         }
     }
 
@@ -234,7 +258,7 @@ constructor(
                         if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
                     ),
                 iconConfig = IconConfig.Small,
-                onClick = { tryToUpdateFavourites() },
+                onClick = { viewModelScope.launch { _updateFavourites.emit(Unit) } },
             )
 
         val compareButton =

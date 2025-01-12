@@ -5,7 +5,6 @@ import androidx.compose.runtime.toMutableStateList
 import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device
-import com.ravenzip.devicepicker.model.device.DeviceQueryParams
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import javax.inject.Inject
@@ -32,14 +31,10 @@ constructor(
     /** Кэш устройств на время работы с приложением */
     private val _cachedDevices = MutableStateFlow(listOf<Device>())
 
-    /** Параметры для запроса текущего устройства */
-    private val _deviceQueryParams = MutableStateFlow<DeviceQueryParams?>(null)
-
     /** Данные о пользователе */
     private val _userData = MutableStateFlow(User())
 
     val allDevices = _allDevices.asStateFlow()
-    val deviceQueryParams = _deviceQueryParams.asStateFlow()
     val userData = _userData.asStateFlow()
 
     val deviceHistory = _userData.map { userData -> userData.deviceHistory }
@@ -94,10 +89,6 @@ constructor(
         _cachedDevices.update { updatedCachedDevices }
     }
 
-    fun setDeviceQueryParams(uid: String, brand: String, model: String) {
-        _deviceQueryParams.update { DeviceQueryParams(uid, brand, model) }
-    }
-
     suspend fun tryToUpdateDeviceHistory(deviceUid: String) {
         if (deviceUid !in _userData.value.deviceHistory) {
             val updatedDeviceHistory = _userData.value.deviceHistory + deviceUid
@@ -127,9 +118,5 @@ constructor(
 
     private fun isFavouriteDevice(deviceUid: String): Boolean {
         return deviceUid in _userData.value.favourites
-    }
-
-    fun clearDeviceQueryParams() {
-        _deviceQueryParams.update { null }
     }
 }

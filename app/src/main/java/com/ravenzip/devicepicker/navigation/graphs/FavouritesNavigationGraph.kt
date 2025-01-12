@@ -26,11 +26,13 @@ fun FavouritesNavigationGraph(
         navigateWithSlideAnimation(FavouritesGraph.FAVOURITES_ROOT) {
             FavouritesScreenScaffold(
                 padding = padding,
-                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+                navigateToDevice = { uid ->
+                    navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}")
+                },
             )
         }
 
-        navigateWithFadeAnimation(route = HomeGraph.DEVICE_INFO) {
+        navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScaffold(padding = padding, navigateBack = { navController.popBackStack() })
         }
     }

@@ -18,7 +18,7 @@ import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
 fun DeviceHistoryScreenContent(
     deviceHistoryViewModel: DeviceHistoryViewModel,
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     val deviceHistoryState = deviceHistoryViewModel.deviceHistory.collectAsState().value
 
@@ -33,14 +33,7 @@ fun DeviceHistoryScreenContent(
                 device = device,
                 onFavouriteClick = { deviceHistoryViewModel.tryToUpdateFavourites(device.uid) },
                 onCompareClick = { deviceHistoryViewModel.tryToUpdateCompares(device.uid) },
-                onCardClick = {
-                    deviceHistoryViewModel.setDeviceQueryParams(
-                        device.uid,
-                        device.brand,
-                        device.model,
-                    )
-                    navigateToDevice()
-                },
+                onCardClick = { navigateToDevice(device.uid) },
             )
         }
     }

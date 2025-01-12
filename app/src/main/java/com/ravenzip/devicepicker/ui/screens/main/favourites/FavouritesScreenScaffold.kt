@@ -13,7 +13,7 @@ import com.ravenzip.workshop.components.TopAppBar
 fun FavouritesScreenScaffold(
     favouritesViewModel: FavouritesViewModel = hiltViewModel(),
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar(title = "Избранное") }) {
         innerPadding ->

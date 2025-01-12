@@ -18,7 +18,7 @@ import com.ravenzip.devicepicker.viewmodels.main.FavouritesViewModel
 fun FavouritesScreenContent(
     favouritesViewModel: FavouritesViewModel,
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     val favourites = favouritesViewModel.favourites.collectAsState().value
 
@@ -34,10 +34,7 @@ fun FavouritesScreenContent(
                 isFavourite = true,
                 onFavouriteClick = { favouritesViewModel.tryToUpdateFavourites(device.uid) },
                 onCompareClick = { favouritesViewModel.tryToUpdateCompares(device.uid) },
-                onCardClick = {
-                    favouritesViewModel.setDeviceQueryParams(device.uid, device.brand, device.model)
-                    navigateToDevice()
-                },
+                onCardClick = { navigateToDevice(device.uid) },
             )
         }
     }

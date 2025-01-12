@@ -14,8 +14,8 @@ class DeviceSources @Inject constructor() {
         return deviceRef
     }
 
-    fun deviceSourceByPath(brand: String, uid: String): DatabaseReference {
-        return deviceRef.child(brand).child(uid)
+    fun deviceSourceByUid(uid: String): DatabaseReference {
+        return deviceRef.child(uid)
     }
 
     fun deviceCompactSource(): DatabaseReference {

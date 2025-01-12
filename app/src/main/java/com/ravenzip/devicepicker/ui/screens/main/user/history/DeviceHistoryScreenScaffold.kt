@@ -13,7 +13,7 @@ import com.ravenzip.workshop.components.TopAppBar
 fun DeviceInfoScreenScaffold(
     deviceHistoryViewModel: DeviceHistoryViewModel = hiltViewModel<DeviceHistoryViewModel>(),
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar("История просмотров") }) {
         innerPadding ->

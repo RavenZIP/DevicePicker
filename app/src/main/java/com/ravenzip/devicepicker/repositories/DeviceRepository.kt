@@ -19,16 +19,16 @@ import kotlinx.coroutines.withContext
 
 @Singleton
 class DeviceRepository @Inject constructor(private val deviceSources: DeviceSources) {
-    fun getDeviceByBrandAndUid(brand: String, uid: String): Flow<Device?> =
+    fun getDeviceByUid(uid: String): Flow<Device?> =
         flow {
-                val response = deviceSources.deviceSourceByPath(brand, uid).get().await()
+                val response = deviceSources.deviceSourceByUid(uid).get().await()
                 val firebaseDevice = response.getValue<FirebaseDevice>()
                 val device = firebaseDevice?.convertToDevice()
 
                 emit(device)
             }
             .catch {
-                withContext(Dispatchers.Main) { Log.e("DeviceCompactViewModel", "${it.message}") }
+                withContext(Dispatchers.Main) { Log.e("getDeviceByUid", "${it.message}") }
 
                 emit(null)
             }

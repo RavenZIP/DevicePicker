@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.viewmodels.main
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
@@ -29,14 +28,10 @@ class HomeViewModel @Inject constructor(private val sharedRepository: SharedRepo
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
-                initialValue = mutableStateListOf(),
+                initialValue = listOf(),
             )
 
     init {
         viewModelScope.launch { sharedRepository.getDeviceCompactList() }
-    }
-
-    fun setDeviceQueryParams(uid: String, brand: String, model: String) {
-        sharedRepository.setDeviceQueryParams(uid, brand, model)
     }
 }

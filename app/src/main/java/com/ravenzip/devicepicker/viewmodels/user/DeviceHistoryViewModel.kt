@@ -27,10 +27,6 @@ class DeviceHistoryViewModel @Inject constructor(private val sharedRepository: S
                 initialValue = listOf(),
             )
 
-    fun setDeviceQueryParams(uid: String, brand: String, model: String) {
-        sharedRepository.setDeviceQueryParams(uid, brand, model)
-    }
-
     fun tryToUpdateFavourites(deviceUid: String) {
         viewModelScope.launch { sharedRepository.tryToUpdateFavourites(deviceUid) }
     }

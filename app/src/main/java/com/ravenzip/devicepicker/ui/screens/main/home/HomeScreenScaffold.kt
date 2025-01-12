@@ -12,7 +12,7 @@ import com.ravenzip.workshop.components.TopAppBar
 fun HomeScreenScaffold(
     homeViewModel: HomeViewModel,
     padding: PaddingValues,
-    navigateToDevice: () -> Unit,
+    navigateToDevice: (uid: String) -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar(title = "Главная") }) {
         innerPadding ->

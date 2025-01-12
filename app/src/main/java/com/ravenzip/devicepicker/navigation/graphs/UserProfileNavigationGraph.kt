@@ -44,14 +44,14 @@ fun UserProfileNavigationGraph(
             AdminScreenScaffold(padding = padding)
         }
 
-        navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
+        navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) { uid ->
             DeviceInfoScreenScaffold(
                 padding = padding,
-                navigateToDevice = { navController.navigate(HomeGraph.DEVICE_INFO) },
+                navigateToDevice = { navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}") },
             )
         }
 
-        navigateWithFadeAnimation(route = HomeGraph.DEVICE_INFO) {
+        navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScaffold(padding = padding, navigateBack = { navController.popBackStack() })
         }
     }
