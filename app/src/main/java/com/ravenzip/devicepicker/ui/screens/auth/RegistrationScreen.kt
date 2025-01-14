@@ -39,8 +39,6 @@ fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel<RegistrationViewModel>(),
     navigateToHomeScreen: () -> Unit,
 ) {
-    val authOptionsState = registrationViewModel.authOptions.collectAsState().value
-    val selectedOptionState = registrationViewModel.selectedOption.collectAsState().value
     val fieldErrorsState = registrationViewModel.fieldErrors.collectAsState().value
     val isLoadingState = registrationViewModel.isLoading.collectAsState().value
     val spinnerTextState = registrationViewModel.spinnerText.collectAsState().value
@@ -71,7 +69,7 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = selectedOptionState,
+            selectedOption = registrationViewModel.authOptionsState.value,
             email = email,
             password = password,
             phone = phone,
@@ -81,16 +79,18 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthOptions(
-            options = authOptionsState,
+            formState = registrationViewModel.authOptionsState,
             title = "Выбор варианта регистрации",
-            onClick = { item -> registrationViewModel.selectOption(item) },
         )
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = Icon.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
-            text = registrationViewModel.getSelectedOptionDescription(selectedOptionState),
+            text =
+                registrationViewModel.getSelectedOptionDescription(
+                    registrationViewModel.authOptionsState.value
+                ),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -100,7 +100,7 @@ fun RegistrationScreen(
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            when (selectedOptionState) {
+            when (registrationViewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
                     registrationViewModel.registrationWithEmailAndPassword(
                         email = email.value,

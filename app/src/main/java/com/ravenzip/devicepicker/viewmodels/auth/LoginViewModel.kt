@@ -6,17 +6,13 @@ import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.repositories.AuthRepository
-import com.ravenzip.devicepicker.services.AuthService
 import com.ravenzip.devicepicker.services.ValidationService
 import com.ravenzip.devicepicker.state.AuthErrorState
-import com.ravenzip.workshop.data.selection.SelectableItemConfig
+import com.ravenzip.workshop.forms.state.FormState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -25,31 +21,16 @@ class LoginViewModel
 @Inject
 constructor(
     private val authRepository: AuthRepository,
-    private val authService: AuthService,
     private val validationService: ValidationService,
 ) : ViewModel() {
-    private val _authOptions = MutableStateFlow(authService.createAuthOptions())
     private val _isLoading = MutableStateFlow(false)
     private val _fieldErrors = MutableStateFlow(AuthErrorState.default())
 
-    val selectedOption =
-        _authOptions
-            .map { options -> authService.calculateSelectedOption(options) }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.Lazily,
-                initialValue = AuthVariantsEnum.EMAIL,
-            )
-    val authOptions = _authOptions.asStateFlow()
+    val authOptionsState = FormState(initialValue = AuthVariantsEnum.EMAIL)
+
     val isLoading = _isLoading.asStateFlow()
     val fieldErrors = _fieldErrors.asStateFlow()
     val snackBarHostState = SnackbarHostState()
-
-    fun selectOption(item: SelectableItemConfig) {
-        authService.selectOption(item, _authOptions.value) { updatedOptions ->
-            _authOptions.update { updatedOptions }
-        }
-    }
 
     fun logInWithEmailAndPassword(
         email: String,

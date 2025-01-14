@@ -34,8 +34,6 @@ fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val authOptionsState = loginViewModel.authOptions.collectAsState().value
-    val selectedOptionState = loginViewModel.selectedOption.collectAsState().value
     val fieldErrorsState = loginViewModel.fieldErrors.collectAsState().value
     val isLoadingState = loginViewModel.isLoading.collectAsState().value
 
@@ -66,7 +64,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = selectedOptionState,
+            selectedOption = loginViewModel.authOptionsState.value,
             email = email,
             password = password,
             phone = phone,
@@ -75,17 +73,13 @@ fun LoginScreen(
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(
-            options = authOptionsState,
-            title = "Выбор варианта входа",
-            onClick = { item -> loginViewModel.selectOption(item) },
-        )
+        AuthOptions(formState = loginViewModel.authOptionsState, title = "Выбор варианта входа")
     }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            when (selectedOptionState) {
+            when (loginViewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
                     loginViewModel.logInWithEmailAndPassword(
                         email = email.value,

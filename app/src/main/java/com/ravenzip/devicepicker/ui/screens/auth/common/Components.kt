@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,7 +22,7 @@ import com.ravenzip.devicepicker.state.AuthErrorState
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.data.icon.Icon
-import com.ravenzip.workshop.data.selection.SelectableItemConfig
+import com.ravenzip.workshop.forms.state.FormState
 
 @Composable
 fun AuthFields(
@@ -67,12 +67,9 @@ fun AuthFields(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthOptions(
-    options: SnapshotStateList<SelectableItemConfig>,
-    title: String,
-    onClick: (item: SelectableItemConfig) -> Unit,
-) {
+fun AuthOptions(formState: FormState<AuthVariantsEnum>, title: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
@@ -87,6 +84,12 @@ fun AuthOptions(
             fontWeight = FontWeight.W500,
         )
         Spacer(modifier = Modifier.height(10.dp))
-        RadioGroup(width = 1f, list = options, textSize = 16, onClick = onClick)
+        RadioGroup(
+            state = formState,
+            source = AuthVariantsEnum.entries,
+            view = { it.value },
+            comparableKey = { it },
+            width = 1f,
+        )
     }
 }
