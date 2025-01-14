@@ -49,10 +49,12 @@ constructor(
 ) : ViewModel() {
     private val _updateFavourites = MutableSharedFlow<Unit>()
 
+    private val _deviceUid = savedStateHandle.getStateFlow("uid", "")
+
     private val _findCachedDeviceComplete =
-        savedStateHandle.getStateFlow("uid", "").map { uid ->
-            sharedRepository.getCachedDevice(uid)
-        }
+        _deviceUid
+            .map { uid -> sharedRepository.getCachedDevice(uid) }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _findCachedDeviceSuccess = _findCachedDeviceComplete.filterNotNull()
 
@@ -60,10 +62,11 @@ constructor(
         _findCachedDeviceComplete.filter { device -> device == null }
 
     private val _loadDeviceComplete =
-        _findCachedDeviceError.flatMapLatest {
-            val uid = savedStateHandle["uid"] ?: ""
-            return@flatMapLatest deviceRepository.getDeviceByUid(uid)
-        }
+        _findCachedDeviceError
+            .flatMapLatest {
+                _deviceUid.flatMapLatest { uid -> deviceRepository.getDeviceByUid(uid) }
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _loadDeviceSuccess =
         _loadDeviceComplete
