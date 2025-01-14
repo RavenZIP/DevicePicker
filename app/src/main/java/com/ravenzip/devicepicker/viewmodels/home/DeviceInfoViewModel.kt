@@ -25,6 +25,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
@@ -48,6 +50,7 @@ constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _updateFavourites = MutableSharedFlow<Unit>()
+    private val _updateCompares = MutableSharedFlow<Unit>()
 
     private val _deviceUid = savedStateHandle.getStateFlow("uid", "")
 
@@ -171,18 +174,21 @@ constructor(
                 initialValue = listOf(),
             )
 
-    private val _isFavourite =
+    private val _isFavouriteHasBeenChanged =
         _deviceStateIsSuccess
             .flatMapLatest { deviceState ->
                 sharedRepository.favourites.map { favourites -> deviceState.data.uid in favourites }
             }
+            .distinctUntilChanged()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    //    private val _isCompare =
-    //        _deviceStateIsSuccess
-    //            .combine(sharedRepository.compares) { device, compares -> device.data.uid in
-    // compares }
-    //            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+    private val _isCompareHasBeenChanged =
+        _deviceStateIsSuccess
+            .flatMapLatest { deviceState ->
+                sharedRepository.compares.map { compares -> deviceState.data.uid in compares }
+            }
+            .distinctUntilChanged()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _updateFavouritesComplete =
         _updateFavourites.flatMapLatest {
@@ -191,20 +197,39 @@ constructor(
             }
         }
 
-    private val _isFavouriteHasBeenChanged =
+    private val _updateComparesComplete =
+        _updateCompares.flatMapLatest {
+            _deviceStateIsSuccess.flatMapLatest { deviceState ->
+                flowOf(sharedRepository.tryToUpdateCompares(deviceState.data.uid))
+            }
+        }
+
+    private val _isFavouriteHasBeenUpdated =
         _updateFavouritesComplete
-            .flatMapLatest { _isFavourite }
+            .flatMapLatest { _isFavouriteHasBeenChanged }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _isCompareHasBeenUpdated =
+        _updateComparesComplete
+            .flatMapLatest { _isCompareHasBeenChanged }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _deviceAddedToFavourites =
-        _isFavouriteHasBeenChanged.filter { isFavourite -> isFavourite }
+        _isFavouriteHasBeenUpdated.filter { isFavourite -> isFavourite }
 
     private val _deviceDeletedFromFavourites =
-        _isFavouriteHasBeenChanged.filter { isFavourite -> !isFavourite }
+        _isFavouriteHasBeenUpdated.filter { isFavourite -> !isFavourite }
+
+    private val _deviceAddedToCompares = _isCompareHasBeenUpdated.filter { isCompare -> isCompare }
+
+    private val _deviceDeletedFromCompares =
+        _isCompareHasBeenUpdated.filter { isCompare -> !isCompare }
 
     val topAppBarButtons =
-        _isFavourite
-            .map { isFavourite -> generateTopAppBarItems(isFavourite) }
+        _isFavouriteHasBeenChanged
+            .combine(_isCompareHasBeenChanged) { isFavourite, isCompare ->
+                generateTopAppBarItems(isFavourite, isCompare)
+            }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Lazily,
@@ -220,6 +245,8 @@ constructor(
             merge(
                     _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
                     _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
+                    _deviceAddedToCompares.map { "Устройство добавлено в список сравнения" },
+                    _deviceDeletedFromCompares.map { "Устройство удалено из списка сравнения" },
                 )
                 .collect { message -> snackBarHostState.showMessage(message) }
         }
@@ -253,7 +280,7 @@ constructor(
         return listOf(rating, reviewsCount, questionsCount)
     }
 
-    private fun generateTopAppBarItems(isFavourite: Boolean): List<AppBarItem> {
+    private fun generateTopAppBarItems(isFavourite: Boolean, isCompare: Boolean): List<AppBarItem> {
         val favouriteButton =
             AppBarItem(
                 icon =
@@ -266,9 +293,12 @@ constructor(
 
         val compareButton =
             AppBarItem(
-                icon = Icon.ResourceIcon(R.drawable.i_compare),
+                icon =
+                    Icon.ResourceIcon(
+                        if (isCompare) R.drawable.i_compare_filled else R.drawable.i_compare
+                    ),
                 iconConfig = IconConfig.Small,
-                onClick = {},
+                onClick = { viewModelScope.launch { _updateCompares.emit(Unit) } },
             )
 
         return listOf(favouriteButton, compareButton)

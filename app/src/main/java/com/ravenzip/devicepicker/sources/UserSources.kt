@@ -23,4 +23,8 @@ class UserSources @Inject constructor() {
     fun favourites(userUid: String): DatabaseReference {
         return usersReference.child(userUid).child("favourites")
     }
+
+    fun compares(userUid: String): DatabaseReference {
+        return usersReference.child(userUid).child("compares")
+    }
 }

@@ -70,4 +70,18 @@ class UserRepository @Inject constructor(private val userSources: UserSources) {
             false
         }
     }
+
+    suspend fun updateCompares(userUid: String?, compares: List<String>): Boolean {
+        return try {
+            if (userUid != null) {
+                userSources.compares(userUid).setValue(compares).await()
+                true
+            } else {
+                throw Exception("user is null")
+            }
+        } catch (e: Exception) {
+            withContext(Dispatchers.Main) { Log.e("updateCompares", "${e.message}") }
+            false
+        }
+    }
 }

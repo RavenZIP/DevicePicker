@@ -116,7 +116,26 @@ constructor(
         }
     }
 
+    suspend fun tryToUpdateCompares(deviceUid: String) {
+        val updatedCompares =
+            if (isComparedDevice(deviceUid)) {
+                _userData.value.compares - deviceUid
+            } else {
+                _userData.value.compares + deviceUid
+            }
+
+        val updateResult = userRepository.updateCompares(firebaseUser?.uid, updatedCompares)
+
+        if (updateResult) {
+            _userData.update { _userData.value.copy(compares = updatedCompares) }
+        }
+    }
+
     private fun isFavouriteDevice(deviceUid: String): Boolean {
         return deviceUid in _userData.value.favourites
+    }
+
+    private fun isComparedDevice(deviceUid: String): Boolean {
+        return deviceUid in _userData.value.compares
     }
 }
