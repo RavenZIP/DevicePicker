@@ -238,6 +238,10 @@ constructor(
 
     init {
         viewModelScope.launch {
+            _deviceUid.collect { uid -> sharedRepository.tryToUpdateDeviceHistory(uid) }
+        }
+
+        viewModelScope.launch {
             _deviceWithImageUrls.collect { device -> sharedRepository.updateCachedDevices(device) }
         }
 
