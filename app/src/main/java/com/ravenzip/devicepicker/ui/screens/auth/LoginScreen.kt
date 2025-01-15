@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,15 +33,9 @@ fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val fieldErrorsState = loginViewModel.fieldErrors.collectAsState().value
     val isLoadingState = loginViewModel.isLoading.collectAsState().value
 
     val snackBarHostState = remember { loginViewModel.snackBarHostState }
-
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val phone = remember { mutableStateOf("") }
-    val code = remember { mutableStateOf("") }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -65,11 +58,10 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
             selectedOption = loginViewModel.authOptionsState.value,
-            email = email,
-            password = password,
-            phone = phone,
-            code = code,
-            fieldErrors = fieldErrorsState,
+            emailState = loginViewModel.emailState,
+            passwordState = loginViewModel.passwordState,
+            phoneState = loginViewModel.phoneState,
+            codeState = loginViewModel.codeState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -82,9 +74,7 @@ fun LoginScreen(
             when (loginViewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
                     loginViewModel.logInWithEmailAndPassword(
-                        email = email.value,
-                        password = password.value,
-                        navigateToHomeScreen = navigateToHomeScreen,
+                        navigateToHomeScreen = navigateToHomeScreen
                     )
                 }
                 AuthVariantsEnum.PHONE -> {}

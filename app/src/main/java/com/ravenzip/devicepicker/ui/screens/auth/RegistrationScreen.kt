@@ -12,7 +12,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,16 +38,10 @@ fun RegistrationScreen(
     registrationViewModel: RegistrationViewModel = hiltViewModel<RegistrationViewModel>(),
     navigateToHomeScreen: () -> Unit,
 ) {
-    val fieldErrorsState = registrationViewModel.fieldErrors.collectAsState().value
     val isLoadingState = registrationViewModel.isLoading.collectAsState().value
     val spinnerTextState = registrationViewModel.spinnerText.collectAsState().value
 
     val snackBarHostState = remember { registrationViewModel.snackBarHostState }
-
-    val email = remember { mutableStateOf("") }
-    val password = remember { mutableStateOf("") }
-    val phone = remember { mutableStateOf("") }
-    val code = remember { mutableStateOf("") }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -70,11 +63,10 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
             selectedOption = registrationViewModel.authOptionsState.value,
-            email = email,
-            password = password,
-            phone = phone,
-            code = code,
-            fieldErrors = fieldErrorsState,
+            emailState = registrationViewModel.emailState,
+            passwordState = registrationViewModel.passwordState,
+            phoneState = registrationViewModel.phoneState,
+            codeState = registrationViewModel.codeState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -103,9 +95,7 @@ fun RegistrationScreen(
             when (registrationViewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
                     registrationViewModel.registrationWithEmailAndPassword(
-                        email = email.value,
-                        password = password.value,
-                        navigateToHomeScreen = navigateToHomeScreen,
+                        navigateToHomeScreen = navigateToHomeScreen
                     )
                 }
 

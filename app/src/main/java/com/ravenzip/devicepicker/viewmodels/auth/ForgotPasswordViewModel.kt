@@ -6,8 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.extensions.functions.showSuccess
 import com.ravenzip.devicepicker.repositories.AuthRepository
-import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.workshop.data.Error
+import com.ravenzip.workshop.forms.Validators
+import com.ravenzip.workshop.forms.state.special.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,25 +16,26 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class ForgotPasswordViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val validationService: ValidationService,
-) : ViewModel() {
+class ForgotPasswordViewModel @Inject constructor(private val authRepository: AuthRepository) :
+    ViewModel() {
     private val _isLoading = MutableStateFlow(false)
-    private val _emailErrors = MutableStateFlow(Error())
+
+    val emailState =
+        TextFieldState(
+            initialValue = "",
+            validators =
+                listOf(
+                    { value -> Validators.required(value) },
+                    { value -> Validators.email(value) },
+                ),
+        )
 
     val isLoading = _isLoading.asStateFlow()
-    val emailErrors = _emailErrors.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
-    fun resetPassword(email: String) {
+    fun resetPassword() {
         viewModelScope.launch {
-            val emailError = validationService.checkEmail(email)
-            _emailErrors.update { emailError }
-
-            if (emailError.value) {
+            if (emailState.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения поля")
                 return@launch
             }
@@ -48,7 +49,7 @@ constructor(
                 return@launch
             }
 
-            val resetResult = authRepository.sendPasswordResetEmail(email)
+            val resetResult = authRepository.sendPasswordResetEmail(emailState.value)
             _isLoading.update { false }
 
             if (resetResult.value == true) {

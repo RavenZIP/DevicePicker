@@ -1,50 +1,70 @@
 package com.ravenzip.devicepicker.viewmodels.auth
 
+import android.util.Patterns.PHONE
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.repositories.AuthRepository
-import com.ravenzip.devicepicker.services.ValidationService
-import com.ravenzip.devicepicker.state.AuthErrorState
+import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.state.FormState
+import com.ravenzip.workshop.forms.state.special.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class LoginViewModel
-@Inject
-constructor(
-    private val authRepository: AuthRepository,
-    private val validationService: ValidationService,
-) : ViewModel() {
+class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
-    private val _fieldErrors = MutableStateFlow(AuthErrorState.default())
 
     val authOptionsState = FormState(initialValue = AuthVariantsEnum.EMAIL)
 
+    val emailState =
+        TextFieldState(
+            initialValue = "",
+            validators =
+                listOf(
+                    { value -> Validators.required(value) },
+                    { value -> Validators.email(value) },
+                ),
+        )
+
+    val passwordState =
+        TextFieldState(
+            initialValue = "",
+            validators =
+                listOf(
+                    { value -> Validators.required(value) },
+                    { value -> Validators.minLength(value, 6) },
+                ),
+        )
+
+    val phoneState =
+        TextFieldState(
+            initialValue = "",
+            validators =
+                listOf(
+                    { value -> Validators.required(value) },
+                    { value ->
+                        if (!PHONE.matcher(value).matches()) "Введен некорректный номер телефона"
+                        else null
+                    },
+                ),
+        )
+
+    val codeState = TextFieldState(initialValue = "")
+
     val isLoading = _isLoading.asStateFlow()
-    val fieldErrors = _fieldErrors.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
-    fun logInWithEmailAndPassword(
-        email: String,
-        password: String,
-        navigateToHomeScreen: () -> Unit,
-    ) {
+    fun logInWithEmailAndPassword(navigateToHomeScreen: () -> Unit) {
         viewModelScope.launch {
-            val emailError = validationService.checkEmail(email)
-            val passwordError = validationService.checkPassword(password)
-            _fieldErrors.update {
-                _fieldErrors.value.copy(email = emailError, password = passwordError)
-            }
-
-            if (emailError.value || passwordError.value) {
+            if (emailState.isInvalid || passwordState.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения полей")
                 return@launch
             }
@@ -58,7 +78,8 @@ constructor(
                 return@launch
             }
 
-            val authResult = authRepository.logInUserWithEmail(email, password)
+            val authResult =
+                authRepository.logInUserWithEmail(emailState.value, passwordState.value)
             if (authResult.value == null) {
                 _isLoading.update { false }
                 snackBarHostState.showError(authResult.error?.message!!)
@@ -67,6 +88,17 @@ constructor(
 
             _isLoading.update { false }
             navigateToHomeScreen()
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            authOptionsState.valueChanges.collect {
+                emailState.reset()
+                passwordState.reset()
+                phoneState.reset()
+                codeState.reset()
+            }
         }
     }
 }

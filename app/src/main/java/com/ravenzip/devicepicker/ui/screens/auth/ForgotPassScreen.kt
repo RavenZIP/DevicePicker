@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,15 +30,13 @@ import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.Icon
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(
     forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel<ForgotPasswordViewModel>()
 ) {
     val isLoadingState = forgotPasswordViewModel.isLoading.collectAsState().value
-    val emailErrorsState = forgotPasswordViewModel.emailErrors.collectAsState().value
     val snackBarHostState = remember { forgotPasswordViewModel.snackBarHostState }
-
-    val email = remember { mutableStateOf("") }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -60,10 +58,9 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         SinglenessOutlinedTextField(
-            text = email,
+            state = forgotPasswordViewModel.emailState,
             label = "Электронная почта",
             leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
-            error = emailErrorsState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
@@ -77,9 +74,7 @@ fun ForgotPasswordScreen(
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(text = "Продолжить") {
-            forgotPasswordViewModel.resetPassword(email = email.value)
-        }
+        SimpleButton(text = "Продолжить") { forgotPasswordViewModel.resetPassword() }
 
         Spacer(modifier = Modifier.height(20.dp))
     }
