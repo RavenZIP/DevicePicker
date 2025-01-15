@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.viewmodels.auth
 
 import androidx.lifecycle.ViewModel
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +24,10 @@ class WelcomeViewModel @Inject constructor(private val authRepository: AuthRepos
             return@flatMapLatest authRepository.reloadUserFlow().zip(
                 flowOf(authRepository.logInAnonymously())
             ) { reloadResult, logInResult ->
-                return@zip if (logInResult.value == null || reloadResult.value == false) {
-                    UiEvent.ShowSnackBar.Error(logInResult.error!!.message)
+                return@zip if (logInResult is Result.Error) {
+                    UiEvent.ShowSnackBar.Error(logInResult.message)
+                } else if (reloadResult is Result.Error) {
+                    UiEvent.ShowSnackBar.Error(reloadResult.message)
                 } else {
                     UiEvent.Navigate()
                 }

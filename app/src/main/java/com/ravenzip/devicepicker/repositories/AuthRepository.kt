@@ -27,17 +27,17 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
         get() = authSources.firebaseUser
 
     fun reloadUserFlow() =
-        flow {
+        flow<Result<Boolean>> {
                 firebaseUser?.reload()?.await()
-                emit(Result.success())
+                emit(Result.Success(true))
             }
             .catch { e ->
                 withContext(Dispatchers.Main) { Log.e("reloadUser", "${e.message}") }
 
                 if (e is FirebaseNetworkException) {
-                    emit(Result.networkError("Не удалось обновить данные о пользователе"))
+                    emit(Result.Error.Network("Не удалось обновить данные о пользователе"))
                 } else {
-                    emit(Result.error("Не удалось обновить данные о пользователе"))
+                    emit(Result.Error.Default("Не удалось обновить данные о пользователе"))
                 }
             }
 
@@ -45,30 +45,30 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     suspend fun reloadUser(): Result<Boolean> {
         return try {
             firebaseUser?.reload()?.await()
-            Result.success(value = true)
+            Result.Success(true)
         } catch (e: FirebaseNetworkException) {
             withContext(Dispatchers.Main) { Log.d("reloadUser", "${e.message}") }
-            Result.networkError(errorMessage = "Не удалось обновить данные о пользователе")
+            Result.Error.Network("Не удалось обновить данные о пользователе")
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("reloadUser", "${e.message}") }
-            Result.error(errorMessage = "Не удалось обновить данные о пользователе")
+            Result.Error.Default("Не удалось обновить данные о пользователе")
         }
     }
 
     suspend fun logInAnonymously(): Result<AuthResult?> {
         return try {
             val result = firebaseAuth.signInAnonymously().await()
-            Result.success(value = result)
+            Result.Success(result)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("logInAnonymously", "${e.message}") }
-            Result.error(errorMessage = "Произошла ошибка при выполнении запроса")
+            Result.Error.Default("Произошла ошибка при выполнении запроса")
         }
     }
 
     suspend fun createUserWithEmail(email: String, password: String): Result<AuthResult?> {
         return try {
             val result = firebaseAuth.createUserWithEmailAndPassword(email, password).await()
-            Result.success(value = result)
+            Result.Success(result)
         } catch (e: FirebaseAuthException) {
             val error = AuthErrorsEnum.getErrorMessage(e)
             withContext(Dispatchers.Main) {
@@ -76,21 +76,21 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result.error(errorMessage = error)
+            Result.Error.Default(error)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "CreateUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
     suspend fun logInUserWithEmail(email: String, password: String): Result<AuthResult?> {
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
-            Result.success(value = result)
+            Result.Success(result)
         } catch (e: FirebaseTooManyRequestsException) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "LoginUserWithEmail")
@@ -100,7 +100,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 )
             }
 
-            Result.error(errorMessage = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         } catch (e: FirebaseAuthException) {
             val error = AuthErrorsEnum.getErrorMessage(e)
             withContext(Dispatchers.Main) {
@@ -108,21 +108,21 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 Log.d("FirebaseAuthException", error)
             }
 
-            Result.error(errorMessage = error)
+            Result.Error.Default(error)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "LoginUserWithEmail")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
     suspend fun sendEmailVerification(): Result<Boolean> {
         return try {
             firebaseUser?.sendEmailVerification()?.await()
-            Result.success(value = true)
+            Result.Success(true)
         } catch (e: FirebaseTooManyRequestsException) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendEmailVerification")
@@ -132,14 +132,14 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
                 )
             }
 
-            Result.error(value = false, errorMessage = AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendEmailVerification")
                 Log.d("Exception", "${e.message}")
             }
 
-            Result.error(value = false, errorMessage = AuthErrorsEnum.ERROR_DEFAULT.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_DEFAULT.value)
         }
     }
 
@@ -151,13 +151,13 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     suspend fun sendPasswordResetEmail(email: String): Result<Boolean> {
         return try {
             firebaseAuth.sendPasswordResetEmail(email).await()
-            Result.success(true)
+            Result.Success(true)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) {
                 Log.d("Method", "SendPasswordResetEmail")
                 Log.d("Exception", "${e.message}")
             }
-            Result.error(value = false, errorMessage = "Ошибка сброса пароля")
+            Result.Error.Default("Ошибка сброса пароля")
         }
     }
 
@@ -169,10 +169,10 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
         return try {
             firebaseUser?.delete()?.await()
             reloadUser()
-            Result.success(true)
+            Result.Success(true)
         } catch (e: Exception) {
             withContext(Dispatchers.Main) { Log.d("DeleteAccount", "${e.message}") }
-            Result.error(value = false, errorMessage = "Ошибка сброса пароля")
+            Result.Error.Default("Ошибка удаления аккаунта")
         }
     }
 }

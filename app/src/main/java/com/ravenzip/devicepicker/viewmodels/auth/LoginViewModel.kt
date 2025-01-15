@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.showError
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.state.FormState
@@ -72,17 +73,17 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
             _isLoading.update { true }
 
             val reloadResult = authRepository.reloadUser()
-            if (reloadResult.value != true) {
+            if (reloadResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showError(reloadResult.error?.message!!)
+                snackBarHostState.showError(reloadResult.message)
                 return@launch
             }
 
             val authResult =
                 authRepository.logInUserWithEmail(emailState.value, passwordState.value)
-            if (authResult.value == null) {
+            if (authResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showError(authResult.error?.message!!)
+                snackBarHostState.showError(authResult.message)
                 return@launch
             }
 

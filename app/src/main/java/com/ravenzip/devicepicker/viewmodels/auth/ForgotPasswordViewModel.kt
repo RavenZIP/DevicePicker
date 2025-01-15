@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.extensions.functions.showSuccess
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.state.special.TextFieldState
@@ -42,23 +43,25 @@ class ForgotPasswordViewModel @Inject constructor(private val authRepository: Au
 
             _isLoading.update { true }
 
-            val isReloadSuccess = authRepository.reloadUser()
-            if (isReloadSuccess.value != true) {
+            val reloadResult = authRepository.reloadUser()
+
+            if (reloadResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showError(isReloadSuccess.error?.message!!)
+                snackBarHostState.showError(reloadResult.message)
                 return@launch
             }
 
             val resetResult = authRepository.sendPasswordResetEmail(emailState.value)
             _isLoading.update { false }
 
-            if (resetResult.value == true) {
-                snackBarHostState.showSuccess(
-                    "Письмо со ссылкой для сброса было успешно отправлено на почту"
-                )
-            } else {
-                snackBarHostState.showError(resetResult.error?.message!!)
+            if (resetResult is Result.Error) {
+                snackBarHostState.showError(resetResult.message)
+                return@launch
             }
+
+            snackBarHostState.showSuccess(
+                "Письмо со ссылкой для сброса было успешно отправлено на почту"
+            )
         }
     }
 }

@@ -3,8 +3,7 @@ package com.ravenzip.devicepicker.viewmodels.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseUser
-import com.ravenzip.devicepicker.constants.enums.OperationErrorTypeEnum
-import com.ravenzip.devicepicker.constants.enums.StatusEnum
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.state.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,15 +31,18 @@ class SplashViewModel @Inject constructor(private val authRepository: AuthReposi
             .map { reloadResult ->
                 delay(500)
 
-                if (reloadResult.status == StatusEnum.OK) {
-                    UiState.Success("Загрузка данных завершена")
-                } else {
-                    val errorMessage =
-                        if (reloadResult.error!!.type == OperationErrorTypeEnum.NETWORK_ERROR)
-                            "Ошибка сети. Попробуйте позднее"
-                        else "Произошла неизвестная ошибка"
+                when (reloadResult) {
+                    is Result.Success -> {
+                        UiState.Success("Загрузка данных завершена")
+                    }
 
-                    UiState.Error(errorMessage)
+                    is Result.Error.Network -> {
+                        UiState.Error("Ошибка сети. Попробуйте позднее")
+                    }
+
+                    is Result.Error.Default -> {
+                        UiState.Error("Произошла неизвестная ошибка")
+                    }
                 }
             }
             .stateIn(

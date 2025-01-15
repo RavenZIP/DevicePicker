@@ -9,6 +9,7 @@ import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.extensions.functions.showWarning
+import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.UserRepository
 import com.ravenzip.workshop.forms.Validators
@@ -90,10 +91,10 @@ constructor(
 
             _isLoading.update { true }
 
-            val isReloadSuccess = authRepository.reloadUser()
-            if (isReloadSuccess.value != true) {
+            val reloadResult = authRepository.reloadUser()
+            if (reloadResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showError(isReloadSuccess.error?.message!!)
+                snackBarHostState.showError(reloadResult.message)
                 return@launch
             }
 
@@ -101,18 +102,18 @@ constructor(
 
             val authResult =
                 authRepository.createUserWithEmail(emailState.value, passwordState.value)
-            if (authResult.value == null) {
+            if (authResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showError(authResult.error?.message!!)
+                snackBarHostState.showError(authResult.message)
                 return@launch
             }
 
             _spinnerText.update { "Отправка письма с подтверждением..." }
 
             val messageResult = authRepository.sendEmailVerification()
-            if (messageResult.value != true) {
+            if (messageResult is Result.Error) {
                 _isLoading.update { false }
-                snackBarHostState.showWarning(messageResult.error?.message!!)
+                snackBarHostState.showWarning(messageResult.message)
                 authRepository.deleteAccount() // TODO проверять падение запроса
                 return@launch
             }
