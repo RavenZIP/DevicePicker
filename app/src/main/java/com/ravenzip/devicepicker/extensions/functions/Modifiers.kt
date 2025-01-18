@@ -1,7 +1,6 @@
 package com.ravenzip.devicepicker.extensions.functions
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -13,8 +12,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 
 /** Контейнер для маленького изображения */
 fun Modifier.smallImageContainer(
@@ -36,7 +33,3 @@ fun Modifier.bigImageContainer(
     color: Color = Color.White,
     padding: PaddingValues = PaddingValues(vertical = 15.dp, horizontal = 15.dp),
 ) = this then (this.fillMaxWidth().height(height).background(color).padding(padding))
-
-/** Клик с запуском сопрограммы */
-fun Modifier.suspendOnClick(coroutineScope: CoroutineScope, onClick: suspend () -> Unit) =
-    this.clickable { coroutineScope.launch { onClick() } }
