@@ -33,8 +33,11 @@ import com.ravenzip.workshop.data.icon.IconConfig
 @Composable
 fun UserProfileScreenContent(
     userProfileViewModel: UserProfileViewModel,
-    onClickToAdminPanel: () -> Unit,
-    onClickToDeviceHistory: () -> Unit,
+    navigateToAdminPanel: () -> Unit,
+    navigateToUserSettings: () -> Unit,
+    navigateToCompany: () -> Unit,
+    navigateToDeviceHistory: () -> Unit,
+    navigateToReviews: () -> Unit,
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
@@ -60,7 +63,7 @@ fun UserProfileScreenContent(
                 iconConfig = IconConfig(color = MaterialTheme.colorScheme.tertiary),
                 colors = ButtonDefaults.inverseMixColors(),
             ) {
-                onClickToAdminPanel()
+                navigateToAdminPanel()
             }
             Spacer(modifier = Modifier.padding(top = 15.dp))
         }
@@ -71,7 +74,23 @@ fun UserProfileScreenContent(
             icon = Icon.ResourceIcon(R.drawable.i_user_settings),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            navigateToUserSettings()
+        }
+
+        Spacer(modifier = Modifier.padding(top = 15.dp))
+
+        CustomButton(
+            title = "Компания",
+            titleConfig = TextConfig.onSurfaceH2,
+            text = "Создать компанию, управлять ранее созданной или вступить в уже существующую",
+            textConfig = TextConfig.onSurface85Small,
+            icon = Icon.ResourceIcon(R.drawable.i_company),
+            iconConfig = IconConfig.Primary,
+            colors = ButtonDefaults.containerColor(),
+        ) {
+            navigateToCompany()
+        }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
 
@@ -84,7 +103,7 @@ fun UserProfileScreenContent(
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {
-            onClickToDeviceHistory()
+            navigateToDeviceHistory()
         }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
@@ -97,7 +116,9 @@ fun UserProfileScreenContent(
             icon = Icon.ResourceIcon(R.drawable.i_feedback),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            navigateToReviews()
+        }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
 

@@ -11,8 +11,11 @@ import com.ravenzip.workshop.components.TopAppBar
 @Composable
 fun UserProfileScaffold(
     userProfileViewModel: UserProfileViewModel,
-    onClickToAdminPanel: () -> Unit,
-    onClickToDeviceHistory: () -> Unit,
+    navigateToAdminPanel: () -> Unit,
+    navigateToUserSettings: () -> Unit,
+    navigateToCompany: () -> Unit,
+    navigateToDeviceHistory: () -> Unit,
+    navigateToReviews: () -> Unit,
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
@@ -20,8 +23,11 @@ fun UserProfileScaffold(
         ->
         UserProfileScreenContent(
             userProfileViewModel = userProfileViewModel,
-            onClickToAdminPanel = onClickToAdminPanel,
-            onClickToDeviceHistory = onClickToDeviceHistory,
+            navigateToAdminPanel = navigateToAdminPanel,
+            navigateToUserSettings = navigateToUserSettings,
+            navigateToCompany = navigateToCompany,
+            navigateToDeviceHistory = navigateToDeviceHistory,
+            navigateToReviews = navigateToReviews,
             navigateToSplashScreen = navigateToSplashScreen,
             padding = innerPadding,
         )
