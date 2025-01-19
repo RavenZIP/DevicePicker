@@ -111,10 +111,6 @@ fun SplashScreen(
                         letterSpacing = 0.sp,
                     )
                 }
-
-                else -> {
-                    // do nothing
-                }
             }
         }
     }

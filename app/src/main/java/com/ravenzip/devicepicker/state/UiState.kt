@@ -2,9 +2,6 @@ package com.ravenzip.devicepicker.state
 
 /** Состояние UI */
 sealed class UiState<out T> {
-    /** Дефолтное состояние */
-    class Default : UiState<Nothing>()
-
     /** Загрузка данных */
     data class Loading(val message: String) : UiState<Nothing>()
 

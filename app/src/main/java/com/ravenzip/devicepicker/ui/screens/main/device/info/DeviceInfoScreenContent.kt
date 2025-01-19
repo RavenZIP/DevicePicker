@@ -197,10 +197,6 @@ fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: Padding
                     Text(text = "При загрузке данных произошла ошибка")
                 }
             }
-
-            else -> {
-                // do nothing
-            }
         }
     }
 }
