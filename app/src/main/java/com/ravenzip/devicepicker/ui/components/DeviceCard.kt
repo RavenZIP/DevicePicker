@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -59,20 +61,16 @@ fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
 
             Spacer(modifier = Modifier.height(5.dp))
 
-            Text(
-                text = device.price.currentFormatted,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-            )
-            SmallText(text = device.model)
+            Text(text = device.type, fontWeight = FontWeight.W500)
+            Text(text = device.model, fontSize = 14.sp, fontWeight = FontWeight.W500)
 
-            TextWithIcon(
-                icon = ImageVector.vectorResource(R.drawable.i_medal),
-                iconSize = 14.dp,
-                text = "${device.rating} (${device.reviewsCount})",
-                spacerWidth = 5.dp,
-                smallText = true,
-            )
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Specifications(device.diagonal, device.cpu, device.camera, device.battery)
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            SimpleRatingWithReviewsCount(device.rating, device.reviewsCount)
         }
     }
 }
@@ -95,49 +93,18 @@ fun RowDeviceCard(
             VerticalCenterRow {
                 FrescoImage(
                     imageUrl = device.imageUrl,
-                    modifier = Modifier.smallImageContainer(width = 100.dp, height = 150.dp),
+                    modifier = Modifier.smallImageContainer(width = 100.dp, height = 170.dp),
                     imageOptions = ImageOptions(contentScale = ContentScale.Fit),
                 )
 
                 DeviceInfoContainer {
                     Column(modifier = Modifier.padding(10.dp)) {
-                        Text(
-                            text = device.model,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Medium,
-                            letterSpacing = 0.sp,
-                            lineHeight = 18.sp,
-                        )
+                        Text(text = device.type, fontSize = 18.sp, fontWeight = FontWeight.W500)
+                        Text(text = device.model, fontSize = 16.sp, fontWeight = FontWeight.W500)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        VerticalCenterRow {
-                            Card(
-                                shape = RoundedCornerShape(10.dp),
-                                colors = CardDefaults.veryLightPrimary(),
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(5.dp),
-                                    text = device.type,
-                                    fontSize = 14.sp,
-                                    letterSpacing = 0.sp,
-                                )
-                            }
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Card(
-                                shape = RoundedCornerShape(10.dp),
-                                colors = CardDefaults.veryLightPrimary(),
-                            ) {
-                                Text(
-                                    modifier = Modifier.padding(5.dp),
-                                    text = "${device.diagonal}\"",
-                                    fontSize = 14.sp,
-                                    letterSpacing = 0.sp,
-                                )
-                            }
-                        }
+                        Specifications(device.diagonal, device.cpu, device.camera, device.battery)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
@@ -149,42 +116,8 @@ fun RowDeviceCard(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Card(
-                            shape = RoundedCornerShape(10.dp),
-                            colors = CardDefaults.veryLightPrimary(),
-                        ) {
-                            Row(
-                                modifier = Modifier.padding(5.dp),
-                                verticalAlignment = Alignment.CenterVertically,
-                            ) {
-                                Spacer(modifier = Modifier.width(5.dp))
-
-                                RatingBar(
-                                    rating = device.rating.toFloat(),
-                                    imageVectorEmpty =
-                                        ImageVector.vectorResource(R.drawable.i_medal),
-                                    imageVectorFilled =
-                                        ImageVector.vectorResource(R.drawable.i_medal),
-                                    tintEmpty = MaterialTheme.colorScheme.primary.copy(0.5f),
-                                    tintFilled = MaterialTheme.colorScheme.primary,
-                                    gestureStrategy = GestureStrategy.None,
-                                    itemSize = 18.dp,
-                                ) {}
-
-                                Spacer(modifier = Modifier.width(5.dp))
-
-                                Text(
-                                    text = device.reviewsCount.toString(),
-                                    fontSize = 14.sp,
-                                    letterSpacing = 0.sp,
-                                )
-
-                                Spacer(modifier = Modifier.width(5.dp))
-                            }
-                        }
+                        RatingWithReviewsCount(device.rating, device.reviewsCount)
                     }
-
-                    Spacer(modifier = Modifier.height(5.dp))
                 }
             }
 
@@ -220,14 +153,98 @@ fun RowDeviceCard(
 }
 
 @Composable
+private fun SimpleRatingWithReviewsCount(rating: Double, reviewsCount: Int) {
+    Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+        TextWithIcon(
+            modifier = Modifier.padding(5.dp),
+            icon = ImageVector.vectorResource(R.drawable.i_medal),
+            iconSize = 16.dp,
+            text = "$rating (${reviewsCount})",
+            spacerWidth = 5.dp,
+            smallText = true,
+        )
+    }
+}
+
+@Composable
+private fun RatingWithReviewsCount(rating: Double, reviewsCount: Int) {
+    Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+        Row(
+            modifier = Modifier.padding(5.dp).horizontalScroll(rememberScrollState()),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            RatingBar(
+                rating = rating.toFloat(),
+                imageVectorEmpty = ImageVector.vectorResource(R.drawable.i_medal),
+                imageVectorFilled = ImageVector.vectorResource(R.drawable.i_medal),
+                tintEmpty = MaterialTheme.colorScheme.primary.copy(0.5f),
+                tintFilled = MaterialTheme.colorScheme.primary,
+                gestureStrategy = GestureStrategy.None,
+                itemSize = 18.dp,
+            ) {}
+
+            Spacer(modifier = Modifier.width(5.dp))
+
+            Text(text = "$rating (${reviewsCount})", fontSize = 14.sp, letterSpacing = 0.sp)
+        }
+    }
+}
+
+@Composable
+private fun Specifications(diagonal: Double, cpu: String, camera: Int, battery: Int) {
+    VerticalCenterRow(modifier = Modifier.horizontalScroll(rememberScrollState())) {
+        Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+            Text(
+                modifier = Modifier.padding(5.dp),
+                text = "${diagonal}\"",
+                fontSize = 14.sp,
+                letterSpacing = 0.sp,
+            )
+        }
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+            Text(
+                modifier = Modifier.padding(5.dp),
+                text = cpu,
+                fontSize = 14.sp,
+                letterSpacing = 0.sp,
+            )
+        }
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+            Text(
+                modifier = Modifier.padding(5.dp),
+                text = "$camera Мп",
+                fontSize = 14.sp,
+                letterSpacing = 0.sp,
+            )
+        }
+
+        Spacer(modifier = Modifier.width(5.dp))
+
+        Card(shape = RoundedCornerShape(10.dp), colors = CardDefaults.veryLightPrimary()) {
+            Text(
+                modifier = Modifier.padding(5.dp),
+                text = "$battery мАч",
+                fontSize = 14.sp,
+                letterSpacing = 0.sp,
+            )
+        }
+    }
+}
+
+@Composable
 private fun DeviceInfoContainer(content: @Composable () -> Unit) {
     Column(
         modifier =
             Modifier.padding(start = 10.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary.copy(0.05f))
-                .height(180.dp),
+                .background(MaterialTheme.colorScheme.primary.copy(0.05f)),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         content()

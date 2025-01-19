@@ -8,6 +8,9 @@ interface IDeviceCompact {
     val type: String
     val model: String
     val diagonal: Double
+    val cpu: String
+    val battery: Int
+    val camera: Int
     val price: IPrice
     val rating: Double
     val reviewsCount: Int

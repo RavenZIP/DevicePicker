@@ -81,6 +81,7 @@ fun BigText(text: String, modifier: Modifier = Modifier, fontWeight: FontWeight 
 
 @Composable
 fun TextWithIcon(
+    modifier: Modifier = Modifier.fillMaxWidth(),
     icon: ImageVector,
     iconSize: Dp = 22.dp,
     text: String,
@@ -90,7 +91,7 @@ fun TextWithIcon(
     smallText: Boolean = false,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = horizontalArrangement,
     ) {
