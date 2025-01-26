@@ -9,7 +9,7 @@ import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
-import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScaffold
+import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.home.HomeScreenScaffold
 import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
 
@@ -35,7 +35,10 @@ fun HomeNavigationGraph(
         }
 
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
-            DeviceInfoScaffold(padding = padding, navigateBack = { navController.popBackStack() })
+            DeviceInfoScreenScaffold(
+                padding = padding,
+                navigateBack = { navController.popBackStack() },
+            )
         }
     }
 }

@@ -87,7 +87,7 @@ import com.skydoves.landscapist.fresco.FrescoImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceInfoContent(deviceInfoViewModel: DeviceInfoViewModel, padding: PaddingValues) {
+fun DeviceInfoScreenContent(deviceInfoViewModel: DeviceInfoViewModel, padding: PaddingValues) {
     val uiState = deviceInfoViewModel.device.collectAsState().value
 
     Box(modifier = Modifier.fillMaxSize().padding(padding)) {

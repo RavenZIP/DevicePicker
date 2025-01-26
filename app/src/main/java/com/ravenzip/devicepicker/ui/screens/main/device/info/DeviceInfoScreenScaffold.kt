@@ -17,7 +17,7 @@ import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
-fun DeviceInfoScaffold(
+fun DeviceInfoScreenScaffold(
     deviceInfoViewModel: DeviceInfoViewModel = hiltViewModel<DeviceInfoViewModel>(),
     navigateBack: () -> Unit,
     padding: PaddingValues,
@@ -37,7 +37,7 @@ fun DeviceInfoScaffold(
         modifier = Modifier.padding(padding),
         topBar = { TopAppBar(title = "", backArrow = backArrow, items = topAppBarItems) },
     ) { innerPadding ->
-        DeviceInfoContent(deviceInfoViewModel = deviceInfoViewModel, padding = innerPadding)
+        DeviceInfoScreenContent(deviceInfoViewModel = deviceInfoViewModel, padding = innerPadding)
     }
 
     SnackBar(snackBarHostState = snackBarHostState)
