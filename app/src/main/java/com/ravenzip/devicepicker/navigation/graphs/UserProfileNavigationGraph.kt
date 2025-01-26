@@ -13,7 +13,7 @@ import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.admin.AdminScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.CompanyScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.history.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.history.DeviceHistoryScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.profile.UserProfileScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.reviews.ReviewsScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.settings.UserSettingsScreenScaffold
@@ -58,10 +58,12 @@ fun UserProfileNavigationGraph(
             CompanyScreenScaffold(padding = padding)
         }
 
-        navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) { uid ->
-            DeviceInfoScreenScaffold(
+        navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
+            DeviceHistoryScreenScaffold(
                 padding = padding,
-                navigateToDevice = { navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}") },
+                navigateToDevice = { uid ->
+                    navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}")
+                },
             )
         }
 

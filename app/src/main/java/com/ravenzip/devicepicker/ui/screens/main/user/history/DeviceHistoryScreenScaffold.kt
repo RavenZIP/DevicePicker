@@ -10,7 +10,7 @@ import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
 import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
-fun DeviceInfoScreenScaffold(
+fun DeviceHistoryScreenScaffold(
     deviceHistoryViewModel: DeviceHistoryViewModel = hiltViewModel<DeviceHistoryViewModel>(),
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
