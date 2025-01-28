@@ -11,7 +11,7 @@ import com.ravenzip.devicepicker.viewmodels.main.SearchViewModel
 import com.ravenzip.workshop.components.SearchBar
 
 @Composable
-fun SearchScreenScaffold(searchViewModel: SearchViewModel, padding: PaddingValues) {
+fun SearchScreenScaffold(viewModel: SearchViewModel, padding: PaddingValues) {
     val query = rememberSaveable { mutableStateOf("") }
 
     Scaffold(
@@ -19,8 +19,8 @@ fun SearchScreenScaffold(searchViewModel: SearchViewModel, padding: PaddingValue
         topBar = { SearchBar(query = query, placeholder = "Введите текст...", onSearch = {}) },
     ) { innerPadding ->
         SearchScreenContent(
-            brandsState = searchViewModel.brandList,
-            deviceTypesState = searchViewModel.deviceTypeList,
+            brandsState = viewModel.brandList,
+            deviceTypesState = viewModel.deviceTypeList,
             innerPadding,
         )
     }

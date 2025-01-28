@@ -16,11 +16,11 @@ import com.ravenzip.devicepicker.viewmodels.user.DeviceHistoryViewModel
 
 @Composable
 fun DeviceHistoryScreenContent(
-    deviceHistoryViewModel: DeviceHistoryViewModel,
+    viewModel: DeviceHistoryViewModel,
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
-    val deviceHistoryState = deviceHistoryViewModel.deviceHistory.collectAsState().value
+    val deviceHistoryState = viewModel.deviceHistory.collectAsState().value
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -31,8 +31,8 @@ fun DeviceHistoryScreenContent(
         items(deviceHistoryState) { device ->
             RowDeviceCard(
                 device = device,
-                onFavouriteClick = { deviceHistoryViewModel.tryToUpdateFavourites(device.uid) },
-                onCompareClick = { deviceHistoryViewModel.tryToUpdateCompares(device.uid) },
+                onFavouriteClick = { viewModel.tryToUpdateFavourites(device.uid) },
+                onCompareClick = { viewModel.tryToUpdateCompares(device.uid) },
                 onCardClick = { navigateToDevice(device.uid) },
             )
         }

@@ -3,6 +3,7 @@ package com.ravenzip.devicepicker.viewmodels.auth
 import androidx.lifecycle.ViewModel
 import com.ravenzip.devicepicker.model.result.Result
 import com.ravenzip.devicepicker.repositories.AuthRepository
+import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

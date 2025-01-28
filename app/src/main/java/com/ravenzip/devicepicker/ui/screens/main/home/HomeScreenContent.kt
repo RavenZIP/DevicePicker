@@ -30,18 +30,18 @@ import com.ravenzip.workshop.data.icon.IconConfig
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
-    homeViewModel: HomeViewModel,
+    viewModel: HomeViewModel,
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
-    val devices = homeViewModel.devicesInSelectedCategory.collectAsStateWithLifecycle().value
+    val devices = viewModel.devicesInSelectedCategory.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            state = homeViewModel.selectedCategory,
+            state = viewModel.selectedCategory,
             source = TagsEnum.entries,
             viewOptions =
                 TagsEnum.entries.associate { item ->

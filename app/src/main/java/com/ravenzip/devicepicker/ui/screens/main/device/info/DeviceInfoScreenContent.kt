@@ -33,12 +33,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -58,6 +60,7 @@ import com.ravenzip.devicepicker.constants.map.colorMap
 import com.ravenzip.devicepicker.constants.map.specificationCategoriesMap
 import com.ravenzip.devicepicker.constants.map.tagsNameMap
 import com.ravenzip.devicepicker.extensions.functions.bigImageContainer
+import com.ravenzip.devicepicker.extensions.functions.showMessage
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Tag
@@ -69,6 +72,7 @@ import com.ravenzip.devicepicker.ui.components.HorizontalCenterRow
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.components.TextWithIcon
 import com.ravenzip.devicepicker.ui.components.VerticalCenterRow
+import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
 import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.BoxedChipGroup
@@ -87,8 +91,9 @@ import com.skydoves.landscapist.fresco.FrescoImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceInfoScreenContent(deviceInfoViewModel: DeviceInfoViewModel, padding: PaddingValues) {
-    val uiState = deviceInfoViewModel.device.collectAsState().value
+fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, padding: PaddingValues) {
+    val uiState = viewModel.device.collectAsState().value
+    val snackBarHostState = remember { SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize().padding(padding)) {
         when (uiState) {
@@ -99,13 +104,12 @@ fun DeviceInfoScreenContent(deviceInfoViewModel: DeviceInfoViewModel, padding: P
             is UiState.Success -> {
                 val device = uiState.data
 
-                val title = deviceInfoViewModel.title.collectAsState().value
-                val specifications = deviceInfoViewModel.specifications.collectAsState().value
-                val shortTags = deviceInfoViewModel.shortTags.collectAsState().value
-                val tags = deviceInfoViewModel.tags.collectAsState().value
-                val feedbacks = deviceInfoViewModel.feedbacks.collectAsState().value
-                val specificationsKeys =
-                    deviceInfoViewModel.specificationsKeys.collectAsState().value
+                val title = viewModel.title.collectAsState().value
+                val specifications = viewModel.specifications.collectAsState().value
+                val shortTags = viewModel.shortTags.collectAsState().value
+                val tags = viewModel.tags.collectAsState().value
+                val feedbacks = viewModel.feedbacks.collectAsState().value
+                val specificationsKeys = viewModel.specificationsKeys.collectAsState().value
 
                 val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
                 val sheetState = rememberModalBottomSheetState()
@@ -199,6 +203,8 @@ fun DeviceInfoScreenContent(deviceInfoViewModel: DeviceInfoViewModel, padding: P
             }
         }
     }
+
+    UiEventEffect(viewModel.uiEvent) { event -> snackBarHostState.showMessage(event.message) }
 }
 
 @Composable

@@ -36,7 +36,7 @@ fun MainNavigationGraph(
 
         // Поиск
         navigateWithSlideAnimation(route = BottomBarGraph.SEARCH) {
-            SearchScreenScaffold(searchViewModel = searchViewModel, padding = padding)
+            SearchScreenScaffold(viewModel = searchViewModel, padding = padding)
         }
 
         // Избранное

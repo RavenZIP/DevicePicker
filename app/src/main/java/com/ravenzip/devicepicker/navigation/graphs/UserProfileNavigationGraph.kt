@@ -33,7 +33,7 @@ fun UserProfileNavigationGraph(
     ) {
         navigateWithSlideAnimation(UserProfileGraph.USER_PROFILE_ROOT) {
             UserProfileScaffold(
-                userProfileViewModel = userProfileViewModel,
+                viewModel = userProfileViewModel,
                 navigateToAdminPanel = { navController.navigate(UserProfileGraph.ADMIN_PANEL) },
                 navigateToUserSettings = { navController.navigate(UserProfileGraph.USER_SETTINGS) },
                 navigateToCompany = { navController.navigate(UserProfileGraph.COMPANY) },

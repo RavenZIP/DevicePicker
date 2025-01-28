@@ -10,7 +10,7 @@ import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
 fun UserProfileScaffold(
-    userProfileViewModel: UserProfileViewModel,
+    viewModel: UserProfileViewModel,
     navigateToAdminPanel: () -> Unit,
     navigateToUserSettings: () -> Unit,
     navigateToCompany: () -> Unit,
@@ -22,7 +22,7 @@ fun UserProfileScaffold(
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar("Профиль") }) { innerPadding
         ->
         UserProfileScreenContent(
-            userProfileViewModel = userProfileViewModel,
+            viewModel = viewModel,
             navigateToAdminPanel = navigateToAdminPanel,
             navigateToUserSettings = navigateToUserSettings,
             navigateToCompany = navigateToCompany,

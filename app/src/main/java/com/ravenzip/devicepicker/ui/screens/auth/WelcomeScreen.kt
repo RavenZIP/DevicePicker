@@ -29,6 +29,7 @@ import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.WelcomeEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.showError
+import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.viewmodels.auth.WelcomeViewModel
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
 import com.ravenzip.workshop.components.AlertDialog
@@ -40,15 +41,15 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @Composable
 fun WelcomeScreen(
-    welcomeViewModel: WelcomeViewModel = hiltViewModel<WelcomeViewModel>(),
+    viewModel: WelcomeViewModel = hiltViewModel(),
     navigateToRegistrationScreen: () -> Unit,
     navigateToLoginScreen: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
     val dialogWindowIsShowed =
-        welcomeViewModel.alertDialog.isShowed.collectAsStateWithLifecycle(false).value
+        viewModel.alertDialog.isShowed.collectAsStateWithLifecycle(false).value
 
-    val isLoading = welcomeViewModel.isLoading.collectAsStateWithLifecycle(false).value
+    val isLoading = viewModel.isLoading.collectAsStateWithLifecycle(false).value
 
     val snackBarHostState = remember { SnackbarHostState() }
     val pagerState = rememberPagerState(pageCount = { 4 })
@@ -85,7 +86,7 @@ fun WelcomeScreen(
                         isFinal = true,
                         navigateToRegistrationScreen = navigateToRegistrationScreen,
                         navigateToLoginScreen = navigateToLoginScreen,
-                        continueWithoutAuthClick = { welcomeViewModel.alertDialog.show() },
+                        continueWithoutAuthClick = { viewModel.alertDialog.show() },
                     )
                 }
             }
@@ -102,7 +103,7 @@ fun WelcomeScreen(
         }
     }
 
-    UiEventEffect(welcomeViewModel.uiEvent) { event ->
+    UiEventEffect(viewModel.uiEvent) { event ->
         when (event) {
             is UiEvent.ShowSnackBar.Error -> {
                 snackBarHostState.showError(event.message)
@@ -123,8 +124,8 @@ fun WelcomeScreen(
             text = WelcomeEnum.DIALOG_WINDOW.text,
             onDismissText = "Назад",
             onConfirmationText = "Продолжить",
-            onDismiss = { welcomeViewModel.alertDialog.dismiss() },
-            onConfirmation = { welcomeViewModel.alertDialog.confirm() },
+            onDismiss = { viewModel.alertDialog.dismiss() },
+            onConfirmation = { viewModel.alertDialog.confirm() },
         )
     }
 

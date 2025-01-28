@@ -34,11 +34,11 @@ import com.ravenzip.devicepicker.viewmodels.auth.SplashViewModel
 
 @Composable
 fun SplashScreen(
-    splashViewModel: SplashViewModel = hiltViewModel<SplashViewModel>(),
+    viewModel: SplashViewModel = hiltViewModel(),
     navigateToAuthentication: () -> Unit,
     navigateToMain: () -> Unit,
 ) {
-    val uiState = splashViewModel.uiState.collectAsStateWithLifecycle().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface),
@@ -117,8 +117,7 @@ fun SplashScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is UiState.Success) {
-            if (splashViewModel.firebaseUser !== null) navigateToMain()
-            else navigateToAuthentication()
+            if (viewModel.firebaseUser !== null) navigateToMain() else navigateToAuthentication()
         }
     }
 }

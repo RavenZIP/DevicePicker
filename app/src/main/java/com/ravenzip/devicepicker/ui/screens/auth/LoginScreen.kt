@@ -29,13 +29,13 @@ import com.ravenzip.workshop.components.Spinner
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel<LoginViewModel>(),
+    viewModel: LoginViewModel = hiltViewModel(),
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val isLoadingState = loginViewModel.isLoading.collectAsState().value
+    val isLoadingState = viewModel.isLoading.collectAsState().value
 
-    val snackBarHostState = remember { loginViewModel.snackBarHostState }
+    val snackBarHostState = remember { viewModel.snackBarHostState }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -57,25 +57,23 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = loginViewModel.authOptionsState.value,
-            emailState = loginViewModel.emailState,
-            passwordState = loginViewModel.passwordState,
-            phoneState = loginViewModel.phoneState,
-            codeState = loginViewModel.codeState,
+            selectedOption = viewModel.authOptionsState.value,
+            emailState = viewModel.emailState,
+            passwordState = viewModel.passwordState,
+            phoneState = viewModel.phoneState,
+            codeState = viewModel.codeState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(formState = loginViewModel.authOptionsState, title = "Выбор варианта входа")
+        AuthOptions(formState = viewModel.authOptionsState, title = "Выбор варианта входа")
     }
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            when (loginViewModel.authOptionsState.value) {
+            when (viewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
-                    loginViewModel.logInWithEmailAndPassword(
-                        navigateToHomeScreen = navigateToHomeScreen
-                    )
+                    viewModel.logInWithEmailAndPassword(navigateToHomeScreen = navigateToHomeScreen)
                 }
                 AuthVariantsEnum.PHONE -> {}
                 AuthVariantsEnum.GOOGLE -> {}

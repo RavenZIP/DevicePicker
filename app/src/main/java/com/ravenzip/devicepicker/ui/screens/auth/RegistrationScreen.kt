@@ -35,13 +35,13 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @Composable
 fun RegistrationScreen(
-    registrationViewModel: RegistrationViewModel = hiltViewModel<RegistrationViewModel>(),
+    viewModel: RegistrationViewModel = hiltViewModel(),
     navigateToHomeScreen: () -> Unit,
 ) {
-    val isLoadingState = registrationViewModel.isLoading.collectAsState().value
-    val spinnerTextState = registrationViewModel.spinnerText.collectAsState().value
+    val isLoadingState = viewModel.isLoading.collectAsState().value
+    val spinnerTextState = viewModel.spinnerText.collectAsState().value
 
-    val snackBarHostState = remember { registrationViewModel.snackBarHostState }
+    val snackBarHostState = remember { viewModel.snackBarHostState }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -62,27 +62,21 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = registrationViewModel.authOptionsState.value,
-            emailState = registrationViewModel.emailState,
-            passwordState = registrationViewModel.passwordState,
-            phoneState = registrationViewModel.phoneState,
-            codeState = registrationViewModel.codeState,
+            selectedOption = viewModel.authOptionsState.value,
+            emailState = viewModel.emailState,
+            passwordState = viewModel.passwordState,
+            phoneState = viewModel.phoneState,
+            codeState = viewModel.codeState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(
-            formState = registrationViewModel.authOptionsState,
-            title = "Выбор варианта регистрации",
-        )
+        AuthOptions(formState = viewModel.authOptionsState, title = "Выбор варианта регистрации")
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = Icon.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
-            text =
-                registrationViewModel.getSelectedOptionDescription(
-                    registrationViewModel.authOptionsState.value
-                ),
+            text = viewModel.getSelectedOptionDescription(viewModel.authOptionsState.value),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -92,9 +86,9 @@ fun RegistrationScreen(
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
-            when (registrationViewModel.authOptionsState.value) {
+            when (viewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
-                    registrationViewModel.registrationWithEmailAndPassword(
+                    viewModel.registrationWithEmailAndPassword(
                         navigateToHomeScreen = navigateToHomeScreen
                     )
                 }

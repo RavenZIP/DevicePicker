@@ -32,11 +32,9 @@ import com.ravenzip.workshop.data.icon.Icon
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ForgotPasswordScreen(
-    forgotPasswordViewModel: ForgotPasswordViewModel = hiltViewModel<ForgotPasswordViewModel>()
-) {
-    val isLoadingState = forgotPasswordViewModel.isLoading.collectAsState().value
-    val snackBarHostState = remember { forgotPasswordViewModel.snackBarHostState }
+fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
+    val isLoadingState = viewModel.isLoading.collectAsState().value
+    val snackBarHostState = remember { viewModel.snackBarHostState }
 
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -58,7 +56,7 @@ fun ForgotPasswordScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         SinglenessOutlinedTextField(
-            state = forgotPasswordViewModel.emailState,
+            state = viewModel.emailState,
             label = "Электронная почта",
             leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
         )
@@ -74,7 +72,7 @@ fun ForgotPasswordScreen(
 
     BottomContainer {
         Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(text = "Продолжить") { forgotPasswordViewModel.resetPassword() }
+        SimpleButton(text = "Продолжить") { viewModel.resetPassword() }
 
         Spacer(modifier = Modifier.height(20.dp))
     }

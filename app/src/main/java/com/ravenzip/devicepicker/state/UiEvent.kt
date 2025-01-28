@@ -1,3 +1,5 @@
+package com.ravenzip.devicepicker.state
+
 /** Действия UI */
 sealed class UiEvent {
     /** Выполнить навигацию */

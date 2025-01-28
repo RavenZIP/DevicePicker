@@ -18,12 +18,11 @@ import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
 fun DeviceInfoScreenScaffold(
-    deviceInfoViewModel: DeviceInfoViewModel = hiltViewModel<DeviceInfoViewModel>(),
+    viewModel: DeviceInfoViewModel = hiltViewModel(),
     navigateBack: () -> Unit,
     padding: PaddingValues,
 ) {
-    val topAppBarItems = deviceInfoViewModel.topAppBarButtons.collectAsState().value
-    val snackBarHostState = remember { deviceInfoViewModel.snackBarHostState }
+    val topAppBarItems = viewModel.topAppBarButtons.collectAsState().value
 
     val backArrow = remember {
         BackArrow(
@@ -37,8 +36,8 @@ fun DeviceInfoScreenScaffold(
         modifier = Modifier.padding(padding),
         topBar = { TopAppBar(title = "", backArrow = backArrow, items = topAppBarItems) },
     ) { innerPadding ->
-        DeviceInfoScreenContent(deviceInfoViewModel = deviceInfoViewModel, padding = innerPadding)
+        DeviceInfoScreenContent(viewModel = viewModel, padding = innerPadding)
     }
 
-    SnackBar(snackBarHostState = snackBarHostState)
+    SnackBar(snackBarHostState = viewModel.snackBarHostState)
 }

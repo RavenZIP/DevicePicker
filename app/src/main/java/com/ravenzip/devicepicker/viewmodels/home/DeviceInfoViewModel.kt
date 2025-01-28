@@ -5,7 +5,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.extensions.functions.showMessage
 import com.ravenzip.devicepicker.model.ButtonData
 import com.ravenzip.devicepicker.model.Feedback
 import com.ravenzip.devicepicker.model.device.Device
@@ -16,6 +15,7 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications.Compa
 import com.ravenzip.devicepicker.repositories.DeviceRepository
 import com.ravenzip.devicepicker.repositories.ImageRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
+import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.workshop.data.appbar.AppBarItem
 import com.ravenzip.workshop.data.icon.Icon
@@ -236,6 +236,15 @@ constructor(
                 initialValue = listOf(),
             )
 
+    val uiEvent =
+        merge(
+                _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
+                _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
+                _deviceAddedToCompares.map { "Устройство добавлено в список сравнения" },
+                _deviceDeletedFromCompares.map { "Устройство удалено из списка сравнения" },
+            )
+            .map { message -> UiEvent.ShowSnackBar.Default(message) }
+
     init {
         viewModelScope.launch {
             _deviceUid.collect { uid -> sharedRepository.tryToUpdateDeviceHistory(uid) }
@@ -243,16 +252,6 @@ constructor(
 
         viewModelScope.launch {
             _deviceWithImageUrls.collect { device -> sharedRepository.updateCachedDevices(device) }
-        }
-
-        viewModelScope.launch {
-            merge(
-                    _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
-                    _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
-                    _deviceAddedToCompares.map { "Устройство добавлено в список сравнения" },
-                    _deviceDeletedFromCompares.map { "Устройство удалено из списка сравнения" },
-                )
-                .collect { message -> snackBarHostState.showMessage(message) }
         }
     }
 

@@ -11,14 +11,14 @@ import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
 fun DeviceHistoryScreenScaffold(
-    deviceHistoryViewModel: DeviceHistoryViewModel = hiltViewModel<DeviceHistoryViewModel>(),
+    viewModel: DeviceHistoryViewModel = hiltViewModel(),
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar("История просмотров") }) {
         innerPadding ->
         DeviceHistoryScreenContent(
-            deviceHistoryViewModel = deviceHistoryViewModel,
+            viewModel = viewModel,
             padding = innerPadding,
             navigateToDevice = navigateToDevice,
         )

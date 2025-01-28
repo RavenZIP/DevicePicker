@@ -26,7 +26,7 @@ fun HomeNavigationGraph(
     ) {
         navigateWithSlideAnimation(route = HomeGraph.HOME_ROOT) {
             HomeScreenScaffold(
-                homeViewModel = homeViewModel,
+                viewModel = homeViewModel,
                 padding = padding,
                 navigateToDevice = { uid ->
                     navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}")

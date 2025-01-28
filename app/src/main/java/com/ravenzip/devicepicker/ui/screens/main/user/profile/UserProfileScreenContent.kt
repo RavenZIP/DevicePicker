@@ -32,7 +32,7 @@ import com.ravenzip.workshop.data.icon.IconConfig
 
 @Composable
 fun UserProfileScreenContent(
-    userProfileViewModel: UserProfileViewModel,
+    viewModel: UserProfileViewModel,
     navigateToAdminPanel: () -> Unit,
     navigateToUserSettings: () -> Unit,
     navigateToCompany: () -> Unit,
@@ -42,9 +42,9 @@ fun UserProfileScreenContent(
     padding: PaddingValues,
 ) {
     val dialogWindowIsShowed =
-        userProfileViewModel.alertDialog.isShowed.collectAsStateWithLifecycle(false).value
+        viewModel.alertDialog.isShowed.collectAsStateWithLifecycle(false).value
 
-    val userData = userProfileViewModel.userData.collectAsStateWithLifecycle().value
+    val userData = viewModel.userData.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
@@ -143,7 +143,7 @@ fun UserProfileScreenContent(
             iconConfig = IconConfig(color = errorColor),
             colors = ButtonDefaults.containerColor(),
         ) {
-            userProfileViewModel.alertDialog.show()
+            viewModel.alertDialog.show()
         }
 
         Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -185,7 +185,7 @@ fun UserProfileScreenContent(
         Spacer(modifier = Modifier.padding(top = 20.dp))
     }
 
-    UiEventEffect(userProfileViewModel.uiEffect) { event -> navigateToSplashScreen() }
+    UiEventEffect(viewModel.uiEffect) { event -> navigateToSplashScreen() }
 
     if (dialogWindowIsShowed) {
         AlertDialog(
@@ -194,8 +194,8 @@ fun UserProfileScreenContent(
             text = "Вы действительно хотите выполнить выход из аккаунта?",
             onDismissText = "Отмена",
             onConfirmationText = "Выйти",
-            onDismiss = { userProfileViewModel.alertDialog.dismiss() },
-            onConfirmation = { userProfileViewModel.alertDialog.confirm() },
+            onDismiss = { viewModel.alertDialog.dismiss() },
+            onConfirmation = { viewModel.alertDialog.confirm() },
         )
     }
 }

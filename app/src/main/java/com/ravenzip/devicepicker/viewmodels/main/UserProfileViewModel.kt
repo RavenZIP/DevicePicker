@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
+import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

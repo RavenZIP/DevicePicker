@@ -16,11 +16,11 @@ import com.ravenzip.devicepicker.viewmodels.main.FavouritesViewModel
 
 @Composable
 fun FavouritesScreenContent(
-    favouritesViewModel: FavouritesViewModel,
+    viewModel: FavouritesViewModel,
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
-    val favourites = favouritesViewModel.favourites.collectAsState().value
+    val favourites = viewModel.favourites.collectAsState().value
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),
@@ -32,8 +32,8 @@ fun FavouritesScreenContent(
             RowDeviceCard(
                 device = device,
                 isFavourite = true,
-                onFavouriteClick = { favouritesViewModel.tryToUpdateFavourites(device.uid) },
-                onCompareClick = { favouritesViewModel.tryToUpdateCompares(device.uid) },
+                onFavouriteClick = { viewModel.tryToUpdateFavourites(device.uid) },
+                onCompareClick = { viewModel.tryToUpdateCompares(device.uid) },
                 onCardClick = { navigateToDevice(device.uid) },
             )
         }

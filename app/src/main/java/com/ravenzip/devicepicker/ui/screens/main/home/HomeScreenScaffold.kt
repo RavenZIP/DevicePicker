@@ -10,14 +10,14 @@ import com.ravenzip.workshop.components.TopAppBar
 
 @Composable
 fun HomeScreenScaffold(
-    homeViewModel: HomeViewModel,
+    viewModel: HomeViewModel,
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
     Scaffold(modifier = Modifier.padding(padding), topBar = { TopAppBar(title = "Главная") }) {
         innerPadding ->
         HomeScreenContent(
-            homeViewModel = homeViewModel,
+            viewModel = viewModel,
             padding = innerPadding,
             navigateToDevice = navigateToDevice,
         )
