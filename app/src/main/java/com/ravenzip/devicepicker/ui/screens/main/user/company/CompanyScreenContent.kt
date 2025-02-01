@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
@@ -29,10 +31,20 @@ import com.ravenzip.workshop.components.SimpleButton
 @Composable
 fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(padding),
+        modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text =
+                "Перед началом работы с разделом \"Компания\" необходимо создать свою компанию, либо вступить в уже существующую. " +
+                    "Пожалуйста, одно их двух действий ниже:",
+            modifier = Modifier.fillMaxWidth(0.9f),
+            letterSpacing = 0.sp,
+        )
+
+        Spacer(modifier = Modifier.height(25.dp))
 
         ActionCard(
             title = "Создать компанию",
@@ -54,6 +66,8 @@ fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
                 "Присоединитесь к существующей компании, чтобы получить доступ к общим ресурсам и работать в единой команде",
             buttonText = "Вступить в компанию",
         )
+
+        Spacer(modifier = Modifier.height(25.dp))
     }
 }
 
@@ -75,8 +89,14 @@ fun ActionCard(
                 .padding(15.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
-        Text(title, fontSize = 23.sp, fontWeight = FontWeight.W500, color = textColor)
-        Text(description, fontSize = 16.sp, color = textColor)
+        Text(
+            title,
+            fontSize = 23.sp,
+            fontWeight = FontWeight.W500,
+            color = textColor,
+            letterSpacing = 0.sp,
+        )
+        Text(description, fontSize = 16.sp, color = textColor, letterSpacing = 0.sp)
         SimpleButton(width = 1f, text = buttonText, colors = buttonColors, onClick = onClick)
     }
 }
