@@ -134,11 +134,23 @@ fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
                             Spacer(modifier = Modifier.height(15.dp))
                         }
 
-                        SimpleButton(text = if (page == 0) "Продолжить" else "Присоединиться") {
-                            if (page == 0) {
+                        if (page == 0) {
+                            SimpleButton(text = "Продолжить") {
                                 composableScope.launch { pagerState.animateScrollToPage(1) }
-                            } else {
-                                // TODO создание компании или вход в компанию
+                            }
+                        } else {
+                            when (viewModel.companyScreenTypeState.value) {
+                                CompanyScreenTypesEnum.CREATE_COMPANY -> {
+                                    SimpleButton(text = "Создать") {
+                                        /// viewModel.createCompany()
+                                    }
+                                }
+
+                                CompanyScreenTypesEnum.JOIN_COMPANY -> {
+                                    SimpleButton(text = "Присоединиться") {
+                                        /// viewModel.joinCompany()
+                                    }
+                                }
                             }
                         }
                     }
