@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.viewmodels.user
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ravenzip.devicepicker.repositories.CompanyRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
 import com.ravenzip.devicepicker.ui.screens.main.user.company.CompanyScreenTypesEnum
 import com.ravenzip.workshop.forms.state.FormState
@@ -15,7 +16,10 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class CompanyViewModel @Inject constructor(sharedRepository: SharedRepository) : ViewModel() {
+class CompanyViewModel
+@Inject
+constructor(sharedRepository: SharedRepository, private val companyRepository: CompanyRepository) :
+    ViewModel() {
     val companyUid =
         sharedRepository.userData
             .map { userData -> userData.companyUid }
