@@ -33,12 +33,18 @@ class CompanyViewModel @Inject constructor(sharedRepository: SharedRepository) :
 
     init {
         viewModelScope.launch {
-            companyScreenTypeState.valueChanges.collect {
+            companyScreenTypeState.valueChanges.collect { type ->
                 companyNameState.reset()
                 companyDescriptionState.reset()
                 companyAddressState.reset()
                 companyListState.reset()
                 companyLeaderState.reset()
+
+                if (type == CompanyScreenTypesEnum.CREATE_COMPANY) {
+                    companyAddressState.enable()
+                } else {
+                    companyAddressState.disable()
+                }
             }
         }
     }
