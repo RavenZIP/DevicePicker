@@ -10,6 +10,7 @@ data class User(
     val reviews: List<String>,
     val favourites: List<String>,
     val compares: List<String>,
+    val companyUid: String,
 ) {
     constructor() :
         this(
@@ -18,5 +19,6 @@ data class User(
             reviews = listOf(),
             favourites = listOf(),
             compares = listOf(),
+            companyUid = "",
         )
 }

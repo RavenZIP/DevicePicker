@@ -70,12 +70,7 @@ fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
         )
     }
 
-    BottomContainer {
-        Spacer(modifier = Modifier.height(20.dp))
-        SimpleButton(text = "Продолжить") { viewModel.resetPassword() }
-
-        Spacer(modifier = Modifier.height(20.dp))
-    }
+    BottomContainer { SimpleButton(text = "Продолжить") { viewModel.resetPassword() } }
 
     if (isLoadingState) {
         Spinner(text = "Отправка ссылки для сброса пароля...")

@@ -69,7 +69,6 @@ fun LoginScreen(
     }
 
     BottomContainer {
-        Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
             when (viewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
@@ -84,8 +83,6 @@ fun LoginScreen(
         SimpleButton(text = "Забыли пароль?", colors = ButtonDefaults.inverseMixColors()) {
             navigateToForgotPassScreen()
         }
-
-        Spacer(modifier = Modifier.height(20.dp))
     }
 
     if (isLoadingState) {

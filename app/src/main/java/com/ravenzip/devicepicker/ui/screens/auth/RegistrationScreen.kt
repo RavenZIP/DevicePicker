@@ -84,7 +84,6 @@ fun RegistrationScreen(
     }
 
     BottomContainer {
-        Spacer(modifier = Modifier.height(20.dp))
         SimpleButton(text = "Продолжить") {
             when (viewModel.authOptionsState.value) {
                 AuthVariantsEnum.EMAIL -> {
@@ -97,7 +96,6 @@ fun RegistrationScreen(
                 AuthVariantsEnum.GOOGLE -> {}
             }
         }
-        Spacer(modifier = Modifier.height(20.dp))
     }
 
     if (isLoadingState) {
