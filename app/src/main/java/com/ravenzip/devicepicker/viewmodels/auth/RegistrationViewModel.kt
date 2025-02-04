@@ -4,7 +4,6 @@ import android.util.Patterns.PHONE
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.showError
@@ -74,14 +73,6 @@ constructor(
     val spinnerText = _spinnerText.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
-    /**
-     * Текущий пользователь firebase
-     *
-     * @return [FirebaseUser] или null
-     */
-    private val firebaseUser: FirebaseUser?
-        get() = authRepository.firebaseUser
-
     fun registrationWithEmailAndPassword(navigateToHomeScreen: () -> Unit) {
         viewModelScope.launch {
             if (emailState.isInvalid || passwordState.isInvalid) {
@@ -130,7 +121,7 @@ constructor(
             }
 
             // TODO добавить обработку в случае ошибки при создании пользователя
-            userRepository.createUserData(firebaseUser?.uid)
+            userRepository.createUserData()
             _isLoading.update { false }
             navigateToHomeScreen()
         }
