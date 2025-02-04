@@ -63,7 +63,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideUserRepository(): UserRepository {
-        return UserRepository(provideUserSources())
+        return UserRepository(provideAuthRepository(), provideUserSources())
     }
 
     @Provides
@@ -72,7 +72,6 @@ object AppModule {
         return SharedRepository(
             provideDeviceRepository(),
             provideImageRepository(),
-            provideAuthRepository(),
             provideUserRepository(),
         )
     }
