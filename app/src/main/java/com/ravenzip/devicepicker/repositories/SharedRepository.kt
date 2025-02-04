@@ -2,7 +2,6 @@ package com.ravenzip.devicepicker.repositories
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.toMutableStateList
-import com.google.firebase.auth.FirebaseUser
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
@@ -22,7 +21,6 @@ class SharedRepository
 constructor(
     private val deviceRepository: DeviceRepository,
     private val imageRepository: ImageRepository,
-    private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
 ) {
     /** Все устройства (компактная модель) */
@@ -40,14 +38,6 @@ constructor(
     val deviceHistory = _userData.map { userData -> userData.deviceHistory }
     val favourites = _userData.map { userData -> userData.favourites }
     val compares = _userData.map { userData -> userData.compares }
-
-    /**
-     * Текущий пользователь firebase
-     *
-     * @return [FirebaseUser] или null
-     */
-    val firebaseUser: FirebaseUser?
-        get() = authRepository.firebaseUser
 
     /** Получение списка устройств и их изображений (компактная модель) */
     @OptIn(ExperimentalCoroutinesApi::class)
@@ -75,9 +65,7 @@ constructor(
     }
 
     suspend fun getUserData() {
-        userRepository.getUserData(firebaseUser?.uid).collect { userData ->
-            _userData.update { userData }
-        }
+        userRepository.getUserData().collect { userData -> _userData.update { userData } }
     }
 
     fun getCachedDevice(uid: String): Device? {
@@ -92,8 +80,7 @@ constructor(
     suspend fun tryToUpdateDeviceHistory(deviceUid: String) {
         if (deviceUid !in _userData.value.deviceHistory) {
             val updatedDeviceHistory = _userData.value.deviceHistory + deviceUid
-            val updateResult =
-                userRepository.updateDeviceHistory(firebaseUser?.uid, updatedDeviceHistory)
+            val updateResult = userRepository.updateDeviceHistory(updatedDeviceHistory)
 
             if (updateResult) {
                 _userData.update { _userData.value.copy(deviceHistory = updatedDeviceHistory) }
@@ -109,7 +96,7 @@ constructor(
                 _userData.value.favourites + deviceUid
             }
 
-        val updateResult = userRepository.updateFavourites(firebaseUser?.uid, updatedFavourites)
+        val updateResult = userRepository.updateFavourites(updatedFavourites)
 
         if (updateResult) {
             _userData.update { _userData.value.copy(favourites = updatedFavourites) }
@@ -124,7 +111,7 @@ constructor(
                 _userData.value.compares + deviceUid
             }
 
-        val updateResult = userRepository.updateCompares(firebaseUser?.uid, updatedCompares)
+        val updateResult = userRepository.updateCompares(updatedCompares)
 
         if (updateResult) {
             _userData.update { _userData.value.copy(compares = updatedCompares) }
