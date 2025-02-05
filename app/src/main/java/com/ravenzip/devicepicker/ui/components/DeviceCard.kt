@@ -38,8 +38,8 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceCompactExtended
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.IconButton
 import com.ravenzip.workshop.components.RowIconButton
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 import com.smarttoolfactory.ratingbar.RatingBar
@@ -124,13 +124,13 @@ fun RowDeviceCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             VerticalCenterRow {
-                IconButton(icon = Icon.ResourceIcon(R.drawable.i_compare)) { onCompareClick() }
+                IconButton(icon = IconData.ResourceIcon(R.drawable.i_compare)) { onCompareClick() }
 
                 Spacer(modifier = Modifier.width(10.dp))
 
                 IconButton(
                     icon =
-                        Icon.ResourceIcon(
+                        IconData.ResourceIcon(
                             if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
                         )
                 ) {
@@ -142,7 +142,7 @@ fun RowDeviceCard(
                 RowIconButton(
                     width = null,
                     text = device.price.currentFormatted,
-                    icon = Icon.ResourceIcon(R.drawable.i_info),
+                    icon = IconData.ResourceIcon(R.drawable.i_info),
                     iconConfig = IconConfig.Small,
                     iconPositionIsLeft = false,
                     contentPadding = PaddingValues(10.dp),

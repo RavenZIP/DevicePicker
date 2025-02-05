@@ -24,8 +24,8 @@ import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
 import com.ravenzip.workshop.components.ChipRadioGroup
 import com.ravenzip.workshop.data.ChipViewOptions
 import com.ravenzip.workshop.data.TextConfig
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,7 +49,7 @@ fun HomeScreenContent(
                         ChipViewOptions(
                             text = item.value,
                             textConfig = TextConfig.SmallMedium,
-                            icon = Icon.ResourceIcon(id = tagIconMap[item]!!),
+                            icon = IconData.ResourceIcon(id = tagIconMap[item]!!),
                             iconConfig = IconConfig(size = 20, color = tagsColorMap[item]),
                         )
                 },

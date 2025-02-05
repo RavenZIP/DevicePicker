@@ -64,6 +64,9 @@ dependencies {
     // Библиотека кастомных элементов
     implementation(libs.workshop)
 
+    // Библиотека расширенных возможностей Kotlin Flow
+    implementation(libs.kotlinflowextended)
+
     // Навигация
     implementation(libs.androidx.navigation.compose)
 

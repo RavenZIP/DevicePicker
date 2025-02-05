@@ -10,8 +10,8 @@ import com.ravenzip.devicepicker.navigation.graphs.MainNavigationGraph
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.workshop.components.BottomNavigationBar
 import com.ravenzip.workshop.data.appbar.BottomNavigationItem
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
 fun MainScaffold(
@@ -36,7 +36,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Главная",
             route = BottomBarGraph.HOME,
-            icon = Icon.ResourceIcon(R.drawable.i_home),
+            icon = IconData.ResourceIcon(R.drawable.i_home),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -45,7 +45,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Поиск",
             route = BottomBarGraph.SEARCH,
-            icon = Icon.ResourceIcon(R.drawable.i_search),
+            icon = IconData.ResourceIcon(R.drawable.i_search),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -54,7 +54,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Избранное",
             route = BottomBarGraph.FAVOURITES,
-            icon = Icon.ResourceIcon(R.drawable.i_heart),
+            icon = IconData.ResourceIcon(R.drawable.i_heart),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -63,7 +63,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Сравнение",
             route = BottomBarGraph.COMPARE,
-            icon = Icon.ResourceIcon(R.drawable.i_compare),
+            icon = IconData.ResourceIcon(R.drawable.i_compare),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )
@@ -72,7 +72,7 @@ private fun generateMenuItems(): List<BottomNavigationItem> {
         BottomNavigationItem(
             label = "Профиль",
             route = BottomBarGraph.USER_PROFILE,
-            icon = Icon.ResourceIcon(R.drawable.i_user),
+            icon = IconData.ResourceIcon(R.drawable.i_user),
             iconConfig = IconConfig.Small,
             hasNews = false,
         )

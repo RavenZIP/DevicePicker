@@ -84,8 +84,8 @@ import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.button.ButtonContentConfig
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
 
@@ -133,7 +133,7 @@ fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, padding: PaddingValu
                                     text = "Подробнее о метках",
                                     textConfig =
                                         TextConfig(size = 16.sp, weight = FontWeight.Medium),
-                                    icon = Icon.ResourceIcon(id = R.drawable.i_arrow_right),
+                                    icon = IconData.ResourceIcon(id = R.drawable.i_arrow_right),
                                     iconConfig = IconConfig.Default,
                                     onClick = { tagsSheetIsVisible.value = true },
                                 ),
@@ -288,7 +288,7 @@ private fun PriceAndConfigurations(
             width = null,
             text = formattedPrice,
             textConfig = TextConfig.H1,
-            icon = Icon.ResourceIcon(R.drawable.i_info),
+            icon = IconData.ResourceIcon(R.drawable.i_info),
             iconConfig = IconConfig.Big,
             iconPositionIsLeft = false,
             contentPadding = PaddingValues(10.dp),
@@ -452,7 +452,7 @@ private fun TagsBottomSheet(
                     item {
                         InfoCard(
                             width = 0.95f,
-                            icon = Icon.ResourceIcon(R.drawable.i_info),
+                            icon = IconData.ResourceIcon(R.drawable.i_info),
                             title = "Описание",
                             text =
                                 "Метки - специальные ярлыки, которые кратко описывают устройство. " +
@@ -498,7 +498,7 @@ private fun TagsBottomSheet(
                             width = 0.95f,
                             text = "Вернуться назад",
                             textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
-                            icon = Icon.ResourceIcon(R.drawable.i_back),
+                            icon = IconData.ResourceIcon(R.drawable.i_back),
                             colors = ButtonDefaults.veryLightPrimary(),
                             contentPadding = PaddingValues(12.dp),
                             onClick = { selectedTag.value = null },
@@ -524,7 +524,7 @@ private fun TagInfo(tag: Tag?) {
 
         InfoCard(
             width = 0.95f,
-            icon = Icon.ResourceIcon(id = R.drawable.i_info),
+            icon = IconData.ResourceIcon(id = R.drawable.i_info),
             title = "Описание",
             text = tag.name.description,
             colors = CardDefaults.veryLightPrimary(),

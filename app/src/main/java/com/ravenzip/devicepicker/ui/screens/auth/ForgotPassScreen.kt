@@ -28,7 +28,7 @@ import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.icon.Icon
+import com.ravenzip.workshop.data.icon.IconData
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,12 +58,12 @@ fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
         SinglenessOutlinedTextField(
             state = viewModel.emailState,
             label = "Электронная почта",
-            leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
+            leadingIcon = IconData.ResourceIcon(R.drawable.i_email),
         )
 
         Spacer(modifier = Modifier.height(30.dp))
         InfoCard(
-            icon = Icon.ResourceIcon(R.drawable.i_info),
+            icon = IconData.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
             text = AuthCardEnum.FORGOT_PASS.value,
             colors = CardDefaults.defaultCardColors(),

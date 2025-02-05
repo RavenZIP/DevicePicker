@@ -13,8 +13,8 @@ import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
 fun DeviceInfoScreenScaffold(
@@ -26,7 +26,7 @@ fun DeviceInfoScreenScaffold(
 
     val backArrow = remember {
         BackArrow(
-            icon = Icon.ResourceIcon(R.drawable.i_back),
+            icon = IconData.ResourceIcon(R.drawable.i_back),
             iconConfig = IconConfig.Default,
             onClick = navigateBack,
         )

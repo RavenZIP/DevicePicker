@@ -18,8 +18,8 @@ import com.ravenzip.devicepicker.repositories.SharedRepository
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.workshop.data.appbar.AppBarItem
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -287,7 +287,7 @@ constructor(
         val favouriteButton =
             AppBarItem(
                 icon =
-                    Icon.ResourceIcon(
+                    IconData.ResourceIcon(
                         if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
                     ),
                 iconConfig = IconConfig.Small,
@@ -297,7 +297,7 @@ constructor(
         val compareButton =
             AppBarItem(
                 icon =
-                    Icon.ResourceIcon(
+                    IconData.ResourceIcon(
                         if (isCompare) R.drawable.i_compare_filled else R.drawable.i_compare
                     ),
                 iconConfig = IconConfig.Small,

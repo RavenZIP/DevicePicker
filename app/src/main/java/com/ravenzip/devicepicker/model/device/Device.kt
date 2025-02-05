@@ -9,8 +9,8 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.model.device.configurations.PhoneConfiguration
 import com.ravenzip.devicepicker.model.device.price.Price
 import com.ravenzip.devicepicker.model.device.specifications.Screen.Companion.diagonal
-import com.ravenzip.workshop.data.icon.Icon
 import com.ravenzip.workshop.data.icon.IconConfig
+import com.ravenzip.workshop.data.icon.IconData
 import com.ravenzip.workshop.data.icon.IconWithConfig
 
 /** Полная модель устройства */
@@ -48,7 +48,7 @@ data class Device(
                     name = tag,
                     icon =
                         IconWithConfig(
-                            icon = Icon.ResourceIcon(tagIconMap[tag]!!),
+                            icon = IconData.ResourceIcon(tagIconMap[tag]!!),
                             config = IconConfig(size = 20, color = tagsColorMap[tag]),
                         ),
                 )
@@ -57,7 +57,7 @@ data class Device(
         fun Device.createShortTags() =
             this.tags.map { tag ->
                 IconWithConfig(
-                    icon = Icon.ResourceIcon(tagIconMap[tag]!!),
+                    icon = IconData.ResourceIcon(tagIconMap[tag]!!),
                     config = IconConfig(size = 20, color = tagsColorMap[tag]),
                 )
             }

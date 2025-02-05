@@ -37,7 +37,7 @@ import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
-import com.ravenzip.workshop.data.icon.Icon
+import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
 fun WelcomeScreen(
@@ -119,7 +119,7 @@ fun WelcomeScreen(
 
     if (dialogWindowIsShowed) {
         AlertDialog(
-            icon = Icon.ResourceIcon(R.drawable.sign_in),
+            icon = IconData.ResourceIcon(R.drawable.sign_in),
             title = WelcomeEnum.DIALOG_WINDOW.title,
             text = WelcomeEnum.DIALOG_WINDOW.text,
             onDismissText = "Назад",

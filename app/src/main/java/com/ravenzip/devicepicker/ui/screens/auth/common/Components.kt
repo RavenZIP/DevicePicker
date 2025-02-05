@@ -19,7 +19,7 @@ import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
-import com.ravenzip.workshop.data.icon.Icon
+import com.ravenzip.workshop.data.icon.IconData
 import com.ravenzip.workshop.forms.state.FormState
 import com.ravenzip.workshop.forms.state.special.TextFieldState
 
@@ -37,14 +37,14 @@ fun AuthFields(
             SinglenessOutlinedTextField(
                 state = emailState,
                 label = "Электронная почта",
-                leadingIcon = Icon.ResourceIcon(R.drawable.i_email),
+                leadingIcon = IconData.ResourceIcon(R.drawable.i_email),
             )
 
             Spacer(modifier = Modifier.height(15.dp))
             SinglenessOutlinedTextField(
                 state = passwordState,
                 label = "Пароль",
-                leadingIcon = Icon.ResourceIcon(R.drawable.i_key),
+                leadingIcon = IconData.ResourceIcon(R.drawable.i_key),
                 isHiddenText = true,
             )
         }
@@ -52,7 +52,7 @@ fun AuthFields(
             SinglenessOutlinedTextField(
                 state = phoneState,
                 label = "Телефон",
-                leadingIcon = Icon.ResourceIcon(R.drawable.i_phone),
+                leadingIcon = IconData.ResourceIcon(R.drawable.i_phone),
             )
 
             // TODO добавить поле с кодом
