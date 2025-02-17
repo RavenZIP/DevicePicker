@@ -1,6 +1,6 @@
 package com.ravenzip.devicepicker.ui.screens.main.user.company.enums
 
-enum class CompanyScreenActionsEnum(val value: String) {
-    CREATE_COMPANY(value = "Создать компанию"),
-    JOIN_COMPANY(value = "Вступить в компанию"),
+enum class CompanyScreenActionsEnum(val description: String) {
+    CREATE_COMPANY(description = "Создать компанию"),
+    JOIN_COMPANY(description = "Вступить в компанию"),
 }

@@ -142,12 +142,7 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
 
             ScreenTitle(
                 if (page == 0) "Первоначальная настройка работы с компанией"
-                else if (
-                    viewModel.companyScreenTypeState.value ==
-                        CompanyScreenActionsEnum.CREATE_COMPANY
-                )
-                    CompanyScreenActionsEnum.CREATE_COMPANY.value
-                else CompanyScreenActionsEnum.JOIN_COMPANY.value
+                else viewModel.companyScreenTypeState.value.description
             )
 
             Spacer(modifier = Modifier.height(5.dp))
@@ -157,7 +152,7 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                     RadioGroup(
                         state = viewModel.companyScreenTypeState,
                         source = CompanyScreenActionsEnum.entries,
-                        view = { it.value },
+                        view = { it.description },
                         comparableKey = { it },
                     )
 
@@ -251,6 +246,7 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
             Column(
                 modifier = Modifier.fillMaxSize(0.9f),
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
                 Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.veryLightPrimary()) {
                     Column(modifier = Modifier.padding(10.dp)) {
@@ -262,10 +258,65 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
                         Spacer(modifier = Modifier.height(10.dp))
 
                         Text("Наименование: ${company.name}")
-                        Text("Ваша роль: ${currentUserPositionInCompany.value}")
+                        Text("Ваша роль: ${currentUserPositionInCompany.description}")
                         Text("Количество участников: $employeesCount")
                     }
                 }
+
+                if (currentUserPositionInCompany == EmployeePosition.Leader) {
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.veryLightPrimary(),
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(
+                                text = "Сотрудники",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.W500,
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Text("Список сотрудниов или что-то еще?")
+                        }
+                    }
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = CardDefaults.veryLightPrimary(),
+                    ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(
+                                text = "Устройства",
+                                fontSize = 22.sp,
+                                fontWeight = FontWeight.W500,
+                            )
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Text("Список устройств???")
+                        }
+                    }
+                }
+
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.veryLightPrimary()) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Text(text = "История", fontSize = 22.sp, fontWeight = FontWeight.W500)
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text("История устройств пользователя?")
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                SimpleButton(
+                    width = 1f,
+                    text = "Покинуть компанию",
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = errorColor,
+                            contentColor = Color.White,
+                        ),
+                )
             }
         }
 
