@@ -8,6 +8,7 @@ import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -33,7 +34,8 @@ constructor(
     private val _userData = MutableStateFlow(User())
 
     val allDevices = _allDevices.asStateFlow()
-    val userData = _userData.asStateFlow()
+    val userDataFlow = _userData.asStateFlow()
+    val userData = _userData.value
 
     val deviceHistory = _userData.map { userData -> userData.deviceHistory }
     val favourites = _userData.map { userData -> userData.favourites }
@@ -64,8 +66,11 @@ constructor(
         }
     }
 
-    suspend fun getUserData() {
-        userRepository.getUserData().collect { userData -> _userData.update { userData } }
+    fun getUserData(): Flow<Unit> {
+        return userRepository
+            .getUserData()
+            .onEach { userData -> _userData.update { userData } }
+            .map {}
     }
 
     fun getCachedDevice(uid: String): Device? {

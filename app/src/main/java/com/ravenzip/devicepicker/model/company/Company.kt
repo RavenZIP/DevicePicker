@@ -6,6 +6,15 @@ data class Company(
     val description: String,
     val address: String,
     val employees: List<Employee>,
+    val requestToJoin: List<String>,
 ) {
-    constructor() : this(uid = "", name = "", description = "", address = "", employees = listOf())
+    constructor() :
+        this(
+            uid = "",
+            name = "",
+            description = "",
+            address = "",
+            employees = listOf(),
+            requestToJoin = listOf(),
+        )
 }

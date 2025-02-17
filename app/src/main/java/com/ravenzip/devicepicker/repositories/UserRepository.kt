@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.database.getValue
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.sources.UserSources
+import com.ravenzip.kotlinflowextended.functions.materialize
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
@@ -96,4 +97,18 @@ constructor(private val authRepository: AuthRepository, private val userSources:
             false
         }
     }
+
+    fun updateCompanyUid(companyUid: String) =
+        flow {
+                val userUid = authRepository.firebaseUser?.uid
+
+                if (userUid == null) {
+                    throw Exception("Ошибка авторизации пользователя")
+                }
+
+                userSources.companyUid(userUid).setValue(companyUid).await()
+
+                emit(companyUid)
+            }
+            .materialize()
 }

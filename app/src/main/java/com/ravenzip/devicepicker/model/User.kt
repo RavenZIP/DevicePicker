@@ -6,6 +6,9 @@ package com.ravenzip.devicepicker.model
 // Поэтому вместо isAdmin просто admin
 data class User(
     val admin: Boolean,
+    val surname: String,
+    val name: String,
+    val patronymic: String,
     val deviceHistory: List<String>,
     val reviews: List<String>,
     val favourites: List<String>,
@@ -15,10 +18,18 @@ data class User(
     constructor() :
         this(
             admin = false,
+            surname = "",
+            name = "",
+            patronymic = "",
             deviceHistory = listOf(),
             reviews = listOf(),
             favourites = listOf(),
             compares = listOf(),
             companyUid = "",
         )
+
+    companion object {
+        val User.fullName
+            get() = "${this.surname} ${this.name} ${this.patronymic}"
+    }
 }

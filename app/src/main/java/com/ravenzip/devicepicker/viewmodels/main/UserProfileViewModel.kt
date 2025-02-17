@@ -9,6 +9,7 @@ import com.ravenzip.devicepicker.ui.model.AlertDialog
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ constructor(
     private val sharedRepository: SharedRepository,
 ) : ViewModel() {
     val alertDialog = AlertDialog()
-    val userData = sharedRepository.userData
+    val userData = sharedRepository.userDataFlow
 
     val logoutWithDelay =
         alertDialog.isConfirmed.onEach {
@@ -32,6 +33,6 @@ constructor(
     val uiEffect = logoutWithDelay.map { UiEvent.Navigate() }
 
     init {
-        viewModelScope.launch { sharedRepository.getUserData() }
+        viewModelScope.launch { sharedRepository.getUserData().collect() }
     }
 }

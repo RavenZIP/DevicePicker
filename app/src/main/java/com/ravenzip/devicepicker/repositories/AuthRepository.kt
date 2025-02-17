@@ -26,6 +26,9 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     val firebaseUser: FirebaseUser?
         get() = authSources.firebaseUser
 
+    val isAnonymousUser: Boolean
+        get() = firebaseUser?.isAnonymous == true
+
     fun reloadUserFlow() =
         flow<Result<Boolean>> {
                 firebaseUser?.reload()?.await()
