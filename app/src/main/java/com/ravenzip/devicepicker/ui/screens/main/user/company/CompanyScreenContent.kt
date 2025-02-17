@@ -55,8 +55,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
-    val screenModeByUserState = viewModel.screenModeByUserState.collectAsStateWithLifecycle().value
-    val companyState = viewModel.company.collectAsStateWithLifecycle().value
+    val screenTypeByUserState = viewModel.screenModeByUserState.collectAsStateWithLifecycle().value
+    val companyState = viewModel.companyStateFlow.collectAsStateWithLifecycle().value
 
     when (companyState) {
         is UiState.Success -> {
@@ -64,7 +64,7 @@ fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
                 modifier = Modifier.fillMaxSize().padding(padding),
                 contentAlignment = Alignment.Center,
             ) {
-                when (screenModeByUserState) {
+                when (screenTypeByUserState) {
                     CompanyScreenTypesEnum.ANONYMOUS -> {
                         InfoCard(
                             text = "Отсутствует доступ",
@@ -243,11 +243,31 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
 private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company) {
     val currentUserPositionInCompany =
         viewModel.currentUserPositionInCompany.collectAsStateWithLifecycle().value
+    val employeesCount = viewModel.employeesCount.collectAsStateWithLifecycle().value
 
     when (currentUserPositionInCompany) {
-        EmployeePosition.Leader -> {}
+        EmployeePosition.Leader,
+        EmployeePosition.Employee -> {
+            Column(
+                modifier = Modifier.fillMaxSize(0.9f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.veryLightPrimary()) {
+                    Column(modifier = Modifier.padding(10.dp)) {
+                        Text(
+                            text = "Краткие сведения",
+                            fontSize = 22.sp,
+                            fontWeight = FontWeight.W500,
+                        )
+                        Spacer(modifier = Modifier.height(10.dp))
 
-        EmployeePosition.Employee -> {}
+                        Text("Наименование: ${company.name}")
+                        Text("Ваша роль: ${currentUserPositionInCompany.value}")
+                        Text("Количество участников: $employeesCount")
+                    }
+                }
+            }
+        }
 
         else -> {
             InfoCard(
@@ -260,9 +280,6 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
             )
         }
     }
-
-    Text("Это экран компании ${company.name}")
-    Text("Текущая роль пользователя в компании $currentUserPositionInCompany")
 }
 
 // TODO убрать после обновления WorkShop

@@ -149,7 +149,7 @@ constructor(
         _loadCompanyAfterCreateOrJoinComplete.filterErrorNotification()
 
     // TODO скорее всего не хватает еще одного UiState.Loading
-    val company =
+    val companyStateFlow =
         merge(
                 merge(_firstLoadCompanySuccess, _loadCompanySuccess).map { company ->
                     UiState.Success(company)
@@ -169,7 +169,7 @@ constructor(
             )
 
     val currentUserPositionInCompany =
-        company
+        companyStateFlow
             .filterIsInstance<UiState.Success<Company>>()
             .map { companyState ->
                 companyState.data.employees
@@ -181,6 +181,12 @@ constructor(
                 started = SharingStarted.Lazily,
                 initialValue = EmployeePosition.Unknown,
             )
+
+    val employeesCount =
+        companyStateFlow
+            .filterIsInstance<UiState.Success<Company>>()
+            .map { company -> company.data.employees.count() }
+            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = 0)
 
     private val _spinnerIsLoading =
         merge(
