@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.EmployeePosition
+import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.company.Company
@@ -42,13 +43,17 @@ import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScree
 import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenTypesEnum
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.viewmodels.user.CompanyViewModel
+import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.DropDownTextField
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.MultilineTextField
 import com.ravenzip.workshop.components.RadioGroup
+import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.components.Spinner
+import com.ravenzip.workshop.data.TextConfig
+import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 import kotlinx.coroutines.launch
 
@@ -244,11 +249,14 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
         EmployeePosition.Leader,
         EmployeePosition.Employee -> {
             Column(
-                modifier = Modifier.fillMaxSize(0.9f),
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
-                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.veryLightPrimary()) {
+                Card(
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                    colors = CardDefaults.veryLightPrimary(),
+                ) {
                     Column(modifier = Modifier.padding(10.dp)) {
                         Text(
                             text = "Краткие сведения",
@@ -264,59 +272,44 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
                 }
 
                 if (currentUserPositionInCompany == EmployeePosition.Leader) {
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.veryLightPrimary(),
-                    ) {
-                        Column(modifier = Modifier.padding(10.dp)) {
-                            Text(
-                                text = "Сотрудники",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.W500,
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
+                    CustomButton(
+                        title = "Сотрудники",
+                        titleConfig = TextConfig.onSurfaceH2,
+                        text = "Просмотр списка сотрудников и привязанных к ним устройств",
+                        textConfig = TextConfig.onSurface85Small,
+                        icon = IconData.ResourceIcon(R.drawable.i_employee),
+                        iconConfig = IconConfig.Primary,
+                        colors = ButtonDefaults.veryLightPrimary(),
+                    )
 
-                            Text("Список сотрудниов или что-то еще?")
-                        }
-                    }
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.veryLightPrimary(),
-                    ) {
-                        Column(modifier = Modifier.padding(10.dp)) {
-                            Text(
-                                text = "Устройства",
-                                fontSize = 22.sp,
-                                fontWeight = FontWeight.W500,
-                            )
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            Text("Список устройств???")
-                        }
-                    }
+                    CustomButton(
+                        title = "Устройства",
+                        titleConfig = TextConfig.onSurfaceH2,
+                        text = "Просмотр устройств, которые привязаны к компании",
+                        textConfig = TextConfig.onSurface85Small,
+                        icon = IconData.ResourceIcon(R.drawable.i_devices),
+                        iconConfig = IconConfig.Primary,
+                        colors = ButtonDefaults.veryLightPrimary(),
+                    )
                 }
 
-                Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.veryLightPrimary()) {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Text(text = "История", fontSize = 22.sp, fontWeight = FontWeight.W500)
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text("История устройств пользователя?")
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(10.dp))
-
-                SimpleButton(
-                    width = 1f,
-                    text = "Покинуть компанию",
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = errorColor,
-                            contentColor = Color.White,
-                        ),
+                CustomButton(
+                    title = "Мои устройства",
+                    titleConfig = TextConfig.onSurfaceH2,
+                    text = "Просмотр устройств, которые принадлежали или принадлежат вам",
+                    textConfig = TextConfig.onSurface85Small,
+                    icon = IconData.ResourceIcon(R.drawable.i_devices),
+                    iconConfig = IconConfig.Primary,
+                    colors = ButtonDefaults.veryLightPrimary(),
                 )
+
+                RowIconButton(
+                    text = "Покинуть компанию",
+                    textConfig = TextConfig.onSurfaceH2,
+                    icon = IconData.ResourceIcon(R.drawable.sign_in),
+                    iconConfig = IconConfig(color = errorColor),
+                    colors = ButtonDefaults.containerColor(),
+                ) {}
             }
         }
 
