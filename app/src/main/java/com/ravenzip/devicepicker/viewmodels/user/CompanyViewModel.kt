@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.EmployeePosition
+import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.User.Companion.fullName
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.repositories.AuthRepository
@@ -52,13 +53,14 @@ constructor(
 ) : ViewModel() {
     val createCompany = MutableSharedFlow<Unit>()
     val joinToCompany = MutableSharedFlow<Unit>()
+    val leaveCompany = MutableSharedFlow<CompanyDeleteRequest>()
 
     val companyUid =
         sharedRepository.userDataFlow
             .map { userData -> userData.companyUid }
             .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
 
-    val companies = mutableStateListOf<Company>()
+    private val _companies = mutableStateListOf<Company>()
 
     val snackBarHostState = SnackbarHostState()
 
@@ -71,7 +73,7 @@ constructor(
     val companyState =
         DropDownTextFieldState(
             initialValue = Company(),
-            items = companies,
+            items = _companies,
             itemsView = { item -> item.name },
         )
     val companyLeaderState = TextFieldState(initialValue = "", disable = true)
@@ -94,8 +96,62 @@ constructor(
             .dematerialize()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
+    private val _calculateEmployeesBeforeLeave =
+        leaveCompany.map { companyDeleteRequest ->
+            return@map if (companyDeleteRequest.employees.count() == 1) {
+                companyDeleteRequest.copy(employees = emptyList())
+            } else {
+                val employees = companyDeleteRequest.employees.toMutableList()
+                employees.removeIf { it.uid === authRepository.firebaseUser?.uid }
+                companyDeleteRequest.copy(employees = employees)
+            }
+        }
+
+    private val _acceptLeave =
+        _calculateEmployeesBeforeLeave.filter { companyDeleteRequest ->
+            companyDeleteRequest.employeePosition === EmployeePosition.Employee
+        }
+
+    private val _acceptDelete =
+        _calculateEmployeesBeforeLeave.filter { companyDeleteRequest ->
+            companyDeleteRequest.employees.isEmpty()
+        }
+
+    private val _rejectLeave =
+        leaveCompany.filter { companyDeleteRequest ->
+            companyDeleteRequest.employeePosition === EmployeePosition.Leader &&
+                companyDeleteRequest.employees.isNotEmpty()
+        }
+
+    private val _leaveCompanyComplete =
+        _acceptLeave.flatMapLatest { companyDeleteRequest ->
+            companyRepository.leaveCompany(
+                companyDeleteRequest.companyUid,
+                companyDeleteRequest.employees,
+            )
+        }
+
+    private val _leaveCompanySuccess = _leaveCompanyComplete.filterNextNotification()
+
+    private val _leaveCompanyError =
+        _leaveCompanyComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _deleteCompanyComplete =
+        _acceptDelete.flatMapLatest { companyDeleteRequest ->
+            companyRepository.deleteCompany(companyDeleteRequest.companyUid)
+        }
+
+    private val _deleteCompanySuccess = _deleteCompanyComplete.filterNextNotification()
+
+    private val _deleteCompanyError =
+        _deleteCompanyComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
     private val _updateCompanyUidInUserComplete =
-        _createCompanySuccess
+        merge(_createCompanySuccess, merge(_leaveCompanySuccess, _deleteCompanySuccess).map { "" })
             .flatMapLatest { uid -> userRepository.updateCompanyUid(uid) }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
@@ -123,18 +179,21 @@ constructor(
 
     private val _joinToCompanyError = _joinToCompanyComplete.filterErrorNotification()
 
-    private val _loadCompanyAfterCreateOrJoinComplete =
+    private val _loadCompany =
         merge(_updateCompanyUidInUserSuccess, _joinToCompanySuccess)
-            .flatMapLatest { companyUid -> companyRepository.getCompanyByUid(companyUid) }
+            .flatMapLatest { companyUid ->
+                if (companyUid == "") flowOf(FlowNotification.Next(Company()))
+                else companyRepository.getCompanyByUid(companyUid)
+            }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _loadCompanySuccess =
-        _loadCompanyAfterCreateOrJoinComplete
+        _loadCompany
             .filterNextNotification()
             .dematerialize()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val _loadCompanyError = _loadCompanyAfterCreateOrJoinComplete.filterErrorNotification()
+    private val _loadCompanyError = _loadCompany.filterErrorNotification()
 
     private val _firstLoadCompanyComplete =
         companyUid.flatMapLatest { uid ->
@@ -145,8 +204,7 @@ constructor(
     private val _firstLoadCompanySuccess =
         _firstLoadCompanyComplete.filterNextNotification().dematerialize()
 
-    private val _firstLoadCompanyError =
-        _loadCompanyAfterCreateOrJoinComplete.filterErrorNotification()
+    private val _firstLoadCompanyError = _loadCompany.filterErrorNotification()
 
     // TODO скорее всего не хватает еще одного UiState.Loading
     val companyStateFlow =
@@ -190,13 +248,16 @@ constructor(
 
     private val _spinnerIsLoading =
         merge(
-                merge(createCompany, joinToCompany).map { 1 },
+                merge(createCompany, joinToCompany, leaveCompany).map { 1 },
                 merge(
                         _createCompanyError,
                         _updateCompanyUidInUserError,
                         _joinToCompanyError,
                         _updateCompanyUidInUserSuccess,
                         _updateCompanyUidInUserError,
+                        _rejectLeave,
+                        _leaveCompanyError,
+                        _deleteCompanyError,
                     )
                     .map { -1 },
             )
@@ -235,7 +296,6 @@ constructor(
         merge(
             _updateCompanyUidInUserSuccess.map { "Компания была успешно создана" },
             _joinToCompanySuccess.map { "Запрос на вступление в организацию отправлен" },
-            _loadCompanySuccess.map { "Данные о компании были успешно загружены" },
         )
 
     private val _showErrorSnackBar =
@@ -251,6 +311,12 @@ constructor(
             merge(_firstLoadCompanyError, _loadCompanyError).map { errorNotification ->
                 errorNotification.error.message
                     ?: "При получении данных о компании произошла ошибка"
+            },
+            _rejectLeave.map {
+                "Невозможно покинуть компанию, т.к. вы являетесь директором и в компании более 1 участника"
+            },
+            merge(_leaveCompanyError, _deleteCompanyError).map { errorNotification ->
+                errorNotification.error.message ?: "При выходе из компании произошла ошибка"
             },
         )
 
@@ -284,8 +350,8 @@ constructor(
                 .filterNextNotification()
                 .dematerialize()
                 .collect { companiesFromDatabase ->
-                    companies.clear()
-                    companies.addAll(companiesFromDatabase)
+                    _companies.clear()
+                    _companies.addAll(companiesFromDatabase)
                 }
         }
 

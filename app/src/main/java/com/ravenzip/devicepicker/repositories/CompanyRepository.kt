@@ -68,4 +68,12 @@ constructor(
     fun addEmployeeToCompany(companyUid: String, employee: Employee) =
         flow { emit(companySources.companyEmployees(companyUid).push().setValue(employee).await()) }
             .materialize()
+
+    fun leaveCompany(companyUid: String, employees: List<Employee>) =
+        flow { emit(companySources.companyEmployees(companyUid).setValue(employees).await()) }
+            .materialize()
+
+    fun deleteCompany(companyUid: String) =
+        flow { emit(companySources.companyEmployees(companyUid).removeValue().await()) }
+            .materialize()
 }

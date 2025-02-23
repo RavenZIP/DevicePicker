@@ -35,6 +35,7 @@ import com.ravenzip.devicepicker.constants.enums.EmployeePosition
 import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
+import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.BottomContainer
@@ -244,6 +245,7 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
     val currentUserPositionInCompany =
         viewModel.currentUserPositionInCompany.collectAsStateWithLifecycle().value
     val employeesCount = viewModel.employeesCount.collectAsStateWithLifecycle().value
+    val composableScope = rememberCoroutineScope()
 
     when (currentUserPositionInCompany) {
         EmployeePosition.Leader,
@@ -309,7 +311,17 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
                     icon = IconData.ResourceIcon(R.drawable.sign_in),
                     iconConfig = IconConfig(color = errorColor),
                     colors = ButtonDefaults.containerColor(),
-                ) {}
+                ) {
+                    composableScope.launch {
+                        viewModel.leaveCompany.emit(
+                            CompanyDeleteRequest(
+                                company.uid,
+                                currentUserPositionInCompany,
+                                company.employees,
+                            )
+                        )
+                    }
+                }
             }
         }
 
