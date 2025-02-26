@@ -69,6 +69,7 @@ constructor(
     val companyNameState = TextFieldState(initialValue = "")
     val companyDescriptionState = TextFieldState(initialValue = "")
     val companyAddressState = TextFieldState(initialValue = "")
+    val companyCodeState = TextFieldState(initialValue = "")
 
     val companyState =
         DropDownTextFieldState(
@@ -85,6 +86,7 @@ constructor(
                     companyNameState.value,
                     companyDescriptionState.value,
                     companyAddressState.value,
+                    companyCodeState.value,
                     sharedRepository.userData.fullName,
                 )
             }
@@ -102,14 +104,14 @@ constructor(
                 companyDeleteRequest.copy(employees = emptyList())
             } else {
                 val employees = companyDeleteRequest.employees.toMutableList()
-                employees.removeIf { it.uid === authRepository.firebaseUser?.uid }
+                employees.removeIf { it.uid == authRepository.firebaseUser?.uid }
                 companyDeleteRequest.copy(employees = employees)
             }
         }
 
     private val _acceptLeave =
         _calculateEmployeesBeforeLeave.filter { companyDeleteRequest ->
-            companyDeleteRequest.employeePosition === EmployeePosition.Employee
+            companyDeleteRequest.employeePosition == EmployeePosition.Employee
         }
 
     private val _acceptDelete =
@@ -119,7 +121,7 @@ constructor(
 
     private val _rejectLeave =
         leaveCompany.filter { companyDeleteRequest ->
-            companyDeleteRequest.employeePosition === EmployeePosition.Leader &&
+            companyDeleteRequest.employeePosition == EmployeePosition.Leader &&
                 companyDeleteRequest.employees.isNotEmpty()
         }
 
@@ -166,8 +168,14 @@ constructor(
 
     private val _createCompanyError = _createCompanyComplete.filterErrorNotification()
 
+    private val _acceptJoinToCompany =
+        joinToCompany.filter { companyCodeState.value == companyState.value.code }
+
+    private val _rejectJoinToCompany =
+        joinToCompany.filter { companyCodeState.value != companyState.value.code }
+
     private val _joinToCompanyComplete =
-        joinToCompany
+        _acceptJoinToCompany
             .flatMapLatest { companyRepository.addRequestToJoinInCompany(companyState.value.uid) }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
@@ -258,6 +266,7 @@ constructor(
                         _rejectLeave,
                         _leaveCompanyError,
                         _deleteCompanyError,
+                        _rejectJoinToCompany,
                     )
                     .map { -1 },
             )
@@ -318,6 +327,7 @@ constructor(
             merge(_leaveCompanyError, _deleteCompanyError).map { errorNotification ->
                 errorNotification.error.message ?: "При выходе из компании произошла ошибка"
             },
+            _rejectJoinToCompany.map { "Введен неверный код организации" },
         )
 
     val uiEvent =
@@ -334,6 +344,7 @@ constructor(
                 companyAddressState.reset()
                 companyState.reset()
                 companyLeaderState.reset()
+                companyCodeState.reset()
 
                 if (type == CompanyScreenActionsEnum.CREATE_COMPANY) {
                     companyAddressState.enable()
@@ -361,7 +372,7 @@ constructor(
                 .collect { company ->
                     val leader =
                         company.employees.first { employee ->
-                            employee.position === EmployeePosition.Leader
+                            employee.position == EmployeePosition.Leader
                         }
 
                     companyLeaderState.setValue(leader.name)

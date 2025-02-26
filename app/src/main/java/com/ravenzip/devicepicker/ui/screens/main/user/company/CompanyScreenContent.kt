@@ -39,7 +39,6 @@ import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.components.ScreenTitle
 import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenActionsEnum
 import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenTypesEnum
 import com.ravenzip.devicepicker.ui.theme.errorColor
@@ -144,14 +143,7 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
-
-            ScreenTitle(
-                if (page == 0) "Первоначальная настройка работы с компанией"
-                else viewModel.companyScreenTypeState.value.description
-            )
-
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             when (page) {
                 0 -> {
@@ -169,6 +161,7 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                         title = "Важно",
                         text =
                             "Перед началом работы с разделом \"Компания\" необходимо создать свою компанию, либо вступить в уже существующую.",
+                        colors = CardDefaults.veryLightPrimary(),
                     )
                 }
 
@@ -187,10 +180,23 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                                 viewModel.companyAddressState,
                                 label = "Адрес",
                             )
+                            SinglenessOutlinedTextField(viewModel.companyCodeState, label = "Код")
+
+                            Spacer(modifier = Modifier.height(5.dp))
+
+                            InfoCard(
+                                icon = IconData.ResourceIcon(R.drawable.i_info),
+                                title = "Важно",
+                                text =
+                                    "Для создания компании заполните обязательные поля и нажмите кнопку \"Создать\". " +
+                                        "После создания компании вы будете перенаправлены на главный экран вашей компании." +
+                                        "Код необходим для авторизации сотрудников внутри вашей компании",
+                                colors = CardDefaults.veryLightPrimary(),
+                            )
                         }
 
                         CompanyScreenActionsEnum.JOIN_COMPANY -> {
-                            DropDownTextField(viewModel.companyState, label = "Компании")
+                            DropDownTextField(viewModel.companyState, label = "Компания")
                             SinglenessOutlinedTextField(
                                 viewModel.companyLeaderState,
                                 label = "Руководитель",
@@ -198,6 +204,18 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                             SinglenessOutlinedTextField(
                                 viewModel.companyAddressState,
                                 label = "Адрес",
+                            )
+                            SinglenessOutlinedTextField(viewModel.companyCodeState, label = "Код")
+
+                            Spacer(modifier = Modifier.height(5.dp))
+
+                            InfoCard(
+                                icon = IconData.ResourceIcon(R.drawable.i_info),
+                                title = "Важно",
+                                text =
+                                    "Для присоединения к уже существующей компании выберите компанию из списка, " +
+                                        "введите код доступа и нажмите на кнопку \"Присоединиться\"",
+                                colors = CardDefaults.veryLightPrimary(),
                             )
                         }
                     }
@@ -255,6 +273,8 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(15.dp),
             ) {
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Card(
                     modifier = Modifier.fillMaxWidth(0.9f),
                     colors = CardDefaults.veryLightPrimary(),

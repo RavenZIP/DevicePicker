@@ -40,12 +40,19 @@ constructor(
             }
             .materialize()
 
-    fun addCompany(name: String, description: String, address: String, leaderFullName: String) =
+    fun addCompany(
+        name: String,
+        description: String,
+        address: String,
+        code: String,
+        leaderFullName: String,
+    ) =
         flow {
                 val uid = companySources.companyBaseSource().push().key.toString()
                 val leader =
                     Employee.createLeader(authRepository.firebaseUser!!.uid, leaderFullName)
-                val company = Company(uid, name, description, address, listOf(leader), listOf())
+                val company =
+                    Company(uid, name, description, address, listOf(leader), listOf(), code)
 
                 companySources.companyByUid(uid).setValue(company).await()
                 emit(uid)
