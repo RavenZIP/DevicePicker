@@ -55,7 +55,10 @@ fun UserProfileNavigationGraph(
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.COMPANY) {
-            CompanyScreenScaffold(padding = padding)
+            CompanyScreenScaffold(
+                padding = padding,
+                navigateBack = { navController.popBackStack() },
+            )
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
