@@ -81,6 +81,5 @@ constructor(
             .materialize()
 
     fun deleteCompany(companyUid: String) =
-        flow { emit(companySources.companyEmployees(companyUid).removeValue().await()) }
-            .materialize()
+        flow { emit(companySources.companyByUid(companyUid).removeValue().await()) }.materialize()
 }

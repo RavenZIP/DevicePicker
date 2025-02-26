@@ -99,15 +99,17 @@ constructor(
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _calculateEmployeesBeforeLeave =
-        leaveCompany.map { companyDeleteRequest ->
-            return@map if (companyDeleteRequest.employees.count() == 1) {
-                companyDeleteRequest.copy(employees = emptyList())
-            } else {
-                val employees = companyDeleteRequest.employees.toMutableList()
-                employees.removeIf { it.uid == authRepository.firebaseUser?.uid }
-                companyDeleteRequest.copy(employees = employees)
+        leaveCompany
+            .map { companyDeleteRequest ->
+                return@map if (companyDeleteRequest.employees.count() == 1) {
+                    companyDeleteRequest.copy(employees = emptyList())
+                } else {
+                    val employees = companyDeleteRequest.employees.toMutableList()
+                    employees.removeIf { it.uid == authRepository.firebaseUser?.uid }
+                    companyDeleteRequest.copy(employees = employees)
+                }
             }
-        }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _acceptLeave =
         _calculateEmployeesBeforeLeave.filter { companyDeleteRequest ->
@@ -120,7 +122,7 @@ constructor(
         }
 
     private val _rejectLeave =
-        leaveCompany.filter { companyDeleteRequest ->
+        _calculateEmployeesBeforeLeave.filter { companyDeleteRequest ->
             companyDeleteRequest.employeePosition == EmployeePosition.Leader &&
                 companyDeleteRequest.employees.isNotEmpty()
         }
@@ -141,9 +143,11 @@ constructor(
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _deleteCompanyComplete =
-        _acceptDelete.flatMapLatest { companyDeleteRequest ->
-            companyRepository.deleteCompany(companyDeleteRequest.companyUid)
-        }
+        _acceptDelete
+            .flatMapLatest { companyDeleteRequest ->
+                companyRepository.deleteCompany(companyDeleteRequest.companyUid)
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _deleteCompanySuccess = _deleteCompanyComplete.filterNextNotification()
 
@@ -190,7 +194,7 @@ constructor(
     private val _loadCompany =
         merge(_updateCompanyUidInUserSuccess, _joinToCompanySuccess)
             .flatMapLatest { companyUid ->
-                if (companyUid == "") flowOf(FlowNotification.Next(Company()))
+                if (companyUid.isEmpty()) flowOf(FlowNotification.Next(Company()))
                 else companyRepository.getCompanyByUid(companyUid)
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
@@ -204,15 +208,20 @@ constructor(
     private val _loadCompanyError = _loadCompany.filterErrorNotification()
 
     private val _firstLoadCompanyComplete =
-        companyUid.flatMapLatest { uid ->
-            if (uid.isEmpty()) flowOf(FlowNotification.Next(Company()))
-            else companyRepository.getCompanyByUid(uid)
-        }
+        companyUid
+            .flatMapLatest { uid ->
+                if (uid.isEmpty()) flowOf(FlowNotification.Next(Company()))
+                else companyRepository.getCompanyByUid(uid)
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _firstLoadCompanySuccess =
         _firstLoadCompanyComplete.filterNextNotification().dematerialize()
 
-    private val _firstLoadCompanyError = _loadCompany.filterErrorNotification()
+    private val _firstLoadCompanyError =
+        _firstLoadCompanyComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     // TODO скорее всего не хватает еще одного UiState.Loading
     val companyStateFlow =
@@ -234,9 +243,14 @@ constructor(
                 initialValue = UiState.Loading("Загрузка..."),
             )
 
-    val currentUserPositionInCompany =
+    private val _hasCompany =
         companyStateFlow
             .filterIsInstance<UiState.Success<Company>>()
+            .filter { companyState -> companyState.data.uid.isNotEmpty() }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    val currentUserPositionInCompany =
+        _hasCompany
             .map { companyState ->
                 companyState.data.employees
                     .first { employee -> employee.uid == authRepository.firebaseUser?.uid }
@@ -249,8 +263,7 @@ constructor(
             )
 
     val employeesCount =
-        companyStateFlow
-            .filterIsInstance<UiState.Success<Company>>()
+        _hasCompany
             .map { company -> company.data.employees.count() }
             .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = 0)
 
@@ -277,6 +290,7 @@ constructor(
         merge(
             createCompany.map { "Создание компании" },
             joinToCompany.map { "Отправка заявки на вступление" },
+            leaveCompany.map { "Выход из компании" },
         )
 
     val spinner =
