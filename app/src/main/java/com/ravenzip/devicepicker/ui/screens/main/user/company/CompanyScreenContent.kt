@@ -180,7 +180,10 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                                 viewModel.companyAddressState,
                                 label = "Адрес",
                             )
-                            SinglenessOutlinedTextField(viewModel.companyCodeState, label = "Код")
+                            SinglenessOutlinedTextField(
+                                viewModel.companyCodeState,
+                                label = "Код доступа",
+                            )
 
                             Spacer(modifier = Modifier.height(5.dp))
 
@@ -205,7 +208,10 @@ private fun CompanyScreenStartPage(viewModel: CompanyViewModel) {
                                 viewModel.companyAddressState,
                                 label = "Адрес",
                             )
-                            SinglenessOutlinedTextField(viewModel.companyCodeState, label = "Код")
+                            SinglenessOutlinedTextField(
+                                viewModel.companyCodeState,
+                                label = "Код доступа",
+                            )
 
                             Spacer(modifier = Modifier.height(5.dp))
 
@@ -314,16 +320,6 @@ private fun CompanyScreenMainPage(viewModel: CompanyViewModel, company: Company)
                         colors = ButtonDefaults.veryLightPrimary(),
                     )
                 }
-
-                CustomButton(
-                    title = "Мои устройства",
-                    titleConfig = TextConfig.onSurfaceH2,
-                    text = "Просмотр устройств, которые принадлежали или принадлежат вам",
-                    textConfig = TextConfig.onSurface85Small,
-                    icon = IconData.ResourceIcon(R.drawable.i_devices),
-                    iconConfig = IconConfig.Primary,
-                    colors = ButtonDefaults.veryLightPrimary(),
-                )
 
                 RowIconButton(
                     text = "Покинуть компанию",
