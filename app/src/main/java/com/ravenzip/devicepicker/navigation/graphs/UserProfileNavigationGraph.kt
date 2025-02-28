@@ -41,6 +41,7 @@ fun UserProfileNavigationGraph(
                     navController.navigate(UserProfileGraph.DEVICE_HISTORY)
                 },
                 navigateToReviews = { navController.navigate(UserProfileGraph.REVIEWS) },
+                navigateToUserDevices = { navController.navigate(UserProfileGraph.USER_DEVICES) },
                 navigateToSplashScreen = navigateToSplashScreen,
                 padding = padding,
             )

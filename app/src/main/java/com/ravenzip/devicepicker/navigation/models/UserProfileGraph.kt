@@ -7,7 +7,7 @@ object UserProfileGraph {
     const val COMPANY = "COMPANY"
     const val DEVICE_HISTORY = "DEVICE_HISTORY"
     const val REVIEWS = "REVIEWS"
-    const val PROMOTIONS = "PROMOTIONS"
+    const val USER_DEVICES = "USER_DEVICES"
     const val VISUAL_APPEARANCE = "VISUAL_APPEARANCE"
     const val NOTIFICATIONS = "NOTIFICATIONS"
     const val UPDATES = "UPDATES"

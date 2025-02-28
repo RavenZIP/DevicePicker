@@ -38,6 +38,7 @@ fun UserProfileScreenContent(
     navigateToCompany: () -> Unit,
     navigateToDeviceHistory: () -> Unit,
     navigateToReviews: () -> Unit,
+    navigateToUserDevices: () -> Unit,
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
@@ -123,14 +124,16 @@ fun UserProfileScreenContent(
         Spacer(modifier = Modifier.padding(top = 15.dp))
 
         CustomButton(
-            title = "Акции",
+            title = "Мои устройства",
             titleConfig = TextConfig.onSurfaceH2,
-            text = "Посмотреть информацию об имеющихся акциях и выгодных предложениях",
+            text = "Просмотр устройств, которые принадлежали или принадлежат вам",
             textConfig = TextConfig.onSurface85Small,
-            icon = IconData.ResourceIcon(R.drawable.i_stocks),
+            icon = IconData.ResourceIcon(R.drawable.i_devices),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            navigateToUserDevices()
+        }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
 
