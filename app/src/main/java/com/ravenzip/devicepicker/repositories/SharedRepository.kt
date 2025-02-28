@@ -1,7 +1,5 @@
 package com.ravenzip.devicepicker.repositories
 
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.toMutableStateList
 import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
@@ -25,7 +23,7 @@ constructor(
     private val userRepository: UserRepository,
 ) {
     /** Все устройства (компактная модель) */
-    private val _allDevices = MutableStateFlow(mutableStateListOf<DeviceCompact>())
+    private val _allDevices = MutableStateFlow(listOf<DeviceCompact>())
 
     /** Кэш устройств на время работы с приложением */
     private val _cachedDevices = MutableStateFlow(listOf<Device>())
@@ -46,7 +44,7 @@ constructor(
     suspend fun getDeviceCompactList() {
         deviceRepository
             .getDeviceCompactList()
-            .onEach { devices -> _allDevices.update { devices.toMutableStateList() } }
+            .onEach { devices -> _allDevices.update { devices.toList() } }
             .flatMapLatest { devices -> imageRepository.getImageUrls(devices) }
             .flatMapMerge(concurrency = 3) { it }
             .collect { imageUrl -> setImageUrlToDevices(imageUrl) }
@@ -62,7 +60,7 @@ constructor(
             updatedAllDevices[deviceIndex] =
                 updatedAllDevices[deviceIndex].copy(imageUrl = imageUrl.value)
 
-            _allDevices.update { updatedAllDevices.toMutableStateList() }
+            _allDevices.update { updatedAllDevices.toList() }
         }
     }
 
