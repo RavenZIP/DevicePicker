@@ -8,7 +8,6 @@ import com.ravenzip.kotlinflowextended.functions.materialize
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -24,15 +23,17 @@ constructor(private val authRepository: AuthRepository, private val userSources:
                 if (userUid != null) {
                     val response = userSources.currentUser(userUid).get().await()
                     val convertedResponse = response.getValue<User>()
-                    emit(convertedResponse ?: User())
+
+                    if (convertedResponse == null) {
+                        throw Exception("При загрузке данных о пользователе произошла ошибка")
+                    }
+
+                    emit(convertedResponse)
                 } else {
                     throw Exception("Ошибка авторизации пользователя")
                 }
             }
-            .catch {
-                withContext(Dispatchers.Main) { Log.e("getUserData", "${it.message}") }
-                emit(User())
-            }
+            .materialize()
 
     suspend fun createUserData(): Boolean {
         return try {

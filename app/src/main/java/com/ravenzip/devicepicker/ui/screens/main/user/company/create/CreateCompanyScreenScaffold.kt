@@ -1,20 +1,23 @@
-package com.ravenzip.devicepicker.ui.screens.main.user.company
+package com.ravenzip.devicepicker.ui.screens.main.user.company.create
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.showError
-import com.ravenzip.devicepicker.extensions.functions.showSuccess
 import com.ravenzip.devicepicker.state.UiEvent
+import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CreateCompanyViewModel
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
-import com.ravenzip.devicepicker.viewmodels.user.CompanyViewModel
-import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow
@@ -22,12 +25,13 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
-fun CompanyScreenScaffold(
-    viewModel: CompanyViewModel = hiltViewModel(),
+fun CompanyScreenCreateScaffold(
+    viewModel: CreateCompanyViewModel = hiltViewModel(),
     padding: PaddingValues,
+    navigateTo: (route: String) -> Unit,
     navigateBack: () -> Unit,
 ) {
-    val spinner = viewModel.spinner.collectAsStateWithLifecycle().value
+    val spinnerState = viewModel.spinner.collectAsStateWithLifecycle().value
 
     val backArrow = remember {
         BackArrow(
@@ -41,28 +45,30 @@ fun CompanyScreenScaffold(
         modifier = Modifier.padding(padding),
         topBar = { TopAppBar("Компания", backArrow = backArrow) },
     ) { innerPadding ->
-        CompanyScreenContent(viewModel, innerPadding)
+        Column(
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            verticalArrangement = Arrangement.spacedBy(15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            CompanyScreenCreateContent(viewModel)
+        }
+    }
 
-        UiEventEffect(viewModel.uiEvent) { event ->
-            when (event) {
-                is UiEvent.ShowSnackBar.Success -> {
-                    viewModel.snackBarHostState.showSuccess(event.message)
-                }
+    UiEventEffect(viewModel.uiEvent) { event ->
+        when (event) {
+            is UiEvent.Navigate -> navigateTo(event.route)
 
-                is UiEvent.ShowSnackBar.Error -> {
-                    viewModel.snackBarHostState.showError(event.message)
-                }
+            is UiEvent.ShowSnackBar.Error -> {
+                viewModel.snackBarHostState.showError(event.message)
+            }
 
-                else -> {
-                    // do nothing
-                }
+            else -> {
+                // do nothing
             }
         }
     }
 
-    SnackBar(viewModel.snackBarHostState)
-
-    if (spinner.isLoading) {
-        Spinner(spinner.text)
+    if (spinnerState.isLoading) {
+        Spinner(spinnerState.text)
     }
 }

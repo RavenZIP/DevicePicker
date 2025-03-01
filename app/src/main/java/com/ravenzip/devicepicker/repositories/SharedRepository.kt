@@ -4,6 +4,7 @@ import com.ravenzip.devicepicker.model.User
 import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
+import com.ravenzip.kotlinflowextended.models.FlowNotification
 import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -64,11 +65,12 @@ constructor(
         }
     }
 
-    fun getUserData(): Flow<Unit> {
-        return userRepository
-            .getUserData()
-            .onEach { userData -> _userData.update { userData } }
-            .map {}
+    fun loadUserData(): Flow<FlowNotification<User>> {
+        return userRepository.getUserData().onEach { flowNotification ->
+            if (flowNotification is FlowNotification.Next) {
+                _userData.update { flowNotification.value }
+            }
+        }
     }
 
     fun getCachedDevice(uid: String): Device? {

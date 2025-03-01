@@ -33,6 +33,7 @@ constructor(
     val uiEffect = logoutWithDelay.map { UiEvent.Navigate() }
 
     init {
-        viewModelScope.launch { sharedRepository.getUserData().collect() }
+        // TODO добавить обработку ошибок
+        viewModelScope.launch { sharedRepository.loadUserData().collect() }
     }
 }

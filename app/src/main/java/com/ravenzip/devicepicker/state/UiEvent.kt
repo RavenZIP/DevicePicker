@@ -3,7 +3,8 @@ package com.ravenzip.devicepicker.state
 /** Действия UI */
 sealed class UiEvent {
     /** Выполнить навигацию */
-    class Navigate() : UiEvent()
+    // TODO временно дефолтная инициализация как пустая строка, потом убрать
+    data class Navigate(val route: String = "") : UiEvent()
 
     /** Отобразить снэкбар */
     sealed class ShowSnackBar() : UiEvent() {

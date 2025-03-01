@@ -12,7 +12,6 @@ import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
 import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.admin.AdminScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.CompanyScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.devices.UserDevicesScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.history.DeviceHistoryScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.profile.UserProfileScaffold
@@ -55,11 +54,11 @@ fun UserProfileNavigationGraph(
         navigateWithSlideAnimation(route = UserProfileGraph.USER_SETTINGS) {
             UserSettingsScreenScaffold(padding = padding)
         }
-
+        // Домашний экран
         navigateWithSlideAnimation(route = UserProfileGraph.COMPANY) {
-            CompanyScreenScaffold(
+            CompanyNavigationGraph(
                 padding = padding,
-                navigateBack = { navController.popBackStack() },
+                navigateToUserProfile = { navController.popBackStack() },
             )
         }
 
