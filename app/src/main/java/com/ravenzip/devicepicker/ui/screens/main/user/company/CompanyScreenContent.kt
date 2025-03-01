@@ -11,13 +11,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -51,7 +54,6 @@ import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
-import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
@@ -63,12 +65,9 @@ fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
     val screenTypeByUserState = viewModel.screenModeByUserState.collectAsStateWithLifecycle().value
     val companyState = viewModel.companyStateFlow.collectAsStateWithLifecycle().value
 
-    when (companyState) {
-        is UiState.Success -> {
-            Box(
-                modifier = Modifier.fillMaxSize().padding(padding),
-                contentAlignment = Alignment.Center,
-            ) {
+    Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
+        when (companyState) {
+            is UiState.Success -> {
                 when (screenTypeByUserState) {
                     CompanyScreenTypesEnum.ANONYMOUS -> {
                         InfoCard(
@@ -89,21 +88,29 @@ fun CompanyScreenContent(viewModel: CompanyViewModel, padding: PaddingValues) {
                     }
                 }
             }
-        }
 
-        is UiState.Error -> {
-            InfoCard(
-                text = "Произошла ошибка",
-                description =
-                    "При загрузке данных произошла ошибка: ${companyState.message}. " +
-                        "Пожалуйста, попробуйте позже",
-                icon = ImageVector.vectorResource(id = R.drawable.i_error),
-                iconColor = errorColor,
-            )
-        }
+            is UiState.Error -> {
+                InfoCard(
+                    text = "Произошла ошибка",
+                    description =
+                        "При загрузке данных произошла ошибка: ${companyState.message}. " +
+                            "Пожалуйста, попробуйте позже",
+                    icon = ImageVector.vectorResource(id = R.drawable.i_error),
+                    iconColor = errorColor,
+                )
+            }
 
-        is UiState.Loading -> {
-            Spinner(companyState.message)
+            is UiState.Loading -> {
+                Card(colors = CardDefaults.veryLightPrimary()) {
+                    Box(modifier = Modifier.padding(15.dp), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(50.dp),
+                            color = MaterialTheme.colorScheme.primary,
+                            strokeWidth = 4.dp,
+                        )
+                    }
+                }
+            }
         }
     }
 }
