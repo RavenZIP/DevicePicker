@@ -15,8 +15,8 @@ import com.ravenzip.devicepicker.repositories.UserRepository
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.screens.main.user.company.SpinnerState
-import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenActionsEnum
-import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenTypesEnum
+import com.ravenzip.devicepicker.ui.screens.main.user.company.enum.CompanyScreenActionsEnum
+import com.ravenzip.devicepicker.ui.screens.main.user.company.enum.CompanyScreenTypesEnum
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
@@ -55,7 +55,7 @@ constructor(
     val joinToCompany = MutableSharedFlow<Unit>()
     val leaveCompany = MutableSharedFlow<CompanyDeleteRequest>()
 
-    val companyUid =
+    private val _companyUid =
         sharedRepository.userDataFlow
             .map { userData -> userData.companyUid }
             .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
@@ -208,7 +208,7 @@ constructor(
     private val _loadCompanyError = _loadCompany.filterErrorNotification()
 
     private val _firstLoadCompanyComplete =
-        companyUid
+        _companyUid
             .flatMapLatest { uid ->
                 if (uid.isEmpty()) flowOf(FlowNotification.Next(Company()))
                 else companyRepository.getCompanyByUid(uid)
@@ -303,7 +303,7 @@ constructor(
             )
 
     val screenModeByUserState =
-        companyUid
+        _companyUid
             .map { companyUid ->
                 if (authRepository.isAnonymousUser) CompanyScreenTypesEnum.ANONYMOUS
                 else if (companyUid.isEmpty()) CompanyScreenTypesEnum.NOT_REGISTERED

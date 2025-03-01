@@ -39,8 +39,8 @@ import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.BottomContainer
-import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenActionsEnum
-import com.ravenzip.devicepicker.ui.screens.main.user.company.enums.CompanyScreenTypesEnum
+import com.ravenzip.devicepicker.ui.screens.main.user.company.enum.CompanyScreenActionsEnum
+import com.ravenzip.devicepicker.ui.screens.main.user.company.enum.CompanyScreenTypesEnum
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.viewmodels.user.CompanyViewModel
 import com.ravenzip.workshop.components.CustomButton
