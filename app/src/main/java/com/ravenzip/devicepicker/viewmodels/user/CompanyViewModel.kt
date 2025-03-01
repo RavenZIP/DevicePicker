@@ -223,7 +223,6 @@ constructor(
             .filterErrorNotification()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    // TODO скорее всего не хватает еще одного UiState.Loading
     val companyStateFlow =
         merge(
                 merge(_firstLoadCompanySuccess, _loadCompanySuccess).map { company ->
@@ -236,6 +235,7 @@ constructor(
 
                     return@map UiState.Error(errorMessage)
                 },
+                _loadCompany.map { UiState.Loading("Загрузка...") },
             )
             .stateIn(
                 scope = viewModelScope,
@@ -317,7 +317,7 @@ constructor(
 
     private val _showSuccessSnackBar =
         merge(
-            _updateCompanyUidInUserSuccess.map { "Компания была успешно создана" },
+            _createCompanySuccess.map { "Компания была успешно создана" },
             _joinToCompanySuccess.map { "Запрос на вступление в организацию отправлен" },
         )
 
