@@ -38,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.TagsEnum
 import com.ravenzip.devicepicker.constants.map.colorMap
@@ -92,7 +92,7 @@ import com.skydoves.landscapist.fresco.FrescoImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, padding: PaddingValues) {
-    val uiState = viewModel.device.collectAsState().value
+    val uiState = viewModel.device.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { SnackbarHostState() }
 
     Box(modifier = Modifier.fillMaxSize().padding(padding)) {
@@ -104,12 +104,13 @@ fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, padding: PaddingValu
             is UiState.Success -> {
                 val device = uiState.data
 
-                val title = viewModel.title.collectAsState().value
-                val specifications = viewModel.specifications.collectAsState().value
-                val shortTags = viewModel.shortTags.collectAsState().value
-                val tags = viewModel.tags.collectAsState().value
-                val feedbacks = viewModel.feedbacks.collectAsState().value
-                val specificationsKeys = viewModel.specificationsKeys.collectAsState().value
+                val title = viewModel.title.collectAsStateWithLifecycle().value
+                val specifications = viewModel.specifications.collectAsStateWithLifecycle().value
+                val shortTags = viewModel.shortTags.collectAsStateWithLifecycle().value
+                val tags = viewModel.tags.collectAsStateWithLifecycle().value
+                val feedbacks = viewModel.feedbacks.collectAsStateWithLifecycle().value
+                val specificationsKeys =
+                    viewModel.specificationsKeys.collectAsStateWithLifecycle().value
 
                 val pagerState = rememberPagerState(pageCount = { device.imageUrls.count() })
                 val sheetState = rememberModalBottomSheetState()

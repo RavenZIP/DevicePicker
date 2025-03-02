@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,6 +15,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.inverseMixColors
 import com.ravenzip.devicepicker.ui.components.BottomContainer
@@ -33,7 +33,7 @@ fun LoginScreen(
     navigateToHomeScreen: () -> Unit,
     navigateToForgotPassScreen: () -> Unit,
 ) {
-    val isLoadingState = viewModel.isLoading.collectAsState().value
+    val isLoadingState = viewModel.isLoading.collectAsStateWithLifecycle().value
 
     val snackBarHostState = remember { viewModel.snackBarHostState }
 

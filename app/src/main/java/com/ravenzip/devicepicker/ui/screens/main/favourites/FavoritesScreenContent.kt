@@ -7,10 +7,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.ui.components.RowDeviceCard
 import com.ravenzip.devicepicker.viewmodels.main.FavouritesViewModel
 
@@ -20,7 +20,7 @@ fun FavouritesScreenContent(
     padding: PaddingValues,
     navigateToDevice: (uid: String) -> Unit,
 ) {
-    val favourites = viewModel.favourites.collectAsState().value
+    val favourites = viewModel.favourites.collectAsStateWithLifecycle().value
 
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(padding),

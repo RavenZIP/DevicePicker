@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +18,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.AuthVariantsEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
@@ -38,8 +38,8 @@ fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel(),
     navigateToHomeScreen: () -> Unit,
 ) {
-    val isLoadingState = viewModel.isLoading.collectAsState().value
-    val spinnerTextState = viewModel.spinnerText.collectAsState().value
+    val isLoadingState = viewModel.isLoading.collectAsStateWithLifecycle().value
+    val spinnerTextState = viewModel.spinnerText.collectAsStateWithLifecycle().value
 
     val snackBarHostState = remember { viewModel.snackBarHostState }
 

@@ -15,7 +15,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.workshop.components.VerticalGrid
 import kotlinx.coroutines.flow.StateFlow
@@ -33,8 +33,8 @@ fun SearchScreenContent(
     deviceTypesState: StateFlow<List<String>>,
     padding: PaddingValues,
 ) {
-    val brands = brandsState.collectAsState().value
-    val deviceTypes = deviceTypesState.collectAsState().value
+    val brands = brandsState.collectAsStateWithLifecycle().value
+    val deviceTypes = deviceTypesState.collectAsStateWithLifecycle().value
 
     Column(
         modifier = Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()),

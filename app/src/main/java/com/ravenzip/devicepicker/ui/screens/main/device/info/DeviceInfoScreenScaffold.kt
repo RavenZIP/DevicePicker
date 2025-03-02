@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.viewmodels.home.DeviceInfoViewModel
 import com.ravenzip.workshop.components.SnackBar
@@ -22,7 +22,7 @@ fun DeviceInfoScreenScaffold(
     navigateBack: () -> Unit,
     padding: PaddingValues,
 ) {
-    val topAppBarItems = viewModel.topAppBarButtons.collectAsState().value
+    val topAppBarItems = viewModel.topAppBarButtons.collectAsStateWithLifecycle().value
 
     val backArrow = remember {
         BackArrow(

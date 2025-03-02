@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,6 +16,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.constants.enums.AuthCardEnum
 import com.ravenzip.devicepicker.extensions.functions.defaultCardColors
@@ -33,7 +33,7 @@ import com.ravenzip.workshop.data.icon.IconData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
-    val isLoadingState = viewModel.isLoading.collectAsState().value
+    val isLoadingState = viewModel.isLoading.collectAsStateWithLifecycle().value
     val snackBarHostState = remember { viewModel.snackBarHostState }
 
     val interactionSource = remember { MutableInteractionSource() }
