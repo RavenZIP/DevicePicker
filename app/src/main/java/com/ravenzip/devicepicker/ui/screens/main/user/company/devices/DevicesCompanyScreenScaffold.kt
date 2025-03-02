@@ -41,7 +41,7 @@ fun DevicesCompanyScreenScaffold(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            DevicesCompanyScreenContent()
+            DevicesCompanyScreenContent(viewModel)
         }
     }
 }

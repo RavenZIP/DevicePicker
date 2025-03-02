@@ -65,7 +65,7 @@ fun CompanyNavigationGraph(
             val viewModel: CompanyInfoViewModel =
                 hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
 
-            DevicesCompanyScreenScaffold(
+            EmployeesCompanyScreenScaffold(
                 viewModel = viewModel,
                 padding = padding,
                 navigateBack = { navController.popBackStack() },
@@ -76,7 +76,7 @@ fun CompanyNavigationGraph(
             val viewModel: CompanyInfoViewModel =
                 hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
 
-            EmployeesCompanyScreenScaffold(
+            DevicesCompanyScreenScaffold(
                 viewModel = viewModel,
                 padding = padding,
                 navigateBack = { navController.popBackStack() },

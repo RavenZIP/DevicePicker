@@ -41,7 +41,7 @@ fun EmployeesCompanyScreenScaffold(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            EmployeesCompanyScreenContent()
+            EmployeesCompanyScreenContent(viewModel)
         }
     }
 }
