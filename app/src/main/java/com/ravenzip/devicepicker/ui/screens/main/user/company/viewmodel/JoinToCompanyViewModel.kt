@@ -14,13 +14,13 @@ import com.ravenzip.devicepicker.ui.screens.main.user.company.SpinnerState
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
+import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.state.special.DropDownTextFieldState
 import com.ravenzip.workshop.forms.state.special.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -61,7 +61,11 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
         )
     val companyLeaderState = TextFieldState(initialValue = "", disable = true)
     val companyAddressState = TextFieldState(initialValue = "", disable = true)
-    val companyCodeState = TextFieldState(initialValue = "")
+    val companyCodeState =
+        TextFieldState(
+            initialValue = "",
+            validators = listOf { value -> Validators.required(value) },
+        )
 
     private val _acceptJoinToCompany =
         joinToCompany.filter { companyCodeState.value == companyState.value.code }
@@ -147,14 +151,13 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             .launchIn(viewModelScope)
 
         companyState.valueChanges
-            .drop(1)
             .onEach { company ->
                 val leader =
-                    company.employees.first { employee ->
+                    company.employees.firstOrNull { employee ->
                         employee.position == EmployeePosition.Leader
                     }
 
-                companyLeaderState.setValue(leader.name)
+                companyLeaderState.setValue(leader?.name ?: "")
                 companyAddressState.setValue(company.address)
 
                 if (company.uid.isNotEmpty()) {

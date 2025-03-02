@@ -13,6 +13,7 @@ import com.ravenzip.devicepicker.ui.screens.main.user.company.SpinnerState
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
+import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.state.special.TextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -38,10 +39,26 @@ constructor(
 
     val snackBarHostState = SnackbarHostState()
 
-    val companyNameState = TextFieldState(initialValue = "")
-    val companyDescriptionState = TextFieldState(initialValue = "")
-    val companyAddressState = TextFieldState(initialValue = "")
-    val companyCodeState = TextFieldState(initialValue = "")
+    val companyNameState =
+        TextFieldState(
+            initialValue = "",
+            validators = listOf { value -> Validators.required(value) },
+        )
+    val companyDescriptionState =
+        TextFieldState(
+            initialValue = "",
+            validators = listOf { value -> Validators.required(value) },
+        )
+    val companyAddressState =
+        TextFieldState(
+            initialValue = "",
+            validators = listOf { value -> Validators.required(value) },
+        )
+    val companyCodeState =
+        TextFieldState(
+            initialValue = "",
+            validators = listOf { value -> Validators.required(value) },
+        )
 
     private val _createCompanyComplete =
         createCompany
