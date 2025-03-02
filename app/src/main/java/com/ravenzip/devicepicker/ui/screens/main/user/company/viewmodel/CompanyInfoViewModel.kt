@@ -138,7 +138,9 @@ constructor(
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _updateCompanyUidInUserError =
-        _updateCompanyUidInUserComplete.filterErrorNotification()
+        _updateCompanyUidInUserComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _updateUserDataComplete =
         _updateCompanyUidInUserSuccess
