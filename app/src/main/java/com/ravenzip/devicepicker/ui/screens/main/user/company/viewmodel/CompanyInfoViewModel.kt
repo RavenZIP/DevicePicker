@@ -46,6 +46,7 @@ constructor(
     private val _companyUid = savedStateHandle.getStateFlow("uid", "")
 
     val navigateTo = MutableSharedFlow<String>()
+    val navigateBackToParent = MutableSharedFlow<Unit>()
     val leaveCompany = MutableSharedFlow<CompanyDeleteRequest>()
 
     val snackBarHostState = SnackbarHostState()
@@ -218,13 +219,11 @@ constructor(
 
     val uiEvent =
         merge(
-            merge(
-                    _updateUserDataSuccess
-                        .flatMapLatest { _updateCompanyUidInUserSuccess }
-                        .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" },
-                    navigateTo,
-                )
-                .map { route -> UiEvent.Navigate.ByRoute(route) },
+            navigateTo.map { route -> UiEvent.Navigate.ByRoute(route) },
+            _updateUserDataSuccess.map {
+                UiEvent.Navigate.WithoutBackStack(CompanyGraph.COMPANY_ROOT)
+            },
+            navigateBackToParent.map { UiEvent.Navigate.Parent },
             _snackBarErrorMessage.map { errorMessage -> UiEvent.ShowSnackBar.Error(errorMessage) },
         )
 

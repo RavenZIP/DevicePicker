@@ -6,10 +6,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSearchRouteInBackStack
 import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
+import com.ravenzip.devicepicker.state.NavigationParams
 import com.ravenzip.devicepicker.ui.screens.main.user.company.create.CompanyScreenCreateScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.devices.DevicesCompanyScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.EmployeesCompanyScreenScaffold
@@ -32,32 +32,44 @@ fun CompanyNavigationGraph(
         navigateWithSlideAnimation(route = CompanyGraph.COMPANY_ROOT) {
             CompanyRootScreenScaffold(
                 padding = padding,
-                navigateTo = { route -> navController.navigateWithSearchRouteInBackStack(route) },
-                navigateBack = { navigateToUserProfile() },
+                navigationParams =
+                    NavigationParams.fromNavController(
+                        navController = navController,
+                        navigateBackToParent = navigateToUserProfile,
+                    ),
             )
         }
 
         navigateWithSlideAnimation(route = CompanyGraph.CREATE_COMPANY) {
             CompanyScreenCreateScaffold(
                 padding = padding,
-                navigateTo = { route -> navController.navigateWithSearchRouteInBackStack(route) },
-                navigateBack = { navigateToUserProfile() },
+                navigationParams =
+                    NavigationParams.fromNavController(
+                        navController = navController,
+                        navigateBackToParent = navigateToUserProfile,
+                    ),
             )
         }
 
         navigateWithSlideAnimation(route = CompanyGraph.JOIN_TO_COMPANY) {
             CompanyScreenJoinScaffold(
                 padding = padding,
-                navigateTo = { route -> navController.navigateWithSearchRouteInBackStack(route) },
-                navigateBack = { navigateToUserProfile() },
+                navigationParams =
+                    NavigationParams.fromNavController(
+                        navController = navController,
+                        navigateBackToParent = navigateToUserProfile,
+                    ),
             )
         }
 
         navigateWithSlideAnimation(route = "${CompanyGraph.COMPANY_INFO}/{uid}") {
             CompanyInfoScreenScaffold(
                 padding = padding,
-                navigateTo = { route -> navController.navigateWithSearchRouteInBackStack(route) },
-                navigateBack = { navigateToUserProfile() },
+                navigationParams =
+                    NavigationParams.fromNavController(
+                        navController = navController,
+                        navigateBackToParent = navigateToUserProfile,
+                    ),
             )
         }
 

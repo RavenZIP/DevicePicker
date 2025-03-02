@@ -13,7 +13,6 @@ import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.inverseColors
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.ui.components.BottomContainer
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.JoinToCompanyViewModel
 import com.ravenzip.workshop.components.DropDownTextField
@@ -46,7 +45,7 @@ fun CompanyScreenJoinContent(viewModel: JoinToCompanyViewModel) {
 
     BottomContainer(padding = PaddingValues(top = 20.dp, bottom = 10.dp)) {
         SimpleButton(text = "Назад", colors = ButtonDefaults.inverseColors()) {
-            composableScope.launch { viewModel.navigateTo.emit(CompanyGraph.COMPANY_ROOT) }
+            composableScope.launch { viewModel.navigateBack.emit(Unit) }
         }
 
         Spacer(modifier = Modifier.height(15.dp))

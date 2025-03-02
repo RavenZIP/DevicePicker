@@ -22,7 +22,7 @@ constructor(
     private val sharedRepository: SharedRepository,
 ) : ViewModel() {
     val alertDialog = AlertDialog()
-    val userData = sharedRepository.userDataFlow
+    val userData = sharedRepository.userData
 
     val logoutWithDelay =
         alertDialog.isConfirmed.onEach {

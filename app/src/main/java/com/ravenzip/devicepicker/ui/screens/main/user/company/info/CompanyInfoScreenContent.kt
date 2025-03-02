@@ -77,21 +77,21 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                     }
                 }
 
-                if (currentUserPositionInCompany == EmployeePosition.Leader) {
-                    CustomButton(
-                        title = "Сотрудники",
-                        titleConfig = TextConfig.onSurfaceH2,
-                        text = "Просмотр списка сотрудников и привязанных к ним устройств",
-                        textConfig = TextConfig.onSurface85Small,
-                        icon = IconData.ResourceIcon(R.drawable.i_employee),
-                        iconConfig = IconConfig.Primary,
-                        colors = ButtonDefaults.veryLightPrimary(),
-                    ) {
-                        composableScope.launch {
-                            viewModel.navigateTo.emit(CompanyGraph.COMPANY_EMPLOYEES)
-                        }
+                CustomButton(
+                    title = "Сотрудники",
+                    titleConfig = TextConfig.onSurfaceH2,
+                    text = "Просмотр списка сотрудников и привязанных к ним устройств",
+                    textConfig = TextConfig.onSurface85Small,
+                    icon = IconData.ResourceIcon(R.drawable.i_employee),
+                    iconConfig = IconConfig.Primary,
+                    colors = ButtonDefaults.veryLightPrimary(),
+                ) {
+                    composableScope.launch {
+                        viewModel.navigateTo.emit(CompanyGraph.COMPANY_EMPLOYEES)
                     }
+                }
 
+                if (currentUserPositionInCompany == EmployeePosition.Leader) {
                     CustomButton(
                         title = "Устройства",
                         titleConfig = TextConfig.onSurfaceH2,

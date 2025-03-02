@@ -14,6 +14,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -24,6 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
+import com.ravenzip.devicepicker.state.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.screens.main.user.company.InfoCard2
@@ -35,19 +37,21 @@ import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
+import kotlinx.coroutines.launch
 
 @Composable
 fun CompanyInfoScreenScaffold(
     viewModel: CompanyInfoViewModel = hiltViewModel(),
     padding: PaddingValues,
-    navigateTo: (route: String) -> Unit,
-    navigateBack: () -> Unit,
+    navigationParams: NavigationParams,
 ) {
+    val composableScope = rememberCoroutineScope()
+
     val backArrow = remember {
         BackArrow(
             icon = IconData.ResourceIcon(R.drawable.i_back),
             iconConfig = IconConfig.Default,
-            onClick = navigateBack,
+            onClick = { composableScope.launch { viewModel.navigateBackToParent.emit(Unit) } },
         )
     }
     val spinnerState = viewModel.spinner.collectAsStateWithLifecycle().value
@@ -102,7 +106,13 @@ fun CompanyInfoScreenScaffold(
 
     UiEventEffect(viewModel.uiEvent) { event ->
         when (event) {
-            is UiEvent.Navigate.ByRoute -> navigateTo(event.route)
+            is UiEvent.Navigate.ByRoute -> {
+                navigationParams.navigateTo(event.route)
+            }
+
+            is UiEvent.Navigate.WithoutBackStack -> {
+                navigationParams.navigateToWithClearBackStack(event.route)
+            }
 
             is UiEvent.ShowSnackBar.Error -> {
                 viewModel.snackBarHostState.showError(event.message)

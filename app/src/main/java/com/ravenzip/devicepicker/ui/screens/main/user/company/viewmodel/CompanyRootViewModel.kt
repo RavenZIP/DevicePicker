@@ -21,9 +21,10 @@ class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepositor
     val companyScreenTypeState = FormState(CompanyScreenActionsEnum.CREATE_COMPANY)
 
     val navigateByCompanyScreenType = MutableSharedFlow<Unit>()
+    val navigateBackToParent = MutableSharedFlow<Unit>()
 
     private val _companyUid =
-        sharedRepository.userDataFlow
+        sharedRepository.userData
             .map { userData -> userData.companyUid }
             .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
 
@@ -31,18 +32,17 @@ class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepositor
 
     val uiEvent =
         merge(
-            merge(
-                    navigateByCompanyScreenType.map {
-                        if (
-                            companyScreenTypeState.value == CompanyScreenActionsEnum.CREATE_COMPANY
-                        ) {
-                            CompanyGraph.CREATE_COMPANY
-                        } else {
-                            CompanyGraph.JOIN_TO_COMPANY
-                        }
-                    },
-                    companyUidChangedToNotEmpty.map { uid -> "${CompanyGraph.COMPANY_INFO}/${uid}" },
-                )
-                .map { route -> UiEvent.Navigate.ByRoute(route) }
+            navigateByCompanyScreenType.map {
+                val route =
+                    if (companyScreenTypeState.value == CompanyScreenActionsEnum.CREATE_COMPANY)
+                        CompanyGraph.CREATE_COMPANY
+                    else CompanyGraph.JOIN_TO_COMPANY
+
+                UiEvent.Navigate.ByRoute(route)
+            },
+            companyUidChangedToNotEmpty.map { uid ->
+                UiEvent.Navigate.WithoutBackStack("${CompanyGraph.COMPANY_INFO}/${uid}")
+            },
+            navigateBackToParent.map { UiEvent.Navigate.Parent },
         )
 }

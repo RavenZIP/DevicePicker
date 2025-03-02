@@ -8,7 +8,11 @@ sealed class UiEvent {
 
         data class ByRoute(val route: String) : Navigate()
 
+        data class WithoutBackStack(val route: String) : Navigate()
+
         data object Back : Navigate()
+
+        data object Parent : Navigate()
     }
 
     /** Отобразить снэкбар */

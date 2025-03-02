@@ -37,6 +37,8 @@ class JoinToCompanyViewModel
 constructor(companyRepository: CompanyRepository, sharedRepository: SharedRepository) :
     ViewModel() {
     val joinToCompany = MutableSharedFlow<Unit>()
+    val navigateBack = MutableSharedFlow<Unit>()
+    val navigateBackToParent = MutableSharedFlow<Unit>()
 
     val snackBarHostState = SnackbarHostState()
 
@@ -50,8 +52,6 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
     private val _loadCompaniesError = _loadCompanies.filterErrorNotification()
 
     private val _companies = mutableStateListOf<Company>()
-
-    val navigateTo = MutableSharedFlow<String>()
 
     val companyState =
         DropDownTextFieldState(
@@ -135,13 +135,13 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
 
     val uiEvent =
         merge(
-            merge(
-                    _updateUserDataSuccess
-                        .flatMapLatest { _joinToCompanySuccess }
-                        .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" },
-                    navigateTo,
-                )
-                .map { route -> UiEvent.Navigate.ByRoute(route) },
+            _updateUserDataSuccess
+                .flatMapLatest { _joinToCompanySuccess }
+                .map { companyUid ->
+                    UiEvent.Navigate.ByRoute("${CompanyGraph.COMPANY_INFO}/${companyUid}")
+                },
+            navigateBack.map { UiEvent.Navigate.Back },
+            navigateBackToParent.map { UiEvent.Navigate.Parent },
             _snackBarErrorMessage.map { errorMessage -> UiEvent.ShowSnackBar.Error(errorMessage) },
         )
 

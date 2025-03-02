@@ -1,6 +1,7 @@
 package com.ravenzip.devicepicker.repositories
 
 import com.ravenzip.devicepicker.model.User
+import com.ravenzip.devicepicker.model.User.Companion.fullName
 import com.ravenzip.devicepicker.model.device.Device
 import com.ravenzip.devicepicker.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.model.result.ImageUrlResult
@@ -33,12 +34,12 @@ constructor(
     private val _userData = MutableStateFlow(User())
 
     val allDevices = _allDevices.asStateFlow()
-    val userDataFlow = _userData.asStateFlow()
-    val userData = _userData.value
+    val userData = _userData.asStateFlow()
 
     val deviceHistory = _userData.map { userData -> userData.deviceHistory }
     val favourites = _userData.map { userData -> userData.favourites }
     val compares = _userData.map { userData -> userData.compares }
+    val userFullName = _userData.map { userData -> userData.fullName }
 
     /** Получение списка устройств и их изображений (компактная модель) */
     @OptIn(ExperimentalCoroutinesApi::class)

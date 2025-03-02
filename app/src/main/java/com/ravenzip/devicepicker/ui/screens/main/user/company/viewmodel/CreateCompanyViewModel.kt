@@ -3,7 +3,6 @@ package com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.model.User.Companion.fullName
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.repositories.CompanyRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
@@ -22,6 +21,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
@@ -35,7 +35,8 @@ constructor(
     private val userRepository: UserRepository,
 ) : ViewModel() {
     val createCompany = MutableSharedFlow<Unit>()
-    val navigateTo = MutableSharedFlow<String>()
+    val navigateBack = MutableSharedFlow<Unit>()
+    val navigateBackToParent = MutableSharedFlow<Unit>()
 
     val snackBarHostState = SnackbarHostState()
 
@@ -62,13 +63,14 @@ constructor(
 
     private val _createCompanyComplete =
         createCompany
-            .flatMapLatest {
+            .flatMapLatest { sharedRepository.userFullName }
+            .flatMapLatest { userFullName ->
                 companyRepository.addCompany(
                     companyNameState.value,
                     companyDescriptionState.value,
                     companyAddressState.value,
                     companyCodeState.value,
-                    sharedRepository.userData.fullName,
+                    userFullName,
                 )
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
@@ -100,11 +102,15 @@ constructor(
             .flatMapLatest { sharedRepository.loadUserData() }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val _updateUserDataSuccess = _updateUserDataComplete.filterNextNotification()
+    private val _updateUserDataSuccess =
+        _updateUserDataComplete.filterNextNotification().onEach {
+            println("_updateUserDataSuccess")
+        }
 
     private val _updateUserDataError =
         _updateUserDataComplete
             .filterErrorNotification()
+            .onEach { println("_updateUserDataError") }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _snackBarErrorMessage =
@@ -140,13 +146,12 @@ constructor(
 
     val uiEvent =
         merge(
-            merge(
-                    _updateUserDataSuccess
-                        .flatMapLatest { _updateCompanyUidInUserSuccess }
-                        .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" },
-                    navigateTo,
-                )
+            _updateUserDataSuccess
+                .flatMapLatest { _updateCompanyUidInUserSuccess }
+                .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" }
                 .map { route -> UiEvent.Navigate.ByRoute(route) },
+            navigateBack.map { UiEvent.Navigate.Back },
+            navigateBackToParent.map { UiEvent.Navigate.Parent },
             _snackBarErrorMessage.map { errorMessage -> UiEvent.ShowSnackBar.Error(errorMessage) },
         )
 }
