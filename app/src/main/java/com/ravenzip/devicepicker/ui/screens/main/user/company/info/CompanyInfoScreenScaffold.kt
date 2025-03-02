@@ -25,7 +25,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.showError
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.state.NavigationParams
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.screens.main.user.company.InfoCard2

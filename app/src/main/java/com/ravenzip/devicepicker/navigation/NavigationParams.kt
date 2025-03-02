@@ -1,4 +1,4 @@
-package com.ravenzip.devicepicker.state
+package com.ravenzip.devicepicker.navigation
 
 import androidx.compose.runtime.Stable
 import androidx.navigation.NavController

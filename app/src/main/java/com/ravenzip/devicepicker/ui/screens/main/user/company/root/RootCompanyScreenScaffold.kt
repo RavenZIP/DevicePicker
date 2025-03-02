@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.state.NavigationParams
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyRootViewModel
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
