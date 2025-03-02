@@ -32,22 +32,6 @@ fun ScreenTitle(text: String) {
 }
 
 @Composable
-fun CustomText(
-    text: String,
-    modifier: Modifier = Modifier,
-    size: Int = 14,
-    fontWeight: FontWeight = FontWeight.W400,
-) {
-    Text(
-        text = text,
-        modifier = modifier,
-        fontSize = size.sp,
-        fontWeight = fontWeight,
-        textAlign = TextAlign.Start,
-    )
-}
-
-@Composable
 fun SmallText(
     text: String,
     modifier: Modifier = Modifier,
@@ -72,11 +56,6 @@ fun DefaultText(
     fontWeight: FontWeight = FontWeight.W400,
 ) {
     Text(text = text, modifier = modifier, fontWeight = fontWeight)
-}
-
-@Composable
-fun BigText(text: String, modifier: Modifier = Modifier, fontWeight: FontWeight = FontWeight.W400) {
-    Text(text = text, modifier = modifier, fontSize = 18.sp, fontWeight = fontWeight)
 }
 
 @Composable
@@ -106,9 +85,4 @@ fun TextWithIcon(
 
         if (smallText) SmallText(text = text, fontWeight = fontWeight) else DefaultText(text = text)
     }
-}
-
-@Composable
-fun Title(text: String) {
-    Text(text = text, fontSize = 18.sp, fontWeight = FontWeight.Bold)
 }

@@ -102,7 +102,7 @@ fun CompanyInfoScreenScaffold(
 
     UiEventEffect(viewModel.uiEvent) { event ->
         when (event) {
-            is UiEvent.Navigate -> navigateTo(event.route)
+            is UiEvent.Navigate.ByRoute -> navigateTo(event.route)
 
             is UiEvent.ShowSnackBar.Error -> {
                 viewModel.snackBarHostState.showError(event.message)

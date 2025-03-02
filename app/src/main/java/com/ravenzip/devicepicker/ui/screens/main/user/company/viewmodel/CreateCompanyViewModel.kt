@@ -146,7 +146,7 @@ constructor(
                         .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" },
                     navigateTo,
                 )
-                .map { route -> UiEvent.Navigate(route) },
+                .map { route -> UiEvent.Navigate.ByRoute(route) },
             _snackBarErrorMessage.map { errorMessage -> UiEvent.ShowSnackBar.Error(errorMessage) },
         )
 }

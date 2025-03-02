@@ -109,7 +109,7 @@ fun WelcomeScreen(
                 snackBarHostState.showError(event.message)
             }
 
-            is UiEvent.Navigate -> {
+            is UiEvent.Navigate.Next -> {
                 navigateToHomeScreen()
             }
 

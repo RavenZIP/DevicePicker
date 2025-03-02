@@ -53,7 +53,6 @@ constructor(
     private val _loadCompany =
         _companyUid
             .flatMapLatest { companyUid ->
-                println(companyUid)
                 if (companyUid.isEmpty()) flowOf(FlowNotification.Next(Company()))
                 else companyRepository.getCompanyByUid(companyUid)
             }
@@ -225,7 +224,7 @@ constructor(
                         .map { companyUid -> "${CompanyGraph.COMPANY_INFO}/${companyUid}" },
                     navigateTo,
                 )
-                .map { route -> UiEvent.Navigate(route) },
+                .map { route -> UiEvent.Navigate.ByRoute(route) },
             _snackBarErrorMessage.map { errorMessage -> UiEvent.ShowSnackBar.Error(errorMessage) },
         )
 

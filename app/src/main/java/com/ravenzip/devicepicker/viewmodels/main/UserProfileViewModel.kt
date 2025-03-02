@@ -30,7 +30,7 @@ constructor(
             delay(500)
         }
 
-    val uiEffect = logoutWithDelay.map { UiEvent.Navigate() }
+    val uiEvent = logoutWithDelay.map { UiEvent.Navigate.Next }
 
     init {
         // TODO добавить обработку ошибок

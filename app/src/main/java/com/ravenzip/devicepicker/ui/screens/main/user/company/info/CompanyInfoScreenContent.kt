@@ -28,6 +28,7 @@ import com.ravenzip.devicepicker.extensions.functions.containerColor
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
+import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.ui.screens.main.user.company.InfoCard2
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 import com.ravenzip.devicepicker.ui.theme.errorColor
@@ -67,9 +68,12 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                         )
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        Text("Наименование: ${company.name}")
-                        Text("Ваша роль: ${currentUserPositionInCompany.description}")
-                        Text("Количество участников: $employeesCount")
+                        Text("Наименование: ${company.name}", letterSpacing = 0.sp)
+                        Text(
+                            "Ваша роль: ${currentUserPositionInCompany.description}",
+                            letterSpacing = 0.sp,
+                        )
+                        Text("Количество участников: $employeesCount", letterSpacing = 0.sp)
                     }
                 }
 
@@ -82,7 +86,11 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                         icon = IconData.ResourceIcon(R.drawable.i_employee),
                         iconConfig = IconConfig.Primary,
                         colors = ButtonDefaults.veryLightPrimary(),
-                    )
+                    ) {
+                        composableScope.launch {
+                            viewModel.navigateTo.emit(CompanyGraph.COMPANY_EMPLOYEES)
+                        }
+                    }
 
                     CustomButton(
                         title = "Устройства",
@@ -92,7 +100,11 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                         icon = IconData.ResourceIcon(R.drawable.i_devices),
                         iconConfig = IconConfig.Primary,
                         colors = ButtonDefaults.veryLightPrimary(),
-                    )
+                    ) {
+                        composableScope.launch {
+                            viewModel.navigateTo.emit(CompanyGraph.COMPANY_DEVICES)
+                        }
+                    }
                 }
 
                 RowIconButton(

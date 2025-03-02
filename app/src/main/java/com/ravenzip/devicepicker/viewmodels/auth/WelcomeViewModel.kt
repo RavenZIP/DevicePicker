@@ -30,7 +30,7 @@ class WelcomeViewModel @Inject constructor(private val authRepository: AuthRepos
                 } else if (reloadResult is Result.Error) {
                     UiEvent.ShowSnackBar.Error(reloadResult.message)
                 } else {
-                    UiEvent.Navigate()
+                    UiEvent.Navigate.Next
                 }
             }
         }

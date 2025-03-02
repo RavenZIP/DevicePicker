@@ -38,6 +38,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 },
             )
         }
+
         navigateWithSlideAnimation(route = AuthGraph.REGISTRATION) {
             SetWindowStyle(
                 view = LocalView.current,
@@ -55,6 +56,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 }
             )
         }
+
         navigateWithSlideAnimation(route = AuthGraph.LOGIN) {
             SetWindowStyle(
                 view = LocalView.current,
@@ -73,6 +75,7 @@ fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
                 navigateToForgotPassScreen = { navController.navigate(AuthGraph.FORGOT_PASS) },
             )
         }
+
         navigateWithSlideAnimation(route = AuthGraph.FORGOT_PASS) {
             SetWindowStyle(
                 view = LocalView.current,

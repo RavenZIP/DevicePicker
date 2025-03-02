@@ -43,6 +43,6 @@ class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepositor
                     },
                     companyUidChangedToNotEmpty.map { uid -> "${CompanyGraph.COMPANY_INFO}/${uid}" },
                 )
-                .map { route -> UiEvent.Navigate(route) }
+                .map { route -> UiEvent.Navigate.ByRoute(route) }
         )
 }

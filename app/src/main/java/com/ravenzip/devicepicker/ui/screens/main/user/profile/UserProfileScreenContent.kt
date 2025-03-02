@@ -188,7 +188,7 @@ fun UserProfileScreenContent(
         Spacer(modifier = Modifier.padding(top = 20.dp))
     }
 
-    UiEventEffect(viewModel.uiEffect) { event -> navigateToSplashScreen() }
+    UiEventEffect(viewModel.uiEvent) { event -> navigateToSplashScreen() }
 
     if (dialogWindowIsShowed) {
         AlertDialog(
