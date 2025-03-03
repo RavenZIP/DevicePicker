@@ -16,14 +16,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
-import com.ravenzip.devicepicker.state.UiState
 import com.ravenzip.devicepicker.ui.components.SmallText
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 
 // TODO подумать, нужна ли все-таки отдельная viewModel или нет
 @Composable
 fun EmployeesCompanyScreenContent(viewModel: CompanyInfoViewModel) {
-    val company = (viewModel.company.collectAsStateWithLifecycle().value as UiState.Success).data
+    val company = viewModel.company.collectAsStateWithLifecycle().value
 
     LazyColumn(
         modifier = Modifier.fillMaxWidth(),

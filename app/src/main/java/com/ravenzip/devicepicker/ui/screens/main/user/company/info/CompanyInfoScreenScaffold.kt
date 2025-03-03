@@ -55,7 +55,7 @@ fun CompanyInfoScreenScaffold(
         )
     }
     val spinnerState = viewModel.spinner.collectAsStateWithLifecycle().value
-    val company = viewModel.company.collectAsStateWithLifecycle().value
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle().value
 
     Scaffold(
         modifier = Modifier.padding(padding),
@@ -65,21 +65,21 @@ fun CompanyInfoScreenScaffold(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
             contentAlignment = Alignment.Center,
         ) {
-            when (company) {
+            when (uiState) {
                 is UiState.Success ->
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.spacedBy(15.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        CompanyInfoScreenContent(viewModel, company.data)
+                        CompanyInfoScreenContent(viewModel, uiState.data)
                     }
 
                 is UiState.Error -> {
                     InfoCard2(
                         text = "Произошла ошибка",
                         description =
-                            "При загрузке данных произошла ошибка: ${company.message}. " +
+                            "При загрузке данных произошла ошибка: ${uiState.message}. " +
                                 "Пожалуйста, попробуйте позже",
                         icon = ImageVector.vectorResource(id = R.drawable.i_error),
                         iconColor = errorColor,

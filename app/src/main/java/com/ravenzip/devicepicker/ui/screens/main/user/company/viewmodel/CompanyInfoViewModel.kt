@@ -176,7 +176,7 @@ constructor(
             },
         )
 
-    val company =
+    val uiState =
         merge(
                 _loadCompanySuccess.map { company -> UiState.Success(company) },
                 _loadCompanyError.map { errorNotification ->
@@ -189,7 +189,7 @@ constructor(
             )
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = UiState.Loading("Загрузка..."),
             )
 
@@ -213,7 +213,7 @@ constructor(
             .map { isLoading -> SpinnerState(isLoading = isLoading, text = "Выход из компании...") }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = SpinnerState(isLoading = false, text = ""),
             )
 
@@ -228,7 +228,7 @@ constructor(
         )
 
     private val _hasCompany =
-        company
+        uiState
             .filterIsInstance<UiState.Success<Company>>()
             .filter { companyState -> companyState.data.uid.isNotEmpty() }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
@@ -242,12 +242,26 @@ constructor(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = EmployeePosition.Unknown,
             )
 
     val employeesCount =
         _hasCompany
             .map { company -> company.data.employees.count() }
-            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = 0)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = 0,
+            )
+
+    // Вот тут начинается часть для экранов с сотрудниками и устройствами компании
+    val company =
+        _hasCompany
+            .map { uiState -> uiState.data }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = Company(),
+            )
 }
