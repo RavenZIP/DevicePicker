@@ -129,7 +129,7 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = SpinnerState(isLoading = false, text = ""),
             )
 

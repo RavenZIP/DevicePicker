@@ -1,7 +1,6 @@
 package com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.repositories.SharedRepository
 import com.ravenzip.devicepicker.state.UiEvent
@@ -10,11 +9,9 @@ import com.ravenzip.workshop.forms.state.FormState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepository) : ViewModel() {
@@ -23,12 +20,10 @@ class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepositor
     val navigateByCompanyScreenType = MutableSharedFlow<Unit>()
     val navigateBackToParent = MutableSharedFlow<Unit>()
 
-    private val _companyUid =
+    private val companyUidChangedToNotEmpty =
         sharedRepository.userData
             .map { userData -> userData.companyUid }
-            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
-
-    private val companyUidChangedToNotEmpty = _companyUid.filter { it.isNotEmpty() }
+            .filter { companyUid -> companyUid.isNotEmpty() }
 
     val uiEvent =
         merge(

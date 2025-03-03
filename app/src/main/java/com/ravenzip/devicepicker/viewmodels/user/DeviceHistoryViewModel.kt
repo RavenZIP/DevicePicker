@@ -23,7 +23,7 @@ class DeviceHistoryViewModel @Inject constructor(private val sharedRepository: S
             .map { devices -> devices.map { device -> device.convertToDeviceCompactExtended() } }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 

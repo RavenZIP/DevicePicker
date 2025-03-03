@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(private val sharedRepository: SharedRepo
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 

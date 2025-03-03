@@ -140,7 +140,7 @@ constructor(
             .map { isLoading -> SpinnerState(isLoading = isLoading, text = "Создание компании...") }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = SpinnerState(isLoading = false, text = ""),
             )
 

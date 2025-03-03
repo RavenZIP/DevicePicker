@@ -112,7 +112,7 @@ constructor(
             )
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = UiState.Loading("Загрузка..."),
             )
 
@@ -127,14 +127,18 @@ constructor(
     val title =
         _deviceStateIsSuccess
             .map { deviceData -> deviceData.data.createDeviceTitle() }
-            .stateIn(scope = viewModelScope, started = SharingStarted.Lazily, initialValue = "")
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = "",
+            )
 
     val specifications =
         _deviceStateIsSuccess
             .map { deviceData -> deviceData.data.specifications.toMap() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = mapOf(),
             )
 
@@ -143,7 +147,7 @@ constructor(
             .map { specifications -> specifications.keys.toList() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 
@@ -152,7 +156,7 @@ constructor(
             .map { deviceData -> deviceData.data.createShortTags() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 
@@ -161,7 +165,7 @@ constructor(
             .map { deviceData -> deviceData.data.createTags() }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 
@@ -170,7 +174,7 @@ constructor(
             .map { deviceData -> generateFeedbackList(deviceData.data.feedback) }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 
@@ -232,7 +236,7 @@ constructor(
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = listOf(),
             )
 

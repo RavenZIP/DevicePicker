@@ -47,7 +47,7 @@ class SplashViewModel @Inject constructor(private val authRepository: AuthReposi
             }
             .stateIn(
                 scope = viewModelScope,
-                started = SharingStarted.Lazily,
+                started = SharingStarted.WhileSubscribed(5000),
                 initialValue = UiState.Loading("Получение данных о пользователе"),
             )
 }
