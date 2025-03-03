@@ -52,7 +52,16 @@ constructor(
                 val leader =
                     Employee.createLeader(authRepository.firebaseUser!!.uid, leaderFullName)
                 val company =
-                    Company(uid, name, description, address, listOf(leader), listOf(), code)
+                    Company(
+                        uid,
+                        name,
+                        description,
+                        address,
+                        listOf(leader),
+                        emptyList(),
+                        code,
+                        emptyList(),
+                    )
 
                 companySources.companyByUid(uid).setValue(company).await()
                 emit(uid)

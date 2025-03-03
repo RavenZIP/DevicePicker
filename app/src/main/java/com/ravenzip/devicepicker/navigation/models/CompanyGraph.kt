@@ -7,4 +7,5 @@ object CompanyGraph {
     const val COMPANY_INFO = "COMPANY_INFO"
     const val COMPANY_DEVICES = "COMPANY_DEVICES"
     const val COMPANY_EMPLOYEES = "COMPANY_EMPLOYEES"
+    const val COMPANY_SETTINGS = "COMPANY_SETTINGS"
 }

@@ -16,6 +16,7 @@ import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.Employee
 import com.ravenzip.devicepicker.ui.screens.main.user.company.info.CompanyInfoScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.join.CompanyScreenJoinScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.root.CompanyRootScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.company.settings.CompanySettingsScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 
 @Composable
@@ -89,6 +90,17 @@ fun CompanyNavigationGraph(
                 hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
 
             DevicesCompanyScreenScaffold(
+                viewModel = viewModel,
+                padding = padding,
+                navigateBack = { navController.popBackStack() },
+            )
+        }
+
+        navigateWithSlideAnimation(route = CompanyGraph.COMPANY_SETTINGS) {
+            val viewModel: CompanyInfoViewModel =
+                hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
+
+            CompanySettingsScreenScaffold(
                 viewModel = viewModel,
                 padding = padding,
                 navigateBack = { navController.popBackStack() },

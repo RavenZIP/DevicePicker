@@ -8,6 +8,7 @@ data class Company(
     val employees: List<Employee>,
     val requestToJoin: List<String>,
     val code: String,
+    val settings: List<CompanySettings>,
 ) {
     constructor() :
         this(
@@ -15,8 +16,9 @@ data class Company(
             name = "",
             description = "",
             address = "",
-            employees = listOf(),
-            requestToJoin = listOf(),
+            employees = emptyList(),
+            requestToJoin = emptyList(),
             code = "",
+            settings = emptyList(),
         )
 }

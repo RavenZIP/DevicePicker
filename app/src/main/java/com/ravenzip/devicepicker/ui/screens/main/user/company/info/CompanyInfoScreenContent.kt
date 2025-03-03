@@ -105,6 +105,18 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                             viewModel.navigateTo.emit(CompanyGraph.COMPANY_DEVICES)
                         }
                     }
+
+                    RowIconButton(
+                        text = "Настройки",
+                        textConfig = TextConfig.onSurfaceH2,
+                        icon = IconData.ResourceIcon(R.drawable.i_settings),
+                        iconConfig = IconConfig.Primary,
+                        colors = ButtonDefaults.veryLightPrimary(),
+                    ) {
+                        composableScope.launch {
+                            viewModel.navigateTo.emit(CompanyGraph.COMPANY_SETTINGS)
+                        }
+                    }
                 }
 
                 RowIconButton(
