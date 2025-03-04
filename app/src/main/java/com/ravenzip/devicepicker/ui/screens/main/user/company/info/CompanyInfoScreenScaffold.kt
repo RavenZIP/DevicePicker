@@ -114,6 +114,10 @@ fun CompanyInfoScreenScaffold(
                 navigationParams.navigateToWithClearBackStack(event.route)
             }
 
+            is UiEvent.Navigate.Parent -> {
+                navigationParams.navigateBackToParent()
+            }
+
             is UiEvent.ShowSnackBar.Error -> {
                 viewModel.snackBarHostState.showError(event.message)
             }
