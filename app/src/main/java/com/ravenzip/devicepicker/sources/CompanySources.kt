@@ -20,4 +20,8 @@ class CompanySources @Inject constructor() {
     fun companyEmployees(uid: String): DatabaseReference {
         return companyByUid(uid).child("employees")
     }
+
+    fun requestToJoin(uid: String): DatabaseReference {
+        return companyByUid(uid).child("requestToJoin")
+    }
 }

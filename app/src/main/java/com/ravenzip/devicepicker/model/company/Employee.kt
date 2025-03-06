@@ -1,12 +1,14 @@
 package com.ravenzip.devicepicker.model.company
 
+import androidx.compose.runtime.Stable
 import com.ravenzip.devicepicker.constants.enums.EmployeePosition
 
+@Stable
 data class Employee(
     val uid: String,
     val name: String,
     val position: EmployeePosition,
-    val devices: List<EmployeeDevice>,
+    val devices: List<String>,
 ) {
     constructor() :
         this(uid = "", name = "", position = EmployeePosition.Employee, devices = emptyList())

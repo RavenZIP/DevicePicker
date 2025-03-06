@@ -11,6 +11,7 @@ import com.ravenzip.devicepicker.repositories.CompanyRepository
 import com.ravenzip.devicepicker.repositories.SharedRepository
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.ui.screens.main.user.company.SpinnerState
+import com.ravenzip.devicepicker.ui.screens.main.user.company.enum.CompanySettingsEnum
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
@@ -73,9 +74,43 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
     private val _rejectJoinToCompany =
         joinToCompany.filter { companyCodeState.value != companyState.value.code }
 
-    private val _joinToCompanyComplete =
+    private val _acceptToJoinCompanyAfterApprove =
         _acceptJoinToCompany
-            .flatMapLatest { companyRepository.addRequestToJoinInCompany(companyState.value.uid) }
+            .map {
+                companyState.value.settings.firstOrNull { setting ->
+                    setting.code == CompanySettingsEnum.JOIN_AFTER_APPROVE.ordinal
+                }
+            }
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _acceptJoinToCompanyWithApprove =
+        _acceptToJoinCompanyAfterApprove.filter { setting -> setting?.active == true }
+
+    private val _acceptJoinToCompanyWithoutApprove =
+        _acceptToJoinCompanyAfterApprove.filter { setting -> setting?.active == false }
+
+    private val _sendRequestToJoinComplete =
+        _acceptJoinToCompanyWithApprove.flatMapLatest {
+            companyRepository.addRequestToJoinInCompany(companyState.value.uid)
+        }
+
+    private val _sendRequestToJoinSuccess =
+        _sendRequestToJoinComplete
+            .filterNextNotification()
+            .dematerialize()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _sendRequestToJoinError =
+        _sendRequestToJoinComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
+
+    private val _joinToCompanyComplete =
+        _acceptJoinToCompanyWithoutApprove
+            .flatMapLatest { sharedRepository.userFullName }
+            .flatMapLatest { userFullName ->
+                companyRepository.joinToCompany(companyState.value.uid, userFullName)
+            }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _joinToCompanySuccess =
@@ -84,10 +119,13 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             .dematerialize()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val _joinToCompanyError = _joinToCompanyComplete.filterErrorNotification()
+    private val _joinToCompanyError =
+        _joinToCompanyComplete
+            .filterErrorNotification()
+            .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _updateUserDataComplete =
-        _joinToCompanySuccess
+        merge(_joinToCompanySuccess, _sendRequestToJoinSuccess)
             .flatMapLatest { sharedRepository.loadUserData() }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
@@ -105,6 +143,9 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             },
             _rejectJoinToCompany.map { "Введен неверный код организации" },
             _joinToCompanyError.map { errorNotification ->
+                errorNotification.error.message ?: "При вступлении в компанию произошла ошибка"
+            },
+            _sendRequestToJoinError.map { errorNotification ->
                 errorNotification.error.message
                     ?: "При отправке запроса на вступление в компанию произошла ошибка"
             },
@@ -117,7 +158,13 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
     private val _spinnerIsLoading =
         merge(
                 merge(joinToCompany).map { 1 },
-                merge(_joinToCompanyError, _rejectJoinToCompany, _updateUserDataError).map { -1 },
+                merge(
+                        _joinToCompanyError,
+                        _rejectJoinToCompany,
+                        _updateUserDataError,
+                        _sendRequestToJoinError,
+                    )
+                    .map { -1 },
             )
             .scan(0) { acc, value -> acc + value }
             .map { counter -> counter > 0 }
@@ -136,7 +183,7 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
     val uiEvent =
         merge(
             _updateUserDataSuccess
-                .flatMapLatest { _joinToCompanySuccess }
+                .flatMapLatest { merge(_joinToCompanySuccess, _sendRequestToJoinSuccess) }
                 .map { companyUid ->
                     UiEvent.Navigate.ByRoute("${CompanyGraph.COMPANY_INFO}/${companyUid}")
                 },

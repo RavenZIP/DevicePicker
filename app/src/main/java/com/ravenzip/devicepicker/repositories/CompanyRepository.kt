@@ -45,33 +45,31 @@ constructor(
         description: String,
         address: String,
         code: String,
-        leaderFullName: String,
+        fullName: String,
     ) =
         flow {
                 val uid = companySources.companyBaseSource().push().key.toString()
-                val leader =
-                    Employee.createLeader(authRepository.firebaseUser!!.uid, leaderFullName)
-                val company =
-                    Company(
-                        uid,
-                        name,
-                        description,
-                        address,
-                        listOf(leader),
-                        emptyList(),
-                        code,
-                        emptyList(),
-                    )
+                val leader = Employee.createLeader(authRepository.firebaseUser!!.uid, fullName)
+                val company = Company.create(uid, name, description, address, leader, code)
 
                 companySources.companyByUid(uid).setValue(company).await()
                 emit(uid)
             }
             .materialize()
 
+    fun joinToCompany(companyUid: String, fullName: String) =
+        flow {
+                val employee = Employee.createEmployee(authRepository.firebaseUser!!.uid, fullName)
+
+                companySources.requestToJoin(companyUid).push().setValue(employee).await()
+                emit(companyUid)
+            }
+            .materialize()
+
     fun addRequestToJoinInCompany(companyUid: String) =
         flow {
                 companySources
-                    .companyEmployees(companyUid)
+                    .requestToJoin(companyUid)
                     .push()
                     .setValue(authRepository.firebaseUser!!.uid)
                     .await()
@@ -80,13 +78,8 @@ constructor(
             }
             .materialize()
 
-    // TODO реализовать добавления сотрудника в компанию
-    fun addEmployeeToCompany(companyUid: String, employee: Employee) =
-        flow { emit(companySources.companyEmployees(companyUid).push().setValue(employee).await()) }
-            .materialize()
-
     fun leaveCompany(companyUid: String, employees: List<Employee>) =
-        flow { emit(companySources.companyEmployees(companyUid).setValue(employees).await()) }
+        flow { emit(companySources.employees(companyUid).setValue(employees).await()) }
             .materialize()
 
     fun deleteCompany(companyUid: String) =
