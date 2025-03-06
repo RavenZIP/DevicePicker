@@ -28,7 +28,7 @@ import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
-import com.ravenzip.devicepicker.ui.screens.main.user.company.InfoCard2
+import com.ravenzip.devicepicker.ui.screens.main.user.company.EmptyScreenCard
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
@@ -76,7 +76,7 @@ fun CompanyInfoScreenScaffold(
                     }
 
                 is UiState.Error -> {
-                    InfoCard2(
+                    EmptyScreenCard(
                         text = "Произошла ошибка",
                         description =
                             "При загрузке данных произошла ошибка: ${uiState.message}. " +

@@ -29,7 +29,7 @@ import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
-import com.ravenzip.devicepicker.ui.screens.main.user.company.InfoCard2
+import com.ravenzip.devicepicker.ui.screens.main.user.company.EmptyScreenCard
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.workshop.components.CustomButton
@@ -60,7 +60,7 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                     modifier = Modifier.fillMaxWidth(0.9f),
                     colors = CardDefaults.veryLightPrimary(),
                 ) {
-                    Column(modifier = Modifier.padding(10.dp)) {
+                    Column(modifier = Modifier.padding(15.dp)) {
                         Text(
                             text = "Краткие сведения",
                             fontSize = 22.sp,
@@ -141,7 +141,7 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
 
         else -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                InfoCard2(
+                EmptyScreenCard(
                     text = "Произошла ошибка",
                     description =
                         "При получении сведений о пользователе произошла ошибка. " +
