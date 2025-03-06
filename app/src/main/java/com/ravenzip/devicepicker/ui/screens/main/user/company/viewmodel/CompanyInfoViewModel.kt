@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.constants.enums.EmployeePosition
 import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
+import com.ravenzip.devicepicker.model.company.EmployeeWithDevice
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.repositories.AuthRepository
 import com.ravenzip.devicepicker.repositories.CompanyRepository
@@ -263,5 +264,32 @@ constructor(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = Company(),
+            )
+
+    val employeesWithActiveDevices =
+        company
+            .map { company ->
+                company.employees.map { employee ->
+                    EmployeeWithDevice(
+                        employee,
+                        company.devices.filter { device ->
+                            device.uid in employee.devices && device.active
+                        },
+                    )
+                }
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
+            )
+
+    val devices =
+        company
+            .map { company -> company.devices }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList(),
             )
 }
