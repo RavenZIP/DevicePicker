@@ -22,6 +22,7 @@ import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.workshop.components.SimpleButton
 
 // TODO Надо ли выносить в библиотеку?
+// TODO может быть стоит объединить с EmptyScreenCardWithAction
 @Composable
 fun EmptyScreenCard(text: String, description: String, icon: ImageVector, iconColor: Color) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.veryLightPrimary()) {

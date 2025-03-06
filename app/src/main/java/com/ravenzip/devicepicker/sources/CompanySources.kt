@@ -17,7 +17,7 @@ class CompanySources @Inject constructor() {
         return companyReference.child(uid)
     }
 
-    fun companyEmployees(uid: String): DatabaseReference {
+    fun employees(uid: String): DatabaseReference {
         return companyByUid(uid).child("employees")
     }
 
