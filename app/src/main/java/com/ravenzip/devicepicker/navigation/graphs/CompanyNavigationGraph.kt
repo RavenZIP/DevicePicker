@@ -13,6 +13,7 @@ import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.ui.screens.main.user.company.create.CompanyScreenCreateScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.devices.DevicesCompanyScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.EmployeesCompanyScreenScaffold
+import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.employee.EmployeeCompanyScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.info.CompanyInfoScreenScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.join.CompanyScreenJoinScaffold
 import com.ravenzip.devicepicker.ui.screens.main.user.company.root.CompanyRootScreenScaffold
@@ -79,6 +80,17 @@ fun CompanyNavigationGraph(
                 hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
 
             EmployeesCompanyScreenScaffold(
+                viewModel = viewModel,
+                padding = padding,
+                navigateBack = { navController.popBackStack() },
+            )
+        }
+
+        navigateWithSlideAnimation(route = "${CompanyGraph.COMPANY_EMPLOYEES}/{uid}") {
+            val viewModel: CompanyInfoViewModel =
+                hiltViewModel(navController.getBackStackEntry("${CompanyGraph.COMPANY_INFO}/{uid}"))
+
+            EmployeeCompanyScreenScaffold(
                 viewModel = viewModel,
                 padding = padding,
                 navigateBack = { navController.popBackStack() },
