@@ -37,3 +37,25 @@ fun BottomContainer(
         }
     }
 }
+
+// TODO перейти впоследствии на этот контейнер, а в местах использования BottomContainer
+// использовать Scaffold,
+// потому что начиная с 15 версии андроид он работает неправильно
+@Composable
+fun BottomContainer2(
+    padding: PaddingValues = PaddingValues(20.dp),
+    content: @Composable () -> Unit,
+) {
+    Column(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clip(RoundedTop)
+                .background(MaterialTheme.colorScheme.surfaceContainer),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Spacer(modifier = Modifier.height(padding.calculateTopPadding()))
+        content()
+        Spacer(modifier = Modifier.height(padding.calculateBottomPadding()))
+    }
+}

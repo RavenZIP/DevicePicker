@@ -16,8 +16,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
+import com.ravenzip.devicepicker.ui.components.BottomContainer2
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyRootViewModel
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
+import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow
 import com.ravenzip.workshop.data.icon.IconConfig
@@ -43,6 +45,13 @@ fun CompanyRootScreenScaffold(
     Scaffold(
         modifier = Modifier.padding(padding),
         topBar = { TopAppBar("Компания", backArrow = backArrow) },
+        bottomBar = {
+            BottomContainer2(padding = PaddingValues(top = 20.dp, bottom = 10.dp)) {
+                SimpleButton(text = "Продолжить") {
+                    composableScope.launch { viewModel.navigateByCompanyScreenType.emit(Unit) }
+                }
+            }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
