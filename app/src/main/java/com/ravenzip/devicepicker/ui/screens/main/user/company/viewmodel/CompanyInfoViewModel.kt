@@ -292,4 +292,13 @@ constructor(
                 started = SharingStarted.WhileSubscribed(5000),
                 initialValue = emptyList(),
             )
+
+    val devicesIsEmpty =
+        company
+            .map { company -> company.devices.isEmpty() }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = true,
+            )
 }

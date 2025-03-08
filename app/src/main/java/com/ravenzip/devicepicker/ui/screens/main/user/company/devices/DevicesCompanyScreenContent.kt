@@ -19,8 +19,9 @@ import com.ravenzip.devicepicker.ui.theme.warningColor
 @Composable
 fun DevicesCompanyScreenContent(viewModel: CompanyInfoViewModel) {
     val devices = viewModel.devices.collectAsStateWithLifecycle().value
+    val devicesIsEmpty = viewModel.devicesIsEmpty.collectAsStateWithLifecycle().value
 
-    if (devices.isEmpty()) {
+    if (devicesIsEmpty) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             EmptyScreenCardWithAction(
                 text = "Список устройств пуст",
