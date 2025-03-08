@@ -82,6 +82,9 @@ fun CompanyNavigationGraph(
             EmployeesCompanyScreenScaffold(
                 viewModel = viewModel,
                 padding = padding,
+                navigateToEmployee = { employeeUid ->
+                    navController.navigate("${CompanyGraph.COMPANY_EMPLOYEES}/${employeeUid}")
+                },
                 navigateBack = { navController.popBackStack() },
             )
         }

@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.EmployeesCompanyScreenContent
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow

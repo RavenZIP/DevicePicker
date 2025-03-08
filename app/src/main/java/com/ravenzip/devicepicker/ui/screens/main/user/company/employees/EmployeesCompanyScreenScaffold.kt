@@ -22,6 +22,7 @@ import com.ravenzip.workshop.data.icon.IconData
 fun EmployeesCompanyScreenScaffold(
     viewModel: CompanyInfoViewModel,
     padding: PaddingValues,
+    navigateToEmployee: (route: String) -> Unit,
     navigateBack: () -> Unit,
 ) {
     val backArrow = remember {
@@ -41,7 +42,7 @@ fun EmployeesCompanyScreenScaffold(
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            EmployeesCompanyScreenContent(viewModel)
+            EmployeesCompanyScreenContent(viewModel, navigateToEmployee)
         }
     }
 }
