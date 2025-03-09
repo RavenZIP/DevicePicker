@@ -64,7 +64,12 @@ fun HomeScreenContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(devices) { device ->
-                ColumnDeviceCard(device = device, onClick = { navigateToDevice(device.uid) })
+                ColumnDeviceCard(
+                    device = device,
+                    onCardClick = { navigateToDevice(device.uid) },
+                    onCompareClick = {},
+                    onFavouriteClick = {},
+                )
             }
         }
     }

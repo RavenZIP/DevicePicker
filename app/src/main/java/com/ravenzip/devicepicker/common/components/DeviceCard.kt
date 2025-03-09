@@ -4,10 +4,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -33,11 +36,13 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompactExtended
+import com.ravenzip.devicepicker.common.utils.extension.containerColor
 import com.ravenzip.devicepicker.common.utils.extension.smallImageContainer
 import com.ravenzip.devicepicker.common.utils.extension.veryLightPrimary
 import com.ravenzip.workshop.components.BoxedChip
 import com.ravenzip.workshop.components.IconButton
-import com.ravenzip.workshop.components.RowIconButton
+import com.ravenzip.workshop.components.SimpleButton
+import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 import com.skydoves.landscapist.ImageOptions
@@ -47,17 +52,55 @@ import com.smarttoolfactory.ratingbar.model.GestureStrategy
 
 /** Карточка устройства, с вертикальным расположением данных */
 @Composable
-fun ColumnDeviceCard(device: DeviceCompact, onClick: () -> Unit) {
+fun ColumnDeviceCard(
+    device: DeviceCompact,
+    onCardClick: () -> Unit,
+    onCompareClick: () -> Unit,
+    onFavouriteClick: () -> Unit,
+) {
     Card(
-        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { onClick() },
+        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { onCardClick() },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
-            FrescoImage(
-                imageUrl = device.imageUrl,
-                modifier = Modifier.smallImageContainer(),
-                imageOptions = ImageOptions(contentScale = ContentScale.Fit),
-            )
+            Box(modifier = Modifier.fillMaxWidth()) {
+                FrescoImage(
+                    imageUrl = device.imageUrl,
+                    modifier = Modifier.smallImageContainer(),
+                    imageOptions = ImageOptions(contentScale = ContentScale.Fit),
+                )
+
+                Box(
+                    modifier =
+                        Modifier.absoluteOffset(x = 10.dp, y = 10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.background)
+                ) {
+                    IconButton(
+                        icon = IconData.ResourceIcon(R.drawable.i_compare),
+                        iconConfig = IconConfig(size = 18),
+                        backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                    ) {
+                        onCompareClick()
+                    }
+                }
+
+                Box(
+                    modifier =
+                        Modifier.align(Alignment.TopEnd)
+                            .absoluteOffset(x = (-10).dp, y = 10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(MaterialTheme.colorScheme.background)
+                ) {
+                    IconButton(
+                        icon = IconData.ResourceIcon(R.drawable.i_heart),
+                        iconConfig = IconConfig(size = 18),
+                        backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                    ) {
+                        onFavouriteClick()
+                    }
+                }
+            }
 
             Spacer(modifier = Modifier.height(5.dp))
 
@@ -83,6 +126,7 @@ fun RowDeviceCard(
     onFavouriteClick: () -> Unit,
     onCompareClick: () -> Unit,
     onCardClick: () -> Unit,
+    onAddToCompanyClick: () -> Unit,
 ) {
     Card(
         modifier =
@@ -124,7 +168,12 @@ fun RowDeviceCard(
             Spacer(modifier = Modifier.height(10.dp))
 
             VerticalCenterRow {
-                IconButton(icon = IconData.ResourceIcon(R.drawable.i_compare)) { onCompareClick() }
+                IconButton(
+                    icon = IconData.ResourceIcon(R.drawable.i_compare),
+                    iconConfig = IconConfig(size = 18),
+                ) {
+                    onCompareClick()
+                }
 
                 Spacer(modifier = Modifier.width(10.dp))
 
@@ -132,21 +181,27 @@ fun RowDeviceCard(
                     icon =
                         IconData.ResourceIcon(
                             if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
-                        )
+                        ),
+                    iconConfig = IconConfig(size = 18),
                 ) {
                     onFavouriteClick()
                 }
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                RowIconButton(
+                SimpleButton(
                     width = null,
-                    text = device.price.currentFormatted,
-                    icon = IconData.ResourceIcon(R.drawable.i_info),
-                    iconConfig = IconConfig.Small,
-                    iconPositionIsLeft = false,
-                    contentPadding = PaddingValues(10.dp),
-                )
+                    text = "Добавить в компанию",
+                    textConfig = TextConfig.SmallCenteredMedium,
+                    contentPadding = PaddingValues(9.dp),
+                    colors =
+                        ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                            contentColor = MaterialTheme.colorScheme.primary,
+                        ),
+                ) {
+                    onAddToCompanyClick()
+                }
             }
         }
     }
