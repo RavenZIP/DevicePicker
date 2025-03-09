@@ -6,19 +6,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.features.main.user.company.screens.create.CompanyScreenCreateScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.devices.DevicesCompanyScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.employees.EmployeesCompanyScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.employees.employee.EmployeeCompanyScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.info.CompanyInfoScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.join.CompanyScreenJoinScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.root.CompanyRootScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.settings.CompanySettingsScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.company.screens.info.CompanyInfoViewModel
 import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
-import com.ravenzip.devicepicker.ui.screens.main.user.company.create.CompanyScreenCreateScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.devices.DevicesCompanyScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.EmployeesCompanyScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.employees.employee.EmployeeCompanyScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.info.CompanyInfoScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.join.CompanyScreenJoinScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.root.CompanyRootScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.settings.CompanySettingsScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 
 @Composable
 fun CompanyNavigationGraph(

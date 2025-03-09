@@ -6,16 +6,16 @@ import androidx.compose.ui.platform.LocalView
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.navigation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithoutPreviousRoute
+import com.ravenzip.devicepicker.common.theme.SetWindowStyle
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithoutPreviousRoute
+import com.ravenzip.devicepicker.features.auth.forgot.password.ForgotPasswordScreen
+import com.ravenzip.devicepicker.features.auth.login.LoginScreen
+import com.ravenzip.devicepicker.features.auth.registration.RegistrationScreen
+import com.ravenzip.devicepicker.features.auth.welcome.WelcomeScreen
 import com.ravenzip.devicepicker.navigation.models.AuthGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.ui.screens.auth.ForgotPasswordScreen
-import com.ravenzip.devicepicker.ui.screens.auth.LoginScreen
-import com.ravenzip.devicepicker.ui.screens.auth.RegistrationScreen
-import com.ravenzip.devicepicker.ui.screens.auth.WelcomeScreen
-import com.ravenzip.devicepicker.ui.theme.SetWindowStyle
 
 fun NavGraphBuilder.authNavigationGraph(navController: NavHostController) {
     navigation(route = RootGraph.AUTHENTICATION, startDestination = AuthGraph.WELCOME) {

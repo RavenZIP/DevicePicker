@@ -5,19 +5,21 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.features.main.device.info.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.admin.AdminScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.devices.UserDevicesScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.history.DeviceHistoryScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.profile.UserProfileScaffold
+import com.ravenzip.devicepicker.features.main.user.reviews.ReviewsScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.settings.user.UserSettingsScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.settings.visual.VisualAppearanceScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.updates.UpdatesScreenScaffold
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
-import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.admin.AdminScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.devices.UserDevicesScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.history.DeviceHistoryScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.profile.UserProfileScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.reviews.ReviewsScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.user.settings.UserSettingsScreenScaffold
-import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
+import com.ravenzip.devicepicker.features.main.user.UserProfileViewModel
 
 @Composable
 fun UserProfileNavigationGraph(
@@ -54,6 +56,7 @@ fun UserProfileNavigationGraph(
         navigateWithSlideAnimation(route = UserProfileGraph.USER_SETTINGS) {
             UserSettingsScreenScaffold(padding = padding)
         }
+
         // Домашний экран
         navigateWithSlideAnimation(route = UserProfileGraph.COMPANY) {
             CompanyNavigationGraph(
@@ -77,6 +80,14 @@ fun UserProfileNavigationGraph(
 
         navigateWithSlideAnimation(route = UserProfileGraph.USER_DEVICES) {
             UserDevicesScreenScaffold(padding = padding)
+        }
+
+        navigateWithSlideAnimation(route = UserProfileGraph.VISUAL_APPEARANCE) {
+            VisualAppearanceScreenScaffold(padding = padding)
+        }
+
+        navigateWithSlideAnimation(route = UserProfileGraph.UPDATES) {
+            UpdatesScreenScaffold(padding = padding)
         }
 
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {

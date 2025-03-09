@@ -5,14 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.features.main.compare.CompareScreenScaffold
+import com.ravenzip.devicepicker.features.main.search.SearchScreenScaffold
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.RootGraph
-import com.ravenzip.devicepicker.ui.screens.main.compare.CompareScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.search.SearchScreenScaffold
-import com.ravenzip.devicepicker.viewmodels.main.HomeViewModel
-import com.ravenzip.devicepicker.viewmodels.main.SearchViewModel
-import com.ravenzip.devicepicker.viewmodels.main.UserProfileViewModel
+import com.ravenzip.devicepicker.features.main.home.HomeViewModel
+import com.ravenzip.devicepicker.features.main.search.SearchViewModel
+import com.ravenzip.devicepicker.features.main.user.UserProfileViewModel
 
 @Composable
 fun MainNavigationGraph(

@@ -5,13 +5,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
-import com.ravenzip.devicepicker.extensions.functions.navigateWithFadeAnimation
-import com.ravenzip.devicepicker.extensions.functions.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimation
+import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
+import com.ravenzip.devicepicker.features.main.device.info.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.features.main.favourites.FavouritesScreenScaffold
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.FavouritesGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
-import com.ravenzip.devicepicker.ui.screens.main.device.info.DeviceInfoScreenScaffold
-import com.ravenzip.devicepicker.ui.screens.main.favourites.FavouritesScreenScaffold
 
 @Composable
 fun FavouritesNavigationGraph(

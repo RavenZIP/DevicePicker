@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.navigation.graphs.RootNavigationGraph
-import com.ravenzip.devicepicker.ui.theme.DevicePickerTheme
+import com.ravenzip.devicepicker.common.theme.DevicePickerTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
