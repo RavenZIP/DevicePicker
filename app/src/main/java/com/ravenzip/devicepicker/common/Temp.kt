@@ -76,6 +76,7 @@ fun EmptyScreenCardWithAction(
     icon: ImageVector,
     iconColor: Color,
     buttonText: String,
+    onClick: () -> Unit,
 ) {
     Card(modifier = Modifier.fillMaxWidth(0.9f), colors = CardDefaults.veryLightPrimary()) {
         Column(
@@ -103,7 +104,7 @@ fun EmptyScreenCardWithAction(
 
             Text(text = description)
 
-            SimpleButton(width = 1f, text = buttonText)
+            SimpleButton(width = 1f, text = buttonText) { onClick() }
         }
     }
 }

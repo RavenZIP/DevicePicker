@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.features.main.device.info.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.features.main.user.UserProfileViewModel
 import com.ravenzip.devicepicker.features.main.user.admin.AdminScreenScaffold
 import com.ravenzip.devicepicker.features.main.user.devices.UserDevicesScreenScaffold
 import com.ravenzip.devicepicker.features.main.user.history.DeviceHistoryScreenScaffold
@@ -19,7 +20,6 @@ import com.ravenzip.devicepicker.features.main.user.updates.UpdatesScreenScaffol
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
-import com.ravenzip.devicepicker.features.main.user.UserProfileViewModel
 
 @Composable
 fun UserProfileNavigationGraph(
