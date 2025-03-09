@@ -52,6 +52,8 @@ constructor(
     private val _updateFavourites = MutableSharedFlow<Unit>()
     private val _updateCompares = MutableSharedFlow<Unit>()
 
+    val snackBarHostState = SnackbarHostState()
+
     private val _deviceUid = savedStateHandle.getStateFlow("uid", "")
 
     private val _findCachedDeviceComplete =
@@ -121,8 +123,6 @@ constructor(
         device
             .filterIsInstance<UiState.Success<Device>>()
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
-
-    val snackBarHostState = SnackbarHostState()
 
     val title =
         _deviceStateIsSuccess

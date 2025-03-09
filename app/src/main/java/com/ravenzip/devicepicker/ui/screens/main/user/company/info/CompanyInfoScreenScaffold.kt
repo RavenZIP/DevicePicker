@@ -6,31 +6,23 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.extensions.functions.showError
-import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.state.UiEvent
 import com.ravenzip.devicepicker.state.UiState
-import com.ravenzip.devicepicker.ui.screens.main.user.company.EmptyScreenCard
+import com.ravenzip.devicepicker.ui.screens.main.user.company.ErrorScreenCard
+import com.ravenzip.devicepicker.ui.screens.main.user.company.SpinnerWithoutBlockScreen
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
-import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.devicepicker.viewmodels.base.UiEventEffect
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.TopAppBar
@@ -76,29 +68,16 @@ fun CompanyInfoScreenScaffold(
                     }
 
                 is UiState.Error -> {
-                    EmptyScreenCard(
+                    ErrorScreenCard(
                         text = "Произошла ошибка",
                         description =
                             "При загрузке данных произошла ошибка: ${uiState.message}. " +
                                 "Пожалуйста, попробуйте позже",
-                        icon = ImageVector.vectorResource(id = R.drawable.i_error),
-                        iconColor = errorColor,
                     )
                 }
 
                 is UiState.Loading -> {
-                    Card(colors = CardDefaults.veryLightPrimary()) {
-                        Box(
-                            modifier = Modifier.padding(15.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(50.dp),
-                                color = MaterialTheme.colorScheme.primary,
-                                strokeWidth = 4.dp,
-                            )
-                        }
-                    }
+                    SpinnerWithoutBlockScreen()
                 }
             }
         }

@@ -16,8 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -29,7 +27,7 @@ import com.ravenzip.devicepicker.extensions.functions.veryLightPrimary
 import com.ravenzip.devicepicker.model.CompanyDeleteRequest
 import com.ravenzip.devicepicker.model.company.Company
 import com.ravenzip.devicepicker.navigation.models.CompanyGraph
-import com.ravenzip.devicepicker.ui.screens.main.user.company.EmptyScreenCard
+import com.ravenzip.devicepicker.ui.screens.main.user.company.ErrorScreenCard
 import com.ravenzip.devicepicker.ui.screens.main.user.company.viewmodel.CompanyInfoViewModel
 import com.ravenzip.devicepicker.ui.theme.errorColor
 import com.ravenzip.workshop.components.CustomButton
@@ -141,13 +139,11 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
 
         else -> {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                EmptyScreenCard(
+                ErrorScreenCard(
                     text = "Произошла ошибка",
                     description =
                         "При получении сведений о пользователе произошла ошибка. " +
                             "Нарушена целостность данных",
-                    icon = ImageVector.vectorResource(id = R.drawable.i_error),
-                    iconColor = errorColor,
                 )
             }
         }
