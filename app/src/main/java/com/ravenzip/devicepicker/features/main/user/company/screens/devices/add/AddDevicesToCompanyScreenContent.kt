@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.common.components.ColumnDeviceCard
+import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import kotlinx.coroutines.launch
 
 @Composable
@@ -30,7 +31,11 @@ fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
         items(devices) { device ->
             ColumnDeviceCard(
                 device = device,
-                onClick = { composableScope.launch { viewModel.navigateTo.emit(device.uid) } },
+                onClick = {
+                    composableScope.launch {
+                        viewModel.navigateTo.emit("${HomeGraph.DEVICE_INFO}/${device.uid}")
+                    }
+                },
             )
         }
     }
