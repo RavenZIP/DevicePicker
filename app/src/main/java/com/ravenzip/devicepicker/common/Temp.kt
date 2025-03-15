@@ -121,6 +121,3 @@ fun SpinnerWithoutBlockScreen() {
         }
     }
 }
-
-// TODO убрать после обновления WorkShop
-class SpinnerState(val isLoading: Boolean, val text: String)

@@ -4,7 +4,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.common.SpinnerState
 import com.ravenzip.devicepicker.common.enums.EmployeePositionEnum
 import com.ravenzip.devicepicker.common.model.UiEvent
 import com.ravenzip.devicepicker.common.repositories.CompanyRepository
@@ -15,9 +14,12 @@ import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
+import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.state.special.DropDownTextFieldState
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.dropdown.DropDownTextFieldComponent
+import com.ravenzip.workshop.forms.dropdown.DropDownTextFieldState
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -54,30 +56,39 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
 
     private val _companies = mutableStateListOf<Company>()
 
-    val companyState =
-        DropDownTextFieldState(
-            initialValue = Company(),
-            items = _companies,
-            itemsView = { item -> item.name },
+    val companyComponent =
+        DropDownTextFieldComponent(
+            control = FormControl(initialValue = Company()),
+            state = DropDownTextFieldState(source = _companies, sourceView = { item -> item.name }),
+            scope = viewModelScope,
         )
-    val companyLeaderState = TextFieldState(initialValue = "", disable = true)
-    val companyAddressState = TextFieldState(initialValue = "", disable = true)
-    val companyCodeState =
-        TextFieldState(
-            initialValue = "",
-            validators = listOf { value -> Validators.required(value) },
+    val companyLeaderComponent =
+        TextFieldComponent(FormControl(initialValue = "", disable = true), scope = viewModelScope)
+    val companyAddressComponent =
+        TextFieldComponent(FormControl(initialValue = "", disable = true), scope = viewModelScope)
+    val companyCodeComponent =
+        TextFieldComponent(
+            FormControl(
+                initialValue = "",
+                validators = listOf { value -> Validators.required(value) },
+            ),
+            scope = viewModelScope,
         )
 
     private val _acceptJoinToCompany =
-        joinToCompany.filter { companyCodeState.value == companyState.value.code }
+        joinToCompany.filter {
+            companyCodeComponent.control.value == companyComponent.control.value.code
+        }
 
     private val _rejectJoinToCompany =
-        joinToCompany.filter { companyCodeState.value != companyState.value.code }
+        joinToCompany.filter {
+            companyCodeComponent.control.value != companyComponent.control.value.code
+        }
 
     private val _acceptToJoinCompanyAfterApprove =
         _acceptJoinToCompany
             .map {
-                companyState.value.settings.firstOrNull { setting ->
+                companyComponent.control.value.settings.firstOrNull { setting ->
                     setting.code == CompanySettingsEnum.JOIN_AFTER_APPROVE.ordinal
                 }
             }
@@ -91,7 +102,7 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
 
     private val _sendRequestToJoinComplete =
         _acceptJoinToCompanyWithApprove.flatMapLatest {
-            companyRepository.addRequestToJoinInCompany(companyState.value.uid)
+            companyRepository.addRequestToJoinInCompany(companyComponent.control.value.uid)
         }
 
     private val _sendRequestToJoinSuccess =
@@ -109,7 +120,7 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
         _acceptJoinToCompanyWithoutApprove
             .flatMapLatest { sharedRepository.userFullName }
             .flatMapLatest { userFullName ->
-                companyRepository.joinToCompany(companyState.value.uid, userFullName)
+                companyRepository.joinToCompany(companyComponent.control.value.uid, userFullName)
             }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
@@ -197,20 +208,21 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             .onEach { companies -> _companies.addAll(companies) }
             .launchIn(viewModelScope)
 
-        companyState.valueChanges
+        companyComponent.control.valueChanges
+            .map { companyChanges -> companyChanges.value }
             .onEach { company ->
                 val leader =
                     company.employees.firstOrNull { employee ->
                         employee.position == EmployeePositionEnum.Leader
                     }
 
-                companyLeaderState.setValue(leader?.name ?: "")
-                companyAddressState.setValue(company.address)
+                companyLeaderComponent.control.setValue(leader?.name ?: "")
+                companyAddressComponent.control.setValue(company.address)
 
                 if (company.uid.isNotEmpty()) {
-                    companyCodeState.enable()
+                    companyCodeComponent.control.enable()
                 } else {
-                    companyCodeState.disable()
+                    companyCodeComponent.control.disable()
                 }
             }
             .launchIn(viewModelScope)

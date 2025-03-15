@@ -40,7 +40,7 @@ fun HomeScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            state = viewModel.selectedCategory,
+            state = viewModel.selectedCategoryControl,
             source = TagsEnum.entries,
             viewOptions =
                 TagsEnum.entries.associate { item ->

@@ -4,7 +4,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.common.SpinnerState
 import com.ravenzip.devicepicker.common.enums.EmployeePositionEnum
 import com.ravenzip.devicepicker.common.model.UiEvent
 import com.ravenzip.devicepicker.common.model.UiState
@@ -20,8 +19,8 @@ import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
 import com.ravenzip.kotlinflowextended.models.FlowNotification
+import com.ravenzip.workshop.data.SpinnerState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.filter
@@ -33,6 +32,7 @@ import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
 class CompanyInfoViewModel

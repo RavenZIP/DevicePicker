@@ -57,14 +57,14 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
             selectedOption = viewModel.authOptionsState.value,
-            emailState = viewModel.emailState,
-            passwordState = viewModel.passwordState,
-            phoneState = viewModel.phoneState,
-            codeState = viewModel.codeState,
+            emailComponent = viewModel.emailComponent,
+            passwordComponent = viewModel.passwordComponent,
+            phoneComponent = viewModel.phoneState,
+            codeComponent = viewModel.codeState,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(formState = viewModel.authOptionsState, title = "Выбор варианта входа")
+        AuthOptions(control = viewModel.authOptionsState, title = "Выбор варианта входа")
     }
 
     BottomContainer {

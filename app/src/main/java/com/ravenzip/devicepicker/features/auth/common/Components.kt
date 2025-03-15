@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,29 +19,28 @@ import com.ravenzip.devicepicker.common.utils.extension.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.data.icon.IconData
-import com.ravenzip.workshop.forms.state.FormState
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthFields(
     selectedOption: AuthVariantsEnum,
-    emailState: TextFieldState<String>,
-    passwordState: TextFieldState<String>,
-    phoneState: TextFieldState<String>,
-    codeState: TextFieldState<String>,
+    emailComponent: TextFieldComponent<String>,
+    passwordComponent: TextFieldComponent<String>,
+    phoneComponent: TextFieldComponent<String>,
+    codeComponent: TextFieldComponent<String>,
 ) {
     when (selectedOption) {
         AuthVariantsEnum.EMAIL -> {
             SinglenessOutlinedTextField(
-                state = emailState,
+                component = emailComponent,
                 label = "Электронная почта",
                 leadingIcon = IconData.ResourceIcon(R.drawable.i_email),
             )
 
             Spacer(modifier = Modifier.height(15.dp))
             SinglenessOutlinedTextField(
-                state = passwordState,
+                component = passwordComponent,
                 label = "Пароль",
                 leadingIcon = IconData.ResourceIcon(R.drawable.i_key),
                 isHiddenText = true,
@@ -50,7 +48,7 @@ fun AuthFields(
         }
         AuthVariantsEnum.PHONE -> {
             SinglenessOutlinedTextField(
-                state = phoneState,
+                component = phoneComponent,
                 label = "Телефон",
                 leadingIcon = IconData.ResourceIcon(R.drawable.i_phone),
             )
@@ -63,9 +61,8 @@ fun AuthFields(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AuthOptions(formState: FormState<AuthVariantsEnum>, title: String) {
+fun AuthOptions(control: FormControl<AuthVariantsEnum>, title: String) {
     Card(
         modifier = Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
@@ -81,7 +78,7 @@ fun AuthOptions(formState: FormState<AuthVariantsEnum>, title: String) {
         )
         Spacer(modifier = Modifier.height(10.dp))
         RadioGroup(
-            state = formState,
+            state = control,
             source = AuthVariantsEnum.entries,
             view = { it.value },
             comparableKey = { it },
