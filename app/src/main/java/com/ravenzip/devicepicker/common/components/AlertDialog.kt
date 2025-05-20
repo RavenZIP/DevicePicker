@@ -28,7 +28,6 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun AlertDialogWithField(
     icon: IconData? = null,
