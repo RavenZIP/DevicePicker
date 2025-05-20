@@ -56,7 +56,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = viewModel.authOptionsState.value,
+            selectedOption = viewModel.authOptionsControl.value,
             emailComponent = viewModel.emailComponent,
             passwordComponent = viewModel.passwordComponent,
             phoneComponent = viewModel.phoneState,
@@ -64,12 +64,12 @@ fun LoginScreen(
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(control = viewModel.authOptionsState, title = "Выбор варианта входа")
+        AuthOptions(control = viewModel.authOptionsControl, title = "Выбор варианта входа")
     }
 
     BottomContainer {
         SimpleButton(text = "Продолжить") {
-            when (viewModel.authOptionsState.value) {
+            when (viewModel.authOptionsControl.value) {
                 AuthVariantsEnum.EMAIL -> {
                     viewModel.logInWithEmailAndPassword(navigateToHomeScreen = navigateToHomeScreen)
                 }

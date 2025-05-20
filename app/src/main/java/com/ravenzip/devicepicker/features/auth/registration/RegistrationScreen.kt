@@ -61,7 +61,7 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = viewModel.authOptionsState.value,
+            selectedOption = viewModel.authOptionsControl.value,
             emailComponent = viewModel.emailComponent,
             passwordComponent = viewModel.passwordComponent,
             phoneComponent = viewModel.phoneComponent,
@@ -69,13 +69,13 @@ fun RegistrationScreen(
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(control = viewModel.authOptionsState, title = "Выбор варианта регистрации")
+        AuthOptions(control = viewModel.authOptionsControl, title = "Выбор варианта регистрации")
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = IconData.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
-            text = viewModel.getSelectedOptionDescription(viewModel.authOptionsState.value),
+            text = viewModel.getSelectedOptionDescription(viewModel.authOptionsControl.value),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -84,7 +84,7 @@ fun RegistrationScreen(
 
     BottomContainer {
         SimpleButton(text = "Продолжить") {
-            when (viewModel.authOptionsState.value) {
+            when (viewModel.authOptionsControl.value) {
                 AuthVariantsEnum.EMAIL -> {
                     viewModel.registrationWithEmailAndPassword(
                         navigateToHomeScreen = navigateToHomeScreen
