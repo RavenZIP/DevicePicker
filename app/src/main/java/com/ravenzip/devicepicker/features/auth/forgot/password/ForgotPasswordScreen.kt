@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -29,7 +28,6 @@ import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.data.icon.IconData
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
     val isLoadingState = viewModel.isLoading.collectAsStateWithLifecycle().value
@@ -55,7 +53,7 @@ fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.height(30.dp))
         SinglenessOutlinedTextField(
-            state = viewModel.emailState,
+            component = viewModel.emailComponent,
             label = "Электронная почта",
             leadingIcon = IconData.ResourceIcon(R.drawable.i_email),
         )

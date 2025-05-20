@@ -4,16 +4,17 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.common.model.UiEvent
-import com.ravenzip.devicepicker.common.SpinnerState
-import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.devicepicker.common.repositories.CompanyRepository
 import com.ravenzip.devicepicker.common.repositories.SharedRepository
 import com.ravenzip.devicepicker.common.repositories.UserRepository
+import com.ravenzip.devicepicker.navigation.models.CompanyGraph
 import com.ravenzip.kotlinflowextended.functions.dematerialize
 import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
+import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,25 +41,37 @@ constructor(
 
     val snackBarHostState = SnackbarHostState()
 
-    val companyNameState =
-        TextFieldState(
-            initialValue = "",
-            validators = listOf { value -> Validators.required(value) },
+    val companyNameComponent =
+        TextFieldComponent(
+            FormControl(
+                initialValue = "",
+                validators = listOf { value -> Validators.required(value) },
+            ),
+            scope = viewModelScope,
         )
-    val companyDescriptionState =
-        TextFieldState(
-            initialValue = "",
-            validators = listOf { value -> Validators.required(value) },
+    val companyDescriptionComponent =
+        TextFieldComponent(
+            FormControl(
+                initialValue = "",
+                validators = listOf { value -> Validators.required(value) },
+            ),
+            scope = viewModelScope,
         )
-    val companyAddressState =
-        TextFieldState(
-            initialValue = "",
-            validators = listOf { value -> Validators.required(value) },
+    val companyAddressComponent =
+        TextFieldComponent(
+            FormControl(
+                initialValue = "",
+                validators = listOf { value -> Validators.required(value) },
+            ),
+            scope = viewModelScope,
         )
-    val companyCodeState =
-        TextFieldState(
-            initialValue = "",
-            validators = listOf { value -> Validators.required(value) },
+    val companyCodeComponent =
+        TextFieldComponent(
+            FormControl(
+                initialValue = "",
+                validators = listOf { value -> Validators.required(value) },
+            ),
+            scope = viewModelScope,
         )
 
     private val _createCompanyComplete =
@@ -66,10 +79,10 @@ constructor(
             .flatMapLatest { sharedRepository.userFullName }
             .flatMapLatest { userFullName ->
                 companyRepository.addCompany(
-                    companyNameState.value,
-                    companyDescriptionState.value,
-                    companyAddressState.value,
-                    companyCodeState.value,
+                    companyNameComponent.control.value,
+                    companyDescriptionComponent.control.value,
+                    companyAddressComponent.control.value,
+                    companyCodeComponent.control.value,
                     userFullName,
                 )
             }

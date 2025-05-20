@@ -9,8 +9,8 @@ import com.ravenzip.devicepicker.common.model.result.Result
 import com.ravenzip.devicepicker.common.repositories.AuthRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.state.FormState
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,49 +22,63 @@ import kotlinx.coroutines.launch
 class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
 
-    val authOptionsState = FormState(initialValue = AuthVariantsEnum.EMAIL)
+    val authOptionsControl = FormControl(initialValue = AuthVariantsEnum.EMAIL)
 
-    val emailState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value -> Validators.email(value) },
+    val emailComponent =
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value -> Validators.email(value) },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
-    val passwordState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value -> Validators.minLength(value, 6) },
+    val passwordComponent =
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value -> Validators.minLength(value, 6) },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
     val phoneState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value ->
-                        if (!PHONE.matcher(value).matches()) "Введен некорректный номер телефона"
-                        else null
-                    },
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value ->
+                                if (!PHONE.matcher(value).matches())
+                                    "Введен некорректный номер телефона"
+                                else null
+                            },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
-    val codeState = TextFieldState(initialValue = "")
+    val codeState =
+        TextFieldComponent(control = FormControl(initialValue = ""), scope = viewModelScope)
 
     val isLoading = _isLoading.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
     fun logInWithEmailAndPassword(navigateToHomeScreen: () -> Unit) {
         viewModelScope.launch {
-            if (emailState.isInvalid || passwordState.isInvalid) {
+            if (emailComponent.control.isInvalid || passwordComponent.control.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения полей")
                 return@launch
             }
@@ -79,7 +93,10 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
             }
 
             val authResult =
-                authRepository.logInUserWithEmail(emailState.value, passwordState.value)
+                authRepository.logInUserWithEmail(
+                    emailComponent.control.value,
+                    passwordComponent.control.value,
+                )
             if (authResult is Result.Error) {
                 _isLoading.update { false }
                 snackBarHostState.showError(authResult.message)
@@ -93,11 +110,11 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
 
     init {
         viewModelScope.launch {
-            authOptionsState.valueChanges.collect {
-                emailState.reset()
-                passwordState.reset()
-                phoneState.reset()
-                codeState.reset()
+            authOptionsControl.valueChanges.collect {
+                emailComponent.control.reset()
+                passwordComponent.control.reset()
+                phoneState.control.reset()
+                codeState.control.reset()
             }
         }
     }

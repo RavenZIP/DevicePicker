@@ -12,8 +12,8 @@ import com.ravenzip.devicepicker.common.repositories.UserRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.common.utils.extension.showWarning
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.state.FormState
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
@@ -32,42 +32,56 @@ constructor(
     private val _isLoading = MutableStateFlow(false)
     private val _spinnerText = MutableStateFlow("Регистрация...")
 
-    val authOptionsState = FormState(initialValue = AuthVariantsEnum.EMAIL)
+    val authOptionsControl = FormControl(initialValue = AuthVariantsEnum.EMAIL)
 
-    val emailState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value -> Validators.email(value) },
+    val emailComponent =
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value -> Validators.email(value) },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
-    val passwordState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value -> Validators.minLength(value, 6) },
+    val passwordComponent =
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value -> Validators.minLength(value, 6) },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
-    val phoneState =
-        TextFieldState(
-            initialValue = "",
-            validators =
-                listOf(
-                    { value -> Validators.required(value) },
-                    { value ->
-                        if (!PHONE.matcher(value).matches()) "Введен некорректный номер телефона"
-                        else null
-                    },
+    val phoneComponent =
+        TextFieldComponent(
+            control =
+                FormControl(
+                    initialValue = "",
+                    validators =
+                        listOf(
+                            { value -> Validators.required(value) },
+                            { value ->
+                                if (!PHONE.matcher(value).matches())
+                                    "Введен некорректный номер телефона"
+                                else null
+                            },
+                        ),
                 ),
+            scope = viewModelScope,
         )
 
-    val codeState = TextFieldState(initialValue = "")
+    val codeComponent =
+        TextFieldComponent(control = FormControl(initialValue = ""), scope = viewModelScope)
 
     val isLoading = _isLoading.asStateFlow()
     val spinnerText = _spinnerText.asStateFlow()
@@ -75,7 +89,7 @@ constructor(
 
     fun registrationWithEmailAndPassword(navigateToHomeScreen: () -> Unit) {
         viewModelScope.launch {
-            if (emailState.isInvalid || passwordState.isInvalid) {
+            if (emailComponent.control.isInvalid || passwordComponent.control.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения полей")
                 return@launch
             }
@@ -92,7 +106,10 @@ constructor(
             _spinnerText.update { "Регистрация..." }
 
             val authResult =
-                authRepository.createUserWithEmail(emailState.value, passwordState.value)
+                authRepository.createUserWithEmail(
+                    emailComponent.control.value,
+                    passwordComponent.control.value,
+                )
             if (authResult is Result.Error) {
                 _isLoading.update { false }
                 snackBarHostState.showError(authResult.message)
@@ -151,11 +168,11 @@ constructor(
 
     init {
         viewModelScope.launch {
-            authOptionsState.valueChanges.collect {
-                emailState.reset()
-                passwordState.reset()
-                phoneState.reset()
-                codeState.reset()
+            authOptionsControl.valueChanges.collect {
+                emailComponent.control.reset()
+                passwordComponent.control.reset()
+                phoneComponent.control.reset()
+                codeComponent.control.reset()
             }
         }
     }

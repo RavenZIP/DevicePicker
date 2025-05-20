@@ -62,14 +62,14 @@ fun RegistrationScreen(
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
             selectedOption = viewModel.authOptionsState.value,
-            emailState = viewModel.emailState,
-            passwordState = viewModel.passwordState,
-            phoneState = viewModel.phoneState,
-            codeState = viewModel.codeState,
+            emailComponent = viewModel.emailComponent,
+            passwordComponent = viewModel.passwordComponent,
+            phoneComponent = viewModel.phoneComponent,
+            codeComponent = viewModel.codeComponent,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(formState = viewModel.authOptionsState, title = "Выбор варианта регистрации")
+        AuthOptions(control = viewModel.authOptionsState, title = "Выбор варианта регистрации")
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(

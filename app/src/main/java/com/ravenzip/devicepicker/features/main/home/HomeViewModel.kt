@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.common.enums.TagsEnum
 import com.ravenzip.devicepicker.common.repositories.SharedRepository
-import com.ravenzip.workshop.forms.state.FormState
+import com.ravenzip.workshop.forms.control.FormControl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,12 +18,12 @@ class HomeViewModel @Inject constructor(private val sharedRepository: SharedRepo
     /** Все устройства (компактная модель) */
     private val _allDevices = sharedRepository.allDevices
 
-    val selectedCategory = FormState(initialValue = TagsEnum.POPULAR)
+    val selectedCategoryControl = FormControl(initialValue = TagsEnum.POPULAR)
 
     val devicesInSelectedCategory =
-        selectedCategory.valueChanges
-            .combine(_allDevices) { category, devices ->
-                devices.filter { device -> device.tags.contains(category) }
+        selectedCategoryControl.valueChanges
+            .combine(_allDevices) { categoryChanges, devices ->
+                devices.filter { device -> device.tags.contains(categoryChanges.value) }
             }
             .stateIn(
                 scope = viewModelScope,

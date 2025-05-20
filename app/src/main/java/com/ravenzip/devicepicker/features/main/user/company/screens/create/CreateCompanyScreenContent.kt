@@ -17,10 +17,10 @@ import com.ravenzip.workshop.data.icon.IconData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompanyScreenCreateContent(viewModel: CreateCompanyViewModel) {
-    SinglenessOutlinedTextField(viewModel.companyNameState, label = "Наименование")
-    MultilineTextField(viewModel.companyDescriptionState, label = "Описание")
-    SinglenessOutlinedTextField(viewModel.companyAddressState, label = "Адрес")
-    SinglenessOutlinedTextField(viewModel.companyCodeState, label = "Код доступа")
+    SinglenessOutlinedTextField(viewModel.companyNameComponent, label = "Наименование")
+    MultilineTextField(viewModel.companyDescriptionComponent, label = "Описание")
+    SinglenessOutlinedTextField(viewModel.companyAddressComponent, label = "Адрес")
+    SinglenessOutlinedTextField(viewModel.companyCodeComponent, label = "Код доступа")
 
     Spacer(modifier = Modifier.height(5.dp))
 

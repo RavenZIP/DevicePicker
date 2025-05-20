@@ -6,7 +6,8 @@ import com.ravenzip.devicepicker.common.model.AlertDialog
 import com.ravenzip.devicepicker.common.model.UiEvent
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompact.Companion.convertToDeviceCompactExtended
 import com.ravenzip.devicepicker.common.repositories.SharedRepository
-import com.ravenzip.workshop.forms.state.special.TextFieldState
+import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,7 +24,8 @@ class AddDevicesToCompanyViewModel @Inject constructor(sharedRepository: SharedR
     val navigateTo = MutableSharedFlow<String>()
     val navigateBack = MutableSharedFlow<Unit>()
 
-    val deviceCounterState = TextFieldState(initialValue = "")
+    val deviceCounterComponent =
+        TextFieldComponent(FormControl(initialValue = ""), scope = viewModelScope)
 
     val alertDialog = AlertDialog()
 
@@ -43,6 +45,8 @@ class AddDevicesToCompanyViewModel @Inject constructor(sharedRepository: SharedR
         )
 
     init {
-        alertDialog.isShowed.onEach { deviceCounterState.reset() }.launchIn(viewModelScope)
+        alertDialog.isShowed
+            .onEach { deviceCounterComponent.control.reset() }
+            .launchIn(viewModelScope)
     }
 }
