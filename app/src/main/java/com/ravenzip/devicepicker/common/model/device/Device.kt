@@ -1,8 +1,6 @@
 package com.ravenzip.devicepicker.common.model.device
 
 import com.ravenzip.devicepicker.common.enums.TagsEnum
-import com.ravenzip.devicepicker.common.map.tagIconMap
-import com.ravenzip.devicepicker.common.map.tagsColorMap
 import com.ravenzip.devicepicker.common.model.FeedbackDto
 import com.ravenzip.devicepicker.common.model.Tag
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceSpecifications
@@ -48,8 +46,8 @@ data class Device(
                     name = tag,
                     icon =
                         IconWithConfig(
-                            icon = IconData.ResourceIcon(tagIconMap[tag]!!),
-                            config = IconConfig(size = 20, color = tagsColorMap[tag]),
+                            icon = IconData.ResourceIcon(tag.icon),
+                            config = IconConfig(size = 20, color = tag.color),
                         ),
                 )
             }
@@ -57,8 +55,8 @@ data class Device(
         fun Device.createShortTags() =
             this.tags.map { tag ->
                 IconWithConfig(
-                    icon = IconData.ResourceIcon(tagIconMap[tag]!!),
-                    config = IconConfig(size = 20, color = tagsColorMap[tag]),
+                    icon = IconData.ResourceIcon(tag.icon),
+                    config = IconConfig(size = 20, color = tag.color),
                 )
             }
     }

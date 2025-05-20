@@ -18,8 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.common.components.ColumnDeviceCard
 import com.ravenzip.devicepicker.common.enums.TagsEnum
-import com.ravenzip.devicepicker.common.map.tagIconMap
-import com.ravenzip.devicepicker.common.map.tagsColorMap
 import com.ravenzip.workshop.components.ChipRadioGroup
 import com.ravenzip.workshop.data.ChipViewOptions
 import com.ravenzip.workshop.data.TextConfig
@@ -48,8 +46,8 @@ fun HomeScreenContent(
                         ChipViewOptions(
                             text = item.value,
                             textConfig = TextConfig.SmallMedium,
-                            icon = IconData.ResourceIcon(id = tagIconMap[item]!!),
-                            iconConfig = IconConfig(size = 20, color = tagsColorMap[item]),
+                            icon = IconData.ResourceIcon(id = item.icon),
+                            iconConfig = IconConfig(size = 20, color = item.color),
                         )
                 },
             comparableKey = { it },

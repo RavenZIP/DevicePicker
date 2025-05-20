@@ -59,7 +59,6 @@ import com.ravenzip.devicepicker.common.components.VerticalCenterRow
 import com.ravenzip.devicepicker.common.enums.TagsEnum
 import com.ravenzip.devicepicker.common.map.colorMap
 import com.ravenzip.devicepicker.common.map.specificationCategoriesMap
-import com.ravenzip.devicepicker.common.map.tagsNameMap
 import com.ravenzip.devicepicker.common.model.ButtonData
 import com.ravenzip.devicepicker.common.model.Tag
 import com.ravenzip.devicepicker.common.model.device.Device
@@ -421,7 +420,7 @@ private fun TagsBottomSheet(
                         Spacer(modifier = Modifier.height(10.dp))
                         CustomButton(
                             width = 0.95f,
-                            title = tagsNameMap[tag.name]!!,
+                            title = tag.name.value,
                             text = "Нажмите, чтобы получить подробности",
                             icon = tag.icon.icon,
                             iconConfig = tag.icon.config,
@@ -469,7 +468,7 @@ private fun TagInfo(tag: Tag?) {
         VerticalCenterRow(modifier = Modifier.fillMaxWidth(0.95f)) {
             BoxedChip(icon = tag.icon.icon, iconConfig = tag.icon.config)
             Spacer(modifier = Modifier.width(10.dp))
-            Text(text = tagsNameMap[tag.name]!!, fontSize = 18.sp, fontWeight = FontWeight.W500)
+            Text(text = tag.name.value, fontSize = 18.sp, fontWeight = FontWeight.W500)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
