@@ -4,8 +4,6 @@ import com.ravenzip.devicepicker.common.enums.TagsEnum
 import com.ravenzip.devicepicker.common.model.FeedbackDto
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.common.model.device.configurations.PhoneConfigurationDto
-import com.ravenzip.devicepicker.common.model.device.price.PriceDto
-import com.ravenzip.devicepicker.common.model.device.price.PriceDto.Companion.convertToPrice
 
 data class DeviceDto(
     val uid: String,
@@ -14,7 +12,6 @@ data class DeviceDto(
     val colors: List<String>,
     val configurations: List<PhoneConfigurationDto>,
     val feedback: FeedbackDto,
-    val price: PriceDto,
 ) {
     constructor() :
         this(
@@ -24,7 +21,6 @@ data class DeviceDto(
             colors = listOf(),
             configurations = listOf(),
             feedback = FeedbackDto(),
-            price = PriceDto(),
         )
 
     fun convertToDevice(imageUrls: List<String> = listOf()): Device {
@@ -35,7 +31,6 @@ data class DeviceDto(
             tags = this.tags,
             configurations = this.configurations,
             feedback = this.feedback,
-            price = this.price.convertToPrice(),
             imageUrls = imageUrls,
         )
     }

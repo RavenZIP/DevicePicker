@@ -1,7 +1,5 @@
 package com.ravenzip.devicepicker.common.model.device.compact
 
-import com.ravenzip.devicepicker.common.model.device.price.PriceDto
-
 class DeviceCompactInfoDto(
     override val uid: String,
     override val type: String,
@@ -10,7 +8,6 @@ class DeviceCompactInfoDto(
     override val cpu: String,
     override val battery: Int,
     override val camera: Int,
-    override val price: PriceDto,
     override val rating: Double,
     override val reviewsCount: Int,
 ) : IDeviceCompact {
@@ -23,7 +20,6 @@ class DeviceCompactInfoDto(
             cpu = "",
             battery = 0,
             camera = 0,
-            price = PriceDto(),
             rating = 0.0,
             reviewsCount = 0,
         )

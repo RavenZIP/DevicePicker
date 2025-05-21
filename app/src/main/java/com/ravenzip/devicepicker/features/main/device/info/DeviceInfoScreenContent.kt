@@ -1,5 +1,6 @@
 package com.ravenzip.devicepicker.features.main.device.info
 
+import androidx.annotation.FloatRange
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -9,6 +10,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -18,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -36,6 +39,7 @@ import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,25 +71,25 @@ import com.ravenzip.devicepicker.common.utils.extension.ColoredBoxWithBorder
 import com.ravenzip.devicepicker.common.utils.extension.bigImageContainer
 import com.ravenzip.devicepicker.common.utils.extension.veryLightPrimary
 import com.ravenzip.workshop.components.BoxedChip
-import com.ravenzip.workshop.components.BoxedChipGroup
+import com.ravenzip.workshop.components.Chip
 import com.ravenzip.workshop.components.CustomButton
 import com.ravenzip.workshop.components.HorizontalPagerIndicator
 import com.ravenzip.workshop.components.InfoCard
 import com.ravenzip.workshop.components.RowIconButton
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.TextConfig
-import com.ravenzip.workshop.data.button.ButtonContentConfig
+import com.ravenzip.workshop.data.button.ButtonContainerConfig
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
+import kotlin.collections.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, device: Device) {
     val title = viewModel.title.collectAsStateWithLifecycle().value
     val specifications = viewModel.specifications.collectAsStateWithLifecycle().value
-    val shortTags = viewModel.shortTags.collectAsStateWithLifecycle().value
     val tags = viewModel.tags.collectAsStateWithLifecycle().value
     val feedbacks = viewModel.feedbacks.collectAsStateWithLifecycle().value
     val specificationsKeys = viewModel.specificationsKeys.collectAsStateWithLifecycle().value
@@ -104,18 +108,28 @@ fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, device: Device) {
         }
 
         item {
+            val lightStyle = ButtonContainerConfig.lightStyle()
+            val buttonContainerConfig = remember {
+                ButtonContainerConfig.smallButtonConfig(lightStyle)
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+            ChipGroup(source = tags)
+
             Spacer(modifier = Modifier.height(10.dp))
-            BoxedChipGroup(
-                items = shortTags,
-                buttonContentConfig =
-                    ButtonContentConfig(
-                        text = "Подробнее о метках",
-                        textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
-                        icon = IconData.ResourceIcon(id = R.drawable.i_arrow_right),
-                        iconConfig = IconConfig.Default,
-                        onClick = { tagsSheetIsVisible.value = true },
-                    ),
-            )
+            RowIconButton(
+                width = 0.9f,
+                text = "Подробнее о метках",
+                textConfig = TextConfig(size = 16.sp, weight = FontWeight.Medium),
+                icon = IconData.ResourceIcon(id = R.drawable.i_arrow_right),
+                iconConfig = IconConfig.Default,
+                iconPositionIsLeft = false,
+                colors = buttonContainerConfig.colors,
+                shape = buttonContainerConfig.shape,
+                contentPadding = buttonContainerConfig.contentPadding,
+            ) {
+                tagsSheetIsVisible.value = true
+            }
         }
 
         item {
@@ -135,11 +149,7 @@ fun DeviceInfoScreenContent(viewModel: DeviceInfoViewModel, device: Device) {
 
         item {
             Spacer(modifier = Modifier.height(15.dp))
-            PriceAndConfigurations(
-                device.price.currentFormatted,
-                device.configurations,
-                device.colors,
-            )
+            PriceAndConfigurations(device.configurations, device.colors)
         }
 
         items(specificationsKeys) { categoryKey ->
@@ -224,7 +234,6 @@ private fun FeedbackContainer(feedback: List<ButtonData>) {
 
 @Composable
 private fun PriceAndConfigurations(
-    formattedPrice: String,
     configurations: List<PhoneConfigurationDto>,
     colors: List<String>,
 ) {
@@ -235,20 +244,6 @@ private fun PriceAndConfigurations(
                 .background(MaterialTheme.colorScheme.surfaceContainer)
                 .padding(10.dp)
     ) {
-        RowIconButton(
-            width = null,
-            text = formattedPrice,
-            textConfig = TextConfig.H1,
-            icon = IconData.ResourceIcon(R.drawable.i_info),
-            iconConfig = IconConfig.Big,
-            iconPositionIsLeft = false,
-            contentPadding = PaddingValues(10.dp),
-        ) {
-            /*TODO*/
-        }
-
-        Spacer(modifier = Modifier.height(15.dp))
-
         TextWithIcon(
             icon = ImageVector.vectorResource(R.drawable.i_configuration),
             text = "Конфигурации",
@@ -420,7 +415,7 @@ private fun TagsBottomSheet(
                         Spacer(modifier = Modifier.height(10.dp))
                         CustomButton(
                             width = 0.95f,
-                            title = tag.name.value,
+                            title = tag.tag.value,
                             text = "Нажмите, чтобы получить подробности",
                             icon = tag.icon.icon,
                             iconConfig = tag.icon.config,
@@ -468,7 +463,7 @@ private fun TagInfo(tag: Tag?) {
         VerticalCenterRow(modifier = Modifier.fillMaxWidth(0.95f)) {
             BoxedChip(icon = tag.icon.icon, iconConfig = tag.icon.config)
             Spacer(modifier = Modifier.width(10.dp))
-            Text(text = tag.name.value, fontSize = 18.sp, fontWeight = FontWeight.W500)
+            Text(text = tag.tag.value, fontSize = 18.sp, fontWeight = FontWeight.W500)
         }
 
         Spacer(modifier = Modifier.height(10.dp))
@@ -477,8 +472,28 @@ private fun TagInfo(tag: Tag?) {
             width = 0.95f,
             icon = IconData.ResourceIcon(id = R.drawable.i_info),
             title = "Описание",
-            text = tag.name.description,
+            text = tag.tag.description,
             colors = CardDefaults.veryLightPrimary(),
         )
+    }
+}
+
+// TODO перенести в библиотеку, предварительно скорректировав
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+fun ChipGroup(
+    source: List<Tag>,
+    @FloatRange(from = 0.0, to = 1.0) width: Float = 1f,
+    containerPadding: PaddingValues = PaddingValues(horizontal = 20.dp),
+    contentPadding: Arrangement.HorizontalOrVertical = Arrangement.spacedBy(10.dp),
+) {
+    LazyRow(
+        modifier = Modifier.fillMaxWidth(width),
+        horizontalArrangement = contentPadding,
+        contentPadding = containerPadding,
+    ) {
+        items(source, key = { item -> item.tag }, contentType = { it }) { item ->
+            Chip(text = item.tag.value, icon = item.icon.icon, iconConfig = item.icon.config)
+        }
     }
 }

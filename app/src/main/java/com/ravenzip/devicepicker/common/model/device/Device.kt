@@ -5,7 +5,6 @@ import com.ravenzip.devicepicker.common.model.FeedbackDto
 import com.ravenzip.devicepicker.common.model.Tag
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceSpecifications
 import com.ravenzip.devicepicker.common.model.device.configurations.PhoneConfigurationDto
-import com.ravenzip.devicepicker.common.model.device.price.Price
 import com.ravenzip.devicepicker.common.model.device.specifications.ScreenDto.Companion.diagonal
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
@@ -20,7 +19,6 @@ data class Device(
     val configurations: List<PhoneConfigurationDto>,
     val imageUrls: List<String>,
     val feedback: FeedbackDto,
-    val price: Price,
 ) {
     constructor() :
         this(
@@ -31,7 +29,6 @@ data class Device(
             configurations = listOf(),
             imageUrls = listOf(),
             feedback = FeedbackDto(),
-            price = Price(),
         )
 
     companion object {
@@ -43,7 +40,7 @@ data class Device(
         fun Device.createTags() =
             this.tags.map { tag ->
                 Tag(
-                    name = tag,
+                    tag = tag,
                     icon =
                         IconWithConfig(
                             icon = IconData.ResourceIcon(tag.icon),

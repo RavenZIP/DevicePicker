@@ -1,6 +1,5 @@
 package com.ravenzip.devicepicker.common.model.device.compact
 
-import com.ravenzip.devicepicker.common.model.device.price.Price
 import com.ravenzip.workshop.data.icon.IconWithConfig
 
 data class DeviceCompactExtended(
@@ -11,7 +10,6 @@ data class DeviceCompactExtended(
     override val cpu: String,
     override val battery: Int,
     override val camera: Int,
-    override val price: Price,
     override val rating: Double,
     override val reviewsCount: Int,
     val brand: String,
@@ -27,7 +25,6 @@ data class DeviceCompactExtended(
             cpu = "",
             battery = 0,
             camera = 0,
-            price = Price(),
             rating = 0.0,
             reviewsCount = 0,
             brand = "",
