@@ -13,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -30,7 +29,6 @@ import com.ravenzip.workshop.forms.control.FormControl
 
 @Composable
 fun AdminScreenContent(padding: PaddingValues) {
-    val key = remember { mutableStateOf("") }
     val firebase = FirebaseDatabase.getInstance()
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
@@ -67,7 +65,7 @@ fun AdminScreenContent(padding: PaddingValues) {
         Spacer(modifier = Modifier.height(20.dp))
 
         SimpleButton(text = "Сгенерировать") {
-            key.value = firebase.reference.push().key.toString()
+            idComponent.control.setValue(firebase.reference.push().key.toString())
         }
         Spacer(modifier = Modifier.height(40.dp))
 
