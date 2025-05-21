@@ -6,8 +6,8 @@ import com.ravenzip.devicepicker.common.model.AlertDialog
 import com.ravenzip.devicepicker.common.model.UiEvent
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompact.Companion.convertToDeviceCompactExtended
 import com.ravenzip.devicepicker.common.repositories.SharedRepository
+import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
-import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow

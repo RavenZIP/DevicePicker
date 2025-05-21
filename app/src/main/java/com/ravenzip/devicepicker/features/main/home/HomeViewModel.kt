@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor(private val sharedRepository: SharedRepo
     val devicesInSelectedCategory =
         selectedCategoryControl.valueChanges
             .combine(_allDevices) { categoryChanges, devices ->
-                devices.filter { device -> device.tags.contains(categoryChanges.value) }
+                devices.filter { device -> device.tags.contains(categoryChanges) }
             }
             .stateIn(
                 scope = viewModelScope,

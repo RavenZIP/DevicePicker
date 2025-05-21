@@ -16,10 +16,10 @@ import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
 import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.forms.Validators
+import com.ravenzip.workshop.forms.component.DropDownTextFieldComponent
+import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
-import com.ravenzip.workshop.forms.dropdown.DropDownTextFieldComponent
-import com.ravenzip.workshop.forms.dropdown.DropDownTextFieldState
-import com.ravenzip.workshop.forms.textfield.TextFieldComponent
+import com.ravenzip.workshop.forms.state.DropDownTextFieldState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -209,7 +209,6 @@ constructor(companyRepository: CompanyRepository, sharedRepository: SharedReposi
             .launchIn(viewModelScope)
 
         companyComponent.control.valueChanges
-            .map { companyChanges -> companyChanges.value }
             .onEach { company ->
                 val leader =
                     company.employees.firstOrNull { employee ->

@@ -8,8 +8,8 @@ import com.ravenzip.devicepicker.common.repositories.AuthRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.common.utils.extension.showSuccess
 import com.ravenzip.workshop.forms.Validators
+import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
-import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow

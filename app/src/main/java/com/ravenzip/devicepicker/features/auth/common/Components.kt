@@ -19,8 +19,8 @@ import com.ravenzip.devicepicker.common.utils.extension.defaultCardColors
 import com.ravenzip.workshop.components.RadioGroup
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import com.ravenzip.workshop.data.icon.IconData
+import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
-import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 
 @Composable
 fun AuthFields(

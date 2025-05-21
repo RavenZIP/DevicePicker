@@ -12,8 +12,8 @@ import com.ravenzip.devicepicker.common.repositories.UserRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.common.utils.extension.showWarning
 import com.ravenzip.workshop.forms.Validators
+import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
-import com.ravenzip.workshop.forms.textfield.TextFieldComponent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.delay
