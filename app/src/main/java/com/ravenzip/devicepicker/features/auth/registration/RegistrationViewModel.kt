@@ -128,10 +128,10 @@ constructor(
 
             _spinnerText.update { "Ожидание подтверждения электронной почты..." }
 
-            val isEmailVerified = checkEmailVerification()
+            val emailIsNotVerified = checkEmailVerification()
             // Если пользователь не успел подтвердить электронную почту,
             // то удаляем аккаунт
-            if (!isEmailVerified) {
+            if (emailIsNotVerified) {
                 _isLoading.update { false }
                 authRepository.deleteAccount()
                 return@launch
