@@ -115,15 +115,11 @@ constructor(
             .flatMapLatest { sharedRepository.loadUserData() }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
-    private val _updateUserDataSuccess =
-        _updateUserDataComplete.filterNextNotification().onEach {
-            println("_updateUserDataSuccess")
-        }
+    private val _updateUserDataSuccess = _updateUserDataComplete.filterNextNotification()
 
     private val _updateUserDataError =
         _updateUserDataComplete
             .filterErrorNotification()
-            .onEach { println("_updateUserDataError") }
             .shareIn(scope = viewModelScope, started = SharingStarted.Lazily, replay = 1)
 
     private val _snackBarErrorMessage =
