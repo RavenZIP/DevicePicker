@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.ButtonDefaults
@@ -18,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -58,28 +60,28 @@ fun WelcomeScreen(
             when (content) {
                 0 -> {
                     ScreenContent(
-                        imageId = R.drawable.devices,
-                        title = WelcomeEnum.MORE_INFORMATION.title,
-                        text = WelcomeEnum.MORE_INFORMATION.text,
+                        imageId = R.drawable.i_tags,
+                        title = WelcomeEnum.TAGS.title,
+                        text = WelcomeEnum.TAGS.text,
                     )
                 }
                 1 -> {
                     ScreenContent(
-                        imageId = R.drawable.search,
+                        imageId = R.drawable.i_company,
                         title = WelcomeEnum.ADVANCED_SEARCH.title,
                         text = WelcomeEnum.ADVANCED_SEARCH.text,
                     )
                 }
                 2 -> {
                     ScreenContent(
-                        imageId = R.drawable.time,
+                        imageId = R.drawable.i_login,
                         title = WelcomeEnum.OPTIONAL_REGISTRATION.title,
                         text = WelcomeEnum.OPTIONAL_REGISTRATION.text,
                     )
                 }
                 3 -> {
                     ScreenContent(
-                        imageId = R.drawable.devicepicker,
+                        imageId = R.drawable.i_devicepicker,
                         title = WelcomeEnum.DEVICE_PICKER.title,
                         text = WelcomeEnum.DEVICE_PICKER.text,
                         isFinal = true,
@@ -150,8 +152,14 @@ private fun ScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Image(painter = painterResource(imageId), contentDescription = "")
-        Spacer(modifier = Modifier.height(80.dp))
+        Image(
+            painter = painterResource(imageId),
+            contentDescription = "",
+            modifier = Modifier.size(150.dp),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
+        )
+
+        Spacer(modifier = Modifier.height(50.dp))
 
         Column(
             modifier = Modifier.fillMaxWidth(0.9f),
@@ -168,7 +176,7 @@ private fun ScreenContent(
         }
 
         if (isFinal) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(50.dp))
             SimpleButton(text = "Регистрация") { navigateToRegistrationScreen() }
 
             Spacer(modifier = Modifier.height(20.dp))

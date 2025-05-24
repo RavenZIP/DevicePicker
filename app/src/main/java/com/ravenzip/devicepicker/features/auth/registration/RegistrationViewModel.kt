@@ -148,7 +148,6 @@ constructor(
         when (selectedOption) {
             AuthVariantsEnum.EMAIL -> AuthCardEnum.REGISTER_WITH_EMAIL.value
             AuthVariantsEnum.PHONE -> AuthCardEnum.REGISTER_WITH_PHONE.value
-            AuthVariantsEnum.GOOGLE -> AuthCardEnum.REGISTER_WITH_GOOGLE.value
         }
 
     private suspend fun checkEmailVerification(): Boolean {

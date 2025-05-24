@@ -53,10 +53,12 @@ fun AuthFields(
                 leadingIcon = IconData.ResourceIcon(R.drawable.i_phone),
             )
 
-            // TODO добавить поле с кодом
-        }
-        AuthVariantsEnum.GOOGLE -> {
-            // TODO
+            Spacer(modifier = Modifier.height(15.dp))
+            SinglenessOutlinedTextField(
+                component = codeComponent,
+                label = "СМС-код",
+                leadingIcon = IconData.ResourceIcon(R.drawable.i_message),
+            )
         }
     }
 }

@@ -74,7 +74,6 @@ fun LoginScreen(
                     viewModel.logInWithEmailAndPassword(navigateToHomeScreen = navigateToHomeScreen)
                 }
                 AuthVariantsEnum.PHONE -> {}
-                AuthVariantsEnum.GOOGLE -> {}
             }
         }
 

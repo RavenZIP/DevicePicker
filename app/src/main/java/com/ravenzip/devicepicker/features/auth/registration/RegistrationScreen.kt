@@ -92,7 +92,6 @@ fun RegistrationScreen(
                 }
 
                 AuthVariantsEnum.PHONE -> {}
-                AuthVariantsEnum.GOOGLE -> {}
             }
         }
     }
