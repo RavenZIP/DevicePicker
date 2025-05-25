@@ -170,6 +170,7 @@ private fun ScreenContent(
                 fontSize = if (isFinal) 24.sp else 22.sp,
                 fontWeight = FontWeight.W500,
                 letterSpacing = 0.sp,
+                textAlign = TextAlign.Center,
             )
             Spacer(modifier = Modifier.height(if (isFinal) 10.dp else 20.dp))
             Text(text = text, letterSpacing = 0.sp, textAlign = TextAlign.Center)

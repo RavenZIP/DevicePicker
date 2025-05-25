@@ -29,6 +29,8 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     val isAnonymousUser: Boolean
         get() = firebaseUser?.isAnonymous == true
 
+    // TODO если отсутствует интернет и пользователь не авторизован
+    // то метод не выкинет ошибку сети
     fun reloadUserFlow() =
         flow<Result<Boolean>> {
                 firebaseUser?.reload()?.await()
@@ -36,7 +38,6 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             }
             .catch { e ->
                 withContext(Dispatchers.Main) { Log.e("reloadUser", "${e.message}") }
-
                 if (e is FirebaseNetworkException) {
                     emit(Result.Error.Network("Не удалось обновить данные о пользователе"))
                 } else {
