@@ -26,9 +26,6 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
     val firebaseUser: FirebaseUser?
         get() = authSources.firebaseUser
 
-    val isAnonymousUser: Boolean
-        get() = firebaseUser?.isAnonymous == true
-
     // TODO если отсутствует интернет и пользователь не авторизован
     // то метод не выкинет ошибку сети
     fun reloadUserFlow() =
@@ -38,6 +35,7 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             }
             .catch { e ->
                 withContext(Dispatchers.Main) { Log.e("reloadUser", "${e.message}") }
+
                 if (e is FirebaseNetworkException) {
                     emit(Result.Error.Network("Не удалось обновить данные о пользователе"))
                 } else {
@@ -96,28 +94,16 @@ class AuthRepository @Inject constructor(private val authSources: AuthSources) {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             Result.Success(result)
         } catch (e: FirebaseTooManyRequestsException) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d(
-                    "FirebaseTooManyRequestsException",
-                    AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value,
-                )
-            }
+            Log.e("logInUserWithEmail", e.message.toString())
 
-            Result.Error.Default(AuthErrorsEnum.ERROR_TOO_MANY_REQUESTS.value)
+            Result.Error.Default(AuthErrorsEnum.ERROR_DEFAULT.value)
         } catch (e: FirebaseAuthException) {
+            Log.e("logInUserWithEmail", e.message.toString())
             val error = AuthErrorsEnum.getErrorMessage(e)
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d("FirebaseAuthException", error)
-            }
 
             Result.Error.Default(error)
         } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                Log.d("Method", "LoginUserWithEmail")
-                Log.d("Exception", "${e.message}")
-            }
+            Log.e("logInUserWithEmail", e.message.toString())
 
             Result.Error.Default(AuthErrorsEnum.ERROR_DEFAULT.value)
         }
