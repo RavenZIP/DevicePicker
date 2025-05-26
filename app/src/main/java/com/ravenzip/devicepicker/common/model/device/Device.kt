@@ -33,9 +33,8 @@ data class Device(
 
     companion object {
         fun Device.createDeviceTitle() =
-            "${this.specifications.baseInfo.type} ${this.specifications.baseInfo.model}, " +
-                "${this.configurations[0].randomAccessMemory}/${this.configurations[0].internalMemory}Gb " +
-                "${this.specifications.screen.diagonal()} ${this.specifications.baseInfo.year} ${this.colors[0]}"
+            "${this.specifications.screen.diagonal()} ${this.specifications.baseInfo.type} " +
+                "${this.specifications.baseInfo.model}, ${this.specifications.baseInfo.year}"
 
         fun Device.createTags() =
             this.tags.map { tag ->
