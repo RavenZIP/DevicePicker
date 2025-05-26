@@ -2,6 +2,7 @@ package com.ravenzip.devicepicker.common.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -36,7 +37,6 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompact
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceCompactExtended
-import com.ravenzip.devicepicker.common.utils.extension.containerColor
 import com.ravenzip.devicepicker.common.utils.extension.smallImageContainer
 import com.ravenzip.devicepicker.common.utils.extension.veryLightPrimary
 import com.ravenzip.workshop.components.BoxedChip
@@ -54,12 +54,15 @@ import com.smarttoolfactory.ratingbar.model.GestureStrategy
 @Composable
 fun ColumnDeviceCard(
     device: DeviceCompact,
-    onCardClick: () -> Unit,
+    onClick: () -> Unit,
+    onLongPress: () -> Unit,
     onCompareClick: () -> Unit,
     onFavouriteClick: () -> Unit,
 ) {
     Card(
-        modifier = Modifier.clip(RoundedCornerShape(12.dp)).clickable { onCardClick() },
+        modifier =
+            Modifier.clip(RoundedCornerShape(12.dp))
+                .combinedClickable(onClick = { onClick() }, onLongClick = { onLongPress() }),
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
@@ -106,10 +109,6 @@ fun ColumnDeviceCard(
 
             Text(text = device.type, fontWeight = FontWeight.W500)
             Text(text = device.model, fontSize = 14.sp, fontWeight = FontWeight.W500)
-
-            Spacer(modifier = Modifier.height(5.dp))
-
-            Specifications(device.diagonal, device.cpu, device.camera, device.battery)
 
             Spacer(modifier = Modifier.height(5.dp))
 

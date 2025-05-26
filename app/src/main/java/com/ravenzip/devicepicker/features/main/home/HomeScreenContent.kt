@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -54,17 +54,18 @@ fun HomeScreenContent(
             containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
+        LazyVerticalStaggeredGrid(
+            columns = StaggeredGridCells.Fixed(2),
             modifier = Modifier.fillMaxWidth(0.9f).fillMaxHeight(),
             contentPadding = PaddingValues(vertical = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalItemSpacing = 10.dp,
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(devices) { device ->
                 ColumnDeviceCard(
                     device = device,
-                    onCardClick = { navigateToDevice(device.uid) },
+                    onClick = { navigateToDevice(device.uid) },
+                    onLongPress = {},
                     onCompareClick = {},
                     onFavouriteClick = {},
                 )
