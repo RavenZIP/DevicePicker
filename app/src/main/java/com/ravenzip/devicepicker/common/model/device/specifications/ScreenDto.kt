@@ -1,7 +1,7 @@
 package com.ravenzip.devicepicker.common.model.device.specifications
 
 data class ScreenDto(
-    val diagonal: Int,
+    val diagonal: Double,
     val width: Int,
     val height: Int,
     val typeOfMatrix: String,
@@ -16,7 +16,7 @@ data class ScreenDto(
 ) {
     constructor() :
         this(
-            diagonal = 0,
+            diagonal = 0.0,
             width = 0,
             height = 0,
             typeOfMatrix = "Не определено",
