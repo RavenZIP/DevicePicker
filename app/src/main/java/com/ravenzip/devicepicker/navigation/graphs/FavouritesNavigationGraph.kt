@@ -9,6 +9,7 @@ import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimatio
 import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.features.main.device.info.DeviceInfoScreenScaffold
 import com.ravenzip.devicepicker.features.main.favourites.FavouritesScreenScaffold
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.FavouritesGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
@@ -35,7 +36,7 @@ fun FavouritesNavigationGraph(
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScreenScaffold(
                 padding = padding,
-                navigateBack = { navController.popBackStack() },
+                navigationParams = NavigationParams.fromNavController(navController),
             )
         }
     }

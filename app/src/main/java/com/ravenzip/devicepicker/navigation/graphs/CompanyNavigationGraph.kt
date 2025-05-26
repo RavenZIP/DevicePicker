@@ -138,7 +138,7 @@ fun CompanyNavigationGraph(
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScreenScaffold(
                 padding = padding,
-                navigateBack = { navController.popBackStack() },
+                navigationParams = NavigationParams.fromNavController(navController),
             )
         }
     }

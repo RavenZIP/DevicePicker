@@ -8,10 +8,14 @@ import androidx.navigation.compose.rememberNavController
 import com.ravenzip.devicepicker.common.utils.extension.navigateWithFadeAnimation
 import com.ravenzip.devicepicker.common.utils.extension.navigateWithSlideAnimation
 import com.ravenzip.devicepicker.features.main.device.info.DeviceInfoScreenScaffold
+import com.ravenzip.devicepicker.features.main.device.questions.QuestionsScreenScaffold
+import com.ravenzip.devicepicker.features.main.device.reviews.ReviewsScreenScaffold
 import com.ravenzip.devicepicker.features.main.home.HomeScreenScaffold
-import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
-import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.features.main.home.HomeViewModel
+import com.ravenzip.devicepicker.navigation.NavigationParams
+import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
+import com.ravenzip.devicepicker.navigation.models.DeviceInfoGraph
+import com.ravenzip.devicepicker.navigation.models.HomeGraph
 
 @Composable
 fun HomeNavigationGraph(
@@ -37,7 +41,22 @@ fun HomeNavigationGraph(
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScreenScaffold(
                 padding = padding,
+                navigationParams = NavigationParams.fromNavController(navController = navController),
+            )
+        }
+
+        // TODO вынести в отдельный нав граф
+        navigateWithFadeAnimation(route = "${DeviceInfoGraph.REVIEWS}/{uid}") {
+            ReviewsScreenScaffold(
                 navigateBack = { navController.popBackStack() },
+                padding = padding,
+            )
+        }
+
+        navigateWithFadeAnimation(route = "${DeviceInfoGraph.QUESTIONS}/{uid}") {
+            QuestionsScreenScaffold(
+                navigateBack = { navController.popBackStack() },
+                padding = padding,
             )
         }
     }

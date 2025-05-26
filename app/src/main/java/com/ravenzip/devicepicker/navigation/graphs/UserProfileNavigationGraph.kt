@@ -17,6 +17,7 @@ import com.ravenzip.devicepicker.features.main.user.reviews.ReviewsScreenScaffol
 import com.ravenzip.devicepicker.features.main.user.settings.user.UserSettingsScreenScaffold
 import com.ravenzip.devicepicker.features.main.user.settings.visual.VisualAppearanceScreenScaffold
 import com.ravenzip.devicepicker.features.main.user.updates.UpdatesScreenScaffold
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.devicepicker.navigation.models.BottomBarGraph
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
 import com.ravenzip.devicepicker.navigation.models.UserProfileGraph
@@ -93,7 +94,7 @@ fun UserProfileNavigationGraph(
         navigateWithFadeAnimation(route = "${HomeGraph.DEVICE_INFO}/{uid}") {
             DeviceInfoScreenScaffold(
                 padding = padding,
-                navigateBack = { navController.popBackStack() },
+                navigationParams = NavigationParams.fromNavController(navController),
             )
         }
     }

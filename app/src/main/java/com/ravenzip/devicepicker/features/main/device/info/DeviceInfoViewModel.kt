@@ -17,6 +17,7 @@ import com.ravenzip.devicepicker.common.model.device.compact.DeviceSpecification
 import com.ravenzip.devicepicker.common.repositories.DeviceRepository
 import com.ravenzip.devicepicker.common.repositories.ImageRepository
 import com.ravenzip.devicepicker.common.repositories.SharedRepository
+import com.ravenzip.devicepicker.navigation.models.DeviceInfoGraph
 import com.ravenzip.workshop.data.appbar.AppBarItem
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
@@ -53,6 +54,8 @@ constructor(
     private val _updateCompares = MutableSharedFlow<Unit>()
 
     val snackBarHostState = SnackbarHostState()
+
+    private val navigateTo = MutableSharedFlow<String>()
 
     private val _deviceUid = savedStateHandle.getStateFlow("uid", "")
 
@@ -242,12 +245,17 @@ constructor(
 
     val uiEvent =
         merge(
-                _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
-                _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
-                _deviceAddedToCompares.map { "Устройство добавлено в список сравнения" },
-                _deviceDeletedFromCompares.map { "Устройство удалено из списка сравнения" },
-            )
-            .map { message -> UiEvent.ShowSnackBar.Default(message) }
+            navigateTo.map { route ->
+                UiEvent.Navigate.ByRoute("${route}/${savedStateHandle.get<String>("uid")}")
+            },
+            merge(
+                    _deviceAddedToFavourites.map { "Устройство добавлено в избранное" },
+                    _deviceDeletedFromFavourites.map { "Устройство удалено из избранного" },
+                    _deviceAddedToCompares.map { "Устройство добавлено в список сравнения" },
+                    _deviceDeletedFromCompares.map { "Устройство удалено из списка сравнения" },
+                )
+                .map { message -> UiEvent.ShowSnackBar.Default(message) },
+        )
 
     init {
         viewModelScope.launch {
@@ -265,7 +273,7 @@ constructor(
                 iconId = R.drawable.i_medal,
                 value = feedback.rating.toString(),
                 text = "Оценка",
-                onClick = {},
+                onClick = { viewModelScope.launch { navigateTo.emit(DeviceInfoGraph.REVIEWS) } },
             )
 
         val reviewsCount =
@@ -273,7 +281,7 @@ constructor(
                 iconId = R.drawable.i_comment,
                 value = feedback.reviewsCount.toString(),
                 text = "Отзывы",
-                onClick = {},
+                onClick = { viewModelScope.launch { navigateTo.emit(DeviceInfoGraph.REVIEWS) } },
             )
 
         val questionsCount =
@@ -281,7 +289,7 @@ constructor(
                 iconId = R.drawable.i_question,
                 value = feedback.questionsCount.toString(),
                 text = "Вопросы",
-                onClick = {},
+                onClick = { viewModelScope.launch { navigateTo.emit(DeviceInfoGraph.QUESTIONS) } },
             )
 
         return listOf(rating, reviewsCount, questionsCount)

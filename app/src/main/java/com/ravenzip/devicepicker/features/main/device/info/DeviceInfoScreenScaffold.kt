@@ -12,10 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.common.model.UiState
-import com.ravenzip.devicepicker.common.utils.extension.showMessage
 import com.ravenzip.devicepicker.common.ErrorScreenCard
+import com.ravenzip.devicepicker.common.model.UiEvent
+import com.ravenzip.devicepicker.common.model.UiState
 import com.ravenzip.devicepicker.common.utils.base.UiEventEffect
+import com.ravenzip.devicepicker.common.utils.extension.showMessage
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.workshop.components.SnackBar
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.TopAppBar
@@ -26,7 +28,7 @@ import com.ravenzip.workshop.data.icon.IconData
 @Composable
 fun DeviceInfoScreenScaffold(
     viewModel: DeviceInfoViewModel = hiltViewModel(),
-    navigateBack: () -> Unit,
+    navigationParams: NavigationParams,
     padding: PaddingValues,
 ) {
     val uiState = viewModel.device.collectAsStateWithLifecycle().value
@@ -36,7 +38,7 @@ fun DeviceInfoScreenScaffold(
         BackArrow(
             icon = IconData.ResourceIcon(R.drawable.i_back),
             iconConfig = IconConfig.Default,
-            onClick = navigateBack,
+            onClick = navigationParams.navigateBack,
         )
     }
 
@@ -67,7 +69,17 @@ fun DeviceInfoScreenScaffold(
     }
 
     UiEventEffect(viewModel.uiEvent) { event ->
-        viewModel.snackBarHostState.showMessage(event.message)
+        when (event) {
+            is UiEvent.ShowSnackBar.Default -> {
+                viewModel.snackBarHostState.showMessage(event.message)
+            }
+
+            is UiEvent.Navigate.ByRoute -> {
+                navigationParams.navigateTo(event.route)
+            }
+
+            else -> {}
+        }
     }
 
     SnackBar(snackBarHostState = viewModel.snackBarHostState)
