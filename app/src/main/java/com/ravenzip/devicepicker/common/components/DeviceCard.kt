@@ -47,8 +47,6 @@ import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.fresco.FrescoImage
-import com.smarttoolfactory.ratingbar.RatingBar
-import com.smarttoolfactory.ratingbar.model.GestureStrategy
 
 /** Карточка устройства, с вертикальным расположением данных */
 @Composable
@@ -227,15 +225,7 @@ private fun RatingWithReviewsCount(rating: Double, reviewsCount: Int) {
             modifier = Modifier.padding(5.dp).horizontalScroll(rememberScrollState()),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            RatingBar(
-                rating = rating.toFloat(),
-                imageVectorEmpty = ImageVector.vectorResource(R.drawable.i_medal),
-                imageVectorFilled = ImageVector.vectorResource(R.drawable.i_medal),
-                tintEmpty = MaterialTheme.colorScheme.primary.copy(0.5f),
-                tintFilled = MaterialTheme.colorScheme.primary,
-                gestureStrategy = GestureStrategy.None,
-                itemSize = 18.dp,
-            ) {}
+            RatingBar(rating.toFloat())
 
             Spacer(modifier = Modifier.width(5.dp))
 
