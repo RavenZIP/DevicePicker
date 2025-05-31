@@ -32,6 +32,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
@@ -52,10 +53,13 @@ import com.skydoves.landscapist.fresco.FrescoImage
 @Composable
 fun ColumnDeviceCard(
     device: DeviceCompact,
-    onClick: () -> Unit,
-    onLongPress: () -> Unit,
-    onCompareClick: () -> Unit,
-    onFavouriteClick: () -> Unit,
+    withCutName: Boolean = false,
+    isFavourite: Boolean = false,
+    isComparable: Boolean = false,
+    onClick: () -> Unit = {},
+    onLongPress: () -> Unit = {},
+    onCompareClick: () -> Unit = {},
+    onFavouriteClick: () -> Unit = {},
 ) {
     Card(
         modifier =
@@ -78,7 +82,11 @@ fun ColumnDeviceCard(
                             .background(MaterialTheme.colorScheme.background)
                 ) {
                     IconButton(
-                        icon = IconData.ResourceIcon(R.drawable.i_compare),
+                        icon =
+                            IconData.ResourceIcon(
+                                if (isComparable) R.drawable.i_compare_filled
+                                else R.drawable.i_compare
+                            ),
                         iconConfig = IconConfig(size = 18),
                         backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
                     ) {
@@ -94,7 +102,10 @@ fun ColumnDeviceCard(
                             .background(MaterialTheme.colorScheme.background)
                 ) {
                     IconButton(
-                        icon = IconData.ResourceIcon(R.drawable.i_heart),
+                        icon =
+                            IconData.ResourceIcon(
+                                if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
+                            ),
                         iconConfig = IconConfig(size = 18),
                         backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
                     ) {
@@ -106,7 +117,13 @@ fun ColumnDeviceCard(
             Spacer(modifier = Modifier.height(5.dp))
 
             Text(text = device.type, fontWeight = FontWeight.W500)
-            Text(text = device.model, fontSize = 14.sp, fontWeight = FontWeight.W500)
+            Text(
+                text = device.model,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.W500,
+                maxLines = if (withCutName) 1 else Int.MAX_VALUE,
+                overflow = TextOverflow.Ellipsis,
+            )
 
             Spacer(modifier = Modifier.height(5.dp))
 

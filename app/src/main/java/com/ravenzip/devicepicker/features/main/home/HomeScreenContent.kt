@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import com.ravenzip.workshop.data.TextConfig
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreenContent(
     viewModel: HomeViewModel,
@@ -62,13 +60,7 @@ fun HomeScreenContent(
             horizontalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             items(devices) { device ->
-                ColumnDeviceCard(
-                    device = device,
-                    onClick = { navigateToDevice(device.uid) },
-                    onLongPress = {},
-                    onCompareClick = {},
-                    onFavouriteClick = {},
-                )
+                ColumnDeviceCard(device = device, onClick = { navigateToDevice(device.uid) })
             }
         }
     }

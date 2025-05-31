@@ -267,7 +267,7 @@ private fun PriceAndConfigurations(
 
 /** Конфигурация устройства */
 @Composable
-private fun DeviceConfiguration(modifier: Modifier, configuration: PhoneConfigurationDto) {
+fun DeviceConfiguration(modifier: Modifier, configuration: PhoneConfigurationDto) {
     val text = rememberSaveable {
         "${configuration.randomAccessMemory}/${configuration.internalMemory}Gb "
     }

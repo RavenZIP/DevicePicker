@@ -12,25 +12,14 @@ import com.ravenzip.workshop.data.icon.IconWithConfig
 
 /** Полная модель устройства */
 data class Device(
-    val uid: String,
-    val specifications: DeviceSpecifications,
-    val colors: List<String>,
-    val tags: List<TagsEnum>,
-    val configurations: List<PhoneConfigurationDto>,
-    val imageUrls: List<String>,
-    val feedback: FeedbackDto,
+    val uid: String = "",
+    val specifications: DeviceSpecifications = DeviceSpecifications(),
+    val colors: List<String> = listOf(),
+    val tags: List<TagsEnum> = listOf(),
+    val configurations: List<PhoneConfigurationDto> = listOf(),
+    val imageUrls: List<String> = listOf(),
+    val feedback: FeedbackDto = FeedbackDto(),
 ) {
-    constructor() :
-        this(
-            uid = "",
-            specifications = DeviceSpecifications(),
-            colors = listOf(),
-            tags = listOf(),
-            configurations = listOf(),
-            imageUrls = listOf(),
-            feedback = FeedbackDto(),
-        )
-
     companion object {
         fun Device.createDeviceTitle() =
             "${this.specifications.screen.diagonal()} ${this.specifications.baseInfo.type} " +

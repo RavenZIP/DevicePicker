@@ -8,6 +8,7 @@ import com.ravenzip.workshop.data.icon.IconWithConfig
 /** Компактная модель устройства */
 data class DeviceCompact(
     override val uid: String,
+    // TODO тип устройства должен быть DeviceTypeEnum
     override val type: String,
     override val model: String,
     override val diagonal: Double,

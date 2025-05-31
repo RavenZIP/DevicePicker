@@ -29,37 +29,20 @@ import com.ravenzip.devicepicker.common.model.device.specifications.camera.BackC
 import com.ravenzip.devicepicker.common.model.device.specifications.camera.FrontCameraDto.Companion.toMap
 
 class DeviceSpecifications(
-    val baseInfo: BaseInfoDto,
-    val screen: ScreenDto,
-    val construction: ConstructionDto,
-    val operationSystem: OperationSystemDto,
-    val cpu: CpuDto,
-    val memory: MemoryDto,
-    val camera: CameraDto,
-    val audio: AudioDto,
-    val communication: CommunicationDto,
-    val connectors: ConnectorsDto,
-    val power: PowerDto,
-    val additionalInfo: AdditionalInfoDto,
-    val dimensions: DimensionsDto,
+    val baseInfo: BaseInfoDto = BaseInfoDto(),
+    val screen: ScreenDto = ScreenDto(),
+    val construction: ConstructionDto = ConstructionDto(),
+    val operationSystem: OperationSystemDto = OperationSystemDto(),
+    val cpu: CpuDto = CpuDto(),
+    val memory: MemoryDto = MemoryDto(),
+    val camera: CameraDto = CameraDto(),
+    val audio: AudioDto = AudioDto(),
+    val communication: CommunicationDto = CommunicationDto(),
+    val connectors: ConnectorsDto = ConnectorsDto(),
+    val power: PowerDto = PowerDto(),
+    val additionalInfo: AdditionalInfoDto = AdditionalInfoDto(),
+    val dimensions: DimensionsDto = DimensionsDto(),
 ) {
-    constructor() :
-        this(
-            baseInfo = BaseInfoDto(),
-            screen = ScreenDto(),
-            construction = ConstructionDto(),
-            operationSystem = OperationSystemDto(),
-            cpu = CpuDto(),
-            memory = MemoryDto(),
-            camera = CameraDto(),
-            audio = AudioDto(),
-            communication = CommunicationDto(),
-            connectors = ConnectorsDto(),
-            power = PowerDto(),
-            additionalInfo = AdditionalInfoDto(),
-            dimensions = DimensionsDto(),
-        )
-
     companion object {
         fun DeviceSpecifications.toMap(): Map<String, Map<String, String>> {
             return mapOf(

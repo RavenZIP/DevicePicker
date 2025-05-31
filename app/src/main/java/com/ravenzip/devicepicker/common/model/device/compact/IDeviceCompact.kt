@@ -5,10 +5,10 @@ interface IDeviceCompact {
     val uid: String
     val type: String
     val model: String
-    val diagonal: Double
-    val cpu: String
-    val battery: Int
-    val camera: Int
+    @Deprecated("Не актуально, убрать") val diagonal: Double
+    @Deprecated("Не актуально, убрать") val cpu: String
+    @Deprecated("Не актуально, убрать") val battery: Int
+    @Deprecated("Не актуально, убрать") val camera: Int
     val rating: Double
     val reviewsCount: Int
 }
