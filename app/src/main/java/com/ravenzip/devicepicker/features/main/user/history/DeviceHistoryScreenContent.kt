@@ -33,7 +33,6 @@ fun DeviceHistoryScreenContent(
                 onFavouriteClick = { viewModel.tryToUpdateFavourites(device.uid) },
                 onCompareClick = { viewModel.tryToUpdateCompares(device.uid) },
                 onCardClick = { navigateToDevice(device.uid) },
-                onAddToCompanyClick = {},
             )
         }
     }

@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.common.components.RowDeviceCard
+import com.ravenzip.devicepicker.common.components.SmallText
 
 @Composable
 fun FavouritesScreenContent(
@@ -27,6 +28,8 @@ fun FavouritesScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
+        item { SmallText(text = "Количество устройств: ${favourites.count()}") }
+
         items(favourites) { device ->
             RowDeviceCard(
                 device = device,
@@ -34,7 +37,6 @@ fun FavouritesScreenContent(
                 onFavouriteClick = { viewModel.tryToUpdateFavourites(device.uid) },
                 onCompareClick = { viewModel.tryToUpdateCompares(device.uid) },
                 onCardClick = { navigateToDevice(device.uid) },
-                onAddToCompanyClick = {},
             )
         }
     }

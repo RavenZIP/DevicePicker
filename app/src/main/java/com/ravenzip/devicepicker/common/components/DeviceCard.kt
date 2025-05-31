@@ -123,7 +123,7 @@ fun RowDeviceCard(
     onFavouriteClick: () -> Unit,
     onCompareClick: () -> Unit,
     onCardClick: () -> Unit,
-    onAddToCompanyClick: () -> Unit,
+    onAddToCompanyClick: (() -> Unit)? = null,
 ) {
     Card(
         modifier =
@@ -132,22 +132,62 @@ fun RowDeviceCard(
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
             VerticalCenterRow {
-                FrescoImage(
-                    imageUrl = device.imageUrl,
-                    modifier = Modifier.smallImageContainer(width = 100.dp, height = 170.dp),
-                    imageOptions = ImageOptions(contentScale = ContentScale.Fit),
-                )
+                Box {
+                    FrescoImage(
+                        imageUrl = device.imageUrl,
+                        modifier = Modifier.smallImageContainer(width = 100.dp, height = 130.dp),
+                        imageOptions = ImageOptions(contentScale = ContentScale.Fit),
+                    )
+
+                    Box(
+                        modifier =
+                            Modifier.absoluteOffset(x = 10.dp, y = 10.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(MaterialTheme.colorScheme.background)
+                    ) {
+                        IconButton(
+                            icon = IconData.ResourceIcon(R.drawable.i_compare),
+                            iconConfig = IconConfig(size = 18),
+                            backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                        ) {
+                            onCompareClick()
+                        }
+                    }
+
+                    Box(
+                        modifier =
+                            Modifier.align(Alignment.TopEnd)
+                                .absoluteOffset(x = (-10).dp, y = 10.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(MaterialTheme.colorScheme.background)
+                    ) {
+                        IconButton(
+                            icon =
+                                IconData.ResourceIcon(
+                                    if (isFavourite) R.drawable.i_heart_filled
+                                    else R.drawable.i_heart
+                                ),
+                            iconConfig = IconConfig(size = 18),
+                            backgroundColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                        ) {
+                            onFavouriteClick()
+                        }
+                    }
+                }
 
                 DeviceInfoContainer {
-                    Column(modifier = Modifier.padding(10.dp)) {
-                        Text(text = device.type, fontSize = 18.sp, fontWeight = FontWeight.W500)
-                        Text(text = device.model, fontSize = 16.sp, fontWeight = FontWeight.W500)
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Specifications(device.diagonal, device.cpu, device.camera, device.battery)
-
-                        Spacer(modifier = Modifier.height(10.dp))
+                    Column(
+                        modifier = Modifier.padding(10.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
+                        Column {
+                            Text(text = device.type, fontSize = 18.sp, fontWeight = FontWeight.W500)
+                            Text(
+                                text = device.model,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.W500,
+                            )
+                        }
 
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(5.dp)) {
                             items(device.tags) { tag ->
@@ -155,36 +195,13 @@ fun RowDeviceCard(
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
                         RatingWithReviewsCount(device.rating, device.reviewsCount)
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
-
-            VerticalCenterRow {
-                IconButton(
-                    icon = IconData.ResourceIcon(R.drawable.i_compare),
-                    iconConfig = IconConfig(size = 18),
-                ) {
-                    onCompareClick()
-                }
-
-                Spacer(modifier = Modifier.width(10.dp))
-
-                IconButton(
-                    icon =
-                        IconData.ResourceIcon(
-                            if (isFavourite) R.drawable.i_heart_filled else R.drawable.i_heart
-                        ),
-                    iconConfig = IconConfig(size = 18),
-                ) {
-                    onFavouriteClick()
-                }
-
-                Spacer(modifier = Modifier.weight(1f))
+            if (onAddToCompanyClick != null) {
+                Spacer(modifier = Modifier.height(10.dp))
 
                 SimpleButton(
                     width = null,
