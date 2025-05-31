@@ -18,10 +18,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.common.utils.extension.containerColor
-import com.ravenzip.devicepicker.common.utils.extension.inverseMixColors
 import com.ravenzip.devicepicker.common.theme.errorColor
 import com.ravenzip.devicepicker.common.utils.base.UiEventEffect
+import com.ravenzip.devicepicker.common.utils.extension.containerColor
+import com.ravenzip.devicepicker.common.utils.extension.inverseMixColors
 import com.ravenzip.devicepicker.features.main.user.UserProfileViewModel
 import com.ravenzip.workshop.components.AlertDialog
 import com.ravenzip.workshop.components.CustomButton
@@ -159,18 +159,6 @@ fun UserProfileScreenContent(
             text = "Внешний вид",
             textConfig = TextConfig.onSurfaceH2,
             icon = IconData.ResourceIcon(R.drawable.i_theme),
-            iconConfig = IconConfig.Primary,
-            colors = ButtonDefaults.containerColor(),
-        ) {}
-
-        Spacer(modifier = Modifier.padding(top = 15.dp))
-
-        CustomButton(
-            title = "Уведомления",
-            titleConfig = TextConfig.onSurfaceH2,
-            text = "Настроить пуш-уведомления и уведомления внутри приложения",
-            textConfig = TextConfig.onSurface85Small,
-            icon = IconData.ResourceIcon(R.drawable.i_notification),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
         ) {}
