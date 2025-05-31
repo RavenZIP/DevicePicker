@@ -46,7 +46,7 @@ fun MainNavigationGraph(
 
         // Сравнение
         navigateWithSlideAnimation(route = BottomBarGraph.COMPARE) {
-            CompareScreenScaffold(padding)
+            CompareScreenScaffold(padding = padding)
         }
 
         // Профиль пользователя
