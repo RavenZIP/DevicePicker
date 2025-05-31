@@ -39,16 +39,35 @@ fun QuestionsScreenContent(padding: PaddingValues) {
         horizontalAlignment = Alignment.CenterHorizontally,
         contentPadding = PaddingValues(top = 10.dp),
     ) {
-        item { QuestionCard() }
+        item {
+            QuestionCard(
+                p1 = "Быстро ли садится зарядка?",
+                p2 =
+                    "Подскажите пожалуйста, быстро ли разряжается " +
+                        "при активном использовании в течении дня?",
+            )
+        }
 
-        item { QuestionCard() }
+        item {
+            QuestionCard(
+                a = "Артем С.",
+                d = "24.05.2025",
+                p1 = "Греется?",
+                p2 = "Сильно ли он греется при обычном использовании?",
+            )
+        }
 
-        item { QuestionCard() }
+        item { QuestionCard(p1 = "Удаленный доступ") }
     }
 }
 
 @Composable
-private fun QuestionCard() {
+private fun QuestionCard(
+    a: String = "Владимир П.",
+    d: String = "27.05.2025",
+    p1: String = "Заголовок вопроса",
+    p2: String = "Текст вопроса",
+) {
     Card(
         Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
@@ -65,19 +84,19 @@ private fun QuestionCard() {
                 )
                 Spacer(modifier = Modifier.width(20.dp))
                 Column {
-                    Text(text = "Владимир П.")
-                    Text(text = "27.05.2025")
+                    Text(text = a)
+                    Text(text = d)
                 }
             }
 
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Заголовок вопроса",
+                    text = p1,
                     fontWeight = FontWeight.W500,
                     fontSize = 20.sp,
                     letterSpacing = 0.sp,
                 )
-                Text(text = "Текст вопроса", letterSpacing = 0.sp)
+                Text(text = p2, letterSpacing = 0.sp)
             }
 
             SimpleButton(

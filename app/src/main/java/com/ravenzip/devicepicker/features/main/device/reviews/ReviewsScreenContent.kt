@@ -77,7 +77,15 @@ fun ReviewsScreenContent(padding: PaddingValues) {
 
         item { Text(text = "Отзывы", modifier = Modifier.fillMaxWidth(0.9f), fontSize = 18.sp) }
 
-        item { ReviewCard() }
+        item {
+            ReviewCard(
+                p1 = "Не тормозит, хорошо лежит в руке, довольно хорошо держит заряд аккумулятора",
+                p2 = "Иногда греется даже в не особо требовательных приложениях",
+                p3 =
+                    "В целом справляется на отлично: веб-серфинг, почта, мессенджеры, звонки, документы. " +
+                        "Система работает плавно, подвисаний не было",
+            )
+        }
 
         item { ReviewCard() }
 
@@ -88,7 +96,7 @@ fun ReviewsScreenContent(padding: PaddingValues) {
 }
 
 @Composable
-private fun ReviewCard() {
+private fun ReviewCard(p1: String = "...", p2: String = "...", p3: String = "...") {
     Card(
         Modifier.fillMaxWidth(0.9f),
         shape = RoundedCornerShape(10.dp),
@@ -133,17 +141,17 @@ private fun ReviewCard() {
 
             Column {
                 SmallText(text = "Достоинства", fontWeight = FontWeight.W500, letterSpacing = 0.sp)
-                SmallText(text = "....", letterSpacing = 0.sp)
+                SmallText(text = p1, letterSpacing = 0.sp)
             }
 
             Column {
                 SmallText(text = "Недостатки", fontWeight = FontWeight.W500, letterSpacing = 0.sp)
-                SmallText(text = "...", letterSpacing = 0.sp)
+                SmallText(text = p2, letterSpacing = 0.sp)
             }
 
             Column {
                 SmallText(text = "Комментарий", fontWeight = FontWeight.W500, letterSpacing = 0.sp)
-                SmallText(text = "...", letterSpacing = 0.sp)
+                SmallText(text = p3, letterSpacing = 0.sp)
             }
         }
     }
