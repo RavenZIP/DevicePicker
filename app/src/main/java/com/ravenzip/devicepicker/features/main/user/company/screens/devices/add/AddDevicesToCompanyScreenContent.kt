@@ -36,7 +36,6 @@ fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
         items(devices) { device ->
             RowDeviceCard(
                 device = device,
-                isFavourite = true,
                 onFavouriteClick = {},
                 onCompareClick = {},
                 onCardClick = {
