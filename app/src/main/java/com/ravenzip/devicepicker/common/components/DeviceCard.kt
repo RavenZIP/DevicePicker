@@ -220,18 +220,20 @@ fun RowDeviceCard(
             if (onAddToCompanyClick != null) {
                 Spacer(modifier = Modifier.height(10.dp))
 
-                SimpleButton(
-                    width = null,
-                    text = "Добавить в компанию",
-                    textConfig = TextConfig.SmallCenteredMedium,
-                    contentPadding = PaddingValues(9.dp),
-                    colors =
-                        ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.primary.copy(0.05f),
-                            contentColor = MaterialTheme.colorScheme.primary,
-                        ),
-                ) {
-                    onAddToCompanyClick()
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+                    SimpleButton(
+                        width = null,
+                        text = "Добавить в компанию",
+                        textConfig = TextConfig.SmallCenteredMedium,
+                        contentPadding = PaddingValues(9.dp),
+                        colors =
+                            ButtonDefaults.buttonColors(
+                                containerColor = MaterialTheme.colorScheme.primary.copy(0.05f),
+                                contentColor = MaterialTheme.colorScheme.primary,
+                            ),
+                    ) {
+                        onAddToCompanyClick()
+                    }
                 }
             }
         }
