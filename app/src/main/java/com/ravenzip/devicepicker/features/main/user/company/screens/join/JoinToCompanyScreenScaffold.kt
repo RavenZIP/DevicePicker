@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -20,10 +22,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.components.BottomContainer2
 import com.ravenzip.devicepicker.common.model.UiEvent
+import com.ravenzip.devicepicker.common.utils.base.UiEventEffect
 import com.ravenzip.devicepicker.common.utils.extension.inverseColors
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.navigation.NavigationParams
-import com.ravenzip.devicepicker.common.utils.base.UiEventEffect
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.TopAppBar
@@ -67,7 +69,8 @@ fun CompanyScreenJoinScaffold(
         },
     ) { innerPadding ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(innerPadding),
+            modifier =
+                Modifier.fillMaxSize().padding(innerPadding).verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(15.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
