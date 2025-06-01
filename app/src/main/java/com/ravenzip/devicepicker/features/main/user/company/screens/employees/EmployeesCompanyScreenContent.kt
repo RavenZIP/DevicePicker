@@ -63,18 +63,16 @@ fun EmployeesCompanyScreenContent(
                     Spacer(modifier = Modifier.padding(5.dp))
 
                     SmallText(
-                        text = "Текущие устройства",
+                        text = "Количество используемых устройств",
                         fontWeight = FontWeight.W500,
                         letterSpacing = 0.sp,
                     )
-
-                    if (employeeWithDevices.devices.isEmpty()) {
-                        SmallText(text = "Отсутствуют", letterSpacing = 0.sp)
-                    } else {
-                        employeeWithDevices.devices.forEach { device ->
-                            SmallText(text = device.name, letterSpacing = 0.sp)
-                        }
-                    }
+                    SmallText(
+                        text =
+                            "${if (employeeWithDevices.devices.isEmpty()) "У пользователя отсутствуют используемые устройства" 
+                            else employeeWithDevices.devices.count()}",
+                        letterSpacing = 0.sp,
+                    )
                 }
             }
         }
