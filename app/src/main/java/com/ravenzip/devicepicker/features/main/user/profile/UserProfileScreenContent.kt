@@ -39,6 +39,8 @@ fun UserProfileScreenContent(
     navigateToDeviceHistory: () -> Unit,
     navigateToReviews: () -> Unit,
     navigateToUserDevices: () -> Unit,
+    navigateToVisualAppearance: () -> Unit,
+    navigateToUpdates: () -> Unit,
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
@@ -161,7 +163,9 @@ fun UserProfileScreenContent(
             icon = IconData.ResourceIcon(R.drawable.i_theme),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            navigateToVisualAppearance()
+        }
 
         Spacer(modifier = Modifier.padding(top = 15.dp))
 
@@ -171,7 +175,9 @@ fun UserProfileScreenContent(
             icon = IconData.ResourceIcon(R.drawable.i_update),
             iconConfig = IconConfig.Primary,
             colors = ButtonDefaults.containerColor(),
-        ) {}
+        ) {
+            navigateToUpdates()
+        }
 
         Spacer(modifier = Modifier.padding(top = 20.dp))
     }

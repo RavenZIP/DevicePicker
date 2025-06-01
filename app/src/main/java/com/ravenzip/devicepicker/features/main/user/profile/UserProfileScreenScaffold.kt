@@ -17,6 +17,8 @@ fun UserProfileScaffold(
     navigateToDeviceHistory: () -> Unit,
     navigateToReviews: () -> Unit,
     navigateToUserDevices: () -> Unit,
+    navigateToVisualAppearance: () -> Unit,
+    navigateToUpdates: () -> Unit,
     navigateToSplashScreen: () -> Unit,
     padding: PaddingValues,
 ) {
@@ -31,6 +33,8 @@ fun UserProfileScaffold(
             navigateToReviews = navigateToReviews,
             navigateToUserDevices = navigateToUserDevices,
             navigateToSplashScreen = navigateToSplashScreen,
+            navigateToVisualAppearance = navigateToVisualAppearance,
+            navigateToUpdates = navigateToUpdates,
             padding = innerPadding,
         )
     }
