@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.ErrorScreenCard
+import com.ravenzip.devicepicker.common.components.SmallText
 import com.ravenzip.devicepicker.common.enums.EmployeePositionEnum
 import com.ravenzip.devicepicker.common.theme.errorColor
 import com.ravenzip.devicepicker.common.utils.extension.containerColor
@@ -57,20 +58,67 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                     modifier = Modifier.fillMaxWidth(0.9f),
                     colors = CardDefaults.veryLightPrimary(),
                 ) {
-                    Column(modifier = Modifier.padding(15.dp)) {
+                    Column(
+                        modifier = Modifier.padding(15.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp),
+                    ) {
                         Text(
-                            text = "Краткие сведения",
+                            text = "Основные сведения",
                             fontSize = 22.sp,
                             fontWeight = FontWeight.W500,
                         )
-                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Text("Наименование: ${company.name}", letterSpacing = 0.sp)
-                        Text(
-                            "Ваша роль: ${currentUserPositionInCompany.description}",
-                            letterSpacing = 0.sp,
-                        )
-                        Text("Количество участников: $employeesCount", letterSpacing = 0.sp)
+                        Column {
+                            SmallText(
+                                text = "Наименование",
+                                fontWeight = FontWeight.W500,
+                                letterSpacing = 0.sp,
+                            )
+                            SmallText(text = company.name, letterSpacing = 0.sp)
+                        }
+
+                        Column {
+                            SmallText(
+                                text = "Описание",
+                                fontWeight = FontWeight.W500,
+                                letterSpacing = 0.sp,
+                            )
+                            SmallText(text = company.description, letterSpacing = 0.sp)
+                        }
+
+                        Column {
+                            SmallText(
+                                text = "Адрес",
+                                fontWeight = FontWeight.W500,
+                                letterSpacing = 0.sp,
+                            )
+                            SmallText(text = company.address, letterSpacing = 0.sp)
+                        }
+
+                        Column {
+                            SmallText(
+                                text = "Ваша роль",
+                                fontWeight = FontWeight.W500,
+                                letterSpacing = 0.sp,
+                            )
+                            SmallText(
+                                text = currentUserPositionInCompany.description,
+                                letterSpacing = 0.sp,
+                            )
+                        }
+
+                        Column {
+                            SmallText(
+                                text = "Количество участников",
+                                fontWeight = FontWeight.W500,
+                                letterSpacing = 0.sp,
+                            )
+                            SmallText(
+                                text =
+                                    "$employeesCount (${if (employeesCount == 1) "Вы" else "Вы и еще ${employeesCount - 1}"})",
+                                letterSpacing = 0.sp,
+                            )
+                        }
                     }
                 }
 
@@ -134,6 +182,8 @@ fun CompanyInfoScreenContent(viewModel: CompanyInfoViewModel, company: Company) 
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
         }
 
         else -> {

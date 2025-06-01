@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -16,13 +18,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
-import com.ravenzip.devicepicker.common.model.UiEvent
-import com.ravenzip.devicepicker.common.model.UiState
-import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.common.ErrorScreenCard
 import com.ravenzip.devicepicker.common.SpinnerWithoutBlockScreen
-import com.ravenzip.devicepicker.navigation.NavigationParams
+import com.ravenzip.devicepicker.common.model.UiEvent
+import com.ravenzip.devicepicker.common.model.UiState
 import com.ravenzip.devicepicker.common.utils.base.UiEventEffect
+import com.ravenzip.devicepicker.common.utils.extension.showError
+import com.ravenzip.devicepicker.navigation.NavigationParams
 import com.ravenzip.workshop.components.Spinner
 import com.ravenzip.workshop.components.TopAppBar
 import com.ravenzip.workshop.data.appbar.BackArrow
@@ -59,7 +61,7 @@ fun CompanyInfoScreenScaffold(
             when (uiState) {
                 is UiState.Success ->
                     Column(
-                        modifier = Modifier.fillMaxSize(),
+                        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(15.dp),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
