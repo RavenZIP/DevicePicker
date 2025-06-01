@@ -13,7 +13,7 @@ data class Company(
     val devices: List<CompanyDevice>,
     val requestToJoin: List<String>,
     val code: String,
-    val settings: List<CompanySettings>,
+    val settings: List<CompanySetting>,
 ) {
     constructor() :
         this(
@@ -51,7 +51,7 @@ data class Company(
 
         fun createSettings() =
             listOf(
-                CompanySettings(
+                CompanySetting(
                     name = "Вход в компанию после подтверждения",
                     code = CompanySettingsEnum.JOIN_AFTER_APPROVE.ordinal,
                     description =
