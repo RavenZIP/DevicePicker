@@ -6,19 +6,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.common.components.AlertDialogWithField
 import com.ravenzip.devicepicker.common.components.RowDeviceCard
 import com.ravenzip.devicepicker.navigation.models.HomeGraph
+import com.ravenzip.workshop.components.SearchTextField
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
     val devices = viewModel.devices.collectAsStateWithLifecycle().value
@@ -33,6 +39,21 @@ fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(20.dp),
     ) {
+        item {
+            SearchTextField(
+                control = viewModel.searchControl,
+                placeholder = "Введите текст...",
+                onSearch = {},
+                colors =
+                    TextFieldDefaults.colors(
+                        focusedLeadingIconColor = MaterialTheme.colorScheme.primary,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                    ),
+            )
+        }
+
         items(devices) { device ->
             RowDeviceCard(
                 device = device,
