@@ -8,7 +8,6 @@ import com.ravenzip.devicepicker.common.repositories.AuthRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
 import com.ravenzip.devicepicker.common.utils.extension.showSuccess
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,17 +21,14 @@ class ForgotPasswordViewModel @Inject constructor(private val authRepository: Au
     ViewModel() {
     private val _isLoading = MutableStateFlow(false)
 
-    val emailComponent =
-        TextFieldComponent(
-            FormControl(
-                initialValue = "",
-                validators =
-                    listOf(
-                        { value -> Validators.required(value) },
-                        { value -> Validators.email(value) },
-                    ),
-            ),
-            scope = viewModelScope,
+    val emailControl =
+        FormControl(
+            initialValue = "",
+            validators =
+                listOf(
+                    { value -> Validators.required(value) },
+                    { value -> Validators.email(value) },
+                ),
         )
 
     val isLoading = _isLoading.asStateFlow()
@@ -40,7 +36,7 @@ class ForgotPasswordViewModel @Inject constructor(private val authRepository: Au
 
     fun resetPassword() {
         viewModelScope.launch {
-            if (emailComponent.control.isInvalid) {
+            if (emailControl.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения поля")
                 return@launch
             }
@@ -55,7 +51,7 @@ class ForgotPasswordViewModel @Inject constructor(private val authRepository: Au
                 return@launch
             }
 
-            val resetResult = authRepository.sendPasswordResetEmail(emailComponent.control.value)
+            val resetResult = authRepository.sendPasswordResetEmail(emailControl.value)
             _isLoading.update { false }
 
             if (resetResult is Result.Error) {

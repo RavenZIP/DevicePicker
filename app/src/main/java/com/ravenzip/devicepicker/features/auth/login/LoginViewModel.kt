@@ -4,17 +4,20 @@ import android.util.Patterns.PHONE
 import androidx.compose.material3.SnackbarHostState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ravenzip.devicepicker.common.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.common.enums.AuthTypeEnum
 import com.ravenzip.devicepicker.common.model.result.Result
 import com.ravenzip.devicepicker.common.repositories.AuthRepository
 import com.ravenzip.devicepicker.common.utils.extension.showError
+import com.ravenzip.devicepicker.features.auth.common.AuthForm
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.group.FormGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,63 +25,51 @@ import kotlinx.coroutines.launch
 class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
 
-    val authOptionsControl = FormControl(initialValue = AuthVariantsEnum.EMAIL)
-
-    val emailComponent =
-        TextFieldComponent(
-            control =
-                FormControl(
-                    initialValue = "",
-                    validators =
-                        listOf(
-                            { value -> Validators.required(value) },
-                            { value -> Validators.email(value) },
-                        ),
-                ),
-            scope = viewModelScope,
+    val form =
+        FormGroup(
+            AuthForm(
+                authType = FormControl(initialValue = AuthTypeEnum.EMAIL),
+                email =
+                    FormControl(
+                        initialValue = "",
+                        validators =
+                            listOf(
+                                { value -> Validators.required(value) },
+                                { value -> Validators.email(value) },
+                            ),
+                    ),
+                password =
+                    FormControl(
+                        initialValue = "",
+                        validators =
+                            listOf(
+                                { value -> Validators.required(value) },
+                                { value -> Validators.minLength(value, 6) },
+                            ),
+                    ),
+                phone =
+                    FormControl(
+                        initialValue = "",
+                        validators =
+                            listOf(
+                                { value -> Validators.required(value) },
+                                { value ->
+                                    if (!PHONE.matcher(value).matches())
+                                        "Введен некорректный номер телефона"
+                                    else null
+                                },
+                            ),
+                    ),
+                code = FormControl(initialValue = ""),
+            )
         )
-
-    val passwordComponent =
-        TextFieldComponent(
-            control =
-                FormControl(
-                    initialValue = "",
-                    validators =
-                        listOf(
-                            { value -> Validators.required(value) },
-                            { value -> Validators.minLength(value, 6) },
-                        ),
-                ),
-            scope = viewModelScope,
-        )
-
-    val phoneState =
-        TextFieldComponent(
-            control =
-                FormControl(
-                    initialValue = "",
-                    validators =
-                        listOf(
-                            { value -> Validators.required(value) },
-                            { value ->
-                                if (!PHONE.matcher(value).matches())
-                                    "Введен некорректный номер телефона"
-                                else null
-                            },
-                        ),
-                ),
-            scope = viewModelScope,
-        )
-
-    val codeState =
-        TextFieldComponent(control = FormControl(initialValue = ""), scope = viewModelScope)
 
     val isLoading = _isLoading.asStateFlow()
     val snackBarHostState = SnackbarHostState()
 
     fun logInWithEmailAndPassword(navigateToHomeScreen: () -> Unit) {
         viewModelScope.launch {
-            if (emailComponent.control.isInvalid || passwordComponent.control.isInvalid) {
+            if (form.controls.email.isInvalid || form.controls.password.isInvalid) {
                 snackBarHostState.showError("Проверьте правильность заполнения полей")
                 return@launch
             }
@@ -94,8 +85,8 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
 
             val authResult =
                 authRepository.logInUserWithEmail(
-                    emailComponent.control.value,
-                    passwordComponent.control.value,
+                    form.controls.email.value,
+                    form.controls.password.value,
                 )
             if (authResult is Result.Error) {
                 _isLoading.update { false }
@@ -109,13 +100,6 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     }
 
     init {
-        viewModelScope.launch {
-            authOptionsControl.valueChanges.collect {
-                emailComponent.control.reset()
-                passwordComponent.control.reset()
-                phoneState.control.reset()
-                codeState.control.reset()
-            }
-        }
+        form.controls.authType.valueChanges.onEach { form.reset() }.launchIn(viewModelScope)
     }
 }

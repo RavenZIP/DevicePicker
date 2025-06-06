@@ -14,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
@@ -24,7 +23,6 @@ import androidx.compose.ui.unit.sp
 import com.google.firebase.database.FirebaseDatabase
 import com.ravenzip.workshop.components.SimpleButton
 import com.ravenzip.workshop.components.SinglenessOutlinedTextField
-import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
 
 @Composable
@@ -33,10 +31,7 @@ fun AdminScreenContent(padding: PaddingValues) {
     val interactionSource = remember { MutableInteractionSource() }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
-    val composableScope = rememberCoroutineScope()
-    val idComponent = remember {
-        TextFieldComponent(control = FormControl(initialValue = ""), scope = composableScope)
-    }
+    val idControl = remember { FormControl(initialValue = "") }
 
     Column(
         modifier =
@@ -58,14 +53,11 @@ fun AdminScreenContent(padding: PaddingValues) {
         )
         Spacer(modifier = Modifier.height(15.dp))
 
-        SinglenessOutlinedTextField(
-            component = idComponent,
-            label = "Сгенерированный индентификатор",
-        )
+        SinglenessOutlinedTextField(control = idControl, label = "Сгенерированный индентификатор")
         Spacer(modifier = Modifier.height(20.dp))
 
         SimpleButton(text = "Сгенерировать") {
-            idComponent.control.setValue(firebase.reference.push().key.toString())
+            idControl.setValue(firebase.reference.push().key.toString())
         }
         Spacer(modifier = Modifier.height(40.dp))
 

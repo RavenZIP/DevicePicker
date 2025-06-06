@@ -18,7 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.common.components.BottomContainer
 import com.ravenzip.devicepicker.common.components.ScreenTitle
-import com.ravenzip.devicepicker.common.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.common.enums.AuthTypeEnum
 import com.ravenzip.devicepicker.common.utils.extension.inverseMixColors
 import com.ravenzip.devicepicker.features.auth.common.AuthFields
 import com.ravenzip.devicepicker.features.auth.common.AuthOptions
@@ -56,24 +56,24 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = viewModel.authOptionsControl.value,
-            emailComponent = viewModel.emailComponent,
-            passwordComponent = viewModel.passwordComponent,
-            phoneComponent = viewModel.phoneState,
-            codeComponent = viewModel.codeState,
+            selectedOption = viewModel.form.controls.authType.value,
+            emailControl = viewModel.form.controls.email,
+            passwordControl = viewModel.form.controls.password,
+            phoneControl = viewModel.form.controls.phone,
+            codeControl = viewModel.form.controls.code,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(control = viewModel.authOptionsControl, title = "Выбор варианта входа")
+        AuthOptions(control = viewModel.form.controls.authType, title = "Выбор варианта входа")
     }
 
     BottomContainer {
         SimpleButton(text = "Продолжить") {
-            when (viewModel.authOptionsControl.value) {
-                AuthVariantsEnum.EMAIL -> {
+            when (viewModel.form.controls.authType.value) {
+                AuthTypeEnum.EMAIL -> {
                     viewModel.logInWithEmailAndPassword(navigateToHomeScreen = navigateToHomeScreen)
                 }
-                AuthVariantsEnum.PHONE -> {}
+                AuthTypeEnum.PHONE -> {}
             }
         }
 

@@ -36,19 +36,17 @@ fun HomeScreenContent(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            state = viewModel.selectedCategoryControl,
+            control = viewModel.selectedCategoryControl,
             source = TagsEnum.entries,
-            viewOptions =
-                TagsEnum.entries.associate { item ->
-                    item to
-                        ChipViewOptions(
-                            text = item.value,
-                            textConfig = TextConfig.SmallMedium,
-                            icon = IconData.ResourceIcon(id = item.icon),
-                            iconConfig = IconConfig(size = 20, color = item.color),
-                        )
-                },
-            comparableKey = { it },
+            viewOptionsProvider = { item ->
+                ChipViewOptions(
+                    text = item.value,
+                    textConfig = TextConfig.SmallMedium,
+                    icon = IconData.ResourceIcon(id = item.icon),
+                    iconConfig = IconConfig(size = 20, color = item.color),
+                )
+            },
+            keySelector = { it },
             containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         )
 

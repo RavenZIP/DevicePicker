@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ravenzip.devicepicker.common.repositories.BrandRepository
 import com.ravenzip.devicepicker.common.repositories.DeviceTypeRepository
+import com.ravenzip.workshop.forms.control.FormControl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,6 +22,8 @@ constructor(
 ) : ViewModel() {
     private val _brandList = MutableStateFlow(listOf<String>())
     private val _deviceTypeList = MutableStateFlow(listOf<String>())
+
+    val searchControl = FormControl("")
 
     val brandList = _brandList.asStateFlow()
     val deviceTypeList = _deviceTypeList.asStateFlow()

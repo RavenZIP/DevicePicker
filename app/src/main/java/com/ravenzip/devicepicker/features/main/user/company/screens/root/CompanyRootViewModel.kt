@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.merge
 
 @HiltViewModel
 class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepository) : ViewModel() {
-    val companyScreenTypeState = FormControl(CompanyScreenActionsEnum.CREATE_COMPANY)
+    val companyScreenTypeControl = FormControl(CompanyScreenActionsEnum.CREATE_COMPANY)
 
     val navigateByCompanyScreenType = MutableSharedFlow<Unit>()
     val navigateBackToParent = MutableSharedFlow<Unit>()
@@ -29,7 +29,7 @@ class CompanyRootViewModel @Inject constructor(sharedRepository: SharedRepositor
         merge(
             navigateByCompanyScreenType.map {
                 val route =
-                    if (companyScreenTypeState.value == CompanyScreenActionsEnum.CREATE_COMPANY)
+                    if (companyScreenTypeControl.value == CompanyScreenActionsEnum.CREATE_COMPANY)
                         CompanyGraph.CREATE_COMPANY
                     else CompanyGraph.JOIN_TO_COMPANY
 

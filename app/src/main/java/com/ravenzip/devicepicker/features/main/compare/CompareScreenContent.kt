@@ -47,19 +47,17 @@ fun CompareScreenContent(viewModel: CompareScreenViewModel, padding: PaddingValu
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         ChipRadioGroup(
-            state = viewModel.selectedListControl,
+            control = viewModel.selectedListControl,
             source = DeviceTypeEnum.entries,
-            viewOptions =
-                DeviceTypeEnum.entries.associate { item ->
-                    item to
-                        ChipViewOptions(
-                            text = "${item.value} ${(item.ordinal + 1) * 2}",
-                            textConfig = TextConfig.SmallMedium,
-                            icon = IconData.ResourceIcon(id = item.icon),
-                            iconConfig = IconConfig(size = 20),
-                        )
-                },
-            comparableKey = { it },
+            viewOptionsProvider = { item ->
+                ChipViewOptions(
+                    text = "${item.value} ${(item.ordinal + 1) * 2}",
+                    textConfig = TextConfig.SmallMedium,
+                    icon = IconData.ResourceIcon(id = item.icon),
+                    iconConfig = IconConfig(size = 20),
+                )
+            },
+            keySelector = { it },
             containerPadding = PaddingValues(horizontal = 20.dp, vertical = 10.dp),
         )
 

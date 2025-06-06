@@ -41,7 +41,7 @@ fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
     ) {
         item {
             SearchTextField(
-                control = viewModel.searchControl,
+                control = viewModel.form.controls.search,
                 placeholder = "Введите текст...",
                 onSearch = {},
                 colors =
@@ -75,7 +75,7 @@ fun AddDevicesToCompanyScreenContent(viewModel: AddDevicesToCompanyViewModel) {
             text = "Укажите число устройств, которое хотите добавить",
             textField = {
                 SinglenessOutlinedTextField(
-                    component = viewModel.deviceCounterComponent,
+                    control = viewModel.form.controls.deviceCounter,
                     width = 1f,
                     label = "Количество устройств",
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

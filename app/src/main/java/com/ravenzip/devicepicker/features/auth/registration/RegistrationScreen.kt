@@ -22,7 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.components.BottomContainer
 import com.ravenzip.devicepicker.common.components.ScreenTitle
-import com.ravenzip.devicepicker.common.enums.AuthVariantsEnum
+import com.ravenzip.devicepicker.common.enums.AuthTypeEnum
 import com.ravenzip.devicepicker.common.utils.extension.defaultCardColors
 import com.ravenzip.devicepicker.features.auth.common.AuthFields
 import com.ravenzip.devicepicker.features.auth.common.AuthOptions
@@ -61,21 +61,24 @@ fun RegistrationScreen(
 
         Spacer(modifier = Modifier.height(30.dp))
         AuthFields(
-            selectedOption = viewModel.authOptionsControl.value,
-            emailComponent = viewModel.emailComponent,
-            passwordComponent = viewModel.passwordComponent,
-            phoneComponent = viewModel.phoneComponent,
-            codeComponent = viewModel.codeComponent,
+            selectedOption = viewModel.form.controls.authType.value,
+            emailControl = viewModel.form.controls.email,
+            passwordControl = viewModel.form.controls.password,
+            phoneControl = viewModel.form.controls.phone,
+            codeControl = viewModel.form.controls.code,
         )
 
         Spacer(modifier = Modifier.height(30.dp))
-        AuthOptions(control = viewModel.authOptionsControl, title = "Выбор варианта регистрации")
+        AuthOptions(
+            control = viewModel.form.controls.authType,
+            title = "Выбор варианта регистрации",
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
         InfoCard(
             icon = IconData.ResourceIcon(R.drawable.i_info),
             title = "Важно!",
-            text = viewModel.getSelectedOptionDescription(viewModel.authOptionsControl.value),
+            text = viewModel.getSelectedOptionDescription(viewModel.form.controls.authType.value),
             colors = CardDefaults.defaultCardColors(),
         )
 
@@ -84,14 +87,14 @@ fun RegistrationScreen(
 
     BottomContainer {
         SimpleButton(text = "Продолжить") {
-            when (viewModel.authOptionsControl.value) {
-                AuthVariantsEnum.EMAIL -> {
+            when (viewModel.form.controls.authType.value) {
+                AuthTypeEnum.EMAIL -> {
                     viewModel.registrationWithEmailAndPassword(
                         navigateToHomeScreen = navigateToHomeScreen
                     )
                 }
 
-                AuthVariantsEnum.PHONE -> {}
+                AuthTypeEnum.PHONE -> {}
             }
         }
     }

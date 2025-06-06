@@ -13,8 +13,8 @@ import com.ravenzip.kotlinflowextended.functions.filterErrorNotification
 import com.ravenzip.kotlinflowextended.functions.filterNextNotification
 import com.ravenzip.workshop.data.SpinnerState
 import com.ravenzip.workshop.forms.Validators
-import com.ravenzip.workshop.forms.component.TextFieldComponent
 import com.ravenzip.workshop.forms.control.FormControl
+import com.ravenzip.workshop.forms.group.FormGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -40,37 +40,30 @@ constructor(
 
     val snackBarHostState = SnackbarHostState()
 
-    val companyNameComponent =
-        TextFieldComponent(
-            FormControl(
-                initialValue = "",
-                validators = listOf { value -> Validators.required(value) },
-            ),
-            scope = viewModelScope,
-        )
-    val companyDescriptionComponent =
-        TextFieldComponent(
-            FormControl(
-                initialValue = "",
-                validators = listOf { value -> Validators.required(value) },
-            ),
-            scope = viewModelScope,
-        )
-    val companyAddressComponent =
-        TextFieldComponent(
-            FormControl(
-                initialValue = "",
-                validators = listOf { value -> Validators.required(value) },
-            ),
-            scope = viewModelScope,
-        )
-    val companyCodeComponent =
-        TextFieldComponent(
-            FormControl(
-                initialValue = "",
-                validators = listOf { value -> Validators.required(value) },
-            ),
-            scope = viewModelScope,
+    val form =
+        FormGroup(
+            CreateCompanyForm(
+                name =
+                    FormControl(
+                        initialValue = "",
+                        validators = listOf { value -> Validators.required(value) },
+                    ),
+                description =
+                    FormControl(
+                        initialValue = "",
+                        validators = listOf { value -> Validators.required(value) },
+                    ),
+                address =
+                    FormControl(
+                        initialValue = "",
+                        validators = listOf { value -> Validators.required(value) },
+                    ),
+                code =
+                    FormControl(
+                        initialValue = "",
+                        validators = listOf { value -> Validators.required(value) },
+                    ),
+            )
         )
 
     private val _createCompanyComplete =
@@ -78,10 +71,10 @@ constructor(
             .flatMapLatest { sharedRepository.userFullName }
             .flatMapLatest { userFullName ->
                 companyRepository.addCompany(
-                    companyNameComponent.control.value,
-                    companyDescriptionComponent.control.value,
-                    companyAddressComponent.control.value,
-                    companyCodeComponent.control.value,
+                    form.controls.name.value,
+                    form.controls.description.value,
+                    form.controls.address.value,
+                    form.controls.code.value,
                     userFullName,
                 )
             }

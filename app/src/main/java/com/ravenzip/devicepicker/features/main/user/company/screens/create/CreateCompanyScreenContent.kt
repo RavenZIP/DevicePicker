@@ -15,10 +15,10 @@ import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
 fun CompanyScreenCreateContent(viewModel: CreateCompanyViewModel) {
-    SinglenessOutlinedTextField(viewModel.companyNameComponent, label = "Наименование")
-    MultilineTextField(viewModel.companyDescriptionComponent, label = "Описание")
-    SinglenessOutlinedTextField(viewModel.companyAddressComponent, label = "Адрес")
-    SinglenessOutlinedTextField(viewModel.companyCodeComponent, label = "Код доступа")
+    SinglenessOutlinedTextField(control = viewModel.form.controls.name, label = "Наименование")
+    MultilineTextField(control = viewModel.form.controls.description, label = "Описание")
+    SinglenessOutlinedTextField(control = viewModel.form.controls.address, label = "Адрес")
+    SinglenessOutlinedTextField(control = viewModel.form.controls.code, label = "Код доступа")
 
     Spacer(modifier = Modifier.height(5.dp))
 

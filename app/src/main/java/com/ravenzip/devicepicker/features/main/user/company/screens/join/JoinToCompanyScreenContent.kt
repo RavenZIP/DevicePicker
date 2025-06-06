@@ -15,10 +15,14 @@ import com.ravenzip.workshop.data.icon.IconData
 
 @Composable
 fun CompanyScreenJoinContent(viewModel: JoinToCompanyViewModel) {
-    DropDownTextField(viewModel.companyComponent, label = "Компания")
-    SinglenessOutlinedTextField(viewModel.companyLeaderComponent, label = "Руководитель")
-    SinglenessOutlinedTextField(viewModel.companyAddressComponent, label = "Адрес")
-    SinglenessOutlinedTextField(viewModel.companyCodeComponent, label = "Код доступа")
+    DropDownTextField(
+        control = viewModel.form.controls.company,
+        state = viewModel.companiesControlState,
+        label = "Компания",
+    )
+    SinglenessOutlinedTextField(control = viewModel.form.controls.leader, label = "Руководитель")
+    SinglenessOutlinedTextField(control = viewModel.form.controls.address, label = "Адрес")
+    SinglenessOutlinedTextField(control = viewModel.form.controls.code, label = "Код доступа")
 
     Spacer(modifier = Modifier.height(5.dp))
 

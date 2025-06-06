@@ -53,7 +53,7 @@ fun ForgotPasswordScreen(viewModel: ForgotPasswordViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.height(30.dp))
         SinglenessOutlinedTextField(
-            component = viewModel.emailComponent,
+            control = viewModel.emailControl,
             label = "Электронная почта",
             leadingIcon = IconData.ResourceIcon(R.drawable.i_email),
         )

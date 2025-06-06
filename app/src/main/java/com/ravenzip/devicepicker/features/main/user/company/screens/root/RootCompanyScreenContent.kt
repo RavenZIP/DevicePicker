@@ -16,10 +16,10 @@ import com.ravenzip.workshop.data.icon.IconData
 @Composable
 fun CompanyRootScreenContent(viewModel: CompanyRootViewModel) {
     RadioGroup(
-        state = viewModel.companyScreenTypeState,
+        control = viewModel.companyScreenTypeControl,
         source = CompanyScreenActionsEnum.entries,
         view = { it.description },
-        comparableKey = { it },
+        keySelector = { it },
     )
 
     Spacer(modifier = Modifier.height(5.dp))

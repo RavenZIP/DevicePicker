@@ -15,7 +15,13 @@ fun SearchScreenScaffold(viewModel: SearchViewModel, padding: PaddingValues) {
 
     Scaffold(
         modifier = Modifier.padding(padding),
-        topBar = { SearchBar(query = query, placeholder = "Введите текст...", onSearch = {}) },
+        topBar = {
+            SearchBar(
+                control = viewModel.searchControl,
+                placeholder = "Введите текст...",
+                onSearch = {},
+            )
+        },
     ) { innerPadding ->
         SearchScreenContent(
             brandsState = viewModel.brandList,
