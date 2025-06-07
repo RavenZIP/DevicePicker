@@ -137,9 +137,9 @@ fun ColumnDeviceCard(
 fun RowDeviceCard(
     device: DeviceCompactExtended,
     isFavourite: Boolean = false,
-    onFavouriteClick: () -> Unit,
-    onCompareClick: () -> Unit,
-    onCardClick: () -> Unit,
+    onFavouriteClick: () -> Unit = {},
+    onCompareClick: () -> Unit = {},
+    onCardClick: () -> Unit = {},
     onAddToCompanyClick: (() -> Unit)? = null,
 ) {
     Card(

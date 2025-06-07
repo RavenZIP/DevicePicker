@@ -24,61 +24,79 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ravenzip.devicepicker.common.components.RowDeviceCard
 import com.ravenzip.devicepicker.common.enums.TagsEnum
 import com.ravenzip.devicepicker.common.utils.extension.veryLightPrimary
 import com.ravenzip.workshop.components.Icon
 import com.ravenzip.workshop.components.VerticalGrid
 import com.ravenzip.workshop.data.icon.IconConfig
 import com.ravenzip.workshop.data.icon.IconData
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
-fun SearchScreenContent(
-    brandsState: StateFlow<List<String>>,
-    deviceTypesState: StateFlow<List<String>>,
-    padding: PaddingValues,
-) {
-    val brands = brandsState.collectAsStateWithLifecycle().value
-    val deviceTypes = deviceTypesState.collectAsStateWithLifecycle().value
+fun SearchScreenContent(viewModel: SearchViewModel, padding: PaddingValues) {
+    val brands = viewModel.brandList.collectAsStateWithLifecycle().value
+    val deviceTypes = viewModel.deviceTypeList.collectAsStateWithLifecycle().value
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(padding),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+    if (viewModel.wasSearched.value) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            contentPadding = PaddingValues(vertical = 20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            item {
+                Text(
+                    text = "Выбранная категория поиска: Xiaomi",
+                    modifier = Modifier.fillMaxSize(0.9f),
+                    fontSize = 18.sp,
+                )
+            }
 
-        item {
-            Text(
-                text = "Категории устройств",
-                modifier = Modifier.fillMaxSize(0.9f),
-                fontSize = 18.sp,
-            )
+            items(viewModel.searchResults) { device -> RowDeviceCard(device = device) }
         }
+    } else {
 
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(padding),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            item { Spacer(modifier = Modifier.height(10.dp)) }
 
-        item { VerticalGrid(items = deviceTypes) { modifier, item -> BrandCard(modifier, item) } }
+            item {
+                Text(
+                    text = "Категории устройств",
+                    modifier = Modifier.fillMaxSize(0.9f),
+                    fontSize = 18.sp,
+                )
+            }
 
-        item { Spacer(modifier = Modifier.height(20.dp)) }
+            item { Spacer(modifier = Modifier.height(10.dp)) }
 
-        item { Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp) }
+            item {
+                VerticalGrid(items = deviceTypes) { modifier, item -> BrandCard(modifier, item) }
+            }
 
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
 
-        item { VerticalGrid(items = brands) { modifier, item -> BrandCard(modifier, item) } }
+            item { Text(text = "Бренды", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp) }
 
-        item { Spacer(modifier = Modifier.height(20.dp)) }
+            item { Spacer(modifier = Modifier.height(10.dp)) }
 
-        item { Text(text = "Метки", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp) }
+            item { VerticalGrid(items = brands) { modifier, item -> BrandCard(modifier, item) } }
 
-        item { Spacer(modifier = Modifier.height(10.dp)) }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
 
-        items(items = TagsEnum.entries, key = { item -> item }) { item ->
-            TagCard(item)
-            Spacer(modifier = Modifier.height(10.dp))
+            item { Text(text = "Метки", modifier = Modifier.fillMaxSize(0.9f), fontSize = 18.sp) }
+
+            item { Spacer(modifier = Modifier.height(10.dp)) }
+
+            items(items = TagsEnum.entries, key = { item -> item }) { item ->
+                TagCard(item)
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            item { Spacer(modifier = Modifier.height(10.dp)) }
         }
-
-        item { Spacer(modifier = Modifier.height(10.dp)) }
     }
 }
 
