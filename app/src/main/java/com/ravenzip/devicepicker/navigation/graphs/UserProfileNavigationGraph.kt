@@ -55,11 +55,17 @@ fun UserProfileNavigationGraph(
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.ADMIN_PANEL) {
-            AdminScreenScaffold(padding = padding)
+            AdminScreenScaffold(
+                padding = padding,
+                navigateToUserProfile = { navController.popBackStack() },
+            )
         }
 
         navigateWithSlideAnimation(route = UserProfileGraph.USER_SETTINGS) {
-            UserSettingsScreenScaffold(padding = padding)
+            UserSettingsScreenScaffold(
+                padding = padding,
+                navigateToUserProfile = { navController.popBackStack() },
+            )
         }
 
         // Домашний экран
@@ -73,6 +79,7 @@ fun UserProfileNavigationGraph(
         navigateWithSlideAnimation(route = UserProfileGraph.DEVICE_HISTORY) {
             DeviceHistoryScreenScaffold(
                 padding = padding,
+                navigateToUserProfile = { navController.popBackStack() },
                 navigateToDevice = { uid ->
                     navController.navigate("${HomeGraph.DEVICE_INFO}/${uid}")
                 },
