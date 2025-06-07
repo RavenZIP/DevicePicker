@@ -68,7 +68,7 @@ private fun UserBaseInfoCard() {
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Основные сведения о сотруднике",
+                    text = "Основные сведения",
                     fontWeight = FontWeight.W500,
                     fontSize = 20.sp,
                     letterSpacing = 0.sp,
@@ -107,7 +107,7 @@ private fun UserDevicesCard() {
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
                 Text(
-                    text = "Устройства сотрудника",
+                    text = "Устройства",
                     fontWeight = FontWeight.W500,
                     fontSize = 20.sp,
                     letterSpacing = 0.sp,

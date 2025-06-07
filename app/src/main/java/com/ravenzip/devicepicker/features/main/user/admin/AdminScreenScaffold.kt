@@ -24,7 +24,7 @@ fun AdminScreenScaffold(padding: PaddingValues, navigateToUserProfile: () -> Uni
 
     Scaffold(
         modifier = Modifier.padding(padding),
-        topBar = { TopAppBar("Панель администратора", backArrow = backArrow) },
+        topBar = { TopAppBar("Администрирование", backArrow = backArrow) },
     ) { innerPadding ->
         AdminScreenContent(innerPadding)
     }
