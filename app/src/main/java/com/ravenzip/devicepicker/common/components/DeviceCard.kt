@@ -135,6 +135,7 @@ fun ColumnDeviceCard(
 /** Карточка устройства, с горизонтальным расположением данных */
 @Composable
 fun RowDeviceCard(
+    modifier: Modifier = Modifier.fillMaxWidth(0.9f),
     device: DeviceCompactExtended,
     isFavourite: Boolean = false,
     onFavouriteClick: () -> Unit = {},
@@ -143,8 +144,7 @@ fun RowDeviceCard(
     onAddToCompanyClick: (() -> Unit)? = null,
 ) {
     Card(
-        modifier =
-            Modifier.fillMaxWidth(0.9f).clip(RoundedCornerShape(12.dp)).clickable { onCardClick() },
+        modifier = modifier.clip(RoundedCornerShape(12.dp)).clickable { onCardClick() },
         colors = CardDefaults.veryLightPrimary(),
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {

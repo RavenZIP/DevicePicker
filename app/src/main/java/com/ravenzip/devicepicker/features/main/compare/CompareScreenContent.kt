@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import com.ravenzip.devicepicker.R
 import com.ravenzip.devicepicker.common.components.ColumnDeviceCard
 import com.ravenzip.devicepicker.common.components.SmallText
+import com.ravenzip.devicepicker.common.dummy.REDMI_NOTE_7
+import com.ravenzip.devicepicker.common.dummy.SAMSUNG_GALAXY_A25
 import com.ravenzip.devicepicker.common.enums.DeviceTypeEnum
 import com.ravenzip.devicepicker.common.enums.TagsEnum
 import com.ravenzip.devicepicker.common.model.device.compact.DeviceSpecifications
@@ -74,7 +76,7 @@ fun CompareScreenContent(viewModel: CompareScreenViewModel, padding: PaddingValu
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         ColumnDeviceCard(
-                            viewModel.firstDeviceCompact,
+                            SAMSUNG_GALAXY_A25,
                             withCutName = true,
                             isFavourite = false,
                             isComparable = true,
@@ -87,7 +89,7 @@ fun CompareScreenContent(viewModel: CompareScreenViewModel, padding: PaddingValu
                         verticalArrangement = Arrangement.spacedBy(10.dp),
                     ) {
                         ColumnDeviceCard(
-                            viewModel.secondDeviceCompact,
+                            REDMI_NOTE_7,
                             withCutName = true,
                             isFavourite = false,
                             isComparable = true,
@@ -97,9 +99,7 @@ fun CompareScreenContent(viewModel: CompareScreenViewModel, padding: PaddingValu
                 }
             }
 
-            item {
-                TagsComparer(viewModel.firstDeviceCompact.tags, viewModel.secondDeviceCompact.tags)
-            }
+            item { TagsComparer(SAMSUNG_GALAXY_A25.tags, REDMI_NOTE_7.tags) }
 
             item {
                 ConfigurationsComparer(
