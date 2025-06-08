@@ -13,13 +13,13 @@ import com.ravenzip.workshop.forms.Validators
 import com.ravenzip.workshop.forms.control.FormControl
 import com.ravenzip.workshop.forms.group.FormGroup
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val authRepository: AuthRepository) : ViewModel() {
@@ -100,6 +100,13 @@ class LoginViewModel @Inject constructor(private val authRepository: AuthReposit
     }
 
     init {
-        form.controls.authType.valueChanges.onEach { form.reset() }.launchIn(viewModelScope)
+        form.controls.authType.valueChanges
+            .onEach {
+                form.controls.email.reset()
+                form.controls.password.reset()
+                form.controls.phone.reset()
+                form.controls.code.reset()
+            }
+            .launchIn(viewModelScope)
     }
 }
