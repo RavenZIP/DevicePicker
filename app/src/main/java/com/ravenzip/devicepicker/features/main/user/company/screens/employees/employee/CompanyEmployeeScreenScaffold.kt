@@ -48,6 +48,11 @@ fun EmployeeCompanyScreenScaffold(
                             text = "Отвязать устройство",
                         ),
                         AppBarMenuItem(
+                            icon = IconData.ResourceIcon(R.drawable.i_leaderboard),
+                            iconConfig = IconConfig(size = 18),
+                            text = "Изменить должность",
+                        ),
+                        AppBarMenuItem(
                             icon = IconData.ResourceIcon(R.drawable.i_delete_user),
                             iconConfig = IconConfig(size = 18, color = Color.Red),
                             text = "Исключить из организации",
